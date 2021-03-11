@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Alert,
+  AppState,
+  AppStateStatus,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Input, Block, Text, Button, theme } from "galio-framework";
@@ -62,14 +64,16 @@ const ChatTemplate: React.FC<Props> = (props) => {
   const messagesScroll = useRef<FlatList>(null);
   const [message, setMessage] = useState("");
   const [inputHeight, setInputHeight] = useState(0);
-
+  // const [appState, setAppState] = useState(AppState.currentState);
+  const appState = useRef(AppState.currentState);
   const existUser = !!user.id.length;
   const chatDispatch = useChatDispatch();
   const chatState = useChatState();
   const profileState = useProfileState();
   const authState = useAuthState();
 
-  useEffect(() => {
+  const turnOnRead = () => {
+    console.log("turnOnRead動いてんの？どうなん？？")
     authState.token &&
       chatDispatch({
         type: "READ_BY_ROOM",
@@ -77,6 +81,27 @@ const ChatTemplate: React.FC<Props> = (props) => {
         token: authState.token,
         isForceSendReadNotification: true,
       });
+  }
+
+  const _handleAppStateChange = (nextAppState: AppStateStatus) => {
+    console.log(nextAppState,appState)
+    if (nextAppState === 'active' && appState.current==='background') {
+      console.log("おかえり")
+      turnOnRead()
+    }
+    // setAppState(nextAppState);
+    appState.current=nextAppState
+    console.log(appState)
+}
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+    return (() => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    })
+  }, [])
+
+  useEffect(() => {
+    if (appState.current === 'active') {console.log("既読つけたね"); turnOnRead()}
     handleScrollBottom();
   }, [messages.length]);
 
