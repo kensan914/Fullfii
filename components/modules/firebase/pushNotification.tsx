@@ -23,15 +23,6 @@ const configurePushNotification = (): Promise<null | string> => {
   const initFcm = async (): Promise<null | string> => {
     const _deviceToken = await messaging().getToken();
 
-    // バッジリセット
-    PushNotification.getApplicationIconBadgeNumber(
-      (badgeCount: number): void => {
-        if (badgeCount > 0) {
-          PushNotification.setApplicationIconBadgeNumber(0);
-        }
-      }
-    );
-
     PushNotification.configure({
       requestPermissions: false,
       onNotification: (notification) => {
@@ -52,14 +43,8 @@ const configurePushNotification = (): Promise<null | string> => {
       console.log("Foreground時にリモートプッシュ通知を受信した");
       _localNotification(message);
 
-      // badge=1が送信されるが, Foregroundであるためリセット
-      PushNotification.setApplicationIconBadgeNumber(0);
-    });
-    messaging().onNotificationOpenedApp((message) => {
-      console.log("ぺっぺけぺー");
-    });
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log("Background", remoteMessage);
+      // // badge=1が送信されるが, Foregroundであるためリセット
+      // PushNotification.setApplicationIconBadgeNumber(0);
     });
 
     return _deviceToken;
@@ -80,3 +65,13 @@ const configurePushNotification = (): Promise<null | string> => {
 };
 
 export default configurePushNotification;
+
+export const updateBudgeCount = (count: number): void => {
+  PushNotification.getApplicationIconBadgeNumber(
+    (currentBadgeCount: number): void => {
+      if (currentBadgeCount > 0) {
+        PushNotification.setApplicationIconBadgeNumber(count);
+      }
+    }
+  );
+};

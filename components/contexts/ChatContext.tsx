@@ -426,6 +426,16 @@ const chatReducer = (
           JSON.stringify({ type: "read", token: action.token })
         );
 
+      // update badge count
+      (action.isForceSendReadNotification || unreadNum > 0) &&
+        (async () => {
+          const pushNotificationModule = await import(
+            "../modules/firebase/pushNotification"
+          );
+          const updateBudgeCount = pushNotificationModule.updateBudgeCount;
+          updateBudgeCount(totalUnreadNum);
+        })();
+
       asyncStoreTalkTicketCollection(_talkTicketCollection);
       return {
         ...prevState,
