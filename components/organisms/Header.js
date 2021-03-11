@@ -12,6 +12,7 @@ import { ProfileMenuButton } from "./ProfileMenuButton";
 import { checkiPhoneX } from "../modules/support";
 import { useProfileState } from "../contexts/ProfileContext";
 import ProfileModal from "../molecules/ProfileModal";
+import { useAuthState } from "../contexts/AuthContext";
 
 const { width } = Dimensions.get("window");
 
@@ -44,6 +45,7 @@ const Header = (props) => {
   } = props;
   const profileState = useProfileState();
   const chatDispatch = useChatDispatch();
+  const authState = useAuthState();
 
   const renderRight = () => {
     const routeName = scene.route.name;
@@ -116,13 +118,16 @@ const Header = (props) => {
 
   const [currentScreenName, setCurrentScreenName] = useState(name);
   if (currentScreenName !== name) setCurrentScreenName(name);
+
   // 画面遷移するたびに呼ばれる
   useEffect(() => {
     if (currentScreenName === "Chat") {
-      chatDispatch({
-        type: "READ_BY_ROOM",
-        talkTicketKey: scene.route.params.talkTicketKey,
-      });
+      authState.token &&
+        chatDispatch({
+          type: "READ_BY_ROOM",
+          talkTicketKey: scene.route.params.talkTicketKey,
+          token: authState.token,
+        });
     }
   }, [currentScreenName]);
 

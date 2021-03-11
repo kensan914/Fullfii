@@ -417,6 +417,15 @@ const chatReducer = (
       const totalUnreadNum = prevState.totalUnreadNum - unreadNum;
       _talkTicketCollection[action.talkTicketKey].room.unreadNum = 0;
 
+      // send read (既読をサーバに通知)
+      _talkTicket.room.ws &&
+        // isForceSendReadNotification(Chat内で呼ばれた時)は強制送信.
+        // それ以外(HomeからChatに画面遷移等)は未読が存在する時にのみ送信.
+        (action.isForceSendReadNotification || unreadNum > 0) &&
+        _talkTicket.room.ws.send(
+          JSON.stringify({ type: "read", token: action.token })
+        );
+
       asyncStoreTalkTicketCollection(_talkTicketCollection);
       return {
         ...prevState,
