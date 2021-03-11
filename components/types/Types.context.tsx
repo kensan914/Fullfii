@@ -175,7 +175,12 @@ export type ChatActionType =
       messageId: string;
       messageText: string;
     }
-  | { type: "READ_BY_ROOM"; talkTicketKey: TalkTicketKey }
+  | {
+      type: "READ_BY_ROOM";
+      talkTicketKey: TalkTicketKey;
+      token: string;
+      isForceSendReadNotification?: boolean;
+    }
   | { type: "OVERWRITE_TALK_TICKET"; talkTicket: TalkTicket | TalkTicketJson }
   | { type: "REMOVE_TALK_TICKETS"; talkTicketKeys: TalkTicketKey[] }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }

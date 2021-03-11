@@ -33,6 +33,7 @@ import {
   OnContentSizeChange,
   SendWsMessage,
 } from "../types/Types";
+import { useAuthState } from "../contexts/AuthContext";
 
 const { width } = Dimensions.get("screen");
 
@@ -66,9 +67,16 @@ const ChatTemplate: React.FC<Props> = (props) => {
   const chatDispatch = useChatDispatch();
   const chatState = useChatState();
   const profileState = useProfileState();
+  const authState = useAuthState();
 
   useEffect(() => {
-    chatDispatch({ type: "READ_BY_ROOM", talkTicketKey });
+    authState.token &&
+      chatDispatch({
+        type: "READ_BY_ROOM",
+        talkTicketKey,
+        token: authState.token,
+        isForceSendReadNotification: true,
+      });
     handleScrollBottom();
   }, [messages.length]);
 

@@ -55,6 +55,12 @@ const configurePushNotification = (): Promise<null | string> => {
       // badge=1が送信されるが, Foregroundであるためリセット
       PushNotification.setApplicationIconBadgeNumber(0);
     });
+    messaging().onNotificationOpenedApp((message) => {
+      console.log("ぺっぺけぺー");
+    });
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log("Background", remoteMessage);
+    });
 
     return _deviceToken;
   };
