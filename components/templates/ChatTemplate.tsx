@@ -155,22 +155,6 @@ const ChatTemplate: React.FC<Props> = (props) => {
     }
   };
 
-  const renderMessages = () => {
-    // const insetBottom = messages.length * (theme.SIZES.BASE * 6.5) + 64; // total messages x message height
-    return (
-      <FlatList
-        ref={messagesScroll}
-        data={messages}
-        showsVerticalScrollIndicator={false}
-        getItemLayout={itemLayout}
-        contentContainerStyle={styles.messagesWrapper}
-        renderItem={({ item, index }) => renderMessage(item, index)}
-        onContentSizeChange={onContentSizeChange}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    );
-  };
-
   const handleMessageChange = (text: string): void => {
     setMessage(text);
   };
@@ -247,6 +231,44 @@ const ChatTemplate: React.FC<Props> = (props) => {
     );
   };
 
+  const renderMessages = () => {
+    return (
+      <FlatList
+        ref={messagesScroll}
+        data={messages}
+        showsVerticalScrollIndicator={false}
+        getItemLayout={itemLayout}
+        contentContainerStyle={styles.messagesWrapper}
+        renderItem={({ item, index }) => renderMessage(item, index)}
+        onContentSizeChange={onContentSizeChange}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
+  };
+
+  const renderBody = () => {
+    const talkStatusKey =
+      chatState.talkTicketCollection[talkTicketKey].status.key;
+
+    switch (talkStatusKey) {
+      case "talking":
+        return renderMessages();
+      case "waiting":
+        return (
+          <Block flex={1}>
+            <Text>待機中</Text>
+          </Block>
+        );
+      case "stopping":
+      case "finishing":
+        return (
+          <Block flex={1}>
+            <Text>修了中</Text>
+          </Block>
+        );
+    }
+  };
+
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   return (
     <Block flex space="between" style={styles.container}>
@@ -256,7 +278,7 @@ const ChatTemplate: React.FC<Props> = (props) => {
         style={{ flex: 1 }}
         keyboardVerticalOffset={theme.SIZES.BASE * 3}
       >
-        {renderMessages()}
+        {renderBody()}
         {messageForm()}
       </KeyboardAvoidingView>
 
