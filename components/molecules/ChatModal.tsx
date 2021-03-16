@@ -280,7 +280,7 @@ type ChatSwitchProps = {
   disable?: boolean;
   alertMessageWhenDisable?: string;
 };
-const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
+export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
   const {
     title,
     onChange,

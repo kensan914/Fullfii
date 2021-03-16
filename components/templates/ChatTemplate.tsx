@@ -34,6 +34,8 @@ import {
   SendWsMessage,
 } from "../types/Types";
 import { useAuthState } from "../contexts/AuthContext";
+import WaitingChatBody from "../organisms/WaitingChatBody";
+import StoppingChatBody from "../organisms/StoppingChatBody";
 
 const { width } = Dimensions.get("screen");
 
@@ -255,16 +257,18 @@ const ChatTemplate: React.FC<Props> = (props) => {
         return renderMessages();
       case "waiting":
         return (
-          <Block flex={1}>
-            <Text>待機中</Text>
-          </Block>
+          <WaitingChatBody
+            talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+            commonMessage={messages[0]}
+          />
         );
       case "stopping":
       case "finishing":
         return (
-          <Block flex={1}>
-            <Text>修了中</Text>
-          </Block>
+          <StoppingChatBody
+            talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+            commonMessage={messages[0]}
+          />
         );
     }
   };

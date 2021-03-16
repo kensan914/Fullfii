@@ -5,10 +5,12 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import { HeaderHeight } from "../../../constants/utils";
 import useSlideView from "./useSlideView";
-import FirstPage from "./signupPages/FirstSignUpPage";
-import SecondPage from "./signupPages/SecondSignUpPage";
-import ThirdPage from "./signupPages/ThirdSignUpPage";
+import SignUpPageFirst from "./signupPages/SignUpPageFirst";
+import SignUpPageSelectWorry from "./signupPages/SignUpPageSelectWorry";
+import SignUpPageInputProfile from "./signupPages/SignUpPageInputProfile";
 import { useAuthState } from "../../contexts/AuthContext";
+import SignUpPageSecond from "./signupPages/SignUpPageSecond";
+import SignUpPagePushNotification from "./signupPages/SignUpPagePushNotification";
 
 const { width } = Dimensions.get("window");
 
@@ -23,9 +25,11 @@ const SignUpTemplate: React.FC = () => {
   const [, scrollViewRef, goToPage] = useSlideView(initPage);
 
   const [pageStack, setPageStack] = useState([
-    <FirstPage goToPage={goToPage} key={1} />,
-    <SecondPage goToPage={goToPage} key={2} />,
-    <ThirdPage key={3} />,
+    <SignUpPageFirst goToPage={goToPage} key={1} />,
+    <SignUpPageSecond goToPage={goToPage} key={2} />,
+    <SignUpPageSelectWorry goToPage={goToPage} key={3} />,
+    <SignUpPageInputProfile goToPage={goToPage} key={4} />,
+    <SignUpPagePushNotification key={5} />,
   ]);
 
   useEffect(() => {

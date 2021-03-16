@@ -6,10 +6,10 @@ import SignUpPageTemplate from "./SignUpPageTemplate";
 type Props = {
   goToPage: GoToPage;
 };
-const FirstSignUpPage: React.FC<Props> = (props) => {
+const SignUpPageSecond: React.FC<Props> = (props) => {
   const { goToPage } = props;
   const authDispatch = useAuthDispatch();
-  const progressNum = 1;
+  const progressNum = 2;
   const pressButton = () => {
     authDispatch({
       type: "TO_PROGRESS_SIGNUP",
@@ -30,4 +30,4 @@ const FirstSignUpPage: React.FC<Props> = (props) => {
   );
 };
 
-export default FirstSignUpPage;
+export default SignUpPageSecond;

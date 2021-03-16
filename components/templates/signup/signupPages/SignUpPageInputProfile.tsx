@@ -17,6 +17,7 @@ import { MenuModal } from "../../../molecules/Menu";
 import { logEvent } from "../../../modules/firebase/logEvent";
 import {
   FormattedGenderKey,
+  GoToPage,
   SignupResData,
   SignupResDataIoTs,
 } from "../../../types/Types";
@@ -25,12 +26,15 @@ import { GenderKey } from "../../../types/Types.context";
 
 const { width } = Dimensions.get("window");
 
-const ThirdSignUpPage: React.FC = () => {
+type Props = {
+  goToPage: GoToPage;
+};
+const SignUpPageInputProfile: React.FC<Props> = () => {
   const authState = useAuthState();
   const authDispatch = useAuthDispatch();
   const profileDispatch = useProfileDispatch();
   const profileState = useProfileState();
-  const progressNum = 3;
+  const progressNum = 4;
 
   const [username, setUsername] = useState("");
   const [isActiveUsername, setIsActiveUsername] = useState(false);
@@ -79,7 +83,7 @@ const ThirdSignUpPage: React.FC = () => {
         authDispatch({
           type: "TO_PROGRESS_SIGNUP",
           didProgressNum: progressNum,
-          isFinished: true,
+          isFinished: false,
         });
 
         // startUpLoggedin(_token, states, dispatches);
@@ -229,7 +233,7 @@ const ThirdSignUpPage: React.FC = () => {
   );
 };
 
-export default ThirdSignUpPage;
+export default SignUpPageInputProfile;
 
 const styles = StyleSheet.create({
   inputContainerPart: {
