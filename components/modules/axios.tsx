@@ -120,7 +120,7 @@ const useCommonFinally = (
   // デフォルトではdidMount時にリクエストは走らない。didMount時の自動リクエストはaction.shouldRequestDidMountにtrueをsetし設定。
   const { isLoading, resData, request } = useAxios(URLJoin(BASE_URL, ".../"), "post", {
     data: {},
-    thenCallback: resData, res => { }, // resDataは, 整形済みであり型安全が保証されているためasしても構わない
+    thenCallback: (resData, res) => { }, // resDataは, 整形済みであり型安全が保証されているためasしても構わない
     catchCallback: err => { },
     token: authState.token,
     shouldRequestDidMount: true,

@@ -1,23 +1,15 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { Alert, StyleSheet, Switch } from "react-native";
 import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 import Spinner from "react-native-loading-spinner-overlay";
 
 import ModalButton from "../atoms/ModalButton";
-import { useAxios } from "../modules/axios";
-import { alertModal, formatGender, URLJoin } from "../modules/support";
-import { BASE_URL } from "../../constants/env";
-import { useAuthState } from "../contexts/AuthContext";
-import { useChatDispatch, useChatState } from "../contexts/ChatContext";
-import { useProfileState } from "../contexts/ProfileContext";
-import { logEvent } from "../modules/firebase/logEvent";
 import { EndTalkScreenType } from "../organisms/Chat";
-import {
-  TalkTicketJson,
-  TalkTicketJsonIoTs,
-  TalkTicketKey,
-} from "../types/Types.context";
+import { TalkTicketKey } from "../types/Types.context";
+import useShuffle from "../hooks/useShuffle";
+import { useProfileState } from "../contexts/ProfileContext";
+import { useAuthState } from "../contexts/AuthContext";
 
 type Props = {
   isOpen: boolean;
@@ -28,160 +20,26 @@ type Props = {
 const ChatModal: React.FC<Props> = (props) => {
   const { isOpen, setIsOpen, EndTalkScreen, talkTicketKey } = props;
 
-  /* states, dispatches */
-  const chatState = useChatState();
-  const authState = useAuthState();
-  const chatDispatch = useChatDispatch();
   const profileState = useProfileState();
+  const authState = useAuthState();
 
-  /* talkTicket */
-  const talkTicket = chatState.talkTicketCollection[talkTicketKey];
-
-  /* state */
-  const [canTalkHeterosexual, setCanTalkHeterosexual] = useState(
-    talkTicket.canTalkHeterosexual
-  );
-  const [canTalkDifferentJob, setCanTalkDifferentJob] = useState(
-    talkTicket.canTalkDifferentJob
-  );
-  const [isSpeaker, setIsSpeaker] = useState(talkTicket.isSpeaker);
-  const [isShowSpinner, setIsShowSpinner] = useState(false);
-  const [isOpenEndTalk, setIsOpenEndTalk] = useState(false);
-  const [canPressBackdrop, setCanPressBackdrop] = useState(true);
-
-  const isSecretJob = profileState.profile.job.key === "secret";
-  const isSecretGender =
-    formatGender(
-      profileState.profile.gender,
-      profileState.profile.isSecretGender
-    ).key === "secret";
-
-  /* ref */
-  const roomId = useRef<string>();
-
-  const { request } = useAxios(
-    URLJoin(BASE_URL, "talk-ticket/", talkTicket.id),
-    "post",
-    TalkTicketJsonIoTs,
-    {
-      thenCallback: (resData) => {
-        const _resData = resData as TalkTicketJson;
-        roomId.current = talkTicket.room.id;
-        const newTalkTicketJson = _resData;
-
-        chatDispatch({
-          type: "OVERWRITE_TALK_TICKET",
-          talkTicket: newTalkTicketJson,
-        });
-        if (talkTicket.status.key === "talking") {
-          setIsOpenEndTalk(true);
-        } else {
-          closeChatModal();
-        }
-      },
-      catchCallback: () => {
-        closeChatModal();
-      },
-      finallyCallback: () => {
-        // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
-        chatDispatch({ type: "TURN_OFF_DELAY" });
-        setIsShowSpinner(false);
-      },
-      didRequestCallback: () => {
-        // この後のchatDispatchを遅延する(同時にマッチしていた場合はSTART_TALKが遅延される)
-        chatDispatch({
-          type: "TURN_ON_DELAY",
-          excludeType: ["OVERWRITE_TALK_TICKET"],
-        });
-      },
-      token: authState.token ? authState.token : "",
-    }
-  );
-
-  const onPressStop = () => {
-    setCanPressBackdrop(false);
-    alertModal({
-      mainText: `「${talkTicket.worry.label}」の話し相手の検索を停止します。`,
-      subText: "今までのトーク内容は端末から削除されます。",
-      cancelButton: "キャンセル",
-      okButton: "停止する",
-      onPress: () => {
-        logEvent(
-          "stop_talk_button",
-          {
-            job: profileState.profile?.job?.label,
-          },
-          profileState
-        );
-        setIsShowSpinner(true);
-        request({
-          data: {
-            is_speaker: isSpeaker,
-            ...(isSecretGender
-              ? {}
-              : { can_talk_heterosexual: canTalkHeterosexual }),
-            ...(isSecretJob
-              ? {}
-              : { can_talk_different_job: canTalkDifferentJob }),
-            status: "stopping",
-          },
-        });
-      },
-      cancelOnPress: () => setCanPressBackdrop(true),
-    });
-  };
-
-  const onPressShuffle = () => {
-    setCanPressBackdrop(false);
-    const jobSubText = canTalkDifferentJob
-      ? "全ての職業を許可"
-      : `話し相手を${profileState.profile.job?.label}に絞る`;
-
-    const genderSubText = canTalkHeterosexual
-      ? "話し相手に異性を含む"
-      : "話し相手を同性に絞る";
-    alertModal({
-      mainText: `以下の条件で「${talkTicket.worry.label}」の話し相手を探します。`,
-      subText: `\n・${isSpeaker ? "話したい" : "聞きたい"}\n${
-        isSecretJob ? "" : `・${jobSubText}\n`
-      }${
-        isSecretGender ? "" : `・${genderSubText}\n`
-      }\n今までのトーク内容は端末から削除されます。`,
-      cancelButton: "キャンセル",
-      okButton: "探す",
-      onPress: () => {
-        logEvent(
-          "shuffle_talk_button",
-          {
-            is_speaker: isSpeaker,
-            ...(isSecretGender
-              ? {}
-              : { can_talk_heterosexual: canTalkHeterosexual }),
-            ...(isSecretJob
-              ? {}
-              : { can_talk_different_job: canTalkDifferentJob }),
-          },
-          profileState
-        );
-        setIsShowSpinner(true);
-        request({
-          data: {
-            is_speaker: isSpeaker,
-            can_talk_heterosexual: canTalkHeterosexual,
-            can_talk_different_job: canTalkDifferentJob,
-            status: "waiting",
-          },
-        });
-      },
-      cancelOnPress: () => setCanPressBackdrop(true),
-    });
-  };
-
-  const closeChatModal = () => {
-    setIsOpen(false);
-    setCanPressBackdrop(true);
-    setIsOpenEndTalk(false);
-  };
+  const {
+    canTalkHeterosexual,
+    setCanTalkHeterosexual,
+    canTalkDifferentJob,
+    setCanTalkDifferentJob,
+    isSpeaker,
+    setIsSpeaker,
+    isShowSpinner,
+    isOpenEndTalk,
+    canPressBackdrop,
+    onPressStop,
+    onPressShuffle,
+    closeChatModal,
+    isSecretJob,
+    isSecretGender,
+    roomId,
+  } = useShuffle(talkTicketKey, setIsOpen);
 
   return (
     <>
@@ -280,7 +138,7 @@ type ChatSwitchProps = {
   disable?: boolean;
   alertMessageWhenDisable?: string;
 };
-const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
+export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
   const {
     title,
     onChange,
@@ -288,6 +146,7 @@ const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
     disable = false,
     alertMessageWhenDisable = "",
   } = props;
+
   return (
     <>
       <Block row space="between" style={styles.settingsCard}>

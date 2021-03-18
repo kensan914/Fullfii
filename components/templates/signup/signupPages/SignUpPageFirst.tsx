@@ -6,7 +6,7 @@ import SignUpPageTemplate from "./SignUpPageTemplate";
 type Props = {
   goToPage: GoToPage;
 };
-const FirstSignUpPage: React.FC<Props> = (props) => {
+const SignUpPageFirst: React.FC<Props> = (props) => {
   const { goToPage } = props;
   const authDispatch = useAuthDispatch();
   const progressNum = 1;
@@ -30,4 +30,4 @@ const FirstSignUpPage: React.FC<Props> = (props) => {
   );
 };
 
-export default FirstSignUpPage;
+export default SignUpPageFirst;

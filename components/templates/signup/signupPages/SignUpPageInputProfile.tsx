@@ -17,6 +17,7 @@ import { MenuModal } from "../../../molecules/Menu";
 import { logEvent } from "../../../modules/firebase/logEvent";
 import {
   FormattedGenderKey,
+  GoToPage,
   SignupResData,
   SignupResDataIoTs,
 } from "../../../types/Types";
@@ -25,12 +26,17 @@ import { GenderKey } from "../../../types/Types.context";
 
 const { width } = Dimensions.get("window");
 
-const ThirdSignUpPage: React.FC = () => {
+type Props = {
+  goToPage: GoToPage;
+};
+const SignUpPageInputProfile: React.FC<Props> = (props) => {
+  const { goToPage } = props;
+
   const authState = useAuthState();
   const authDispatch = useAuthDispatch();
   const profileDispatch = useProfileDispatch();
   const profileState = useProfileState();
-  const progressNum = 3;
+  const progressNum = 4;
 
   const [username, setUsername] = useState("");
   const [isActiveUsername, setIsActiveUsername] = useState(false);
@@ -79,10 +85,10 @@ const ThirdSignUpPage: React.FC = () => {
         authDispatch({
           type: "TO_PROGRESS_SIGNUP",
           didProgressNum: progressNum,
-          isFinished: true,
+          isFinished: false,
         });
 
-        // startUpLoggedin(_token, states, dispatches);
+        goToPage(progressNum + 1);
       },
       catchCallback: () => {
         Alert.alert("新規登録に失敗しました。");
@@ -222,14 +228,14 @@ const ThirdSignUpPage: React.FC = () => {
       contents={renderContents()}
       isLoading={isLoading}
       pressCallback={pressButton}
-      buttonTitle="登録してはじめる"
+      buttonTitle="登録する"
       checkCanNext={checkCanNext}
       statesRequired={[username, genderKey, jobKey, isAgreedUserpolicy]}
     />
   );
 };
 
-export default ThirdSignUpPage;
+export default SignUpPageInputProfile;
 
 const styles = StyleSheet.create({
   inputContainerPart: {

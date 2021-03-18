@@ -12,6 +12,8 @@ type Props = {
   isLoading: boolean;
   pressCallback: () => void;
   buttonTitle: string;
+  pressSubCallback?: () => void;
+  subButtonTitle?: string;
   checkCanNext?: () => boolean;
   statesRequired?: unknown[];
 };
@@ -23,6 +25,8 @@ const SignUpPageTemplate: React.FC<Props> = (props) => {
     isLoading,
     pressCallback,
     buttonTitle,
+    pressSubCallback,
+    subButtonTitle,
     checkCanNext,
     statesRequired = [],
   } = props;
@@ -39,7 +43,7 @@ const SignUpPageTemplate: React.FC<Props> = (props) => {
   return (
     <>
       <Block flex middle style={styles.signupContainer}>
-        <Block flex={0.15} style={styles.signupTitleContainer}>
+        <Block flex={0.2} style={styles.signupTitleContainer}>
           <Text size={26} bold color={COLORS.PINK} style={styles.title}>
             {title}
           </Text>
@@ -48,7 +52,7 @@ const SignUpPageTemplate: React.FC<Props> = (props) => {
           </Text>
         </Block>
 
-        <Block flex={0.7} style={styles.signupContentsContainer}>
+        <Block flex={0.65} style={styles.signupContentsContainer}>
           {contents}
         </Block>
 
@@ -67,6 +71,20 @@ const SignUpPageTemplate: React.FC<Props> = (props) => {
               {buttonTitle}
             </Text>
           </Button>
+          {subButtonTitle && pressSubCallback && (
+            <Button
+              round
+              color={"darkgray"}
+              // shadowColor={"darkgray"}
+              shadowless
+              style={{ marginTop: 16 }}
+              onPress={pressSubCallback}
+            >
+              <Text bold color="white" size={16}>
+                {subButtonTitle}
+              </Text>
+            </Button>
+          )}
         </Block>
       </Block>
     </>
@@ -84,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   signupTitleContainer: {
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
   },
   signupButtonContainer: {
@@ -100,6 +118,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   subTitle: {
+    lineHeight: 20,
     paddingHorizontal: 2,
     textAlign: "center",
     color: "pink",

@@ -15,11 +15,11 @@ const { height } = Dimensions.get("screen");
 type Props = {
   goToPage: GoToPage;
 };
-const SecondSignUpPage: React.FC<Props> = (props) => {
+const SignUpPageSelectWorry: React.FC<Props> = (props) => {
   const { goToPage } = props;
   const authDispatch = useAuthDispatch();
   const profileState = useProfileState();
-  const progressNum = 2;
+  const progressNum = 3;
 
   const [
     worriesCollection,
@@ -96,4 +96,4 @@ const SecondSignUpPage: React.FC<Props> = (props) => {
   );
 };
 
-export default SecondSignUpPage;
+export default SignUpPageSelectWorry;

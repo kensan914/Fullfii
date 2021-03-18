@@ -60,6 +60,7 @@ const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (props) => {
                     : ""}
                 </Text>
               </Button>
+              {/* </Block> */}
             </Block>
           );
         })}

@@ -36,6 +36,8 @@ import {
   SendWsMessage,
 } from "../types/Types";
 import { useAuthState } from "../contexts/AuthContext";
+import WaitingChatBody from "../organisms/WaitingChatBody";
+import StoppingChatBody from "../organisms/StoppingChatBody";
 
 const { width } = Dimensions.get("screen");
 
@@ -180,22 +182,6 @@ const ChatTemplate: React.FC<Props> = (props) => {
     }
   };
 
-  const renderMessages = () => {
-    // const insetBottom = messages.length * (theme.SIZES.BASE * 6.5) + 64; // total messages x message height
-    return (
-      <FlatList
-        ref={messagesScroll}
-        data={messages}
-        showsVerticalScrollIndicator={false}
-        getItemLayout={itemLayout}
-        contentContainerStyle={styles.messagesWrapper}
-        renderItem={({ item, index }) => renderMessage(item, index)}
-        onContentSizeChange={onContentSizeChange}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    );
-  };
-
   const handleMessageChange = (text: string): void => {
     setMessage(text);
   };
@@ -272,18 +258,62 @@ const ChatTemplate: React.FC<Props> = (props) => {
     );
   };
 
+  const renderMessages = () => {
+    return (
+      <FlatList
+        ref={messagesScroll}
+        data={messages}
+        showsVerticalScrollIndicator={false}
+        getItemLayout={itemLayout}
+        contentContainerStyle={styles.messagesWrapper}
+        renderItem={({ item, index }) => renderMessage(item, index)}
+        onContentSizeChange={onContentSizeChange}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
+  };
+
+  const renderBody = () => {
+    const talkStatusKey =
+      chatState.talkTicketCollection[talkTicketKey].status.key;
+
+    switch (talkStatusKey) {
+      case "talking":
+        return (
+          <KeyboardAvoidingView
+            enabled
+            behavior="padding"
+            style={{ flex: 1 }}
+            keyboardVerticalOffset={theme.SIZES.BASE * 3}
+          >
+            {renderMessages()}
+            {messageForm()}
+          </KeyboardAvoidingView>
+        );
+      case "waiting":
+        return (
+          <>
+            <WaitingChatBody
+              talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+              commonMessage={messages[0]}
+            />
+          </>
+        );
+      case "stopping":
+      case "finishing":
+        return (
+          <StoppingChatBody
+            talkTicketKey={talkTicketKey}
+            commonMessage={messages[0]}
+          />
+        );
+    }
+  };
+
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   return (
     <Block flex space="between" style={styles.container}>
-      <KeyboardAvoidingView
-        enabled
-        behavior="padding"
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={theme.SIZES.BASE * 3}
-      >
-        {renderMessages()}
-        {messageForm()}
-      </KeyboardAvoidingView>
+      {renderBody()}
 
       {existUser ? (
         <ProfileModal

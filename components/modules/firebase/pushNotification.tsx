@@ -4,20 +4,24 @@ import messaging, {
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 
+const requestPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  return enabled;
+};
+
 const configurePushNotification = (): Promise<null | string> => {
   const initPushNotification = async (): Promise<null | string> => {
-    const enabled = await messaging().hasPermission();
+    const enabled = await requestPermissionOfIOSPushNotification();
+
     if (enabled) {
       return initFcm();
     } else {
-      try {
-        await messaging().requestPermission();
-        return initFcm();
-      } catch (e) {
-        console.error(e);
-      }
+      return initFcm();
     }
-    return null;
   };
 
   const initFcm = async (): Promise<null | string> => {

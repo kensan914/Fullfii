@@ -45,18 +45,20 @@ const StartUpManager: React.FC = (props) => {
   const [meProfileTemp, setMeProfileTemp] = useState<MeProfile>();
   const isConfiguredPushNotification = useRef(false);
   useEffect(() => {
-    // meProfileTemp両方の準備が完了 && expoじゃない && pushNotification未設定 && 認証済み
+    // meProfileTemp両方の準備が完了 && expoじゃない && pushNotification未設定 && アカウント作成済み && サインアップ終了
     if (
       meProfileTemp &&
       !isExpo &&
       !isConfiguredPushNotification.current &&
-      states.authState.token
+      states.authState.token &&
+      states.authState.status === "Authenticated"
     ) {
       (async () => {
         const pushNotificationModule = await import(
           "../components/modules/firebase/pushNotification"
         );
         const configurePushNotification = pushNotificationModule.default;
+
         const deviceToken = await configurePushNotification();
 
         if (deviceToken) {
@@ -76,7 +78,7 @@ const StartUpManager: React.FC = (props) => {
         }
       })();
     }
-  }, [meProfileTemp, states.authState.token]);
+  }, [meProfileTemp, states.authState.token, states.authState.status]);
 
   useEffect(() => {
     states.authState.token &&
