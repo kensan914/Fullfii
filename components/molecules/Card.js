@@ -146,7 +146,7 @@ const Card = (props) => {
             style={[
               styles.card,
               {
-                backgroundColor: "#fff",
+                backgroundColor: "transparent",
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: 5,

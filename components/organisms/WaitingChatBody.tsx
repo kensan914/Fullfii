@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Block, Text } from "galio-framework";
 import { Image, StyleSheet } from "react-native";
 import { AllMessage, TalkTicket } from "../types/Types.context";
-import { useProfileState } from "../contexts/ProfileContext";
-import { formatGender } from "../modules/support";
-import ModalButton from "../atoms/ModalButton";
 import { CommonMessage } from "./Chat";
 
 type Props = {
@@ -44,7 +41,7 @@ const WaitingChatBody: React.FC<Props> = (props) => {
         flex={0.3}
         style={[styles.dividedContainer, styles.bottomContainer]}
       >
-        <Text color="dimgray" size={15}>
+        <Text bold color="#737373" size={15}>
           話し相手が見つかり次第、通知でお知らせします。
         </Text>
       </Block>
