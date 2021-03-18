@@ -14,11 +14,14 @@ import {
 } from "../constants/env";
 import Admob from "../components/molecules/Admob";
 import {
+  AdmobItem,
   HomeFirstItem,
   HomeItems,
   HomeNavigationProp,
   HomeRooms,
 } from "../components/types/Types";
+
+import { HOME_IMG } from "../constants/Image";
 
 const Home: React.FC = () => {
   const navigation = useNavigation<HomeNavigationProp>();
@@ -27,20 +30,25 @@ const Home: React.FC = () => {
 
   const rooms: HomeRooms = talkTickets.map((talkTicket) => {
     const choiceColor = () => {
-      if (!CARD_COLORS[talkTicket.worry.key]) {
-        const talkTicketKey = talkTicket.worry.key;
-        if (isNaN(Number(talkTicketKey)))
-          return CARD_COLORS[Number(talkTicketKey) % 10];
-        else {
-          Object.values(CARD_COLORS)[0];
-        }
-      }
+      // if (!CARD_COLORS[talkTicket.worry.key]) {
+      //   const talkTicketKey = talkTicket.worry.key;
+      //   if (isNaN(Number(talkTicketKey)))
+      //     return CARD_COLORS[Number(talkTicketKey) % 10];
+      //   else {
+      //     Object.values(CARD_COLORS)[0];
+      //   }
+      // }
       return CARD_COLORS[talkTicket.worry.key];
     };
+
+    const choiseImg = () => {
+      return HOME_IMG[talkTicket.worry.key]
+    }
 
     return {
       title: talkTicket.worry.label,
       color: choiceColor(),
+      image: choiseImg(),
       content:
         talkTicket.room.messages[talkTicket.room.messages.length - 1]?.message,
       onPress: () => {
@@ -56,22 +64,27 @@ const Home: React.FC = () => {
     icon: "plus",
     iconFamily: "Feather",
     iconColor: "white",
-    color: "gainsboro",
+    color: ["#d3d8dd", "#d3d8dd"],
     borderLess: true,
     onPress: () => {
       navigation.navigate("WorrySelect");
     },
   };
 
-  const items: HomeItems = [firstItem, ...rooms];
+  const admobItem: AdmobItem = {
+    icon: "admob"
+  }
+
+  const items: HomeItems = [admobItem, firstItem, ...rooms];
 
   return (
     <Block flex style={styles.container}>
+      {/* <Block style={styles.adMobBanner}>
+        {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
+      </Block> */}
       <HomeTemplate items={items} />
 
-      <Block style={styles.adMobBanner}>
-        {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
-      </Block>
+
     </Block>
   );
 };
@@ -87,7 +100,9 @@ const styles = StyleSheet.create({
     width: ADMOB_BANNER_WIDTH,
     height: ADMOB_BANNER_HEIGHT,
     zIndex: 2,
-    position: "absolute",
-    bottom: 0,
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 10,
+    marginBottom: 0,
   },
 });

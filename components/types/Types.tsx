@@ -66,7 +66,8 @@ export type ProfileInputScreen =
 //--------- Home.tsx ---------//
 export type HomeRooms = {
   title: string;
-  color: string;
+  color: string[];
+  image: string;
   content: string;
   onPress: () => void;
   countNum: number;
@@ -75,11 +76,14 @@ export type HomeFirstItem = {
   icon: string;
   iconFamily: string;
   iconColor: string;
-  color: string;
+  color: string[];
   borderLess: boolean;
   onPress: () => void;
 };
-export type HomeItems = [HomeFirstItem, ...HomeRooms];
+export type AdmobItem = {
+  isAdmob: boolean;
+};
+export type HomeItems = [AdmobItem, HomeFirstItem, ...HomeRooms];
 //--------- Home.tsx ---------//
 
 //--------- HomeTemplate.tsx ---------//
