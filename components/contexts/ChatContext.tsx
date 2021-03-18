@@ -607,7 +607,7 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
     }
     case "stopping": {
       message["messageId"] = "0";
-      message["message"] = "ただいま話し相手の検索を停止しています。";
+      message["message"] = "タップして話し相手を探しましょう";
       break;
     }
   }

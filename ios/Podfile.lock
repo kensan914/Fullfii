@@ -386,9 +386,9 @@ PODS:
     - React
   - RNCPushNotificationIOS (1.8.0):
     - React-Core
-  - RNDateTimePicker (3.1.1):
+  - RNDateTimePicker (3.0.9):
     - React-Core
-  - RNFBAdMob (10.8.1):
+  - RNFBAdMob (10.8.0):
     - Firebase/AdMob (~> 7.6.0)
     - PersonalizedAdConsent (~> 1.0.4)
     - React-Core
@@ -736,8 +736,8 @@ SPEC CHECKSUMS:
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNCPushNotificationIOS: 5b1cf9ad2aaa107ecb92d5d2d7005ba521b2b97a
-  RNDateTimePicker: f648227e42b269becea155a454b4c0691b66d869
-  RNFBAdMob: 11365dcc37bcadea3afcdf04e1b82906a501d3b6
+  RNDateTimePicker: 986d4794006e5caaebd089a724f54d35631a8dd4
+  RNFBAdMob: 67ba1fca47ea74bb7356b58584bfb27af96665b4
   RNFBAnalytics: 90d32a12ca53f8cd6246030b7f1c12615c148f1f
   RNFBApp: 97b618641633d6d23187a9d0537c3893482c483f
   RNFBMessaging: 9eae1103b79d94c6baa5bc43dabc9aba49dfb9da

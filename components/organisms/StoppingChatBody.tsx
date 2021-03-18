@@ -24,36 +24,29 @@ const StoppingChatBody: React.FC<Props> = (props) => {
     isSpeaker,
     setIsSpeaker,
     isShowSpinner,
-    isOpenEndTalk,
-    canPressBackdrop,
-    onPressStop,
     onPressShuffle,
-    closeChatModal,
     isSecretJob,
     isSecretGender,
-    roomId,
   } = useShuffle(talkTicketKey);
 
   const profileState = useProfileState();
 
   return (
     <Block flex={1}>
-      <Block
-        flex={0.2}
-        style={[styles.dividedContainer, styles.headerContainer]}
-      >
+      <Block flex={0.2} style={[styles.dividedContainer]}>
         {"common" in commonMessage && (
           <Block style={{}}>
             <CommonMessage message={commonMessage.message} />
           </Block>
         )}
-        <Text bold size={18} color={"dimgray"} style={{ textAlign: "center" }}>
+      </Block>
+      <Block flex={0.1} style={{ justifyContent: "flex-start" }}>
+        <Text bold size={16} color={"#737373"} style={{ textAlign: "center" }}>
           条件を絞ることでミスマッチ{"\n"}を防ぐことができます
         </Text>
       </Block>
-
       <Block
-        flex={0.45}
+        flex={0.4}
         style={[styles.dividedContainer, styles.centralContainer]}
       >
         <Block>
@@ -95,7 +88,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
       </Block>
 
       <Block
-        flex={0.35}
+        flex={0.3}
         style={[styles.dividedContainer, styles.bottomContainer]}
       >
         <SvgButton
@@ -115,16 +108,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  headerContainer: {
-    // backgroundColor: "red",
-    justifyContent: "space-around",
-  },
+  headerContainer: {},
   centralContainer: {
-    // backgroundColor: "green",
+    justifyContent: "space-evenly",
   },
-  bottomContainer: {
-    // backgroundColor: "blue",
-  },
+  bottomContainer: {},
   modalContents: {
     backgroundColor: "white",
     justifyContent: "center",
