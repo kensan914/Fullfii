@@ -12,7 +12,7 @@ type Props = {
   items: HomeItems;
 };
 const HomeTemplate: React.FC<Props> = (props) => {
-  const numColumns = 2;
+  const numColumns = 1;
   const { items } = props;
 
   return (
@@ -47,7 +47,7 @@ const HomeTemplate: React.FC<Props> = (props) => {
             >
               <Card
                 item={item}
-                onPress={item.onPress}
+                onPress={"onPress" in item ? item.onPress : null}
                 countNum={"countNum" in item ? item.countNum : 0}
               />
             </Block>
@@ -65,7 +65,7 @@ export default HomeTemplate;
 const styles = StyleSheet.create({
   home: {
     width: width,
-    backgroundColor: "white",
+    backgroundColor: "#fff9f5",
   },
   list: {
     width: width,
