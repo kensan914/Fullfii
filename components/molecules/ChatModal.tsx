@@ -10,6 +10,7 @@ import { TalkTicketKey } from "../types/Types.context";
 import useShuffle from "../hooks/useShuffle";
 import { useProfileState } from "../contexts/ProfileContext";
 import { useAuthState } from "../contexts/AuthContext";
+import { COLORS } from "../../constants/Theme";
 
 type Props = {
   isOpen: boolean;
@@ -56,6 +57,14 @@ const ChatModal: React.FC<Props> = (props) => {
 
         <Block style={styles.modalContents}>
           <Block>
+            <Text
+              bold
+              size={15}
+              style={{ textAlign: "center", paddingBottom: 18 }}
+              color={COLORS.PINK}
+            >
+              気楽に話し相手をシャッフルしましょう
+            </Text>
             <Block style={{ justifyContent: "center" }}>
               <ChatSwitch
                 title="話したい"
