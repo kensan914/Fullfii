@@ -1,56 +1,56 @@
-import React, { useState } from "react";
-import { Alert, Dimensions, StyleSheet, TouchableOpacity } from "react-native";
-import { Block, Checkbox, Icon, Input, Text } from "galio-framework";
-import * as WebBrowser from "expo-web-browser";
+import React from "react";
+import { Dimensions, Image } from "react-native";
+import { Block } from "galio-framework";
 
 import SignUpPageTemplate from "./SignUpPageTemplate";
-import { useAuthDispatch, useAuthState } from "../../../contexts/AuthContext";
-import { useAxios } from "../../../modules/axios";
-import { generatePassword, URLJoin } from "../../../modules/support";
-import { BASE_URL, USER_POLICY_URL } from "../../../../constants/env";
-import {
-  useProfileDispatch,
-  useProfileState,
-} from "../../../contexts/ProfileContext";
-import { COLORS } from "../../../../constants/Theme";
-import { MenuModal } from "../../../molecules/Menu";
-import { logEvent } from "../../../modules/firebase/logEvent";
-import {
-  FormattedGenderKey,
-  SignupResData,
-  SignupResDataIoTs,
-} from "../../../types/Types";
-import GenderInputButtonList from "../../../molecules/GenderInputButtonList";
-import { GenderKey } from "../../../types/Types.context";
+import { useAuthDispatch } from "../../../contexts/AuthContext";
 
 const { width } = Dimensions.get("window");
 
 const SignUpPagePushNotification: React.FC = () => {
-  const authState = useAuthState();
   const authDispatch = useAuthDispatch();
-  const profileDispatch = useProfileDispatch();
-  const profileState = useProfileState();
   const progressNum = 5;
   const pressButton = () => {
     authDispatch({
       type: "TO_PROGRESS_SIGNUP",
       didProgressNum: progressNum,
-      isFinished: false,
+      isFinished: true,
     });
-    goToPage(progressNum + 1);
+  };
+
+  const renderContents = () => {
+    return (
+      <Block
+        flex
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          width: width,
+        }}
+      >
+        <Image
+          style={{
+            width: "85%",
+            resizeMode: "contain",
+          }}
+          source={require("../../../../assets/images/signup/pushNotificationDialog.png")}
+        />
+      </Block>
+    );
   };
 
   return (
     <SignUpPageTemplate
-      title={"はじめまして" + "\n" + "ようこそ、Fullfiiへ"}
-      subTitle="これから使い方の説明を始めていきます。"
+      title={"通知を受け取る"}
+      subTitle="話し相手が見つかった時やメッセージを受信した時にお知らせします。この機能はいつでも「設定」で変更できます。"
       isLoading={false}
+      contents={renderContents()}
       pressCallback={pressButton}
-      buttonTitle="次へ"
+      buttonTitle="受け取る"
+      pressSubCallback={pressButton}
+      subButtonTitle="受け取らない"
     />
   );
 };
 
 export default SignUpPagePushNotification;
-
-const styles = StyleSheet.create({});

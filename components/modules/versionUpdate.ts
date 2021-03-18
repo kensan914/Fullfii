@@ -46,7 +46,6 @@ export const checkUpdateVersion = async (): Promise<void | null> => {
 const onUpdateVersion = (prevVersionNum: number) => {
   switch (prevVersionNum) {
     case 200: {
-      console.log("talkTicketCollection削除");
       asyncRemoveItem("talkTicketCollection");
       break;
     }

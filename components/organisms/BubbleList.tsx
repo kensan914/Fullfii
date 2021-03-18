@@ -59,7 +59,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
       e.persist();
       onAnimationPress(false);
 
-      // // pressIn時からスクロールされていれば処理を無効化
+      // pressIn時からスクロールされていれば処理を無効化
       if (
         e.nativeEvent?.pageX === posWhenPressInX.current &&
         e.nativeEvent?.pageY === posWhenPressInY.current

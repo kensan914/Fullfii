@@ -1,40 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet } from "react-native";
 import { ChatSwitch } from "../molecules/ChatModal";
-import { AllMessage, TalkTicket } from "../types/Types.context";
+import { AllMessage, TalkTicketKey } from "../types/Types.context";
 import { useProfileState } from "../contexts/ProfileContext";
-import { formatGender } from "../modules/support";
-import ModalButton from "../atoms/ModalButton";
 import { CommonMessage } from "./Chat";
+import SvgButton from "../atoms/SvgButton";
+import useShuffle from "../hooks/useShuffle";
+import Spinner from "react-native-loading-spinner-overlay";
 
 type Props = {
-  talkTicket: TalkTicket;
+  talkTicketKey: TalkTicketKey;
   commonMessage: AllMessage;
 };
 const StoppingChatBody: React.FC<Props> = (props) => {
-  const { talkTicket, commonMessage } = props;
+  const { talkTicketKey, commonMessage } = props;
 
-  const [canTalkHeterosexual, setCanTalkHeterosexual] = useState(
-    talkTicket.canTalkHeterosexual
-  );
-  const [canTalkDifferentJob, setCanTalkDifferentJob] = useState(
-    talkTicket.canTalkDifferentJob
-  );
-  const [isSpeaker, setIsSpeaker] = useState(talkTicket.isSpeaker);
+  const {
+    canTalkHeterosexual,
+    setCanTalkHeterosexual,
+    canTalkDifferentJob,
+    setCanTalkDifferentJob,
+    isSpeaker,
+    setIsSpeaker,
+    isShowSpinner,
+    isOpenEndTalk,
+    canPressBackdrop,
+    onPressStop,
+    onPressShuffle,
+    closeChatModal,
+    isSecretJob,
+    isSecretGender,
+    roomId,
+  } = useShuffle(talkTicketKey);
 
   const profileState = useProfileState();
-  const isSecretJob = profileState.profile.job.key === "secret";
-  const isSecretGender =
-    formatGender(
-      profileState.profile.gender,
-      profileState.profile.isSecretGender
-    ).key === "secret";
 
   return (
     <Block flex={1}>
       <Block
-        flex={0.25}
+        flex={0.2}
         style={[styles.dividedContainer, styles.headerContainer]}
       >
         {"common" in commonMessage && (
@@ -42,7 +47,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
             <CommonMessage message={commonMessage.message} />
           </Block>
         )}
-        <Text bold size={18} style={{ textAlign: "center" }}>
+        <Text bold size={18} color={"dimgray"} style={{ textAlign: "center" }}>
           条件を絞ることでミスマッチ{"\n"}を防ぐことができます
         </Text>
       </Block>
@@ -51,7 +56,6 @@ const StoppingChatBody: React.FC<Props> = (props) => {
         flex={0.45}
         style={[styles.dividedContainer, styles.centralContainer]}
       >
-        {/* <Block style={styles.modalContents}> */}
         <Block>
           <Block style={{ justifyContent: "center" }}>
             <ChatSwitch
@@ -73,7 +77,9 @@ const StoppingChatBody: React.FC<Props> = (props) => {
                   : `話し相手を${profileState.profile.job?.label}に絞る`
               }
               value={!canTalkDifferentJob}
-              onChange={(val) => setCanTalkDifferentJob(!val)}
+              onChange={() => {
+                setCanTalkDifferentJob(!canTalkDifferentJob);
+              }}
               disable={isSecretJob}
               alertMessageWhenDisable="話し相手を職業で絞り込むには職業を内緒以外に設定して下さい"
             />
@@ -86,18 +92,17 @@ const StoppingChatBody: React.FC<Props> = (props) => {
             />
           </Block>
         </Block>
-        {/* </Block> */}
       </Block>
 
       <Block
-        flex={0.3}
+        flex={0.35}
         style={[styles.dividedContainer, styles.bottomContainer]}
       >
-        <ModalButton
-          icon="loop"
-          iconFamily="MaterialIcons"
-          onPress={() => {}}
+        <SvgButton
+          source={require("../../assets/icons/pinkLoop.svg")}
+          onPress={() => onPressShuffle()}
         />
+        <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0.3)" />
       </Block>
     </Block>
   );
@@ -112,6 +117,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     // backgroundColor: "red",
+    justifyContent: "space-around",
   },
   centralContainer: {
     // backgroundColor: "green",

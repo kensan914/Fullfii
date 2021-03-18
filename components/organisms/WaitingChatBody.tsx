@@ -1,33 +1,18 @@
 import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
-import { StyleSheet } from "react-native";
-import { ChatSwitch } from "../molecules/ChatModal";
-import { TalkTicket } from "../types/Types.context";
+import { Image, StyleSheet } from "react-native";
+import { AllMessage, TalkTicket } from "../types/Types.context";
 import { useProfileState } from "../contexts/ProfileContext";
 import { formatGender } from "../modules/support";
 import ModalButton from "../atoms/ModalButton";
+import { CommonMessage } from "./Chat";
 
 type Props = {
   talkTicket: TalkTicket;
+  commonMessage: AllMessage;
 };
 const WaitingChatBody: React.FC<Props> = (props) => {
-  const { talkTicket } = props;
-
-  const [canTalkHeterosexual, setCanTalkHeterosexual] = useState(
-    talkTicket.canTalkHeterosexual
-  );
-  const [canTalkDifferentJob, setCanTalkDifferentJob] = useState(
-    talkTicket.canTalkDifferentJob
-  );
-  const [isSpeaker, setIsSpeaker] = useState(talkTicket.isSpeaker);
-
-  const profileState = useProfileState();
-  const isSecretJob = profileState.profile.job.key === "secret";
-  const isSecretGender =
-    formatGender(
-      profileState.profile.gender,
-      profileState.profile.isSecretGender
-    ).key === "secret";
+  const { talkTicket, commonMessage } = props;
 
   return (
     <Block flex={1}>
@@ -35,62 +20,33 @@ const WaitingChatBody: React.FC<Props> = (props) => {
         flex={0.2}
         style={[styles.dividedContainer, styles.headerContainer]}
       >
-        <Text bold size={18} style={{ textAlign: "center" }}>
-          条件を絞ることでミスマッチ{"\n"}を防ぐことができます
-        </Text>
+        {"common" in commonMessage && (
+          <Block style={{}}>
+            <CommonMessage message={commonMessage.message} />
+          </Block>
+        )}
       </Block>
 
       <Block
-        flex={0.45}
+        flex={0.5}
         style={[styles.dividedContainer, styles.centralContainer]}
       >
-        {/* <Block style={styles.modalContents}> */}
-        <Block>
-          <Block style={{ justifyContent: "center" }}>
-            <ChatSwitch
-              title="話したい"
-              value={isSpeaker}
-              onChange={(val) => setIsSpeaker(val)}
-            />
-            <ChatSwitch
-              title="聞きたい"
-              value={!isSpeaker}
-              onChange={(val) => setIsSpeaker(!val)}
-            />
-          </Block>
-          <Block style={{ justifyContent: "center", marginTop: 10 }}>
-            <ChatSwitch
-              title={
-                isSecretJob
-                  ? "話し相手を職業で絞る"
-                  : `話し相手を${profileState.profile.job?.label}に絞る`
-              }
-              value={!canTalkDifferentJob}
-              onChange={(val) => setCanTalkDifferentJob(!val)}
-              disable={isSecretJob}
-              alertMessageWhenDisable="話し相手を職業で絞り込むには職業を内緒以外に設定して下さい"
-            />
-            <ChatSwitch
-              title="話し相手に異性を含む"
-              value={canTalkHeterosexual}
-              onChange={setCanTalkHeterosexual}
-              disable={isSecretGender}
-              alertMessageWhenDisable="話し相手を性別で絞り込むには性別を内緒以外に設定して下さい"
-            />
-          </Block>
-        </Block>
-        {/* </Block> */}
+        <Image
+          style={{
+            height: "100%",
+            resizeMode: "contain",
+          }}
+          source={require("../../assets/images/chat/waiting_chat.png")}
+        />
       </Block>
 
       <Block
-        flex={0.35}
+        flex={0.3}
         style={[styles.dividedContainer, styles.bottomContainer]}
       >
-        <ModalButton
-          icon="loop"
-          iconFamily="MaterialIcons"
-          onPress={() => {}}
-        />
+        <Text color="dimgray" size={15}>
+          話し相手が見つかり次第、通知でお知らせします。
+        </Text>
       </Block>
     </Block>
   );
@@ -111,6 +67,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     // backgroundColor: "blue",
+    paddingHorizontal: 20,
   },
   modalContents: {
     backgroundColor: "white",

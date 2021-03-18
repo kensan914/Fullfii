@@ -9,7 +9,7 @@ import SignUpPageFirst from "./signupPages/SignUpPageFirst";
 import SignUpPageSelectWorry from "./signupPages/SignUpPageSelectWorry";
 import SignUpPageInputProfile from "./signupPages/SignUpPageInputProfile";
 import { useAuthState } from "../../contexts/AuthContext";
-import SignUpPageSecond from "./signupPages/SignUpPageSecond";
+import SignUpPageShuffleExplain from "./signupPages/SignUpPageShuffleExplain";
 import SignUpPagePushNotification from "./signupPages/SignUpPagePushNotification";
 
 const { width } = Dimensions.get("window");
@@ -26,7 +26,7 @@ const SignUpTemplate: React.FC = () => {
 
   const [pageStack, setPageStack] = useState([
     <SignUpPageFirst goToPage={goToPage} key={1} />,
-    <SignUpPageSecond goToPage={goToPage} key={2} />,
+    <SignUpPageShuffleExplain goToPage={goToPage} key={2} />,
     <SignUpPageSelectWorry goToPage={goToPage} key={3} />,
     <SignUpPageInputProfile goToPage={goToPage} key={4} />,
     <SignUpPagePushNotification key={5} />,

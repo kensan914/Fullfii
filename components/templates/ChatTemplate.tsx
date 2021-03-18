@@ -254,19 +254,31 @@ const ChatTemplate: React.FC<Props> = (props) => {
 
     switch (talkStatusKey) {
       case "talking":
-        return renderMessages();
+        return (
+          <KeyboardAvoidingView
+            enabled
+            behavior="padding"
+            style={{ flex: 1 }}
+            keyboardVerticalOffset={theme.SIZES.BASE * 3}
+          >
+            {renderMessages()}
+            {messageForm()}
+          </KeyboardAvoidingView>
+        );
       case "waiting":
         return (
-          <WaitingChatBody
-            talkTicket={chatState.talkTicketCollection[talkTicketKey]}
-            commonMessage={messages[0]}
-          />
+          <>
+            <WaitingChatBody
+              talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+              commonMessage={messages[0]}
+            />
+          </>
         );
       case "stopping":
       case "finishing":
         return (
           <StoppingChatBody
-            talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+            talkTicketKey={talkTicketKey}
             commonMessage={messages[0]}
           />
         );
@@ -276,15 +288,7 @@ const ChatTemplate: React.FC<Props> = (props) => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   return (
     <Block flex space="between" style={styles.container}>
-      <KeyboardAvoidingView
-        enabled
-        behavior="padding"
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={theme.SIZES.BASE * 3}
-      >
-        {renderBody()}
-        {messageForm()}
-      </KeyboardAvoidingView>
+      {renderBody()}
 
       {existUser ? (
         <ProfileModal

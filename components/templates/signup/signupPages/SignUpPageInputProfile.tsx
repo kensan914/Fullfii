@@ -29,7 +29,9 @@ const { width } = Dimensions.get("window");
 type Props = {
   goToPage: GoToPage;
 };
-const SignUpPageInputProfile: React.FC<Props> = () => {
+const SignUpPageInputProfile: React.FC<Props> = (props) => {
+  const { goToPage } = props;
+
   const authState = useAuthState();
   const authDispatch = useAuthDispatch();
   const profileDispatch = useProfileDispatch();
@@ -86,7 +88,7 @@ const SignUpPageInputProfile: React.FC<Props> = () => {
           isFinished: false,
         });
 
-        // startUpLoggedin(_token, states, dispatches);
+        goToPage(progressNum + 1);
       },
       catchCallback: () => {
         Alert.alert("新規登録に失敗しました。");
@@ -226,7 +228,7 @@ const SignUpPageInputProfile: React.FC<Props> = () => {
       contents={renderContents()}
       isLoading={isLoading}
       pressCallback={pressButton}
-      buttonTitle="登録してはじめる"
+      buttonTitle="登録する"
       checkCanNext={checkCanNext}
       statesRequired={[username, genderKey, jobKey, isAgreedUserpolicy]}
     />
