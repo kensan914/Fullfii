@@ -72,7 +72,7 @@ const Home: React.FC = () => {
   };
 
   const admobItem: AdmobItem = {
-    icon: "admob"
+    isAdmob: true
   }
 
   const items: HomeItems = [admobItem, firstItem, ...rooms];
