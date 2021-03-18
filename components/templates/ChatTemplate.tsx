@@ -75,7 +75,6 @@ const ChatTemplate: React.FC<Props> = (props) => {
   const authState = useAuthState();
 
   const turnOnRead = () => {
-    console.log("turnOnRead動いてんの？どうなん？？")
     authState.token &&
       chatDispatch({
         type: "READ_BY_ROOM",
@@ -83,27 +82,26 @@ const ChatTemplate: React.FC<Props> = (props) => {
         token: authState.token,
         isForceSendReadNotification: true,
       });
-  }
+  };
 
   const _handleAppStateChange = (nextAppState: AppStateStatus) => {
-    console.log(nextAppState,appState)
-    if (nextAppState === 'active' && appState.current==='background') {
-      console.log("おかえり")
-      turnOnRead()
+    if (nextAppState === "active" && appState.current === "background") {
+      turnOnRead();
     }
     // setAppState(nextAppState);
-    appState.current=nextAppState
-    console.log(appState)
-}
+    appState.current = nextAppState;
+  };
   useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange);
-    return (() => {
-      AppState.removeEventListener('change', _handleAppStateChange);
-    })
-  }, [])
+    AppState.addEventListener("change", _handleAppStateChange);
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
 
   useEffect(() => {
-    if (appState.current === 'active') {console.log("既読つけたね"); turnOnRead()}
+    if (appState.current === "active") {
+      turnOnRead();
+    }
     handleScrollBottom();
   }, [messages.length]);
 
