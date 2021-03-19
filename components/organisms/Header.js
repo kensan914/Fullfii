@@ -7,7 +7,7 @@ import Icon from "../atoms/Icon";
 import materialTheme from "../../constants/Theme";
 import { TalkMenuButton } from "./Chat";
 import Avatar from "../atoms/Avatar";
-import { useChatDispatch } from "../contexts/ChatContext";
+import { useChatDispatch, useChatState } from "../contexts/ChatContext";
 import { ProfileMenuButton } from "./ProfileMenuButton";
 import { checkiPhoneX } from "../modules/support";
 import { useProfileState } from "../contexts/ProfileContext";
@@ -46,10 +46,21 @@ const Header = (props) => {
   const profileState = useProfileState();
   const chatDispatch = useChatDispatch();
   const authState = useAuthState();
+  const chatState = useChatState();
 
   const renderRight = () => {
     const routeName = scene.route.name;
-    if (routeName === "Chat" && talkTicketKey)
+
+    console.log(chatState.talkTicketCollection);
+    console.log(talkTicketKey);
+    const talkStatusKey =
+      talkTicketKey && chatState.talkTicketCollection[talkTicketKey].status.key;
+    if (
+      routeName === "Chat" &&
+      talkTicketKey &&
+      talkStatusKey !== "stopping" &&
+      talkStatusKey !== "finishing"
+    )
       return (
         <TalkMenuButton
           key="TalkMenuButton"

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Block, Text } from "galio-framework";
+import { Block } from "galio-framework";
 import {
   ImageURISource,
   LayoutAnimation,
@@ -14,6 +14,7 @@ type Props = {
   style?: { [styleName: string]: string };
   diameter?: number;
   reductionRate?: number;
+  shadowColor?: string;
 };
 const SvgButton: React.FC<Props> = (props) => {
   const {
@@ -22,6 +23,7 @@ const SvgButton: React.FC<Props> = (props) => {
     onPress,
     diameter = 150,
     reductionRate = 0.95,
+    shadowColor = "#f08080",
   } = props;
 
   const [isPressed, setIsPressed] = useState(false);
@@ -75,7 +77,7 @@ const SvgButton: React.FC<Props> = (props) => {
               borderRadius:
                 (isPressed ? diameter * reductionRate : diameter) / 2,
 
-              shadowColor: "#f08080",
+              shadowColor: shadowColor,
               shadowOffset: {
                 width: 0,
                 height: isPressed ? 1 : 3,
