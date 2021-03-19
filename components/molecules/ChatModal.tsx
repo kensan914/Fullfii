@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, StyleSheet, Switch } from "react-native";
+import { Alert, Dimensions, StyleSheet, Switch } from "react-native";
 import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -11,6 +11,9 @@ import useShuffle from "../hooks/useShuffle";
 import { useProfileState } from "../contexts/ProfileContext";
 import { useAuthState } from "../contexts/AuthContext";
 import { COLORS } from "../../constants/Theme";
+import SvgButton from "../atoms/SvgButton";
+
+const { width } = Dimensions.get("screen");
 
 type Props = {
   isOpen: boolean;
@@ -104,19 +107,19 @@ const ChatModal: React.FC<Props> = (props) => {
               style={{ justifyContent: "center", marginTop: 20 }}
             >
               <Block flex={0.45} center>
-                <ModalButton
-                  icon="logout"
-                  iconFamily="AntDesign"
-                  colorLess
+                <SvgButton
+                  source={require("../../assets/icons/exit-room.svg")}
                   onPress={onPressStop}
+                  diameter={width / 5.5}
+                  shadowColor={"#a9a9a9"}
                 />
               </Block>
               <Block />
               <Block flex={0.45} center>
-                <ModalButton
-                  icon="loop"
-                  iconFamily="MaterialIcons"
+                <SvgButton
+                  source={require("../../assets/icons/pinkLoop.svg")}
                   onPress={onPressShuffle}
+                  diameter={width / 5.5}
                 />
               </Block>
             </Block>

@@ -14,6 +14,7 @@ import { logEvent } from "../modules/firebase/logEvent";
 import { useProfileState } from "../contexts/ProfileContext";
 import { TalkTicketKey } from "../types/Types.context";
 import { LottieSource } from "../types/Types";
+import SvgUri from "react-native-svg-uri";
 
 const { width } = Dimensions.get("screen");
 
@@ -53,7 +54,12 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
           logEvent("shuffle_option_button", {}, profileState);
         }}
       >
-        <Icon family="MaterialIcons" size={25} name="loop" color="gray" />
+        {/* <Icon family="MaterialIcons" size={25} name="loop" color="gray" /> */}
+        <SvgUri
+          width={24}
+          height={24}
+          source={require("../../assets/icons/pinkLoop.svg")}
+        />
         <ChatModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
