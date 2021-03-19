@@ -95,7 +95,6 @@ export const EndTalkScreen: React.FC<EndTalkScreenType> = (props) => {
     })();
   }, []);
 
-  // const showAdMobInterstitial = useAdMobInterstitial(ADMOB_UNIT_ID_AFTER_THX);
   const { request } = useAxios(
     URLJoin(BASE_URL, "rooms/", roomId, "close/"),
     "post",
