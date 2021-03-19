@@ -9,13 +9,20 @@ const Admob: React.FC<Props> = (props) => {
   const { adSize, adUnitId } = props;
 
   const [firebaseAdmobModule, setFirebaseAdmobModule] = useState();
+  const [nativeAdsModule, setNativeAdsModule] = useState();
   useEffect(() => {
     (async () => {
       if (!isExpo) {
         setFirebaseAdmobModule(await import("@react-native-firebase/admob"));
+        setNativeAdsModule(await import("react-native-admob-native-ads"));
       }
     })();
   }, []);
+
+  // if (nativeAdsModule) {
+  //   return <nativeAdsModule.NativeAdView
+  //   adUnitID={adUnitId} />
+  // }
 
   if (firebaseAdmobModule) {
     return (

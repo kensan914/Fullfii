@@ -602,7 +602,7 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
       const hour = now.getHours();
       const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
       message["messageId"] = "0";
-      message["message"] = `話し相手を探し中...。（最終更新：${hour}:${min}）`;
+      message["message"] = `話し相手を探しています（最終更新：${hour}:${min}）`;
       break;
     }
     case "stopping": {
