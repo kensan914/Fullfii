@@ -23,6 +23,10 @@
 #import <RNCPushNotificationIOS.h>
 /* push notification */
 
+/* https://developers.google.com/admob/ios/ios14?hl=ja#objective-c */
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import <AdSupport/AdSupport.h>
+
 @interface AppDelegate ()
 
 @property (nonatomic, strong) NSDictionary *launchOptions;
@@ -85,6 +89,15 @@
   /* push notification */
 
   return YES;
+}
+
+// https://developers.google.com/admob/ios/ios14?hl=ja#objective-c
+// (iOS14対応準備)react nativeで実装している日本語の情報が少なすぎて延期
+- (void)requestIDFA {
+  [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+    // Tracking authorization completed. Start loading ads here.
+    // [self loadAd];
+  }];
 }
 
 /* push notification https://qiita.com/iwashi1t/items/517cda73dba715025b6c */
