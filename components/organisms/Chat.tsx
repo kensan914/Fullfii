@@ -39,9 +39,10 @@ export const CommonMessage: React.FC<CommonMessageType> = (props) => {
 
 type TalkMenuButtonType = {
   talkTicketKey: TalkTicketKey;
+  disable?: boolean;
 };
 export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
-  const { talkTicketKey } = props;
+  const { talkTicketKey, disable = false } = props;
   const [isOpen, setIsOpen] = useState(false);
   const profileState = useProfileState();
 
@@ -55,11 +56,13 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
         }}
       >
         {/* <Icon family="MaterialIcons" size={25} name="loop" color="gray" /> */}
-        <SvgUri
-          width={24}
-          height={24}
-          source={require("../../assets/icons/pinkLoop.svg")}
-        />
+        {!disable && (
+          <SvgUri
+            width={24}
+            height={24}
+            source={require("../../assets/icons/pinkLoop.svg")}
+          />
+        )}
         <ChatModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}

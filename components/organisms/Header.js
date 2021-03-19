@@ -53,14 +53,12 @@ const Header = (props) => {
 
     const talkStatusKey =
       talkTicketKey && chatState.talkTicketCollection[talkTicketKey].status.key;
-    if (
-      routeName === "Chat" &&
-      talkTicketKey &&
-      talkStatusKey !== "stopping" &&
-      talkStatusKey !== "finishing"
-    )
+    if (routeName === "Chat" && talkTicketKey)
       return (
         <TalkMenuButton
+          disable={
+            talkStatusKey === "stopping" || talkStatusKey === "finishing"
+          }
           key="TalkMenuButton"
           navigation={navigation}
           talkTicketKey={talkTicketKey}
