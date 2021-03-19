@@ -1,7 +1,10 @@
-import { Dispatch, MutableRefObject, useEffect, useRef, useState } from "react";
-import { Alert } from "react-native";
-import { BASE_URL } from "../../constants/env";
-import { useAuthState } from "../contexts/AuthContext";
+import { Dispatch, MutableRefObject, useRef, useState } from "react";
+import {
+  ADMOB_UNIT_ID_AFTER_SHUFFLE,
+  BASE_URL,
+  isExpo,
+} from "../../constants/env";
+import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
 import { useChatDispatch, useChatState } from "../contexts/ChatContext";
 import { useProfileState } from "../contexts/ProfileContext";
 import { useAxios } from "../modules/axios";
@@ -12,6 +15,7 @@ import {
   TalkTicketKey,
 } from "../types/Types.context";
 import { logEvent } from "../modules/firebase/logEvent";
+import { showAdMobInterstitial } from "../molecules/Admob";
 
 const useShuffle = (
   talkTicketKey: TalkTicketKey,
@@ -41,6 +45,7 @@ const useShuffle = (
   const authState = useAuthState();
   const chatDispatch = useChatDispatch();
   const profileState = useProfileState();
+  const authDispatch = useAuthDispatch();
 
   /* talkTicket */
   const talkTicket = chatState.talkTicketCollection[talkTicketKey];
@@ -94,6 +99,13 @@ const useShuffle = (
         // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
         chatDispatch({ type: "TURN_OFF_DELAY" });
         setIsShowSpinner(false);
+
+        if (!isExpo) {
+          authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
+          showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
+            authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+          });
+        }
       },
       didRequestCallback: () => {
         // この後のchatDispatchを遅延する(同時にマッチしていた場合はSTART_TALKが遅延される)
