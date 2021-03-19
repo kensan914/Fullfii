@@ -41,8 +41,14 @@ const WaitingChatBody: React.FC<Props> = (props) => {
         flex={0.3}
         style={[styles.dividedContainer, styles.bottomContainer]}
       >
-        <Text bold color="#737373" size={15}>
-          話し相手が見つかり次第、通知でお知らせします。
+        <Text
+          bold
+          color="#737373"
+          size={15}
+          style={{ lineHeight: 20, textAlign: "center" }}
+        >
+          マッチするまで時間がかかる場合があります。{"\n"}
+          話し相手が見つかり次第通知でお知らせします。
         </Text>
       </Block>
     </Block>
