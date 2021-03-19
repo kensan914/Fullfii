@@ -51,8 +51,6 @@ const Header = (props) => {
   const renderRight = () => {
     const routeName = scene.route.name;
 
-    console.log(chatState.talkTicketCollection);
-    console.log(talkTicketKey);
     const talkStatusKey =
       talkTicketKey && chatState.talkTicketCollection[talkTicketKey].status.key;
     if (
