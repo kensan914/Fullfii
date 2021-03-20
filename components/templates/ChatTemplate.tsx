@@ -277,6 +277,7 @@ const ChatTemplate: React.FC<Props> = (props) => {
 
     switch (talkStatusKey) {
       case "talking":
+      case "finishing":
         return (
           <KeyboardAvoidingView
             enabled
@@ -298,7 +299,6 @@ const ChatTemplate: React.FC<Props> = (props) => {
           </>
         );
       case "stopping":
-      case "finishing":
         return (
           <StoppingChatBody
             talkTicketKey={talkTicketKey}
