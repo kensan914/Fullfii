@@ -185,21 +185,6 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
             }
           });
 
-        // 既にトークは開始されているが、バックでは終了している(なんとため？)←本文が表示されないバグを生んでいる
-        // talkTickets
-        //   .filter((talkTicket) => talkTicket.status.key !== "talking")
-        //   .forEach((talkTicket) => {
-        //     if (
-        //       _prevTalkTicketCollection[talkTicket.worry.key].status.key ===
-        //       "talking"
-        //     ) {
-        //       dispatches.chatDispatch({
-        //         type: "OVERWRITE_TALK_TICKET",
-        //         talkTicket: talkTicket,
-        //       });
-        //     }
-        //   });
-
         talkTickets
           .filter((talkTicket) => talkTicket.status.key === "finishing")
           .forEach((talkTicket) => {
@@ -207,11 +192,26 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
               _prevTalkTicketCollection[talkTicket.worry.key].status.key ===
               "talking"
             ) {
-              // 既にトークは開始されているが、バックでは終了している
+              // 既にトーク中であったが、quitからforegroundに復帰したらトークが終了していた。
               dispatches.chatDispatch({
                 type: "END_TALK",
                 talkTicketKey: talkTicket.worry.key,
               });
+            } else {
+              // quit中にトークの開始・終了が行われた。
+              if (talkTicket.room) {
+                dispatches.chatDispatch({
+                  type: "UPDATE_TALK_TICKETS",
+                  talkTickets: [talkTicket],
+                });
+                initConnectWsChat(
+                  talkTicket.room.id,
+                  token,
+                  states,
+                  dispatches,
+                  talkTicket
+                );
+              }
             }
           });
 
@@ -293,10 +293,11 @@ const handleChatMessage = (
         token,
       });
     }
-  } else if (data.type === "multi_chat_messages") {
-    const messages = data.messages as MessageJson[];
-    chatDispatch({ type: "MERGE_MESSAGES", talkTicketKey, messages, token });
   }
+  // else if (data.type === "multi_chat_messages") {
+  //   const messages = data.messages as MessageJson[];
+  //   chatDispatch({ type: "MERGE_MESSAGES", talkTicketKey, messages, token });
+  // }
 };
 
 type WsProps = {
@@ -321,6 +322,7 @@ const _connectWsChat = (wsProps: WsProps) => {
     callbackSuccess,
     talkTicket,
   } = wsProps;
+
   const wsSettings: WsSettings = {
     url: URLJoin(BASE_URL_WS, "chat/", roomId),
     typeIoTsOfResData: WsResChatIoTs,
@@ -348,6 +350,26 @@ const _connectWsChat = (wsProps: WsProps) => {
             });
           } else {
             callbackSuccess(data, ws);
+
+            if (
+              "notStoredMessages" in data &&
+              data.notStoredMessages.length > 0
+            ) {
+              const messages = data.notStoredMessages as MessageJson[];
+              dispatches.chatDispatch({
+                type: "MERGE_MESSAGES",
+                talkTicketKey,
+                messages,
+                token,
+              });
+            }
+
+            if ("isAlreadyEnded" in data && data.isAlreadyEnded) {
+              dispatches.chatDispatch({
+                type: "END_TALK",
+                talkTicketKey: talkTicketKey,
+              });
+            }
           }
           break;
 

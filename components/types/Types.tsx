@@ -288,8 +288,8 @@ export const WsResNotificationIoTs = t.union([
 export const WsResChatAuthIoTs = t.type({
   type: t.literal("auth"),
   roomId: t.string,
-  // targetUser: ProfileIoTs,
-  // profile: MeProfileIoTs,
+  notStoredMessages: t.array(MessageJsonIoTs),
+  isAlreadyEnded: t.boolean,
 });
 export const WsResChatMessageIoTs = t.type({
   type: t.literal("chat_message"),

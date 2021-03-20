@@ -351,7 +351,7 @@ const chatReducer = (
       if (
         _talkTicket.room.messages.length > 0 &&
         _talkTicket.room.messages[_talkTicket.room.messages.length - 1]
-          .messageId !== "-1"
+          .messageId !== "COMMON_MESSAGE_FINISHING_TALK"
       ) {
         _talkTicket.room.messages = [
           ..._talkTicket.room.messages,
@@ -560,33 +560,33 @@ const initRoomAdd: RoomAdd = Object.freeze({
 
 const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
   const message: CommonMessage = {
-    messageId: "0",
+    messageId: "INIT_COMMON_MESSAGE",
     message: "",
     time: new Date(Date.now()),
     common: true,
   };
   switch (type) {
     case "initSpeak": {
-      message["messageId"] = "0";
+      message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_SPEAKER";
       message[
         "message"
       ] = `話し相手が見つかりました！${userName}さんに話を聞いてもらいましょう。`;
       break;
     }
     case "initListen": {
-      message["messageId"] = "0";
+      message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_LISTENER";
       message[
         "message"
       ] = `話し相手が見つかりました！${userName}さんのお話を聞いてあげましょう。`;
       break;
     }
     case "alert": {
-      message["messageId"] = "2";
+      message["messageId"] = "COMMON_MESSAGE_ALERT";
       message["message"] = "残り5分で自動退室となります。";
       break;
     }
     case "end": {
-      message["messageId"] = "-1";
+      message["messageId"] = "COMMON_MESSAGE_FINISHING_TALK";
       if (timeOut) {
         message["message"] =
           "トークが開始されてから2週間が経過したため、自動退室されました。右上のボタンからトークを更新または終了してください。";
@@ -601,12 +601,12 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
       const now = new Date();
       const hour = now.getHours();
       const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
-      message["messageId"] = "0";
+      message["messageId"] = "COMMON_MESSAGE_WAITING_TALK";
       message["message"] = `話し相手を探しています（最終更新：${hour}:${min}）`;
       break;
     }
     case "stopping": {
-      message["messageId"] = "0";
+      message["messageId"] = "COMMON_MESSAGE_STOPPING_TALK";
       message["message"] = "タップして話し相手を探しましょう";
       break;
     }

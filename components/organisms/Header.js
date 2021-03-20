@@ -56,9 +56,7 @@ const Header = (props) => {
     if (routeName === "Chat" && talkTicketKey)
       return (
         <TalkMenuButton
-          disable={
-            talkStatusKey === "stopping" || talkStatusKey === "finishing"
-          }
+          disable={talkStatusKey === "stopping"}
           key="TalkMenuButton"
           navigation={navigation}
           talkTicketKey={talkTicketKey}
