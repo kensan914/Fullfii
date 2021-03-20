@@ -139,6 +139,8 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
       const _resData = resData as TalkInfoJson;
       const talkTickets = _resData["talkTickets"];
 
+      console.log(talkTickets);
+
       // connect wsChat
       const prevTalkTicketCollection = await asyncGetJson(
         "talkTicketCollection",
