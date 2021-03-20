@@ -15,6 +15,8 @@ import { useProfileState } from "../contexts/ProfileContext";
 import { TalkTicketKey } from "../types/Types.context";
 import { LottieSource } from "../types/Types";
 import SvgUri from "react-native-svg-uri";
+import { NavigationEvents } from "@react-navigation/compat";
+import { useNavigation } from "@react-navigation/core";
 
 const { width } = Dimensions.get("screen");
 
@@ -45,7 +47,6 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
   const { talkTicketKey, disable = false } = props;
   const [isOpen, setIsOpen] = useState(false);
   const profileState = useProfileState();
-
   return (
     <>
       <TouchableOpacity
@@ -86,6 +87,7 @@ export const EndTalkScreen: React.FC<EndTalkScreenType> = (props) => {
   const authDispatch = useAuthDispatch();
   const profileState = useProfileState();
   const [lottieHeartSource, setLottieHeartSource] = useState<LottieSource>();
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -121,6 +123,9 @@ export const EndTalkScreen: React.FC<EndTalkScreenType> = (props) => {
           closeChatModal();
           authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
         }
+      },
+      finallyCallback: () => {
+        navigation.navigate("Home");
       },
       token: token,
       limitRequest: 1,

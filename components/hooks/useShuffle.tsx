@@ -15,6 +15,7 @@ import {
   TalkTicketKey,
 } from "../types/Types.context";
 import { logEvent } from "../modules/firebase/logEvent";
+import { useNavigation } from "@react-navigation/core";
 import { showAdMobInterstitial } from "../molecules/Admob";
 
 const useShuffle = (
@@ -45,6 +46,7 @@ const useShuffle = (
   const authState = useAuthState();
   const chatDispatch = useChatDispatch();
   const profileState = useProfileState();
+  const navigation = useNavigation();
   const authDispatch = useAuthDispatch();
 
   /* talkTicket */
@@ -71,8 +73,54 @@ const useShuffle = (
 
   /* ref */
   const roomId = useRef<string>();
+  // HACK:
+  const { request: requestShuffle } = useAxios(
+    URLJoin(BASE_URL, "talk-ticket/", talkTicket.id),
+    "post",
+    TalkTicketJsonIoTs,
+    {
+      thenCallback: (resData) => {
+        const _resData = resData as TalkTicketJson;
+        roomId.current = talkTicket.room.id;
+        const newTalkTicketJson = _resData;
 
-  const { request } = useAxios(
+        chatDispatch({
+          type: "OVERWRITE_TALK_TICKET",
+          talkTicket: newTalkTicketJson,
+        });
+        if (talkTicket.status.key === "talking") {
+          setIsOpenEndTalk(true);
+        } else {
+          closeChatModal();
+          if (!isExpo) {
+            authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
+            showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
+              authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+            });
+          }
+        }
+      },
+      catchCallback: () => {
+        closeChatModal();
+      },
+      finallyCallback: () => {
+        // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
+        chatDispatch({ type: "TURN_OFF_DELAY" });
+        setIsShowSpinner(false);
+
+      },
+      didRequestCallback: () => {
+        // この後のchatDispatchを遅延する(同時にマッチしていた場合はSTART_TALKが遅延される)
+        chatDispatch({
+          type: "TURN_ON_DELAY",
+          excludeType: ["OVERWRITE_TALK_TICKET"],
+        });
+      },
+      token: authState.token ? authState.token : "",
+    }
+  );
+
+  const { request: requestStop } = useAxios(
     URLJoin(BASE_URL, "talk-ticket/", talkTicket.id),
     "post",
     TalkTicketJsonIoTs,
@@ -99,11 +147,11 @@ const useShuffle = (
         // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
         chatDispatch({ type: "TURN_OFF_DELAY" });
         setIsShowSpinner(false);
-
         if (!isExpo) {
           authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
           showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
             authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+            navigation.navigate("Home");
           });
         }
       },
@@ -134,7 +182,7 @@ const useShuffle = (
           profileState
         );
         setIsShowSpinner(true);
-        request({
+        requestStop({
           data: {
             is_speaker: isSpeaker,
             ...(isSecretGender
@@ -146,6 +194,7 @@ const useShuffle = (
             status: "stopping",
           },
         });
+
       },
       cancelOnPress: () => setCanPressBackdrop(true),
     });
@@ -184,7 +233,7 @@ const useShuffle = (
           profileState
         );
         setIsShowSpinner(true);
-        request({
+        requestShuffle({
           data: {
             is_speaker: isSpeaker,
             can_talk_heterosexual: canTalkHeterosexual,
