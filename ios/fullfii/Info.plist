@@ -62,7 +62,7 @@
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow fullfii to access your reminders</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<string>トラッキングを許可すると広告をカスタマイズできます。</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

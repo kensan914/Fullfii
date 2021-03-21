@@ -80,7 +80,29 @@ const StartUpManager: React.FC = (props) => {
     }
   }, [meProfileTemp, states.authState.token, states.authState.status]);
 
+  // useEffect(() => {
+  //   // サインアップ終了済み
+  //   if (states.authState.status === "Authenticated") {
+  //     (async () => {
+  //       const appTrackingTransparencyModule = await import(
+  //         "../components/modules/appTrackingTransparency"
+  //       );
+  //       appTrackingTransparencyModule.requestPermissionAppTrackingTransparency();
+  //     })();
+  //   }
+  // }, [states.authState.status]);
+
   useEffect(() => {
+    (async () => {
+      const appTrackingTransparencyModule = await import(
+        "../components/modules/appTrackingTransparency"
+      );
+      appTrackingTransparencyModule.requestPermissionAppTrackingTransparency();
+    })();
+  }, []);
+
+  useEffect(() => {
+    // アカウント作成済み
     states.authState.token &&
       startUpLoggedin(
         states.authState.token,
