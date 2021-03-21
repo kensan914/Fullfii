@@ -53,3 +53,7 @@ export let isExpo = false;
 export const setIsExpo = (val: boolean): void => {
   isExpo = val;
 };
+
+import Config from "react-native-config";
+export const CAN_APP_TRACKING_TRANSPARENCY =
+  Config.CAN_APP_TRACKING_TRANSPARENCY === "false" ? false : true;

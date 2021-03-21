@@ -276,3 +276,7 @@ buck-out/
 web-build/
 
 .DS_Store
+
+# Xcode12以前では、Permission-AppTrackingTransparencyをpod installしたら動かないのでGit管理から外す
+ios/Podfile
+.env

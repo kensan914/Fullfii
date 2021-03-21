@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Block } from "galio-framework";
 
 import useAllContext from "../components/contexts/ContextUtils";
-import { BASE_URL, BASE_URL_WS, isExpo } from "../constants/env";
+import {
+  BASE_URL,
+  BASE_URL_WS,
+  CAN_APP_TRACKING_TRANSPARENCY,
+  isExpo,
+} from "../constants/env";
 import {
   URLJoin,
   asyncGetJson,
@@ -80,25 +85,16 @@ const StartUpManager: React.FC = (props) => {
     }
   }, [meProfileTemp, states.authState.token, states.authState.status]);
 
-  // useEffect(() => {
-  //   // サインアップ終了済み
-  //   if (states.authState.status === "Authenticated") {
-  //     (async () => {
-  //       const appTrackingTransparencyModule = await import(
-  //         "../components/modules/appTrackingTransparency"
-  //       );
-  //       appTrackingTransparencyModule.requestPermissionAppTrackingTransparency();
-  //     })();
-  //   }
-  // }, [states.authState.status]);
-
   useEffect(() => {
-    (async () => {
-      const appTrackingTransparencyModule = await import(
-        "../components/modules/appTrackingTransparency"
-      );
-      appTrackingTransparencyModule.requestPermissionAppTrackingTransparency();
-    })();
+    // XCode12じゃない開発者への対処
+    if (CAN_APP_TRACKING_TRANSPARENCY) {
+      (async () => {
+        const appTrackingTransparencyModule = await import(
+          "../components/modules/appTrackingTransparency"
+        );
+        appTrackingTransparencyModule.requestPermissionAppTrackingTransparency();
+      })();
+    }
   }, []);
 
   useEffect(() => {

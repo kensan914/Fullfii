@@ -5,7 +5,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 target 'fullfii' do
   rnPrefix = '../node_modules/react-native'
-  rnPermissionsPrefix = '../node_modules/react-native-permissions/ios'
+  # rnPermissionsPrefix = '../node_modules/react-native-permissions/ios'
 
   # React Native and its dependencies
   pod 'FBLazyVector', :path => "#{rnPrefix}/Libraries/FBLazyVector"
@@ -39,7 +39,7 @@ target 'fullfii' do
   pod 'glog', :podspec => "#{rnPrefix}/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
   # Other native modules
-  pod 'Permission-AppTrackingTransparency', :path => "#{rnPermissionsPrefix}/AppTrackingTransparency" # https://github.com/zoontek/react-native-permissions
+  # pod 'Permission-AppTrackingTransparency', :path => "#{rnPermissionsPrefix}/AppTrackingTransparency" # https://github.com/zoontek/react-native-permissions
 
   # Automatically detect installed unimodules
   use_unimodules!
