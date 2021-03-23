@@ -587,26 +587,26 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
   switch (type) {
     case "approving": {
       message["messageId"] = "COMMON_MESSAGE_START_APPROVING_TALK";
-      message["message"] = "条件に合う話し相手がみつかりました。";
+      message["message"] = "条件に合う話し相手がみつかりました";
       break;
     }
     case "initSpeak": {
       message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_SPEAKER";
       message[
         "message"
-      ] = `話し相手が見つかりました！${userName}さんに話を聞いてもらいましょう。`;
+      ] = `話し相手が見つかりました！${userName}さんに話を聞いてもらいましょう`;
       break;
     }
     case "initListen": {
       message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_LISTENER";
       message[
         "message"
-      ] = `話し相手が見つかりました！${userName}さんのお話を聞いてあげましょう。`;
+      ] = `話し相手が見つかりました！${userName}さんのお話を聞いてあげましょう`;
       break;
     }
     case "alert": {
       message["messageId"] = "COMMON_MESSAGE_ALERT";
-      message["message"] = "残り5分で自動退室となります。";
+      message["message"] = "残り5分で自動退室となります";
       break;
     }
     case "end": {
@@ -626,12 +626,14 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
       const hour = now.getHours();
       const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
       message["messageId"] = "COMMON_MESSAGE_WAITING_TALK";
-      message["message"] = `話し相手を探しています（最終更新：${hour}:${min}）`;
+      message[
+        "message"
+      ] = `あなたに合う話し相手を探しています（最終更新：${hour}:${min}）`;
       break;
     }
     case "stopping": {
       message["messageId"] = "COMMON_MESSAGE_STOPPING_TALK";
-      message["message"] = "タップして話し相手を探しましょう";
+      message["message"] = "タップしてあなたに合う話し相手を探しましょう";
       break;
     }
   }

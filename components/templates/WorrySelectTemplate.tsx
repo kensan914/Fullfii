@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Dimensions } from "react-native";
-import { Block } from "galio-framework";
+import { Block, Text } from "galio-framework";
 
 import BubbleList from "../organisms/BubbleList";
 import { useProfileState } from "../contexts/ProfileContext";
@@ -14,7 +14,7 @@ import {
   BASE_URL,
   isExpo,
 } from "../../constants/env";
-
+import { COLORS } from "../../constants/Theme";
 import { useAuthState } from "../contexts/AuthContext";
 import { useChatDispatch, useChatState } from "../contexts/ChatContext";
 import { useEffect } from "react";
@@ -143,7 +143,12 @@ const WorrySelectTemplate: React.FC = () => {
 
   return (
     <Block flex center style={styles.container}>
-      <Block flex={0.8}>
+      <Block flex={0.15} style={styles.title}>
+        <Text size={22} bold color={COLORS.PINK}>
+          あなたの悩みをおしえて下さい
+        </Text>
+      </Block>
+      <Block flex={0.65}>
         <BubbleList
           items={Object.values(genreOfWorries)}
           limitLines={isHigherDevice ? 3 /* before: 5 */ : 3} // 悩み7個で5行だと配置が不自然になるため
@@ -175,6 +180,12 @@ const styles = StyleSheet.create({
   container: {
     width: width,
     backgroundColor: "white",
+  },
+  title: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 22,
+    // backgroundColor: "red",
   },
   list: {
     width: width,

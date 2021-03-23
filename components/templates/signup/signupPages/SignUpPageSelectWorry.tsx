@@ -85,11 +85,11 @@ const SignUpPageSelectWorry: React.FC<Props> = (props) => {
   return (
     <SignUpPageTemplate
       title="あなたの悩みをおしえて下さい。"
-      subTitle="当てはまる悩みを一回タップ、合計で3つ選択してください。完了したら次へのボタンを押してください。"
+      subTitle="当てはまる悩みを一回タップ、合計で3つ選択してください。完了したら「プロフィールの作成に進む」のボタンを押してください。"
       contents={renderContents()}
       isLoading={false}
       pressCallback={pressButton}
-      buttonTitle="次へ"
+      buttonTitle="プロフィールの作成に進む"
       checkCanNext={checkCanNext}
       statesRequired={[worriesCollection]}
     />

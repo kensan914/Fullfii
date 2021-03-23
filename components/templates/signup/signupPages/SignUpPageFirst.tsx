@@ -22,10 +22,10 @@ const SignUpPageFirst: React.FC<Props> = (props) => {
   return (
     <SignUpPageTemplate
       title={"はじめまして" + "\n" + "ようこそ、Fullfiiへ"}
-      subTitle="これから使い方の説明を始めていきます。"
+      subTitle="これから簡単な使い方の説明とプロフィールの作成を始めていきます。"
       isLoading={false}
       pressCallback={pressButton}
-      buttonTitle="次へ"
+      buttonTitle="使い方を見る"
     />
   );
 };

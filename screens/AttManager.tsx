@@ -31,7 +31,7 @@ const AttManager: React.FC = (props) => {
     if (
       attModule &&
       !requested.current &&
-      authState.status === "Authenticated"
+      authState.signupBuffer.worries.length > 0
     ) {
       attModule.checkPermissionATT(
         () => {
@@ -45,7 +45,7 @@ const AttManager: React.FC = (props) => {
     } else if (attModule === null) {
       requested.current = true;
     }
-  }, [attModule, authState.status]);
+  }, [attModule, authState.signupBuffer.worries.length]);
 
   const onOpenRequestPermissionDialog = () => {
     if (attModule) {

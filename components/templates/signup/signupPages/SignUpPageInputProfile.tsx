@@ -223,12 +223,12 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
 
   return (
     <SignUpPageTemplate
-      title="新規登録"
-      subTitle="ユーザ名・性別・職業を教えて下さい。"
+      title="プロフィールの作成"
+      subTitle="あなたの話し相手と繋がるために、ユーザ名・性別・職業を教えて下さい。"
       contents={renderContents()}
       isLoading={isLoading}
       pressCallback={pressButton}
-      buttonTitle="登録する"
+      buttonTitle="作成して最後のステップに進む"
       checkCanNext={checkCanNext}
       statesRequired={[username, genderKey, jobKey, isAgreedUserpolicy]}
     />
