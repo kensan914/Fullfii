@@ -4,7 +4,6 @@ import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 import Spinner from "react-native-loading-spinner-overlay";
 
-import ModalButton from "../atoms/ModalButton";
 import { EndTalkScreenType } from "../organisms/Chat";
 import { TalkTicketKey } from "../types/Types.context";
 import useShuffle from "../hooks/useShuffle";
@@ -18,7 +17,7 @@ const { width } = Dimensions.get("screen");
 type Props = {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  EndTalkScreen: React.FC<EndTalkScreenType>;
+  EndTalkScreen?: React.FC<EndTalkScreenType>;
   talkTicketKey: TalkTicketKey;
 };
 const ChatModal: React.FC<Props> = (props) => {
@@ -126,7 +125,7 @@ const ChatModal: React.FC<Props> = (props) => {
           </Block>
         </Block>
 
-        {roomId.current && authState.token ? (
+        {roomId.current && authState.token && EndTalkScreen ? (
           <EndTalkScreen
             isOpen={isOpenEndTalk}
             closeChatModal={closeChatModal}

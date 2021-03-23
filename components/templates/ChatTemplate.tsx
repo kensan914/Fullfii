@@ -38,6 +38,7 @@ import {
 import { useAuthState } from "../contexts/AuthContext";
 import WaitingChatBody from "../organisms/WaitingChatBody";
 import StoppingChatBody from "../organisms/StoppingChatBody";
+import ApprovingChatBody from "../organisms/ApprovingChatBody";
 
 const { width } = Dimensions.get("screen");
 
@@ -289,14 +290,22 @@ const ChatTemplate: React.FC<Props> = (props) => {
             {messageForm()}
           </KeyboardAvoidingView>
         );
+
+      case "approving":
+        return (
+          <ApprovingChatBody
+            talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+            talkTicketKey={talkTicketKey}
+            commonMessage={messages[0]}
+          />
+        );
+
       case "waiting":
         return (
-          <>
-            <WaitingChatBody
-              talkTicket={chatState.talkTicketCollection[talkTicketKey]}
-              commonMessage={messages[0]}
-            />
-          </>
+          <WaitingChatBody
+            talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+            commonMessage={messages[0]}
+          />
         );
       case "stopping":
         return (
