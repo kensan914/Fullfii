@@ -108,6 +108,25 @@ const chatReducer = (
       };
     }
 
+    case "START_APPROVING_TALK": {
+      /** マッチング時に実行. 承認の準備. initMessage追加.
+       * @param {Object} action [type, talkTicketKey, ws] */
+
+      _talkTicketCollection = prevState.talkTicketCollection;
+      _talkTicket = _talkTicketCollection[action.talkTicketKey];
+      if (!_talkTicket) return { ...prevState };
+
+      // initMessage付与。
+      _talkTicket.room.messages = [geneCommonMessage("approving")];
+
+      _talkTicketCollection[action.talkTicketKey] = _talkTicket;
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      return {
+        ...prevState,
+        talkTicketCollection: _talkTicketCollection,
+      };
+    }
+
     case "START_TALK": {
       /** トーク開始時(init)に実行. initMessage追加 & set ws.
        * @param {Object} action [type, talkTicketKey, ws] */
@@ -566,6 +585,11 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
     common: true,
   };
   switch (type) {
+    case "approving": {
+      message["messageId"] = "COMMON_MESSAGE_START_APPROVING_TALK";
+      message["message"] = "条件に合う話し相手がみつかりました。";
+      break;
+    }
     case "initSpeak": {
       message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_SPEAKER";
       message[

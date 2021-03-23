@@ -32,6 +32,7 @@ import {
   TalkTicketCollectionAsync,
 } from "./components/types/Types.context";
 import { Assets } from "./components/types/Types";
+import AttManager from "./screens/AttManager";
 
 LogBox.ignoreAllLogs(true);
 
@@ -146,8 +147,10 @@ const RootNavigator: React.FC<Props> = (props) => {
             <ChatProvider talkTicketCollection={talkTicketCollection}>
               <GalioProvider theme={materialTheme}>
                 <StartUpManager>
-                  {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-                  <Screens {...props} />
+                  <AttManager>
+                    {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+                    <Screens {...props} />
+                  </AttManager>
                 </StartUpManager>
               </GalioProvider>
             </ChatProvider>

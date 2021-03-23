@@ -139,6 +139,7 @@ export type ChatActionType =
       type: "UPDATE_TALK_TICKETS";
       talkTickets: (TalkTicket | TalkTicketJson)[];
     }
+  | { type: "START_APPROVING_TALK"; talkTicketKey: TalkTicketKey }
   | { type: "START_TALK"; talkTicketKey: TalkTicketKey; ws: WebSocket }
   | { type: "RESTART_TALK"; talkTicketKey: TalkTicketKey; ws: WebSocket }
   | { type: "RESTART_TALK_ONLY_MESSAGE"; talkTicketKey: TalkTicketKey }

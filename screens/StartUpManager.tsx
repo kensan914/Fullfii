@@ -2,12 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Block } from "galio-framework";
 
 import useAllContext from "../components/contexts/ContextUtils";
-import {
-  BASE_URL,
-  BASE_URL_WS,
-  CAN_APP_TRACKING_TRANSPARENCY,
-  isExpo,
-} from "../constants/env";
+import { BASE_URL, BASE_URL_WS, isExpo } from "../constants/env";
 import {
   URLJoin,
   asyncGetJson,
@@ -86,18 +81,6 @@ const StartUpManager: React.FC = (props) => {
   }, [meProfileTemp, states.authState.token, states.authState.status]);
 
   useEffect(() => {
-    // XCode12じゃない開発者への対処
-    if (CAN_APP_TRACKING_TRANSPARENCY) {
-      (async () => {
-        const appTrackingTransparencyModule = await import(
-          "../components/modules/appTrackingTransparency"
-        );
-        appTrackingTransparencyModule.requestPermissionAppTrackingTransparency();
-      })();
-    }
-  }, []);
-
-  useEffect(() => {
     // アカウント作成済み
     states.authState.token &&
       startUpLoggedin(
@@ -165,6 +148,25 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
       if (prevTalkTicketCollection) {
         // 毎起動時
         const _prevTalkTicketCollection = prevTalkTicketCollection as TalkTicketCollection;
+
+        // 復帰時, approvingだったら
+        talkTickets
+          .filter((talkTicket) => talkTicket.status.key === "approving")
+          .forEach((talkTicket) => {
+            if (
+              _prevTalkTicketCollection[talkTicket.worry.key].status.key !==
+              "approving"
+            ) {
+              // 未だトークの承認準備がされていない
+              dispatches.chatDispatch({
+                type: "UPDATE_TALK_TICKETS",
+                talkTickets: [talkTicket],
+              });
+              startApprovingTalk(dispatches.chatDispatch, talkTicket.worry.key);
+            }
+          });
+
+        // 復帰時, talkingだったら
         talkTickets
           .filter((talkTicket) => talkTicket.status.key === "talking")
           .forEach((talkTicket) => {
@@ -186,23 +188,21 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
                     talkTicket
                   );
             } else {
-              // トークが開始されていない
+              // 未だトークが開始されていない
               if (talkTicket.room) {
                 dispatches.chatDispatch({
                   type: "UPDATE_TALK_TICKETS",
                   talkTickets: [talkTicket],
                 });
-                initConnectWsChat(
-                  talkTicket.room.id,
-                  token,
-                  states,
-                  dispatches,
-                  talkTicket
+                startApprovingTalk(
+                  dispatches.chatDispatch,
+                  talkTicket.worry.key
                 );
               }
             }
           });
 
+        // 復帰時, finishingだったら
         talkTickets
           .filter((talkTicket) => talkTicket.status.key === "finishing")
           .forEach((talkTicket) => {
@@ -222,13 +222,18 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
                   type: "UPDATE_TALK_TICKETS",
                   talkTickets: [talkTicket],
                 });
-                initConnectWsChat(
-                  talkTicket.room.id,
-                  token,
-                  states,
-                  dispatches,
-                  talkTicket
+
+                // 実際ここでやってるのはapprovingのcommonMessageの追加のみ
+                startApprovingTalk(
+                  dispatches.chatDispatch,
+                  talkTicket.worry.key
                 );
+
+                // 実際ここでやってるのはtalk endのcommonMessageの追加のみ
+                dispatches.chatDispatch({
+                  type: "END_TALK",
+                  talkTicketKey: talkTicket.worry.key,
+                });
               }
             }
           });
@@ -251,13 +256,14 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
           .filter((talkTicket) => talkTicket.status.key === "talking")
           .forEach((talkTicket) => {
             if (talkTicket.room) {
-              initConnectWsChat(
-                talkTicket.room.id,
-                token,
-                states,
-                dispatches,
-                talkTicket
-              );
+              startApprovingTalk(dispatches.chatDispatch, talkTicket.worry.key);
+              // initConnectWsChat(
+              //   talkTicket.room.id,
+              //   token,
+              //   states,
+              //   dispatches,
+              //   talkTicket
+              // );
             }
           });
       }
@@ -446,13 +452,13 @@ const _connectWsChat = (wsProps: WsProps) => {
   new Ws(wsSettings);
 };
 
-const initConnectWsChat = (
+export const initConnectWsChat = (
   roomId: string,
   token: string,
   states: States,
   dispatches: Dispatches,
   talkTicket: TalkTicketJson
-) => {
+): void => {
   _connectWsChat({
     roomId,
     token,
@@ -467,6 +473,16 @@ const initConnectWsChat = (
       });
     },
     talkTicket,
+  });
+};
+
+const startApprovingTalk = (
+  chatDispatch: ChatDispatch,
+  _talkTicketKey: TalkTicketKey
+): void => {
+  chatDispatch({
+    type: "START_APPROVING_TALK",
+    talkTicketKey: _talkTicketKey,
   });
 };
 
@@ -522,12 +538,9 @@ const connectWsNotification = (
               type: "UPDATE_TALK_TICKETS",
               talkTickets: [data.talkTicket],
             });
-            initConnectWsChat(
-              data.roomId,
-              token,
-              states,
-              dispatches,
-              data.talkTicket
+            startApprovingTalk(
+              dispatches.chatDispatch,
+              data.talkTicket.worry.key
             );
           }
         } else if (data.status === "end") {

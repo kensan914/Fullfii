@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Dimensions, ScrollView, Alert } from "react-native";
-import { Block, Text, theme, Button, Icon } from "galio-framework";
+import { Block, Text, theme, Button } from "galio-framework";
 import Modal from "react-native-modal";
 import LottieView from "lottie-react-native";
 
@@ -15,7 +15,6 @@ import { useProfileState } from "../contexts/ProfileContext";
 import { TalkTicketKey } from "../types/Types.context";
 import { LottieSource } from "../types/Types";
 import SvgUri from "react-native-svg-uri";
-import { NavigationEvents } from "@react-navigation/compat";
 import { useNavigation } from "@react-navigation/core";
 
 const { width } = Dimensions.get("screen");
@@ -52,8 +51,10 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
       <TouchableOpacity
         style={[styles.TalkMenuButton]}
         onPress={() => {
-          setIsOpen(true);
-          logEvent("shuffle_option_button", {}, profileState);
+          if (!disable) {
+            setIsOpen(true);
+            logEvent("shuffle_option_button", {}, profileState);
+          }
         }}
       >
         {/* <Icon family="MaterialIcons" size={25} name="loop" color="gray" /> */}
