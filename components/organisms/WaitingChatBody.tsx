@@ -47,8 +47,8 @@ const WaitingChatBody: React.FC<Props> = (props) => {
           size={15}
           style={{ lineHeight: 20, textAlign: "center" }}
         >
-          しばらく待ってもマッチしない場合は、シャッフルの条件を変えてみましょう。{"\n"}
-          話し相手が見つかり次第通知でお知らせします。
+          話し相手が見つかり次第通知でお知らせします。{"\n"}
+          待ち時間が長い場合は、シャッフルの条件を変えてみるのも一つの手です。
         </Text>
       </Block>
     </Block>

@@ -138,8 +138,18 @@ const SignUpPageShuffleExplain: React.FC<Props> = (props) => {
             width: width,
           }}
         >
-          <Text bold size={18} color={COLORS.PINK}>
-            一期一会のチャット相談アプリです。
+          <Text
+            bold
+            size={18}
+            color={COLORS.PINK}
+            style={{
+              height: 40,
+              width: width,
+              paddingHorizontal: 22,
+              textAlign: "center",
+            }}
+          >
+            あなたに合う相手と話せるチャット相談アプリです。
           </Text>
         </Block>
       </Block>
@@ -153,7 +163,7 @@ const SignUpPageShuffleExplain: React.FC<Props> = (props) => {
       contents={renderContents()}
       isLoading={false}
       pressCallback={pressButton}
-      buttonTitle="次へ"
+      buttonTitle="次に進む"
     />
   );
 };

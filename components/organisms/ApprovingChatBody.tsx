@@ -105,6 +105,7 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
               justifyContent: "center",
               margin: 20,
               borderRadius: 20,
+              paddingVertical: 30,
             },
           ]}
           flex={0.5}
@@ -187,7 +188,8 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
             }}
           >
             <Text bold color="white" size={16}>
-              メッセージを送信する
+              {/* メッセージを送信する */}
+              話してみる
             </Text>
           </Button>
 
