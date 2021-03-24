@@ -87,7 +87,11 @@ const AttModal: React.FC<Props> = (props) => {
           広告をカスタマイズしましょう
         </Text>
         <Text style={styles.attDescription}>
-          Fullfiiは広告の収益に支えられています。広告の数を増やさずにより適切な広告を表示するには、必要な情報の利用をFullfiiに許可してください。アプリに表示される広告が皆様に合わせてカスタマイズされます。
+          Fullfiiは広告の収益に支えられています。
+          <Text color="red">関連性の低い広告</Text>
+          を表示させずにより
+          <Text color="blue">適切な広告</Text>
+          を表示するには、必要な情報の利用をFullfiiに許可してください。アプリに表示される広告が皆様に合わせてカスタマイズされます。
         </Text>
         <Button
           round
@@ -97,10 +101,10 @@ const AttModal: React.FC<Props> = (props) => {
           onPress={onPress}
         >
           <Text size={16} color="white" bold>
-            カスタマイズした広告をオンにする
+            次の画面で設定する
           </Text>
         </Button>
-        <Button
+        {/* <Button
           round
           color="transparent"
           style={styles.attOffButton}
@@ -109,7 +113,7 @@ const AttModal: React.FC<Props> = (props) => {
           <Text size={16} color="#80ccf0" bold>
             関連性の低い広告を引き続き表示する
           </Text>
-        </Button>
+        </Button> */}
       </Block>
     </Modal>
   );
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
   },
   attOnButton: {
     width: "100%",
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   attOffButton: {
     width: "100%",
