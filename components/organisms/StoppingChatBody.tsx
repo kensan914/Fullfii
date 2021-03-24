@@ -27,7 +27,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
     onPressShuffle,
     isSecretJob,
     isSecretGender,
-  } = useShuffle(talkTicketKey);
+  } = useShuffle(talkTicketKey, undefined, false);
 
   const profileState = useProfileState();
 
