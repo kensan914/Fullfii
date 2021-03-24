@@ -20,8 +20,8 @@ import { showAdMobInterstitial } from "../molecules/Admob";
 
 const useShuffle = (
   talkTicketKey: TalkTicketKey,
-  setIsOpen?: (val: boolean) => void
-  // isShowIntersticial?: boolean,
+  setIsOpen?: (val: boolean) => void,
+  isShowIntersticial = true
 ): {
   canTalkHeterosexual: boolean;
   setCanTalkHeterosexual: Dispatch<boolean>;
@@ -93,7 +93,7 @@ const useShuffle = (
           setIsOpenEndTalk(true);
         } else {
           closeChatModal();
-          if (!isExpo) {
+          if (!isExpo && isShowIntersticial) {
             authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
             showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
               authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
@@ -147,7 +147,7 @@ const useShuffle = (
         // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
         chatDispatch({ type: "TURN_OFF_DELAY" });
         setIsShowSpinner(false);
-        if (!isExpo) {
+        if (!isExpo && isShowIntersticial) {
           authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
           showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
             authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
