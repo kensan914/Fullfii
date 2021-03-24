@@ -21,6 +21,7 @@ import { showAdMobInterstitial } from "../molecules/Admob";
 const useShuffle = (
   talkTicketKey: TalkTicketKey,
   setIsOpen?: (val: boolean) => void
+  // isShowIntersticial?: boolean,
 ): {
   canTalkHeterosexual: boolean;
   setCanTalkHeterosexual: Dispatch<boolean>;
@@ -107,7 +108,6 @@ const useShuffle = (
         // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
         chatDispatch({ type: "TURN_OFF_DELAY" });
         setIsShowSpinner(false);
-
       },
       didRequestCallback: () => {
         // この後のchatDispatchを遅延する(同時にマッチしていた場合はSTART_TALKが遅延される)
@@ -194,7 +194,6 @@ const useShuffle = (
             status: "stopping",
           },
         });
-
       },
       cancelOnPress: () => setCanPressBackdrop(true),
     });
