@@ -88,9 +88,9 @@ const AttModal: React.FC<Props> = (props) => {
         </Text>
         <Text style={styles.attDescription}>
           Fullfiiは広告の収益に支えられています。
-          <Text color="red">関連性の低い広告</Text>
+          <Text color="#ff5576">関連性の低い広告</Text>
           を表示させずにより
-          <Text color="blue">適切な広告</Text>
+          <Text color="#1997d2">適切な広告</Text>
           を表示するには、必要な情報の利用をFullfiiに許可してください。アプリに表示される広告が皆様に合わせてカスタマイズされます。
         </Text>
         <Button
