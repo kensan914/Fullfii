@@ -1,5 +1,5 @@
-import React from "react";
-import { Alert, Dimensions, StyleSheet, Switch } from "react-native";
+import React, {useState} from "react";
+import { Alert, Dimensions, StyleSheet, Switch, TextInput } from "react-native";
 import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 import Spinner from "react-native-loading-spinner-overlay";
@@ -11,6 +11,7 @@ import { useProfileState } from "../contexts/ProfileContext";
 import { useAuthState } from "../contexts/AuthContext";
 import { COLORS } from "../../constants/Theme";
 import SvgButton from "../atoms/SvgButton";
+import { between } from "fp-ts/lib/Ord";
 
 const { width } = Dimensions.get("screen");
 
@@ -23,8 +24,28 @@ type Props = {
 const ChatModal: React.FC<Props> = (props) => {
   const { isOpen, setIsOpen, EndTalkScreen, talkTicketKey } = props;
 
-  const profileState = useProfileState();
   const authState = useAuthState();
+//↓でstate値を引き継げるのか？
+    // const { prevValue, screen: profileInputScreen } = route.params;
+  const prevValue = "こんにちは"
+
+  const [value, setValue] = useState(prevValue);
+
+  const placeholder = ():string[] => {
+    if (talkTicketKey==="ただ話したい") {
+      if (isSpeaker) {
+        return ["今の気分は？","話したいことはなんですか？","今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！"]
+      } else {
+        return ["今の気分は？","一緒に話したいことはなんですか？","今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！"]
+      }
+    } else {
+      if (isSpeaker) {
+        return ["悩みやモヤモヤを？","悩んでることはなんですか？","友達に裏切られた、好きな人ができた、寂しいから話したい...なんでも大丈夫です！"]
+      } else {
+        return ["悩みやモヤモヤを？","力になってあげられそうな悩みはなんですか？","人間関係でアドバイスできる、片想いの悩みで共感できる、ただ話しをきいてあげる...なんでも大丈夫です！"]
+      }
+    }
+  }
 
   const {
     canTalkHeterosexual,
@@ -67,7 +88,7 @@ const ChatModal: React.FC<Props> = (props) => {
             >
               気楽に話し相手をシャッフルしましょう
             </Text>
-            <Block style={{ justifyContent: "center" }}>
+            <Block style={{ justifyContent: "center",alignItems: "center", }}>
               <ChatSwitch
                 title="話したい"
                 value={isSpeaker}
@@ -80,7 +101,7 @@ const ChatModal: React.FC<Props> = (props) => {
               />
             </Block>
             <Block style={{ justifyContent: "center", marginTop: 10 }}>
-              <ChatSwitch
+              {/* <ChatSwitch
                 title={
                   isSecretJob
                     ? "話し相手を職業で絞る"
@@ -97,7 +118,21 @@ const ChatModal: React.FC<Props> = (props) => {
                 onChange={setCanTalkHeterosexual}
                 disable={isSecretGender}
                 alertMessageWhenDisable="話し相手を性別で絞り込むには性別を内緒以外に設定して下さい"
-              />
+              /> */}
+              <Block
+                style={styles.textArea}
+              >
+                <TextInput
+                multiline
+                numberOfLines={4}
+                editable
+
+                maxLength={250}
+                placeholder={placeholder()[2]}
+                value={value}
+                onChangeText={(text) => setValue(text)}
+                />
+              </Block>
             </Block>
             <Block />
             <Block
@@ -166,7 +201,7 @@ export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
             bold
             size={15}
             color={disable ? "silver" : "dimgray"}
-            style={{ marginHorizontal: 15 }}
+            style={{ marginRight: 40}}
           >
             {title}
           </Text>
@@ -179,7 +214,7 @@ export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
             }}
             ios_backgroundColor={disable ? "gainsboro" : "gray"}
             value={disable ? false : value}
-            style={{ marginVertical: 8, marginHorizontal: 15 }}
+            style={{ marginVertical: 8, marginLeft: 40 }}
             onValueChange={(val) => {
               if (alertMessageWhenDisable && disable)
                 Alert.alert(alertMessageWhenDisable);
@@ -210,4 +245,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+  textArea: {
+    height:150,
+    borderColor: "silver",
+    borderWidth: 1,
+    padding: 10,
+    marginHorizontal: 30,
+
+    borderRadius: 10,
+    backgroundColor: "white",
+  }
 });

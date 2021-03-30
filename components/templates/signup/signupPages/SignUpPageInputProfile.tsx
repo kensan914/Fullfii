@@ -224,7 +224,7 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
   return (
     <SignUpPageTemplate
       title="プロフィールの作成"
-      subTitle="あなたの話し相手と繋がるために、ユーザ名・性別・職業を教えて下さい。"
+      subTitle="あなたに合う話し相手と繋がるために、ユーザ名・性別・職業を教えて下さい。"
       contents={renderContents()}
       isLoading={isLoading}
       pressCallback={pressButton}
