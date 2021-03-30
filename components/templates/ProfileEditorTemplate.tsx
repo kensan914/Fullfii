@@ -203,7 +203,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
         </Block>
         <ProfileHr />
 
-        <Block style={styles.profileTextBlock}>
+        {/* <Block style={styles.profileTextBlock}>
           <Text size={16} bold style={{ marginBottom: 10 }}>
             今悩んでいること
           </Text>
@@ -229,7 +229,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
             }
           />
         </Block>
-        <ProfileHr />
+        <ProfileHr /> */}
       </Block>
     </ScrollView>
   );
