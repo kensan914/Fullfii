@@ -85,20 +85,44 @@ const chatReducer = (
         const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
         if (_talkTicket === null) return { ...prevState };
 
-        if (
-          !(
-            _talkTicketCollection[_talkTicket.worry.key] &&
-            _talkTicketCollection[_talkTicket.worry.key].status.key ===
-              "talking"
-          )
-        ) {
-          if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
-            _talkTicket.room.messages = [geneCommonMessage("waiting")];
-          } else if (_talkTicket.status.key === "stopping") {
-            _talkTicket.room.messages = [geneCommonMessage("stopping")];
-          }
-          _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
+        // if (
+        //   !(
+        //     _talkTicketCollection[_talkTicket.worry.key] &&
+        //     _talkTicketCollection[_talkTicket.worry.key].status.key ===
+        //       "talking"
+        //   )
+        // ) {
+        if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
+          _talkTicket.room.messages = [geneCommonMessage("waiting")];
+        } else if (_talkTicket.status.key === "stopping") {
+          _talkTicket.room.messages = [geneCommonMessage("stopping")];
         }
+        _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
+        // }
+      });
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
+
+      return {
+        ...prevState,
+        talkTicketCollection: _talkTicketCollection,
+      };
+    }
+
+    case "FORCE_UPDATE_TALK_TICKETS": {
+      /** force update talkTickets to talkTicketCollection.(worry.keyをkeyに持つObjectに変換)
+       * 上記のUPDATE_TALK_TICKETSと変更処理は同じだが、こちらはどんなtalkTicketでもupdateをする
+       * @param {Object} action [type, talkTickets] */
+      _talkTicketCollection = prevState.talkTicketCollection;
+      action.talkTickets.forEach((talkTicketJson) => {
+        const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
+        if (_talkTicket === null) return { ...prevState };
+
+        if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
+          _talkTicket.room.messages = [geneCommonMessage("waiting")];
+        } else if (_talkTicket.status.key === "stopping") {
+          _talkTicket.room.messages = [geneCommonMessage("stopping")];
+        }
+        _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
       });
       asyncStoreTalkTicketCollection(_talkTicketCollection);
 

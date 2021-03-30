@@ -155,7 +155,11 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
           .forEach((talkTicket) => {
             if (
               _prevTalkTicketCollection[talkTicket.worry.key].status.key !==
-              "approving"
+                "approving" ||
+              // prevがapprovingの時に, roomがtimeoutして別のroomとマッチしapprovingである状態
+              (talkTicket.room?.id &&
+                talkTicket.room.id !==
+                  _prevTalkTicketCollection[talkTicket.worry.key].room.id)
             ) {
               // 未だトークの承認準備がされていない
               dispatches.chatDispatch({
@@ -199,6 +203,26 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
                   talkTicket.worry.key
                 );
               }
+            }
+          });
+
+        // 復帰時, waitingだったら(実際, roomのtimeout後にマッチしなかった場合)
+        talkTickets
+          .filter((talkTicket) => talkTicket.status.key === "waiting")
+          .forEach((talkTicket) => {
+            if (
+              _prevTalkTicketCollection[talkTicket.worry.key].status.key !==
+                "waiting" ||
+              // prevがwaitingの時に, roomがtimeoutして別のroomとマッチせずにwaitingである状態
+              (talkTicket.room?.id &&
+                talkTicket.room.id !==
+                  _prevTalkTicketCollection[talkTicket.worry.key].room.id)
+            ) {
+              // statusがwaitingに切り替わっている
+              dispatches.chatDispatch({
+                type: "UPDATE_TALK_TICKETS",
+                talkTickets: [talkTicket],
+              });
             }
           });
 
@@ -257,13 +281,6 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
           .forEach((talkTicket) => {
             if (talkTicket.room) {
               startApprovingTalk(dispatches.chatDispatch, talkTicket.worry.key);
-              // initConnectWsChat(
-              //   talkTicket.room.id,
-              //   token,
-              //   states,
-              //   dispatches,
-              //   talkTicket
-              // );
             }
           });
       }
@@ -398,6 +415,7 @@ const _connectWsChat = (wsProps: WsProps) => {
           break;
 
         case "end_talk_alert":
+          // not used
           dispatches.profileDispatch({
             type: "SET_ALL",
             profile: data.profile,
@@ -410,14 +428,14 @@ const _connectWsChat = (wsProps: WsProps) => {
           break;
 
         case "end_talk_time_out":
+          // time out時は, statusをwaitingに
           dispatches.profileDispatch({
             type: "SET_ALL",
             profile: data.profile,
           });
           dispatches.chatDispatch({
-            type: "END_TALK",
-            talkTicketKey,
-            timeOut: true,
+            type: "UPDATE_TALK_TICKETS",
+            talkTickets: [data.talkTicket],
           });
           break;
 
@@ -532,7 +550,10 @@ const connectWsNotification = (
         // 認証完了
       } else if (data.type === "notice_talk") {
         if (data.status === "start") {
+          console.log("スタートトーク");
+
           if (data.talkTicket) {
+            console.log(data.talkTicket);
             // updateTalk(token, states, dispatches);
             dispatches.chatDispatch({
               type: "UPDATE_TALK_TICKETS",
@@ -544,7 +565,8 @@ const connectWsNotification = (
             );
           }
         } else if (data.status === "end") {
-          // end 多分使わない？
+          console.log(data);
+          // end 多分使わない
         }
       }
     },

@@ -304,14 +304,17 @@ export const WsResMultiChatMessagesIoTs = t.type({
 export const WsResEndTalkAlertIoTs = t.type({
   type: t.literal("end_talk_alert"),
   profile: MeProfileIoTs,
+  talkTicket: TalkTicketJsonIoTs,
 });
 export const WsResEndTalkTimeOutIoTs = t.type({
   type: t.literal("end_talk_time_out"),
   profile: MeProfileIoTs,
+  talkTicket: TalkTicketJsonIoTs,
 });
 export const WsResEndTalkIoTs = t.type({
   type: t.literal("end_talk"),
   profile: MeProfileIoTs,
+  talkTicket: TalkTicketJsonIoTs,
 });
 export const WsResErrorIoTs = t.intersection([
   t.type({
