@@ -148,7 +148,8 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
               color="dimgray"
               style={{ marginHorizontal: 15 }}
             >
-              {user.introduction}
+              {/* {user.introduction} */}
+              {talkTicket.room?.userTopic}
             </Text>
           </Block>
 

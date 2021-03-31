@@ -85,6 +85,7 @@ const chatReducer = (
         const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
         if (_talkTicket === null) return { ...prevState };
 
+        // TODO: これで不具合がなければ"FORCE_UPDATE_TALK_TICKETS"を削除
         // if (
         //   !(
         //     _talkTicketCollection[_talkTicket.worry.key] &&
@@ -591,6 +592,7 @@ const initRoomBase: RoomJson = Object.freeze({
   endedAt: "",
   isAlert: false,
   isTimeOut: false,
+  userTopic: "",
 });
 
 const initRoomAdd: RoomAdd = Object.freeze({

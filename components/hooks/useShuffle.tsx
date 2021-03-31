@@ -23,6 +23,8 @@ const useShuffle = (
   setIsOpen?: (val: boolean) => void,
   isShowIntersticial = true
 ): {
+  topic: string;
+  setTopic: Dispatch<string>;
   canTalkHeterosexual: boolean;
   setCanTalkHeterosexual: Dispatch<boolean>;
   canTalkDifferentJob: boolean;
@@ -41,6 +43,7 @@ const useShuffle = (
   isSecretJob: boolean;
   isSecretGender: boolean;
   roomId: MutableRefObject<string | undefined>;
+  genePlaceholder: (talkTicketKey: TalkTicketKey) => string[];
 } => {
   /* states, dispatches */
   const chatState = useChatState();
@@ -54,6 +57,7 @@ const useShuffle = (
   const talkTicket = chatState.talkTicketCollection[talkTicketKey];
 
   /* state */
+  const [topic, setTopic] = useState(talkTicket.topic);
   const [canTalkHeterosexual, setCanTalkHeterosexual] = useState(
     talkTicket.canTalkHeterosexual
   );
@@ -185,12 +189,8 @@ const useShuffle = (
         requestStop({
           data: {
             is_speaker: isSpeaker,
-            ...(isSecretGender
-              ? {}
-              : { can_talk_heterosexual: canTalkHeterosexual }),
-            ...(isSecretJob
-              ? {}
-              : { can_talk_different_job: canTalkDifferentJob }),
+            can_talk_heterosexual: true,
+            can_talk_different_job: true,
             status: "stopping",
           },
         });
@@ -210,11 +210,9 @@ const useShuffle = (
       : "話し相手を同性に絞る";
     alertModal({
       mainText: `以下の条件で「${talkTicket.worry.label}」の話し相手を探します。`,
-      subText: `\n・${isSpeaker ? "話したい" : "聞きたい"}\n${
-        isSecretJob ? "" : `・${jobSubText}\n`
-      }${
-        isSecretGender ? "" : `・${genderSubText}\n`
-      }\n今までのトーク内容は端末から削除されます。`,
+      subText: `\n・${
+        isSpeaker ? "話したい" : "聞きたい"
+      }\n\n今までのトーク内容は端末から削除されます。`,
       cancelButton: "キャンセル",
       okButton: "探す",
       onPress: () => {
@@ -228,6 +226,7 @@ const useShuffle = (
             ...(isSecretJob
               ? {}
               : { can_talk_different_job: canTalkDifferentJob }),
+            topic: topic,
           },
           profileState
         );
@@ -235,8 +234,9 @@ const useShuffle = (
         requestShuffle({
           data: {
             is_speaker: isSpeaker,
-            can_talk_heterosexual: canTalkHeterosexual,
-            can_talk_different_job: canTalkDifferentJob,
+            can_talk_heterosexual: true,
+            can_talk_different_job: true,
+            topic: topic,
             status: "waiting",
           },
         });
@@ -251,7 +251,42 @@ const useShuffle = (
     setIsOpenEndTalk(false);
   };
 
+  //returnで配列を返す。[0]=switchのサブタイトル、[1]=textareaのサブタイトル、[2]=textareaのplaceholder
+  const genePlaceholder = (talkTicketKey: TalkTicketKey): string[] => {
+    if (talkTicketKey === "g" /* ただ話したい */) {
+      if (isSpeaker) {
+        return [
+          "今の気分は？",
+          "話したいことはなんですか？",
+          "今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！",
+        ];
+      } else {
+        return [
+          "今の気分は？",
+          "一緒に話したいことはなんですか？",
+          "今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！",
+        ];
+      }
+    } else {
+      if (isSpeaker) {
+        return [
+          "悩みやモヤモヤを？",
+          "悩んでることはなんですか？",
+          "友達に裏切られた、好きな人ができた、寂しいから話したい...なんでも大丈夫です！",
+        ];
+      } else {
+        return [
+          "悩みやモヤモヤを？",
+          "力になってあげられそうな悩みはなんですか？",
+          "人間関係でアドバイスできる、片想いの悩みで共感できる、ただ話しをきいてあげる...なんでも大丈夫です！",
+        ];
+      }
+    }
+  };
+
   return {
+    topic,
+    setTopic,
     canTalkHeterosexual,
     setCanTalkHeterosexual,
     canTalkDifferentJob,
@@ -270,6 +305,7 @@ const useShuffle = (
     isSecretJob,
     isSecretGender,
     roomId,
+    genePlaceholder,
   };
 };
 

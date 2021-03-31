@@ -1,7 +1,7 @@
 const DEBUG = true;
 // const DEBUG = false;
-const ADMOB_DEBUG = true;
-// const ADMOB_DEBUG = false;
+// const ADMOB_DEBUG = true;
+const ADMOB_DEBUG = false;
 
 const BASE_HOST = DEBUG ? "192.168.11.3:8080" : "fullfii.com";
 const URL_SCHEME_HTTP = DEBUG ? "http" : "https";
@@ -17,8 +17,8 @@ export const REPORT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLScuWE_hUXY8GN2Nu4CpMa7rNsUTtVRfcL0_avj5h69XwwjD8g/viewform";
 export const ACCOUNT_DELETION_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSclvk_l4JsWCMQf6a6qh2AmoAkiM9ReU6eZOaYTUoTz9MP3gw/viewform?usp=sf_link";
-export const VERSION = "2.3.1";
-export const VERSION_NUM = 231;
+export const VERSION = "2.4.0";
+export const VERSION_NUM = 240;
 
 export const PRODUCT_ID_LIST = ["com.fullfii.fullfii.normal_plan"];
 

@@ -284,6 +284,7 @@ export const RoomJsonIoTs = t.type({
   endedAt: t.union([t.string, t.null]),
   isAlert: t.boolean,
   isTimeOut: t.boolean,
+  userTopic: t.string,
 });
 export const RoomAddJsonIoTs = t.type({
   messages: AllMessagesIoTs,
@@ -309,6 +310,7 @@ const TalkTicketJsonExceptRoomIoTs = t.type({
   waitStartTime: t.string,
   canTalkHeterosexual: t.boolean,
   canTalkDifferentJob: t.boolean,
+  topic: t.string,
 });
 /** TalkTicketAsyncIoTsとの違い: roomがnullable & roomJson */
 export const TalkTicketJsonIoTs = t.intersection([

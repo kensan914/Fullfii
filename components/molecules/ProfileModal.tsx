@@ -18,7 +18,7 @@ type Props = {
 };
 /**
  *
- * @param {*} props talkTicketはchat画面時のみ必要
+ * @param {*} props talkTicket・userTopicはchat画面時のみ必要
  */
 const ProfileModal: React.FC<Props> = (props) => {
   const { isOpen, setIsOpen, profile, talkTicket } = props;
@@ -80,7 +80,7 @@ const ProfileModal: React.FC<Props> = (props) => {
 
         <Block center>
           <Text bold size={15} color="dimgray" style={{ marginHorizontal: 15 }}>
-            {user.introduction}
+            {talkTicket ? talkTicket.room.userTopic : user.introduction}
           </Text>
         </Block>
 
