@@ -1,10 +1,16 @@
 import React from "react";
-import { Block, Text } from "galio-framework";
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Block, Text, theme } from "galio-framework";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { ChatSwitch } from "../molecules/ChatModal";
 import { AllMessage, TalkTicketKey } from "../types/Types.context";
 import { CommonMessage } from "./Chat";
-import { RequestPatchProfile, RequestPutGender } from "../types/Types";
 import useShuffle from "../hooks/useShuffle";
 import SvgUri from "react-native-svg-uri";
 import { COLORS } from "../../constants/Theme";
@@ -38,115 +44,93 @@ const StoppingChatBody: React.FC<Props> = (props) => {
   // const [validationText, setValidationText] = useState("");
 
   return (
-    <Block flex={1}>
-      <Block flex={0.2} style={[styles.dividedContainer]}>
-        {"common" in commonMessage && (
-          <Block style={{}}>
-            <CommonMessage message="マッチする前に確認画面が表示されますので、気軽に話し相手を探してみましょう" />
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <Block flex>
+        <KeyboardAvoidingView
+          behavior="position"
+          style={{
+            flex: 0.85,
+          }}
+          contentContainerStyle={{ flex: 1 }}
+          keyboardVerticalOffset={theme.SIZES.BASE * 3}
+        >
+          <Block flex={0.2} style={[styles.dividedContainer]}>
+            {"common" in commonMessage && (
+              <CommonMessage message="マッチする前に確認画面が表示されますので、気軽に話し相手を探してみましょう" />
+            )}
           </Block>
-        )}
-      </Block>
-      <Block flex={0.05} style={styles.subTitle}>
-        <Text bold color="#909090">
-          {genePlaceholder(talkTicketKey)[0]}
-        </Text>
-      </Block>
-      <Block
-        flex={0.25}
-        style={[styles.dividedContainer, styles.centralContainer]}
-      >
-        <Block>
-          {/* {validationText ? (
-            <Block style={styles.container}>
-              <Text
-                color="red"
-                style={{ paddingHorizontal: 10, paddingVertical: 3 }}
-              >
-                {validationText}
-              </Text>
+          <Block flex={0.1} style={styles.subTitle}>
+            <Text bold color="#909090">
+              {genePlaceholder(talkTicketKey)[0]}
+            </Text>
+          </Block>
+          <Block
+            flex={0.25}
+            style={[styles.dividedContainer, styles.centralContainer]}
+          >
+            <Block>
+              <Block style={{ justifyContent: "center" }}>
+                <ChatSwitch
+                  title="話したい"
+                  value={isSpeaker}
+                  onChange={(val) => setIsSpeaker(val)}
+                />
+                <ChatSwitch
+                  title="聞きたい"
+                  value={!isSpeaker}
+                  onChange={(val) => setIsSpeaker(!val)}
+                />
+              </Block>
             </Block>
-          ) : null} */}
-          <Block style={{ justifyContent: "center" }}>
-            <ChatSwitch
-              title="話したい"
-              value={isSpeaker}
-              onChange={(val) => setIsSpeaker(val)}
-            />
-            <ChatSwitch
-              title="聞きたい"
-              value={!isSpeaker}
-              onChange={(val) => setIsSpeaker(!val)}
+          </Block>
+          <Block flex={0.1} style={styles.subTitle}>
+            <Text bold color="#909090">
+              {genePlaceholder(talkTicketKey)[1]}
+            </Text>
+          </Block>
+          <Block flex={0.35} style={styles.textAreaContainer}>
+            <TextInput
+              multiline
+              numberOfLines={4}
+              editable
+              maxLength={250}
+              value={topic}
+              placeholder={genePlaceholder(talkTicketKey)[2]}
+              onChangeText={setTopic}
+              style={styles.textArea}
+              returnKeyType="done"
+              blurOnSubmit
+              onSubmitEditing={() => {
+                Keyboard.dismiss();
+              }}
             />
           </Block>
-          {/* <Block style={{ justifyContent: "center", marginTop: 10 }}>
-            <ChatSwitch
-              title={
-                isSecretJob
-                  ? "話し相手を職業で絞る"
-                  : `話し相手を${profileState.profile.job?.label}に絞る`
-              }
-              value={!canTalkDifferentJob}
-              onChange={() => {
-                setCanTalkDifferentJob(!canTalkDifferentJob);
-              }}
-              disable={isSecretJob}
-              alertMessageWhenDisable="話し相手を職業で絞り込むには職業を内緒以外に設定して下さい"
-            />
-            <ChatSwitch
-              title="話し相手に異性を含む"
-              value={canTalkHeterosexual}
-              onChange={setCanTalkHeterosexual}
-              disable={isSecretGender}
-              alertMessageWhenDisable="話し相手を性別で絞り込むには性別を内緒以外に設定して下さい"
-            />
-          </Block> */}
+        </KeyboardAvoidingView>
+
+        <Block flex={0.15} style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.touchableOpacity}
+            onPress={() => onPressShuffle()}
+          >
+            <Block flex row>
+              <Block flex={0.2} center style={styles.buttonSvgIcon}>
+                <SvgUri width={40} height={40} source={pinkLoop} />
+              </Block>
+              <Block flex={0.8} center style={styles.buttonText}>
+                <Text bold size={20} color={COLORS.PINK}>
+                  話し相手を探す!
+                </Text>
+              </Block>
+            </Block>
+          </TouchableOpacity>
+          <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0.3)" />
         </Block>
       </Block>
-      <Block flex={0.05} style={styles.subTitle}>
-        <Text bold color="#909090">
-          {genePlaceholder(talkTicketKey)[1]}
-        </Text>
-      </Block>
-      <Block flex={0.35} style={styles.textAreaContainer}>
-        <TextInput
-          multiline
-          numberOfLines={4}
-          editable
-          maxLength={250}
-          value={topic}
-          placeholder={genePlaceholder(talkTicketKey)[2]}
-          onChangeText={setTopic}
-          style={styles.textArea}
-        />
-      </Block>
-
-      <Block
-        flex={0.2}
-        style={[styles.dividedContainer, styles.bottomContainer]}
-      >
-        {/* <SvgButton
-          source={require("../../assets/icons/pinkLoop.svg")}
-          onPress={() => onPressShuffle()}
-        /> */}
-        {/* <Button round uppercase color="error">話し相手を探す！</Button> */}
-        <TouchableOpacity
-          style={styles.touchableOpacity}
-          onPress={() => onPressShuffle()}
-        >
-          <Block flex row>
-            <Block flex={0.2} center style={styles.buttonSvgIcon}>
-              <SvgUri width={40} height={40} source={pinkLoop} />
-            </Block>
-            <Block flex={0.8} center style={styles.buttonText}>
-              <Text bold size={20} color={COLORS.PINK}>
-                話し相手を探す!
-              </Text>
-            </Block>
-          </Block>
-        </TouchableOpacity>
-        <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0.3)" />
-      </Block>
-    </Block>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -204,5 +188,8 @@ const styles = StyleSheet.create({
   buttonText: {
     justifyContent: "center",
     paddingRight: 20,
+  },
+  buttonContainer: {
+    alignItems: "center",
   },
 });
