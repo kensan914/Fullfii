@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { Alert, Dimensions, StyleSheet, Switch, TextInput } from "react-native";
 import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
@@ -7,11 +7,9 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { EndTalkScreenType } from "../organisms/Chat";
 import { TalkTicketKey } from "../types/Types.context";
 import useShuffle from "../hooks/useShuffle";
-import { useProfileState } from "../contexts/ProfileContext";
 import { useAuthState } from "../contexts/AuthContext";
 import { COLORS } from "../../constants/Theme";
 import SvgButton from "../atoms/SvgButton";
-import { between } from "fp-ts/lib/Ord";
 
 const { width } = Dimensions.get("screen");
 
@@ -25,33 +23,12 @@ const ChatModal: React.FC<Props> = (props) => {
   const { isOpen, setIsOpen, EndTalkScreen, talkTicketKey } = props;
 
   const authState = useAuthState();
-//↓でstate値を引き継げるのか？
-    // const { prevValue, screen: profileInputScreen } = route.params;
-  const prevValue = "こんにちは"
-
-  const [value, setValue] = useState(prevValue);
-
-  const placeholder = ():string[] => {
-    if (talkTicketKey==="ただ話したい") {
-      if (isSpeaker) {
-        return ["今の気分は？","話したいことはなんですか？","今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！"]
-      } else {
-        return ["今の気分は？","一緒に話したいことはなんですか？","今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！"]
-      }
-    } else {
-      if (isSpeaker) {
-        return ["悩みやモヤモヤを？","悩んでることはなんですか？","友達に裏切られた、好きな人ができた、寂しいから話したい...なんでも大丈夫です！"]
-      } else {
-        return ["悩みやモヤモヤを？","力になってあげられそうな悩みはなんですか？","人間関係でアドバイスできる、片想いの悩みで共感できる、ただ話しをきいてあげる...なんでも大丈夫です！"]
-      }
-    }
-  }
+  //↓でstate値を引き継げるのか？
+  // const { prevValue, screen: profileInputScreen } = route.params;
 
   const {
-    canTalkHeterosexual,
-    setCanTalkHeterosexual,
-    canTalkDifferentJob,
-    setCanTalkDifferentJob,
+    topic,
+    setTopic,
     isSpeaker,
     setIsSpeaker,
     isShowSpinner,
@@ -60,9 +37,8 @@ const ChatModal: React.FC<Props> = (props) => {
     onPressStop,
     onPressShuffle,
     closeChatModal,
-    isSecretJob,
-    isSecretGender,
     roomId,
+    genePlaceholder,
   } = useShuffle(talkTicketKey, setIsOpen);
 
   return (
@@ -88,7 +64,7 @@ const ChatModal: React.FC<Props> = (props) => {
             >
               気楽に話し相手をシャッフルしましょう
             </Text>
-            <Block style={{ justifyContent: "center",alignItems: "center", }}>
+            <Block style={{ justifyContent: "center", alignItems: "center" }}>
               <ChatSwitch
                 title="話したい"
                 value={isSpeaker}
@@ -119,18 +95,16 @@ const ChatModal: React.FC<Props> = (props) => {
                 disable={isSecretGender}
                 alertMessageWhenDisable="話し相手を性別で絞り込むには性別を内緒以外に設定して下さい"
               /> */}
-              <Block
-                style={styles.textArea}
-              >
+              <Block style={styles.textAreaContainer}>
                 <TextInput
-                multiline
-                numberOfLines={4}
-                editable
-
-                maxLength={250}
-                placeholder={placeholder()[2]}
-                value={value}
-                onChangeText={(text) => setValue(text)}
+                  multiline
+                  numberOfLines={4}
+                  editable
+                  maxLength={250}
+                  placeholder={genePlaceholder(talkTicketKey)[2]}
+                  value={topic}
+                  onChangeText={setTopic}
+                  style={styles.textArea}
                 />
               </Block>
             </Block>
@@ -201,7 +175,7 @@ export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
             bold
             size={15}
             color={disable ? "silver" : "dimgray"}
-            style={{ marginRight: 40}}
+            style={{ marginRight: 40 }}
           >
             {title}
           </Text>
@@ -245,14 +219,22 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+  textAreaContainer: {
+    height: 150,
+    width: width * 0.8,
+    alignSelf: "center",
+
+    marginHorizontal: 30,
+    backgroundColor: "white",
+  },
   textArea: {
-    height:150,
+    height: 150,
+    width: width * 0.8,
+    alignSelf: "center",
+    padding: 10,
     borderColor: "silver",
     borderWidth: 1,
-    padding: 10,
-    marginHorizontal: 30,
-
     borderRadius: 10,
     backgroundColor: "white",
-  }
+  },
 });
