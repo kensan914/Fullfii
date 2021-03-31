@@ -56,16 +56,6 @@ const StoppingChatBody: React.FC<Props> = (props) => {
         style={[styles.dividedContainer, styles.centralContainer]}
       >
         <Block>
-          {/* {validationText ? (
-            <Block style={styles.container}>
-              <Text
-                color="red"
-                style={{ paddingHorizontal: 10, paddingVertical: 3 }}
-              >
-                {validationText}
-              </Text>
-            </Block>
-          ) : null} */}
           <Block style={{ justifyContent: "center" }}>
             <ChatSwitch
               title="話したい"
@@ -107,7 +97,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
           {genePlaceholder(talkTicketKey)[1]}
         </Text>
       </Block>
-      <Block flex={0.35} style={styles.textAreaContainer}>
+      <Block flex={0.25} style={styles.textAreaContainer}>
         <TextInput
           multiline
           numberOfLines={4}
@@ -121,7 +111,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
       </Block>
 
       <Block
-        flex={0.2}
+        flex={0.3}
         style={[styles.dividedContainer, styles.bottomContainer]}
       >
         {/* <SvgButton
