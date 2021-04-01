@@ -104,11 +104,8 @@ const ChatModal: React.FC<Props> = (props) => {
                       value={topic}
                       onChangeText={setTopic}
                       style={styles.textArea}
-<<<<<<< HEAD
                       returnKeyType="done"
                       blurOnSubmit
-=======
->>>>>>> 6205e4772f19a1c63c1cb33b2199cd2223e792cc
                       onSubmitEditing={() => {
                         Keyboard.dismiss();
                       }}
