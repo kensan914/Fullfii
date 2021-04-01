@@ -1,6 +1,15 @@
 import React from "react";
-import { Alert, Dimensions, StyleSheet, Switch, TextInput } from "react-native";
-import { Block, Text } from "galio-framework";
+import {
+  Alert,
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Switch,
+  TextInput,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { Block, Text, theme } from "galio-framework";
 import Modal from "react-native-modal";
 import Spinner from "react-native-loading-spinner-overlay";
 
@@ -52,98 +61,96 @@ const ChatModal: React.FC<Props> = (props) => {
         }}
         style={styles.modal}
       >
-        <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0)" />
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <KeyboardAvoidingView behavior="padding" style={{}}>
+            <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0)" />
 
-        <Block style={styles.modalContents}>
-          <Block>
-            <Text
-              bold
-              size={15}
-              style={{ textAlign: "center", paddingBottom: 18 }}
-              color={COLORS.PINK}
-            >
-              気楽に話し相手をシャッフルしましょう
-            </Text>
-            <Block style={{ justifyContent: "center", alignItems: "center" }}>
-              <ChatSwitch
-                title="話したい"
-                value={isSpeaker}
-                onChange={(val) => setIsSpeaker(val)}
-              />
-              <ChatSwitch
-                title="聞きたい"
-                value={!isSpeaker}
-                onChange={(val) => setIsSpeaker(!val)}
-              />
-            </Block>
-            <Block style={{ justifyContent: "center", marginTop: 10 }}>
-              {/* <ChatSwitch
-                title={
-                  isSecretJob
-                    ? "話し相手を職業で絞る"
-                    : `話し相手を${profileState.profile.job?.label}に絞る`
-                }
-                value={!canTalkDifferentJob}
-                onChange={(val) => setCanTalkDifferentJob(!val)}
-                disable={isSecretJob}
-                alertMessageWhenDisable="話し相手を職業で絞り込むには職業を内緒以外に設定して下さい"
-              />
-              <ChatSwitch
-                title="話し相手に異性を含む"
-                value={canTalkHeterosexual}
-                onChange={setCanTalkHeterosexual}
-                disable={isSecretGender}
-                alertMessageWhenDisable="話し相手を性別で絞り込むには性別を内緒以外に設定して下さい"
-              /> */}
-              <Block style={styles.textAreaContainer}>
-                <TextInput
-                  multiline
-                  numberOfLines={4}
-                  editable
-                  maxLength={250}
-                  placeholder={genePlaceholder(talkTicketKey)[2]}
-                  value={topic}
-                  onChangeText={setTopic}
-                  style={styles.textArea}
-                />
-              </Block>
-            </Block>
-            <Block />
-            <Block
-              row
-              center
-              style={{ justifyContent: "center", marginTop: 20 }}
-            >
-              <Block flex={0.45} center>
-                <SvgButton
-                  source={require("../../assets/icons/exit-room.svg")}
-                  onPress={onPressStop}
-                  diameter={width / 5.5}
-                  shadowColor={"#a9a9a9"}
-                />
-              </Block>
-              <Block />
-              <Block flex={0.45} center>
-                <SvgButton
-                  source={require("../../assets/icons/pinkLoop.svg")}
-                  onPress={onPressShuffle}
-                  diameter={width / 5.5}
-                />
-              </Block>
-            </Block>
-          </Block>
-        </Block>
+            <Block style={styles.modalContents}>
+              <Block>
+                <Text
+                  bold
+                  size={15}
+                  style={{ textAlign: "center", paddingBottom: 18 }}
+                  color={COLORS.PINK}
+                >
+                  気楽に話し相手をシャッフルしましょう
+                </Text>
+                <Block
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <ChatSwitch
+                    title="話したい"
+                    value={isSpeaker}
+                    onChange={(val) => setIsSpeaker(val)}
+                  />
+                  <ChatSwitch
+                    title="聞きたい"
+                    value={!isSpeaker}
+                    onChange={(val) => setIsSpeaker(!val)}
+                  />
+                </Block>
+                <Block style={{ justifyContent: "center", marginTop: 10 }}>
+                  <Block style={styles.textAreaContainer}>
+                    <TextInput
+                      multiline
+                      numberOfLines={4}
+                      editable
+                      maxLength={250}
+                      placeholder={genePlaceholder(talkTicketKey)[2]}
+                      value={topic}
+                      onChangeText={setTopic}
+                      style={styles.textArea}
+                      returnKeyType="done"
+                      blurOnSubmit
+                      onSubmitEditing={() => {
+                        Keyboard.dismiss();
+                      }}
+                    />
+                  </Block>
+                </Block>
 
-        {roomId.current && authState.token && EndTalkScreen ? (
-          <EndTalkScreen
-            isOpen={isOpenEndTalk}
-            closeChatModal={closeChatModal}
-            roomId={roomId.current}
-            token={authState.token}
-          />
-        ) : (
-          <></>
-        )}
+                <Block />
+                <Block
+                  row
+                  center
+                  style={{ justifyContent: "center", marginTop: 20 }}
+                >
+                  <Block flex={0.45} center>
+                    <SvgButton
+                      source={require("../../assets/icons/exit-room.svg")}
+                      onPress={onPressStop}
+                      diameter={width / 5.5}
+                      shadowColor={"#a9a9a9"}
+                    />
+                  </Block>
+                  <Block />
+                  <Block flex={0.45} center>
+                    <SvgButton
+                      source={require("../../assets/icons/pinkLoop.svg")}
+                      onPress={onPressShuffle}
+                      diameter={width / 5.5}
+                    />
+                  </Block>
+                </Block>
+              </Block>
+            </Block>
+
+            {roomId.current && authState.token && EndTalkScreen ? (
+              <EndTalkScreen
+                isOpen={isOpenEndTalk}
+                closeChatModal={closeChatModal}
+                roomId={roomId.current}
+                token={authState.token}
+              />
+            ) : (
+              <></>
+            )}
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   );
