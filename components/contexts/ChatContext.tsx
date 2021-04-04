@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import { isExpo } from "../../constants/env";
 import {
   isString,
   closeWsSafely,
@@ -327,20 +328,33 @@ const chatReducer = (
       /** 受け取ったmessagesを統合 未読値をインクリメント ストア通知 (messagesの中身は全てスネークケース)
        * @param {Object} action [type, talkTicketKey, messages, token] */
 
-      let incrementNum_MM = 0;
-      const messages = action.messages.map((elm) => {
-        if (!elm.isMe) incrementNum_MM += 1;
-        return {
-          messageId: elm.messageId,
-          message: elm.message,
-          isMe: elm.isMe,
-          time: isString(elm.time) ? new Date(elm.time) : elm.time,
-        };
-      });
-
       _talkTicketCollection = prevState.talkTicketCollection;
       _talkTicket = _talkTicketCollection[action.talkTicketKey];
       if (!_talkTicket) return { ...prevState };
+
+      let incrementNum_MM = 0;
+      const messages = action.messages
+        .filter((elm) => {
+          if (
+            _talkTicket.room.messages.some((_message) => {
+              return _message.messageId === elm.messageId;
+            })
+          ) {
+            // 既に該当のmessageが存在する(保存状況の送信がうまくいっていなかった場合)
+            return false;
+          } else {
+            return true;
+          }
+        })
+        .map((elm) => {
+          if (!elm.isMe) incrementNum_MM += 1;
+          return {
+            messageId: elm.messageId,
+            message: elm.message,
+            isMe: elm.isMe,
+            time: isString(elm.time) ? new Date(elm.time) : elm.time,
+          };
+        });
 
       _messages = _talkTicket.room.messages.concat(messages);
       const prevUnreadNum_MM = _talkTicket.room.unreadNum;
@@ -423,12 +437,14 @@ const chatReducer = (
 
     case "APPEND_OFFLINE_MESSAGE": {
       /** offlineMessageを作成し、追加
-       * @param {Object} action [type, talkTicketKey, messageId, messageText] */
+       * @param {Object} action [type, talkTicketKey, messageId, messageText, time] */
 
       const offlineMessage: OfflineMessage = {
         messageId: action.messageId,
         message: action.messageText,
         isMe: true,
+        time: action.time,
+        isOffline: true,
       };
 
       _talkTicketCollection = prevState.talkTicketCollection;
@@ -472,6 +488,7 @@ const chatReducer = (
 
       // update badge count
       (action.isForceSendReadNotification || unreadNum > 0) &&
+        !isExpo &&
         (async () => {
           const pushNotificationModule = await import(
             "../modules/firebase/pushNotification"

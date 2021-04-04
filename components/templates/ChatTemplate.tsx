@@ -39,6 +39,7 @@ import { useAuthState } from "../contexts/AuthContext";
 import WaitingChatBody from "../organisms/WaitingChatBody";
 import StoppingChatBody from "../organisms/StoppingChatBody";
 import ApprovingChatBody from "../organisms/ApprovingChatBody";
+import ChatBody from "./chat/ChatBody";
 
 const { width } = Dimensions.get("screen");
 
@@ -67,7 +68,6 @@ const ChatTemplate: React.FC<Props> = (props) => {
   const messagesScroll = useRef<FlatList>(null);
   const [message, setMessage] = useState("");
   const [inputHeight, setInputHeight] = useState(0);
-  // const [appState, setAppState] = useState(AppState.currentState);
   const appState = useRef(AppState.currentState);
   const existUser = !!user.id.length;
   const chatDispatch = useChatDispatch();
@@ -280,15 +280,25 @@ const ChatTemplate: React.FC<Props> = (props) => {
       case "talking":
       case "finishing":
         return (
-          <KeyboardAvoidingView
-            enabled
-            behavior="padding"
-            style={{ flex: 1 }}
-            keyboardVerticalOffset={theme.SIZES.BASE * 3}
-          >
-            {renderMessages()}
-            {messageForm()}
-          </KeyboardAvoidingView>
+          // <KeyboardAvoidingView
+          //   enabled
+          //   behavior="padding"
+          //   style={{ flex: 1 }}
+          //   keyboardVerticalOffset={theme.SIZES.BASE * 3}
+          // >
+          //   {renderMessages()}
+          //   {messageForm()}
+          // </KeyboardAvoidingView>
+          <ChatBody
+            user={user}
+            messages={messages} // TODO:
+            ws={ws}
+            token={token}
+            talkTicketKey={talkTicketKey}
+            isEnd={isEnd}
+            existUser={existUser}
+            setIsOpenProfile={setIsOpenProfile}
+          />
         );
 
       case "approving":

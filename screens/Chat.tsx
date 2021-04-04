@@ -29,6 +29,7 @@ const Chat: React.FC = () => {
     const ws = talkTicket.room.ws;
     const isEnd = talkTicket.room.isEnd;
 
+    // TODO: 後で消す
     const appendOfflineMessage: AppendOfflineMessage = (
       messageId,
       messageText
@@ -38,6 +39,7 @@ const Chat: React.FC = () => {
         talkTicketKey,
         messageId,
         messageText,
+        time: new Date(),
       });
     };
 
@@ -58,6 +60,7 @@ const Chat: React.FC = () => {
 
 export default Chat;
 
+// TODO: 後で消す
 const sendWsMessage: SendWsMessage = (ws, messageId, messageText, token) => {
   ws.send(
     JSON.stringify({

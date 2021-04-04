@@ -179,6 +179,7 @@ export type ChatActionType =
       talkTicketKey: TalkTicketKey;
       messageId: string;
       messageText: string;
+      time: Date;
     }
   | {
       type: "READ_BY_ROOM";
@@ -247,19 +248,26 @@ export const DateType = new t.Type<Date, string, unknown>(
     }),
   (a) => a.toISOString()
 );
-export const OfflineMessageIoTs = t.type({
+export const BaseMessageIoTs = t.type({
   messageId: t.string,
   message: t.string,
   isMe: t.boolean,
 });
+export const OfflineMessageIoTs = t.type({
+  messageId: t.string,
+  message: t.string,
+  isMe: t.boolean,
+  time: DateType,
+  isOffline: t.boolean,
+});
 export const MessageIoTs = t.intersection([
-  OfflineMessageIoTs,
+  BaseMessageIoTs,
   t.type({
     time: DateType,
   }),
 ]);
 export const MessageJsonIoTs = t.intersection([
-  OfflineMessageIoTs,
+  BaseMessageIoTs,
   t.type({
     time: t.string,
   }),
