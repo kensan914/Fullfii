@@ -149,7 +149,7 @@ const RootNavigator: React.FC<Props> = (props) => {
                 <StartUpManager>
                   <AttManager>
                     {Platform.OS === "ios" && (
-                      <StatusBar barStyle="light-content" />
+                      <StatusBar barStyle="dark-content" />
                     )}
                     <Screens />
                   </AttManager>
