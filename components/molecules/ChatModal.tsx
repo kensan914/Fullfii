@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Switch,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Block, Text, theme } from "galio-framework";
+import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 import Spinner from "react-native-loading-spinner-overlay";
 
@@ -19,6 +20,7 @@ import useShuffle from "../hooks/useShuffle";
 import { useAuthState } from "../contexts/AuthContext";
 import { COLORS } from "../../constants/Theme";
 import SvgButton from "../atoms/SvgButton";
+import SvgUri from "react-native-svg-uri";
 
 const { width } = Dimensions.get("screen");
 
@@ -27,9 +29,16 @@ type Props = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   EndTalkScreen?: React.FC<EndTalkScreenType>;
   talkTicketKey: TalkTicketKey;
+  isOnlyShuffle?: boolean;
 };
 const ChatModal: React.FC<Props> = (props) => {
-  const { isOpen, setIsOpen, EndTalkScreen, talkTicketKey } = props;
+  const {
+    isOpen,
+    setIsOpen,
+    EndTalkScreen,
+    talkTicketKey,
+    isOnlyShuffle = false,
+  } = props;
 
   const authState = useAuthState();
   //↓でstate値を引き継げるのか？
@@ -113,28 +122,59 @@ const ChatModal: React.FC<Props> = (props) => {
                   </Block>
                 </Block>
 
-                <Block />
                 <Block
                   row
                   center
                   style={{ justifyContent: "center", marginTop: 20 }}
                 >
-                  <Block flex={0.45} center>
-                    <SvgButton
-                      source={require("../../assets/icons/exit-room.svg")}
-                      onPress={onPressStop}
-                      diameter={width / 5.5}
-                      shadowColor={"#a9a9a9"}
-                    />
-                  </Block>
-                  <Block />
-                  <Block flex={0.45} center>
-                    <SvgButton
-                      source={require("../../assets/icons/pinkLoop.svg")}
+                  {isOnlyShuffle ? (
+                    <TouchableOpacity
+                      style={styles.onlyShuffleButton}
                       onPress={onPressShuffle}
-                      diameter={width / 5.5}
-                    />
-                  </Block>
+                    >
+                      <Block flex row>
+                        <Block
+                          flex={0.2}
+                          center
+                          style={styles.onlyShuffleButtonIcon}
+                        >
+                          <SvgUri
+                            width={40}
+                            height={40}
+                            source={require("../../assets/icons/pinkLoop.svg")}
+                          />
+                        </Block>
+                        <Block
+                          flex={0.8}
+                          center
+                          style={styles.onlyShuffleButtonText}
+                        >
+                          <Text bold size={20} color={COLORS.PINK}>
+                            話し相手を探す!
+                          </Text>
+                        </Block>
+                      </Block>
+                    </TouchableOpacity>
+                  ) : (
+                    <>
+                      <Block flex={0.45} center>
+                        <SvgButton
+                          source={require("../../assets/icons/exit-room.svg")}
+                          onPress={onPressStop}
+                          diameter={width / 5.5}
+                          shadowColor={"#a9a9a9"}
+                        />
+                      </Block>
+                      <Block />
+                      <Block flex={0.45} center>
+                        <SvgButton
+                          source={require("../../assets/icons/pinkLoop.svg")}
+                          onPress={onPressShuffle}
+                          diameter={width / 5.5}
+                        />
+                      </Block>
+                    </>
+                  )}
                 </Block>
               </Block>
             </Block>
@@ -243,5 +283,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: "white",
+  },
+
+  onlyShuffleButton: {
+    width: 300,
+    height: 50,
+    borderRadius: 50,
+    backgroundColor: "white",
+    shadowColor: COLORS.PINK,
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  onlyShuffleButtonIcon: {
+    justifyContent: "center",
+    paddingLeft: 20,
+  },
+  onlyShuffleButtonText: {
+    justifyContent: "center",
+    paddingRight: 20,
   },
 });

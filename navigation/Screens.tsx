@@ -1,5 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { SafeAreaView } from "react-navigation";
 
 import Header from "../components/organisms/Header";
 import HomeScreen from "../screens/Home";
@@ -141,7 +142,10 @@ const AppStack: React.FC = () => {
   const authState = useAuthState();
 
   return (
-    <>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "white" }}
+      forceInset={{ bottom: "never" }}
+    >
       {authState.status === AUTHENTICATED ? (
         <Stack.Navigator mode="card" headerMode="none">
           <Stack.Screen name="Authenticated">
@@ -171,7 +175,7 @@ const AppStack: React.FC = () => {
           </Stack.Screen>
         </Stack.Navigator>
       )}
-    </>
+    </SafeAreaView>
   );
 };
 

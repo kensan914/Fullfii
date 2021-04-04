@@ -304,6 +304,7 @@ const ChatTemplate: React.FC<Props> = (props) => {
         return (
           <WaitingChatBody
             talkTicket={chatState.talkTicketCollection[talkTicketKey]}
+            talkTicketKey={talkTicketKey}
             commonMessage={messages[0]}
           />
         );
