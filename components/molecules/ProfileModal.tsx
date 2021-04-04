@@ -78,7 +78,7 @@ const ProfileModal: React.FC<Props> = (props) => {
           </Block>
         )}
 
-        <Block center>
+        <Block center style={{margin: 20}}>
           <Text bold size={15} color="dimgray" style={{ marginHorizontal: 15 }}>
             {talkTicket ? talkTicket.room.userTopic : user.introduction}
           </Text>
