@@ -9,7 +9,6 @@ import { TalkMenuButton } from "./Chat";
 import Avatar from "../atoms/Avatar";
 import { useChatDispatch, useChatState } from "../contexts/ChatContext";
 import { ProfileMenuButton } from "./ProfileMenuButton";
-import { checkiPhoneX } from "../modules/support";
 import { useProfileState } from "../contexts/ProfileContext";
 import ProfileModal from "../molecules/ProfileModal";
 import { useAuthState } from "../contexts/AuthContext";
@@ -56,7 +55,7 @@ const Header = (props) => {
     if (routeName === "Chat" && talkTicketKey)
       return (
         <TalkMenuButton
-          disable={["stopping", "approving"].includes(talkStatusKey)}
+          disable={["stopping", "approving", "waiting"].includes(talkStatusKey)}
           key="TalkMenuButton"
           navigation={navigation}
           talkTicketKey={talkTicketKey}
@@ -198,14 +197,7 @@ const Header = (props) => {
   return (
     <Block style={headerStyles}>
       <NavBar
-        style={[
-          styles.navbar,
-          {
-            paddingTop: checkiPhoneX(Dimensions)
-              ? theme.SIZES.BASE * 4
-              : theme.SIZES.BASE * 3,
-          },
-        ]}
+        style={[styles.navbar]}
         transparent={transparent}
         title={convertNameToTitle(name)}
         titleStyle={[
@@ -241,9 +233,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   navbar: {
-    paddingVertical: 0,
-    paddingBottom: theme.SIZES.BASE * 1.5,
     zIndex: 5,
+    height: 54,
   },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,

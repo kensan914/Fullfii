@@ -148,8 +148,10 @@ const RootNavigator: React.FC<Props> = (props) => {
               <GalioProvider theme={materialTheme}>
                 <StartUpManager>
                   <AttManager>
-                    {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-                    <Screens {...props} />
+                    {Platform.OS === "ios" && (
+                      <StatusBar barStyle="dark-content" />
+                    )}
+                    <Screens />
                   </AttManager>
                 </StartUpManager>
               </GalioProvider>

@@ -122,12 +122,12 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
               <Avatar size={75} image={false} border={false} />
             </Block>
             <Block flex={0.4} center>
-              <Block style={{paddingVertical: 5}}>
+              <Block style={{ paddingVertical: 5 }}>
                 <Text bold size={15} color="dimgray">
                   性別：{user.gender.label}
                 </Text>
               </Block>
-              <Block style={{paddingVertical: 5}}>
+              <Block style={{ paddingVertical: 5 }}>
                 <Text bold size={15} color="dimgray">
                   職業：{user.job.label}
                 </Text>
@@ -164,21 +164,27 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
 
           <Block row center style={{ marginVertical: theme.SIZES.BASE * 2 }}>
             <Block flex={0.45} center>
-              <Button round uppercase color="#b0b0b0" shadowColor="#b0b0b0" style={styles.modalButton} onPress={onPressReport}>
-                <Block row space='between'>
-                  <Block center style={{paddingRight: 5}}>
-                  <Icon
+              <Button
+                round
+                uppercase
+                color="#b0b0b0"
+                shadowColor="#b0b0b0"
+                style={styles.modalButton}
+                onPress={onPressReport}
+              >
+                <Block row space="between">
+                  <Block center style={{ paddingRight: 5 }}>
+                    <Icon
                       name="notification"
                       family="AntDesign"
                       color="white"
                       size={25}
                     />
-                    </Block>
-                    <Block center>
-                  <Text size={16} color="white" bold
-                  >
-                  通報
-                  </Text>
+                  </Block>
+                  <Block center>
+                    <Text size={16} color="white" bold>
+                      通報
+                    </Text>
                   </Block>
                 </Block>
               </Button>
@@ -212,21 +218,27 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
                 colorLess
                 onPress={onPressBlock}
               /> */}
-              <Button round uppercase color="#b0b0b0" shadowColor="#b0b0b0" style={styles.modalButton} onPress={onPressReport}>
-                <Block row space='between'>
-                  <Block center style={{paddingRight: 5}}>
-                  <Icon
+              <Button
+                round
+                uppercase
+                color="#b0b0b0"
+                shadowColor="#b0b0b0"
+                style={styles.modalButton}
+                onPress={onPressReport}
+              >
+                <Block row space="between">
+                  <Block center style={{ paddingRight: 5 }}>
+                    <Icon
                       name="block"
                       family="Entypo"
                       color="white"
                       size={25}
                     />
-                    </Block>
-                    <Block center>
-                  <Text size={16} color="white" bold
-                  >
-                  ブロック
-                  </Text>
+                  </Block>
+                  <Block center>
+                    <Text size={16} color="white" bold>
+                      ブロック
+                    </Text>
                   </Block>
                 </Block>
               </Button>
