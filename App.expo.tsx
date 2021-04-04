@@ -92,8 +92,6 @@ const RootNavigator: React.FC<Props> = (props) => {
         _talkTicketCollectionJson ? _talkTicketCollectionJson : null
       );
     })();
-
-    StatusBar.setBarStyle("light-content");
   }, []);
   if (
     typeof status === "undefined" ||
@@ -113,7 +111,7 @@ const RootNavigator: React.FC<Props> = (props) => {
               <GalioProvider theme={materialTheme}>
                 <StartUpManager>
                   {Platform.OS === "ios" && (
-                    <StatusBar barStyle="light-content" />
+                    <StatusBar barStyle="dark-content" />
                   )}
                   <Screens />
                 </StartUpManager>
