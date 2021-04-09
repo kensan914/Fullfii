@@ -1,15 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Block, Text } from "galio-framework";
-import { Image, StyleSheet } from "react-native";
-import { AllMessage, TalkTicket } from "../types/Types.context";
+import LottieView from "lottie-react-native";
+import { Dimensions, Image, StyleSheet } from "react-native";
+
+import { AllMessage, TalkTicket, TalkTicketKey } from "../types/Types.context";
 import { CommonMessage } from "./Chat";
+import SvgButton from "../atoms/SvgButton";
+import useShuffle from "../hooks/useShuffle";
+import ChatModal from "../molecules/ChatModal";
+
+const { width } = Dimensions.get("screen");
 
 type Props = {
   talkTicket: TalkTicket;
   commonMessage: AllMessage;
+  talkTicketKey: TalkTicketKey;
 };
 const WaitingChatBody: React.FC<Props> = (props) => {
-  const { talkTicket, commonMessage } = props;
+  const { talkTicket, talkTicketKey, commonMessage } = props;
+
+  const {
+    topic,
+    setTopic,
+    isSpeaker,
+    setIsSpeaker,
+    isShowSpinner,
+    isOpenEndTalk,
+    canPressBackdrop,
+    onPressStop,
+    onPressShuffle,
+    closeChatModal,
+    roomId,
+    genePlaceholder,
+  } = useShuffle(talkTicketKey);
+
+  const [isOpenChatModal, setIsOpenChatModal] = useState(false);
 
   return (
     <Block flex={1}>
@@ -25,21 +50,26 @@ const WaitingChatBody: React.FC<Props> = (props) => {
       </Block>
 
       <Block
-        flex={0.5}
+        flex={0.4}
         style={[styles.dividedContainer, styles.centralContainer]}
       >
-        <Image
+        <LottieView
           style={{
-            height: "100%",
-            resizeMode: "contain",
+            width: "70%",
           }}
-          source={require("../../assets/images/chat/waiting_chat.png")}
+          loop
+          autoPlay
+          source={require("../../assets/animations/waiting.json")}
         />
       </Block>
 
       <Block
-        flex={0.3}
-        style={[styles.dividedContainer, styles.bottomContainer]}
+        flex={0.4}
+        style={[
+          styles.dividedContainer,
+          styles.bottomContainer,
+          { justifyContent: "space-evenly" },
+        ]}
       >
         <Text
           bold
@@ -47,10 +77,37 @@ const WaitingChatBody: React.FC<Props> = (props) => {
           size={15}
           style={{ lineHeight: 20, textAlign: "center" }}
         >
-          話し相手が見つかり次第通知でお知らせします。{"\n"}
-          待ち時間が長い場合は、シャッフルの条件を変えてみるのも一つの手です。
+          話し相手が見つかり次第通知でお知らせします！
         </Text>
+
+        <Block row center style={{ justifyContent: "center", marginTop: 20 }}>
+          <Block flex={0.45} center>
+            <SvgButton
+              source={require("../../assets/icons/exit-room.svg")}
+              onPress={onPressStop}
+              diameter={width / 5.5}
+              shadowColor={"#a9a9a9"}
+            />
+          </Block>
+          <Block />
+          <Block flex={0.45} center>
+            <SvgButton
+              source={require("../../assets/icons/pinkLoop.svg")}
+              onPress={() => {
+                setIsOpenChatModal(true);
+              }}
+              diameter={width / 5.5}
+            />
+          </Block>
+        </Block>
       </Block>
+
+      <ChatModal
+        isOpen={isOpenChatModal}
+        setIsOpen={setIsOpenChatModal}
+        talkTicketKey={talkTicketKey}
+        isOnlyShuffle
+      />
     </Block>
   );
 };
@@ -62,14 +119,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  headerContainer: {
-    // backgroundColor: "red",
-  },
-  centralContainer: {
-    // backgroundColor: "green",
-  },
+  headerContainer: {},
+  centralContainer: {},
   bottomContainer: {
-    // backgroundColor: "blue",
     paddingHorizontal: 20,
   },
   modalContents: {

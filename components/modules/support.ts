@@ -452,6 +452,7 @@ export const checkSubscribePlan = (
 
 /**
  * iPhoneX系か判定
+ * @deprecated
  */
 export const checkiPhoneX = (Dimensions: Dimensions): boolean => {
   const { height, width } = Dimensions.get("window");

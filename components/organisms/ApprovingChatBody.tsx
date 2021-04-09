@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { Block, Text, theme, Button } from "galio-framework";
 
 import Avatar from "../atoms/Avatar";
@@ -20,6 +20,8 @@ import useAllContext from "../contexts/ContextUtils";
 import { initConnectWsChat } from "../../screens/StartUpManager";
 import ChatModal from "../molecules/ChatModal";
 import useProfileModal from "../hooks/useProfileModal";
+
+const { width } = Dimensions.get("screen");
 
 type Props = {
   talkTicket: TalkTicket;
@@ -120,9 +122,16 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
               <Avatar size={75} image={false} border={false} />
             </Block>
             <Block flex={0.4} center>
-              <Text bold size={15} color="dimgray">
-                {user.job.label}
-              </Text>
+              <Block style={{ paddingVertical: 5 }}>
+                <Text bold size={15} color="dimgray">
+                  性別：{user.gender.label}
+                </Text>
+              </Block>
+              <Block style={{ paddingVertical: 5 }}>
+                <Text bold size={15} color="dimgray">
+                  職業：{user.job.label}
+                </Text>
+              </Block>
             </Block>
           </Block>
           <Block row center style={{ marginVertical: 28 }}>
@@ -155,21 +164,84 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
 
           <Block row center style={{ marginVertical: theme.SIZES.BASE * 2 }}>
             <Block flex={0.45} center>
-              <ModalButton
+              <Button
+                round
+                uppercase
+                color="#b0b0b0"
+                shadowColor="#b0b0b0"
+                style={styles.modalButton}
+                onPress={onPressReport}
+              >
+                <Block row space="between">
+                  <Block center style={{ paddingRight: 5 }}>
+                    <Icon
+                      name="notification"
+                      family="AntDesign"
+                      color="white"
+                      size={25}
+                    />
+                  </Block>
+                  <Block center>
+                    <Text size={16} color="white" bold>
+                      通報
+                    </Text>
+                  </Block>
+                </Block>
+              </Button>
+              {/* <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() => onPressShuffle()}
+            >
+              <Block flex row>
+                <Block flex={0.2} center style={styles.buttonSvgIcon}>
+                  <SvgUri width={40} height={40} source={pinkLoop} />
+                </Block>
+                <Block flex={0.8} center style={styles.buttonText}>
+                  <Text bold size={20} color={COLORS.PINK}>
+                    話し相手を探す!
+                  </Text>
+                </Block>
+              </Block>
+            </TouchableOpacity> */}
+              {/* <ModalButton
                 icon="notification"
                 iconFamily="AntDesign"
                 colorLess
                 onPress={onPressReport}
-              />
+              /> */}
             </Block>
             <Block flex={0.1} />
             <Block flex={0.45} center>
-              <ModalButton
+              {/* <ModalButton
                 icon="block"
                 iconFamily="Entypo"
                 colorLess
                 onPress={onPressBlock}
-              />
+              /> */}
+              <Button
+                round
+                uppercase
+                color="#b0b0b0"
+                shadowColor="#b0b0b0"
+                style={styles.modalButton}
+                onPress={onPressReport}
+              >
+                <Block row space="between">
+                  <Block center style={{ paddingRight: 5 }}>
+                    <Icon
+                      name="block"
+                      family="Entypo"
+                      color="white"
+                      size={25}
+                    />
+                  </Block>
+                  <Block center>
+                    <Text size={16} color="white" bold>
+                      ブロック
+                    </Text>
+                  </Block>
+                </Block>
+              </Button>
             </Block>
           </Block>
         </Block>
@@ -177,7 +249,7 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
           <Button
             round
             color={COLORS.PINK}
-            shadowColor={COLORS.PINK}
+            shadowColor="#ee504d"
             style={[styles.goNextButton]}
             loading={isLoading}
             onPress={() => {
@@ -190,20 +262,20 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
           >
             <Text bold color="white" size={16}>
               {/* メッセージを送信する */}
-              話してみる
+              話してみる！
             </Text>
           </Button>
 
           <Button
             round
-            color={"darkgray"}
-            shadowless
+            color={"white"}
+            shadowColor="#cccccc"
             style={{ marginTop: 16 }}
             onPress={() => {
               setIsOpenChatModal(true);
             }}
           >
-            <Text bold color="white" size={16}>
+            <Text bold color={COLORS.PINK} size={16}>
               話し相手を変更する
             </Text>
           </Button>
@@ -253,7 +325,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
   },
-
+  modalButton: {
+    width: 120,
+  },
   settingsCard: {
     backgroundColor: "white",
     alignItems: "center",

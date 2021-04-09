@@ -110,7 +110,9 @@ const RootNavigator: React.FC<Props> = (props) => {
             <ChatProvider talkTicketCollection={talkTicketCollection}>
               <GalioProvider theme={materialTheme}>
                 <StartUpManager>
-                  {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+                  {Platform.OS === "ios" && (
+                    <StatusBar barStyle="dark-content" />
+                  )}
                   <Screens />
                 </StartUpManager>
               </GalioProvider>
