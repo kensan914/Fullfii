@@ -13,7 +13,6 @@ import requestAxios from "../components/modules/axios";
 import {
   Dispatches,
   MeProfile,
-  ProfileDispatch,
   MeProfileIoTs,
   States,
   TalkInfoJson,
@@ -35,7 +34,11 @@ import {
 } from "../components/types/Types";
 import { Alert } from "react-native";
 import { requestPatchProfile } from "./ProfileInput";
-import { checkUpdateVersion } from "../components/modules/versionUpdate";
+import {
+  checkUpdateVersion,
+  checkAndPromptSiren,
+} from "../components/modules/versionUpdate";
+import { alertDeleteAuth } from "../components/modules/auth/crud";
 
 const StartUpManager: React.FC = (props) => {
   const { children } = props;
@@ -106,7 +109,8 @@ export const startUpLoggedin = (
 ): void => {
   if (typeof token !== "undefined") {
     checkUpdateVersion();
-    requestGetProfile(token, dispatches.profileDispatch, setMeProfileTemp);
+    // checkAndPromptSiren();
+    requestGetProfile(token, dispatches, setMeProfileTemp);
     connectWsNotification(token, states, dispatches);
     updateTalk(token, states, dispatches);
   }
@@ -114,15 +118,20 @@ export const startUpLoggedin = (
 
 const requestGetProfile = (
   token: string,
-  profileDispatch: ProfileDispatch,
+  dispatches: Dispatches,
   setMeProfileTemp: React.Dispatch<MeProfile>
 ): void => {
   requestAxios(URLJoin(BASE_URL, "me/"), "get", MeProfileIoTs, {
     token: token,
     thenCallback: (resData) => {
       const _resData = resData as MeProfile;
-      profileDispatch({ type: "SET_ALL", profile: _resData });
+      dispatches.profileDispatch({ type: "SET_ALL", profile: _resData });
       setMeProfileTemp(_resData);
+    },
+    catchCallback: (err) => {
+      if (err?.response?.status === 401)
+        // alertDeleteAuth(err?.response?.data.detail);
+        alertDeleteAuth(dispatches.authDispatch);
     },
   });
 };

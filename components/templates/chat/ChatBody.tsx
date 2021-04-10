@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Platform,
-  Alert,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, Platform, Alert, Dimensions } from "react-native";
 import {
   Bubble,
   GiftedChat,
@@ -14,11 +7,13 @@ import {
   IMessage,
   Send,
   BubbleProps,
+  InputToolbar,
+  InputToolbarProps,
+  SystemMessageProps,
 } from "react-native-gifted-chat";
 import "dayjs/locale/ja";
 import { Text } from "galio-framework";
 
-import messagesData from "./data/messages";
 import { COLORS } from "../../../constants/Theme";
 import Icon from "../../atoms/Icon";
 import { logEvent } from "../../modules/firebase/logEvent";
@@ -51,7 +46,7 @@ type Props = {
 const ChatBody: React.FC<Props> = (props) => {
   const {
     user,
-    messages = messagesData, // TODO:
+    messages,
     ws,
     token,
     talkTicketKey,
@@ -119,8 +114,8 @@ const ChatBody: React.FC<Props> = (props) => {
         Alert.alert(`${user.name}さんは退室しています`);
         return;
       } else if (!existUser) {
-        // Alert.alert("話し相手が見つかりません。");
-        // return;
+        Alert.alert("話し相手が見つかりません。");
+        return;
       }
 
       // TODO:
@@ -201,6 +196,7 @@ const ChatBody: React.FC<Props> = (props) => {
           wrapperStyle={{
             right: {
               backgroundColor: COLORS.PINK,
+              paddingRight: 4,
               paddingLeft: 4,
               paddingVertical: 4,
 
@@ -266,7 +262,11 @@ const ChatBody: React.FC<Props> = (props) => {
     );
   };
 
-  const renderSystemMessage = (props) => {
+  const renderInputToolbar = (props: InputToolbarProps) => {
+    return <InputToolbar {...props} containerStyle={{}} />;
+  };
+
+  const renderSystemMessage = (props: SystemMessageProps<IMessage>) => {
     return (
       <SystemMessage
         {...props}
@@ -298,7 +298,16 @@ const ChatBody: React.FC<Props> = (props) => {
     </Send>
   );
 
-  console.log(giftedMessages);
+  const renderScrollToBottomComponent = () => {
+    return (
+      <Icon
+        family="font-awesome"
+        size={15}
+        name="arrow-down"
+        color="darkgray"
+      />
+    );
+  };
 
   return (
     <View
@@ -309,7 +318,6 @@ const ChatBody: React.FC<Props> = (props) => {
     >
       <GiftedChat
         messages={giftedMessages}
-        placeholder="メッセージを入力"
         onSend={onSend}
         user={giftedMe}
         scrollToBottom
@@ -318,6 +326,7 @@ const ChatBody: React.FC<Props> = (props) => {
         }}
         keyboardShouldPersistTaps="never"
         renderBubble={renderBubble}
+        renderInputToolbar={renderInputToolbar}
         renderSystemMessage={renderSystemMessage}
         renderSend={renderSend}
         inverted
@@ -331,6 +340,20 @@ const ChatBody: React.FC<Props> = (props) => {
         renderTicks={() => null}
         renderTime={() => null}
         locale="ja"
+        placeholder="メッセージを入力"
+        textInputStyle={{
+          paddingHorizontal: 6,
+          paddingTop: 8,
+        }}
+        bottomOffset={34} // textInput下部に時たま余白ができてしまうため固定
+        listViewProps={{
+          // https://reactnative.dev/docs/scrollview#props
+          contentContainerStyle: {
+            paddingBottom: 16,
+          },
+        }}
+        scrollToBottomComponent={renderScrollToBottomComponent}
+        scrollToBottomStyle={{ bottom: 20 }}
 
         // parsePatterns={parsePatterns} // 特定のテキスト(ex. "# awesome")をリンク化
         // onQuickReply={onQuickReply} // QuickReply (ex. checkBox)

@@ -22,7 +22,8 @@ export type AuthActionType =
   | { type: "SET_WORRIES_BUFFER"; worries: GenreOfWorries }
   | { type: "COMPLETE_SIGNUP"; token: string; password: string }
   | { type: "SET_TOKEN"; token: string }
-  | { type: "SET_IS_SHOW_SPINNER"; value: boolean };
+  | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
+  | { type: "DANGEROUSLY_DELETE_AUTH" };
 //========== Auth ==========//
 
 //========== Auth io-ts ==========//
@@ -121,6 +122,7 @@ export const MeProfileIoTs = t.intersection([
     plan: PlanIoTs,
     canTalkHeterosexual: t.boolean,
     deviceToken: t.union([t.string, t.null]),
+    isActive: t.boolean,
   }),
   ProfileIoTs,
 ]);

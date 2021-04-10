@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext } from "react";
+import { dangerouslyDeleteAuth } from "../modules/auth/crud";
 import {
   asyncStoreItem,
   asyncRemoveItem,
@@ -93,6 +94,13 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
         isShowSpinner: Boolean(action.value),
       };
 
+    case "DANGEROUSLY_DELETE_AUTH":
+      /** async storageからtokenを含む全ての認証情報を削除し、auth stateを初期化.
+       * @param {Object} action [type] */
+
+      dangerouslyDeleteAuth();
+      return { ...initAuthState };
+
     default:
       console.warn(`Not found this action.type`);
       return { ...prevState };
@@ -108,12 +116,13 @@ export const UNAUTHENTICATED: UnauthenticatedType = "Unauthenticated"; // signup
 export const AUTHENTICATING: AuthenticatingType = "Authenticating"; // signup処理中. SignUp描画
 export const AUTHENTICATED: AuthenticatedType = "Authenticated"; // signup処理後. Home描画
 
-const authStateContext = createContext<AuthState>({
+const initAuthState = Object.freeze({
   status: UNAUTHENTICATED,
   token: null,
   signupBuffer: { ...initSignupBuffer },
   isShowSpinner: false,
 });
+const authStateContext = createContext<AuthState>(initAuthState);
 const authDispatchContext = createContext<AuthDispatch>(() => {
   return void 0;
 });
