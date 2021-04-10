@@ -118,15 +118,14 @@ const ChatBody: React.FC<Props> = (props) => {
         return;
       }
 
-      // TODO:
-      // logEvent(
-      //   "send_message_button",
-      //   {
-      //     message: _giftedMessage.text,
-      //     talkTicketKey: talkTicketKey,
-      //   },
-      //   profileState
-      // );
+      logEvent(
+        "send_message_button",
+        {
+          message: _giftedMessage.text,
+          talkTicketKey: talkTicketKey,
+        },
+        profileState
+      );
 
       const messageId = generateUuid4();
       appendOfflineMessage(messageId, _giftedMessage.text);
