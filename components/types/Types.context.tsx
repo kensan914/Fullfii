@@ -22,7 +22,8 @@ export type AuthActionType =
   | { type: "SET_WORRIES_BUFFER"; worries: GenreOfWorries }
   | { type: "COMPLETE_SIGNUP"; token: string; password: string }
   | { type: "SET_TOKEN"; token: string }
-  | { type: "SET_IS_SHOW_SPINNER"; value: boolean };
+  | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
+  | { type: "DANGEROUSLY_DELETE_AUTH" };
 //========== Auth ==========//
 
 //========== Auth io-ts ==========//
@@ -121,6 +122,7 @@ export const MeProfileIoTs = t.intersection([
     plan: PlanIoTs,
     canTalkHeterosexual: t.boolean,
     deviceToken: t.union([t.string, t.null]),
+    isActive: t.boolean,
   }),
   ProfileIoTs,
 ]);
@@ -179,6 +181,7 @@ export type ChatActionType =
       talkTicketKey: TalkTicketKey;
       messageId: string;
       messageText: string;
+      time: Date;
     }
   | {
       type: "READ_BY_ROOM";
@@ -247,19 +250,26 @@ export const DateType = new t.Type<Date, string, unknown>(
     }),
   (a) => a.toISOString()
 );
-export const OfflineMessageIoTs = t.type({
+export const BaseMessageIoTs = t.type({
   messageId: t.string,
   message: t.string,
   isMe: t.boolean,
 });
+export const OfflineMessageIoTs = t.type({
+  messageId: t.string,
+  message: t.string,
+  isMe: t.boolean,
+  time: DateType,
+  isOffline: t.boolean,
+});
 export const MessageIoTs = t.intersection([
-  OfflineMessageIoTs,
+  BaseMessageIoTs,
   t.type({
     time: DateType,
   }),
 ]);
 export const MessageJsonIoTs = t.intersection([
-  OfflineMessageIoTs,
+  BaseMessageIoTs,
   t.type({
     time: t.string,
   }),

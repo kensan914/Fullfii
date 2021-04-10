@@ -13,7 +13,7 @@ import Hr from "../components/atoms/Hr";
 import {
   USER_POLICY_URL,
   VERSION,
-  GOOGLE_FORM_URL,
+  CONTACT_US_URL,
   ACCOUNT_DELETION_URL,
   PRIVACY_POLICY_URL,
   ADMOB_UNIT_ID_SETTINGS,
@@ -36,7 +36,7 @@ const Settings: React.FC = () => {
   };
 
   const _handleOpenWithWebBrowserContactUsForm = () => {
-    WebBrowser.openBrowserAsync(GOOGLE_FORM_URL);
+    WebBrowser.openBrowserAsync(CONTACT_US_URL);
   };
 
   const _handleOpenWithWebBrowserAccountDeletion = () => {
@@ -48,7 +48,11 @@ const Settings: React.FC = () => {
       <ScrollView>
         <SettingsTitle title="Fullfiiについて" />
         <SettingsLabel title="バージョン" content={VERSION} />
-        <SettingsCard title="利用規約" titleColor="dimgray" onPress={_handleOpenWithWebBrowser} />
+        <SettingsCard
+          title="利用規約"
+          titleColor="dimgray"
+          onPress={_handleOpenWithWebBrowser}
+        />
         <SettingsCard
           title="プライバシーポリシー"
           titleColor="dimgray"
@@ -89,13 +93,22 @@ const SettingsTitle: React.FC<{ title: string }> = (props) => {
   );
 };
 
-const SettingsCard: React.FC<{ title: string; titleColor: string; onPress: OnPress }> = (props) => {
+const SettingsCard: React.FC<{
+  title: string;
+  titleColor: string;
+  onPress: OnPress;
+}> = (props) => {
   const { title, titleColor, onPress } = props;
   return (
     <TouchableOpacity onPress={onPress}>
       <Block flex row style={styles.settingsCard}>
         <Block flex={0.9}>
-          <Text bold size={15} color={titleColor} style={{ marginHorizontal: 15 }}>
+          <Text
+            bold
+            size={15}
+            color={titleColor}
+            style={{ marginHorizontal: 15 }}
+          >
             {title}
           </Text>
         </Block>

@@ -54,3 +54,24 @@ const onUpdateVersion = (prevVersionNum: number) => {
     }
   }
 };
+
+// siren
+import Siren from "react-native-siren";
+
+export const checkAndPromptSiren = (): void => {
+  const defaultOptions = {
+    title: "AwesomeApp has a new update!",
+  };
+
+  const versionSpecificRules = [
+    {
+      localVersion: "3.0.2",
+      forceUpgrade: true,
+      title: "Update your app now",
+      message:
+        "This version contains a bug that might corrupt your data. You must update to be able to use our app.",
+    },
+  ];
+
+  Siren.promptUser(defaultOptions, versionSpecificRules, "com.fullfii.fullfii");
+};

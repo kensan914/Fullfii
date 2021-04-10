@@ -437,12 +437,14 @@ const chatReducer = (
 
     case "APPEND_OFFLINE_MESSAGE": {
       /** offlineMessageを作成し、追加
-       * @param {Object} action [type, talkTicketKey, messageId, messageText] */
+       * @param {Object} action [type, talkTicketKey, messageId, messageText, time] */
 
       const offlineMessage: OfflineMessage = {
         messageId: action.messageId,
         message: action.messageText,
         isMe: true,
+        time: action.time,
+        isOffline: true,
       };
 
       _talkTicketCollection = prevState.talkTicketCollection;
