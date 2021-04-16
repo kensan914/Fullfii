@@ -30,6 +30,7 @@ import {
 import { AppendOfflineMessage, SendWsMessage } from "../../types/Types";
 import { useChatDispatch } from "../../contexts/ChatContext";
 import useGifted from "./Gifted";
+import { getBottomSpace } from 'react-native-iphone-x-helper'
 
 const { width } = Dimensions.get("screen");
 
@@ -344,7 +345,7 @@ const ChatBody: React.FC<Props> = (props) => {
           paddingHorizontal: 6,
           paddingTop: 8,
         }}
-        bottomOffset={34} // textInput下部に時たま余白ができてしまうため固定
+        bottomOffset={getBottomSpace()} // textInput下部に時たま余白ができてしまうため固定
         listViewProps={{
           // https://reactnative.dev/docs/scrollview#props
           contentContainerStyle: {
