@@ -131,7 +131,6 @@ const ChatBody: React.FC<Props> = (props) => {
       appendOfflineMessage(messageId, _giftedMessage.text);
 
       if (ws !== null && token !== null) {
-        console.log("wsによるメッセージの送信を下");
         sendWsMessage(ws, messageId, _giftedMessage.text, token);
       }
 
@@ -156,8 +155,10 @@ const ChatBody: React.FC<Props> = (props) => {
     const isSameAsPreviousCreatedAt =
       typeof currentCreatedAt !== "undefined" &&
       typeof currentCreatedAt !== "number" &&
+      typeof currentCreatedAt !== "string" &&
       typeof previousCreatedAt !== "undefined" &&
       typeof previousCreatedAt !== "number" &&
+      typeof previousCreatedAt !== "string" &&
       typeof currentUser !== "undefined" &&
       typeof previousUser !== "undefined" &&
       currentUser._id === previousUser._id &&
@@ -170,8 +171,10 @@ const ChatBody: React.FC<Props> = (props) => {
     const isSameAsNextCreatedAt =
       typeof currentCreatedAt !== "undefined" &&
       typeof currentCreatedAt !== "number" &&
+      typeof currentCreatedAt !== "string" &&
       typeof nextCreatedAt !== "undefined" &&
       typeof nextCreatedAt !== "number" &&
+      typeof nextCreatedAt !== "string" &&
       typeof currentUser !== "undefined" &&
       typeof nextUser !== "undefined" &&
       currentUser._id === nextUser._id &&

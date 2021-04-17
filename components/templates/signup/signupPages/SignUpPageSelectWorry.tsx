@@ -20,13 +20,14 @@ const SignUpPageSelectWorry: React.FC<Props> = (props) => {
   const authDispatch = useAuthDispatch();
   const profileState = useProfileState();
   const progressNum = 3;
+  const minSelectWorryNum = 1;
 
   const [
     worriesCollection,
     setWorriesCollection,
   ] = useState<GenreOfWorriesCollection>({});
   const checkCanNext = () => {
-    return Object.keys(worriesCollection).length >= 3;
+    return Object.keys(worriesCollection).length >= minSelectWorryNum;
   };
 
   const pressButton = () => {
@@ -85,7 +86,7 @@ const SignUpPageSelectWorry: React.FC<Props> = (props) => {
   return (
     <SignUpPageTemplate
       title="あなたの悩みをおしえて下さい"
-      subTitle="3つ選択してください。選んだ悩みは後で変更できます。"
+      subTitle={`当てはまる悩みを${minSelectWorryNum}つ選択してください。選んだ悩みは後で変更できます。`}
       contents={renderContents()}
       isLoading={false}
       pressCallback={pressButton}

@@ -12,7 +12,8 @@ import {
 } from "react-native";
 import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
-import Spinner from "react-native-loading-spinner-overlay";
+// import Spinner from "react-native-loading-spinner-overlay";
+import Spinner from "../atoms/Spinner";
 
 import { EndTalkScreenType } from "../organisms/Chat";
 import { TalkTicketKey } from "../types/Types.context";
@@ -76,7 +77,7 @@ const ChatModal: React.FC<Props> = (props) => {
           }}
         >
           <KeyboardAvoidingView behavior="padding" style={{}}>
-            <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0)" />
+            {/* <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0)" /> */}
 
             <Block style={styles.modalContents}>
               <Block>
@@ -178,20 +179,20 @@ const ChatModal: React.FC<Props> = (props) => {
                 </Block>
               </Block>
             </Block>
-
-            {roomId.current && authState.token && EndTalkScreen ? (
-              <EndTalkScreen
-                isOpen={isOpenEndTalk}
-                closeChatModal={closeChatModal}
-                roomId={roomId.current}
-                token={authState.token}
-              />
-            ) : (
-              <></>
-            )}
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
       </Modal>
+
+      {roomId.current && authState.token && EndTalkScreen ? (
+        <EndTalkScreen
+          isOpen={isOpenEndTalk}
+          closeChatModal={closeChatModal}
+          roomId={roomId.current}
+          token={authState.token}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

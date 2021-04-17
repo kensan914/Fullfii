@@ -38,14 +38,13 @@ const profileReducer = (
         profileParams: action.profileParams,
       };
 
-    case "RESET":
-      /** リセット wsの切断
+    case "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS":
+      /** profile stateを初期化. 再サインアップ時のためにprofileParamsは対象外とする.
        * @param {Object} action [type] */
 
       return {
         ...prevState,
         profile: { ...initMeProfile },
-        profileParams: null,
       };
 
     default:
@@ -82,6 +81,7 @@ export const initMeProfile: MeProfile = Object.freeze({
   me: true,
   plan: { key: "", label: "" },
   deviceToken: "",
+  isActive: true,
 });
 
 const profileStateContext = createContext<ProfileState>({

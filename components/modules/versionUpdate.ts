@@ -58,6 +58,7 @@ const onUpdateVersion = (prevVersionNum: number) => {
 // siren
 import Siren from "react-native-siren";
 
+// FIXME:
 export const checkAndPromptSiren = (): void => {
   const defaultOptions = {
     title: "AwesomeApp has a new update!",
@@ -73,5 +74,5 @@ export const checkAndPromptSiren = (): void => {
     },
   ];
 
-  Siren.promptUser(defaultOptions, versionSpecificRules, "com.fullfii.fullfii");
+  Siren.promptUser(defaultOptions, versionSpecificRules);
 };

@@ -1,23 +1,30 @@
 import { Alert } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 
-import { AuthDispatch } from "../../types/Types.context";
+import { Dispatches } from "../../types/Types.context";
 import { asyncRemoveItem } from "../support";
 import { CONTACT_US_URL } from "../../../constants/env";
 
 /**
  * async storageからtokenを含む全ての認証情報を削除するため復帰ができません。
+ * 加えて、各stateもリセットされる
  */
-export const dangerouslyDeleteAuth = (): void => {
+export const dangerouslyDelete = (dispatches: Dispatches): void => {
   asyncRemoveItem("status");
   asyncRemoveItem("token");
   asyncRemoveItem("signupBuffer");
   asyncRemoveItem("talkTicketCollection");
   asyncRemoveItem("versionNum");
+
+  dispatches.authDispatch({ type: "DANGEROUSLY_RESET" });
+  dispatches.chatDispatch({ type: "DANGEROUSLY_RESET" });
+  dispatches.profileDispatch({
+    type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS",
+  });
 };
 
 export const alertDeleteAuth = (
-  authDispatch: AuthDispatch,
+  dispatches: Dispatches,
   title?: string,
   subTitle?: string
 ): void => {
@@ -30,14 +37,14 @@ export const alertDeleteAuth = (
           text: "端末上のデータを完全に削除する",
           onPress: () => {
             // AsyncStorage削除・auth state初期化
-            authDispatch({ type: "DANGEROUSLY_DELETE_AUTH" });
+            dangerouslyDelete(dispatches);
           },
           style: "destructive",
         },
         {
           text: "キャンセル",
           onPress: () => {
-            alertDeleteAuth(authDispatch);
+            alertDeleteAuth(dispatches);
           },
           style: "cancel",
         },
@@ -63,7 +70,7 @@ export const alertDeleteAuth = (
         onPress: () => {
           (async () => {
             await WebBrowser.openBrowserAsync(CONTACT_US_URL);
-            alertDeleteAuth(authDispatch);
+            alertDeleteAuth(dispatches);
           })();
         },
         style: "cancel",

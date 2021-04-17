@@ -15,7 +15,6 @@ import useShuffle from "../hooks/useShuffle";
 import SvgUri from "react-native-svg-uri";
 import { COLORS } from "../../constants/Theme";
 import pinkLoop from "../../assets/icons/pinkLoop.svg";
-import Spinner from "react-native-loading-spinner-overlay";
 
 type Props = {
   talkTicketKey: TalkTicketKey;
@@ -31,7 +30,6 @@ const StoppingChatBody: React.FC<Props> = (props) => {
     setTopic,
     isSpeaker,
     setIsSpeaker,
-    isShowSpinner,
     onPressShuffle,
     genePlaceholder,
   } = useShuffle(talkTicketKey, undefined, false);
@@ -127,7 +125,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </TouchableOpacity>
-          <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0.3)" />
+          {/* <Spinner visible={isShowSpinner} overlayColor="rgba(0,0,0,0.3)" /> */}
         </Block>
       </Block>
     </TouchableWithoutFeedback>
