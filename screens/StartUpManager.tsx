@@ -34,10 +34,7 @@ import {
 } from "../components/types/Types";
 import { Alert } from "react-native";
 import { requestPatchProfile } from "./ProfileInput";
-import {
-  checkUpdateVersion,
-  checkAndPromptSiren,
-} from "../components/modules/versionUpdate";
+import { checkUpdateVersion } from "../components/modules/versionUpdate";
 import { alertDeleteAuth } from "../components/modules/auth/crud";
 
 const StartUpManager: React.FC = (props) => {
@@ -109,7 +106,7 @@ export const startUpLoggedin = (
 ): void => {
   if (typeof token !== "undefined") {
     checkUpdateVersion();
-    // checkAndPromptSiren();
+    // checkAndPromptSiren(); // 先延ばし
     requestGetProfile(token, dispatches, setMeProfileTemp);
     connectWsNotification(token, states, dispatches);
     updateTalk(token, states, dispatches);
@@ -129,9 +126,9 @@ const requestGetProfile = (
       setMeProfileTemp(_resData);
     },
     catchCallback: (err) => {
-      if (err?.response?.status === 401)
-        // alertDeleteAuth(err?.response?.data.detail);
-        alertDeleteAuth(dispatches.authDispatch);
+      if (err?.response?.status === 401) {
+        alertDeleteAuth(dispatches);
+      }
     },
   });
 };
@@ -400,26 +397,26 @@ const _connectWsChat = (wsProps: WsProps) => {
             });
           } else {
             callbackSuccess(data, ws);
+          }
 
-            if (
-              "notStoredMessages" in data &&
-              data.notStoredMessages.length > 0
-            ) {
-              const messages = data.notStoredMessages as MessageJson[];
-              dispatches.chatDispatch({
-                type: "MERGE_MESSAGES",
-                talkTicketKey,
-                messages,
-                token,
-              });
-            }
+          if (
+            "notStoredMessages" in data &&
+            data.notStoredMessages.length > 0
+          ) {
+            const messages = data.notStoredMessages as MessageJson[];
+            dispatches.chatDispatch({
+              type: "MERGE_MESSAGES",
+              talkTicketKey,
+              messages,
+              token,
+            });
+          }
 
-            if ("isAlreadyEnded" in data && data.isAlreadyEnded) {
-              dispatches.chatDispatch({
-                type: "END_TALK",
-                talkTicketKey: talkTicketKey,
-              });
-            }
+          if ("isAlreadyEnded" in data && data.isAlreadyEnded) {
+            dispatches.chatDispatch({
+              type: "END_TALK",
+              talkTicketKey: talkTicketKey,
+            });
           }
           break;
 
@@ -559,10 +556,7 @@ const connectWsNotification = (
         // 認証完了
       } else if (data.type === "notice_talk") {
         if (data.status === "start") {
-          console.log("スタートトーク");
-
           if (data.talkTicket) {
-            console.log(data.talkTicket);
             // updateTalk(token, states, dispatches);
             dispatches.chatDispatch({
               type: "UPDATE_TALK_TICKETS",
@@ -574,7 +568,6 @@ const connectWsNotification = (
             );
           }
         } else if (data.status === "end") {
-          console.log(data);
           // end 多分使わない
         }
       }

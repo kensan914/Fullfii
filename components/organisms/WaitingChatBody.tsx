@@ -19,20 +19,7 @@ type Props = {
 const WaitingChatBody: React.FC<Props> = (props) => {
   const { talkTicket, talkTicketKey, commonMessage } = props;
 
-  const {
-    topic,
-    setTopic,
-    isSpeaker,
-    setIsSpeaker,
-    isShowSpinner,
-    isOpenEndTalk,
-    canPressBackdrop,
-    onPressStop,
-    onPressShuffle,
-    closeChatModal,
-    roomId,
-    genePlaceholder,
-  } = useShuffle(talkTicketKey);
+  const { onPressStop } = useShuffle(talkTicketKey);
 
   const [isOpenChatModal, setIsOpenChatModal] = useState(false);
 

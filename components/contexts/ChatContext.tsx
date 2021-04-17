@@ -86,21 +86,12 @@ const chatReducer = (
         const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
         if (_talkTicket === null) return { ...prevState };
 
-        // TODO: これで不具合がなければ"FORCE_UPDATE_TALK_TICKETS"を削除
-        // if (
-        //   !(
-        //     _talkTicketCollection[_talkTicket.worry.key] &&
-        //     _talkTicketCollection[_talkTicket.worry.key].status.key ===
-        //       "talking"
-        //   )
-        // ) {
         if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
           _talkTicket.room.messages = [geneCommonMessage("waiting")];
         } else if (_talkTicket.status.key === "stopping") {
           _talkTicket.room.messages = [geneCommonMessage("stopping")];
         }
         _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
-        // }
       });
       asyncStoreTalkTicketCollection(_talkTicketCollection);
 
@@ -596,6 +587,12 @@ const chatReducer = (
       };
     }
 
+    case "DANGEROUSLY_RESET":
+      /** chat stateを初期化.
+       * @param {Object} action [type] */
+
+      return { ...initChatState };
+
     default:
       console.warn(`Not found thi action.type.`);
       return { ...prevState };
@@ -731,11 +728,12 @@ const cvtDateStringToDateObject = (
   return talkTicketCollection;
 };
 
-const ChatStateContext = createContext<ChatState>({
+const initChatState: ChatState = Object.freeze({
   totalUnreadNum: 0,
   talkTicketCollection: {},
   chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
 });
+const ChatStateContext = createContext<ChatState>(initChatState);
 const ChatDispatchContext = createContext<ChatDispatch>(() => {
   return void 0;
 });

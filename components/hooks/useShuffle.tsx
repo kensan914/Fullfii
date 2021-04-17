@@ -102,6 +102,8 @@ const useShuffle = (
             showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
               authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
             });
+          } else {
+            authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
           }
         }
       },
@@ -114,6 +116,8 @@ const useShuffle = (
         setIsShowSpinner(false);
       },
       didRequestCallback: () => {
+        authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
+        closeChatModal();
         // この後のchatDispatchを遅延する(同時にマッチしていた場合はSTART_TALKが遅延される)
         chatDispatch({
           type: "TURN_ON_DELAY",
@@ -157,9 +161,13 @@ const useShuffle = (
             authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
             navigation.navigate("Home");
           });
+        } else {
+          authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
         }
       },
       didRequestCallback: () => {
+        authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
+        closeChatModal();
         // この後のchatDispatchを遅延する(同時にマッチしていた場合はSTART_TALKが遅延される)
         chatDispatch({
           type: "TURN_ON_DELAY",
@@ -254,7 +262,7 @@ const useShuffle = (
   //returnで配列を返す。[0]=switchのサブタイトル、[1]=textareaのサブタイトル、[2]=textareaのplaceholder
   const genePlaceholder = (talkTicketKey: TalkTicketKey): string[] => {
     switch (talkTicketKey) {
-      case "g": /* ただ話したい */
+      case "g" /* ただ話したい */:
         if (isSpeaker) {
           return [
             "今の気分は？",
@@ -268,7 +276,7 @@ const useShuffle = (
             "今日あった出来事、今の感情、気になってる映画について...なんでも大丈夫です！",
           ];
         }
-      case "a": /* 失恋の悩み */
+      case "a" /* 失恋の悩み */:
         if (isSpeaker) {
           return [
             "悩みやモヤモヤを？",
@@ -282,7 +290,7 @@ const useShuffle = (
             "励ますことができるかもしれない、失恋した経験があるから共感したい、話しをきいてあげたい...なんでも大丈夫です！",
           ];
         }
-      case "b": /* 片想いの悩み */
+      case "b" /* 片想いの悩み */:
         if (isSpeaker) {
           return [
             "悩みやモヤモヤを？",
@@ -296,7 +304,7 @@ const useShuffle = (
             "好きな人へのアプローチでアドバイスできるかもしれない、片想いの悩みで共感したい、話しをきいてあげたい...なんでも大丈夫です！",
           ];
         }
-      case "c": /* アルバイトの悩み */
+      case "c" /* アルバイトの悩み */:
         if (isSpeaker) {
           return [
             "悩みやモヤモヤを？",
@@ -310,7 +318,7 @@ const useShuffle = (
             "経験を元にアドバイスできるかもしれない、自分も悩んだことがあるからこそ共感したい、話しをきいてあげたい...なんでも大丈夫です！",
           ];
         }
-      case "d": /* 就職の悩み */
+      case "d" /* 就職の悩み */:
         if (isSpeaker) {
           return [
             "悩みやモヤモヤを？",
@@ -324,7 +332,7 @@ const useShuffle = (
             "経験を元にアドバイスできるかもしれない、自分も悩んだことがあるからこそ共感したい、話しをきいてあげたい...なんでも大丈夫です！",
           ];
         }
-      case "e": /* 夢・目標の悩み */
+      case "e" /* 夢・目標の悩み */:
         if (isSpeaker) {
           return [
             "悩みやモヤモヤを？",
@@ -338,7 +346,7 @@ const useShuffle = (
             "今は目標があるからこそ何かアドバイスできるかもしれない、やりたいことを一緒に探したい、話しをきいてあげたい...なんでも大丈夫です！",
           ];
         }
-      case "f": /* 人間関係全般の悩み */
+      case "f" /* 人間関係全般の悩み */:
         if (isSpeaker) {
           return [
             "悩みやモヤモヤを？",

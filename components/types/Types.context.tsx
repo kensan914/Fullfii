@@ -23,7 +23,7 @@ export type AuthActionType =
   | { type: "COMPLETE_SIGNUP"; token: string; password: string }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
-  | { type: "DANGEROUSLY_DELETE_AUTH" };
+  | { type: "DANGEROUSLY_RESET" };
 //========== Auth ==========//
 
 //========== Auth io-ts ==========//
@@ -46,7 +46,7 @@ export type ProfileDispatch = React.Dispatch<ProfileActionType>;
 export type ProfileActionType =
   | { type: "SET_ALL"; profile: MeProfile }
   | { type: "SET_PARAMS"; profileParams: ProfileParams }
-  | { type: "RESET" };
+  | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" };
 
 export type Plan = t.TypeOf<typeof PlanIoTs>;
 export type GenderKey = t.TypeOf<typeof GenderKeyIoTs>;
@@ -193,7 +193,8 @@ export type ChatActionType =
   | { type: "REMOVE_TALK_TICKETS"; talkTicketKeys: TalkTicketKey[] }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
-  | { type: "EXECUTED_DELAY_DISPATCH" };
+  | { type: "EXECUTED_DELAY_DISPATCH" }
+  | { type: "DANGEROUSLY_RESET" };
 
 export type TotalUnreadNum = number;
 export type TalkStatus = t.TypeOf<typeof TalkStatusIoTs>;

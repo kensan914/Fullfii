@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useContext } from "react";
-import { dangerouslyDeleteAuth } from "../modules/auth/crud";
 import {
   asyncStoreItem,
   asyncRemoveItem,
@@ -94,11 +93,10 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
         isShowSpinner: Boolean(action.value),
       };
 
-    case "DANGEROUSLY_DELETE_AUTH":
-      /** async storageからtokenを含む全ての認証情報を削除し、auth stateを初期化.
+    case "DANGEROUSLY_RESET":
+      /** auth stateを初期化.
        * @param {Object} action [type] */
 
-      dangerouslyDeleteAuth();
       return { ...initAuthState };
 
     default:

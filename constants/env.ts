@@ -3,7 +3,7 @@ const DEBUG = true;
 const ADMOB_DEBUG = true;
 // const ADMOB_DEBUG = false;
 
-const BASE_HOST = DEBUG ? "192.168.11.3:8080" : "fullfii.com";
+const BASE_HOST = DEBUG ? "192.168.11.46:8080" : "fullfii.com";
 const URL_SCHEME_HTTP = DEBUG ? "http" : "https";
 const WS_SCHEME_HTTP = DEBUG ? "ws" : "wss";
 
