@@ -86,7 +86,7 @@ const SignUpPageSelectWorry: React.FC<Props> = (props) => {
   return (
     <SignUpPageTemplate
       title="あなたの悩みをおしえて下さい"
-      subTitle={`当てはまる悩みを${minSelectWorryNum}つ選択してください。選んだ悩みは後で変更できます。`}
+      subTitle={`当てはまる悩みを選択してください。選んだ悩みは後で変更できます。`}
       contents={renderContents()}
       isLoading={false}
       pressCallback={pressButton}

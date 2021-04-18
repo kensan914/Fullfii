@@ -378,12 +378,10 @@ export class Ws {
 
     ws.onopen = this.wsSettings.onopen
       ? () => {
-          console.log("onopen");
           clearTimeout(this.connectInterval);
           this.wsSettings.onopen(ws);
         }
       : () => {
-          console.log("onopen");
           return void 0;
         };
     ws.onmessage = this.wsSettings.onmessage
@@ -406,10 +404,6 @@ export class Ws {
           return e;
         };
     ws.onclose = (e) => {
-      console.error("websocketが切断されました.");
-      console.error(e.code);
-      console.error(e);
-
       if (
         e.code === CODE.WS.UNAUTHORIZED ||
         e.code === 1000 /* 接続の正常な完了 */ ||
@@ -418,21 +412,13 @@ export class Ws {
         // ws切断
       } else {
         // ws再接続
-        console.warn({ ...ws });
-
         this.connectInterval = setTimeout(() => {
           if (!ws || ws.readyState == WebSocket.CLOSED) {
-            console.log("再接続");
-
             this.connect(true); // isReconnect = true
           }
         }, this.connectIntervalTime);
       }
       this.wsSettings.onclose(e, ws);
-    };
-    ws.onerror = (e) => {
-      console.log("えらー");
-      console.log(e);
     };
     this.wsSettings.registerWs && this.wsSettings.registerWs(ws);
   };
@@ -440,14 +426,13 @@ export class Ws {
 
 // ios環境でcloseCodeが1001で固定されてしまうため対処
 export const closeWsSafely = (ws: WebSocket): void => {
-  console.error("closeWsSafelyが実行されました.");
   if (isObject(ws) && Object.keys(ws).length) {
     ws.onclose = (e) => {
       return e;
     };
     ws.close();
   } else {
-    console.error("ws is empty object");
+    ("ws is empty object");
   }
 };
 
