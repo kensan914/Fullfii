@@ -276,13 +276,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   textArea: {
-    height: 150,
     width: width * 0.8,
     alignSelf: "center",
-    padding: 10,
+    height: 150,
     borderColor: "silver",
     borderWidth: 1,
     borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
     backgroundColor: "white",
   },
 

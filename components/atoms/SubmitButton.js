@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Text, Button } from "galio-framework";
+import { COLORS } from "../../constants/Theme";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const SubmitButton = (props) => {
@@ -10,7 +11,7 @@ const SubmitButton = (props) => {
   let textColor;
   let pressedFunc;
   if (canSubmit) {
-    color = "lightcoral";
+    color = COLORS.PINK;
     textColor = "white";
     pressedFunc = submit;
   } else {

@@ -9,6 +9,8 @@ import ModalButton from "../atoms/ModalButton";
 import { MeProfile, Profile, TalkTicket } from "../types/Types.context";
 import { useNavigation } from "@react-navigation/native";
 import useProfileModal from "../hooks/useProfileModal";
+import { COLORS } from "../../constants/Theme";
+
 
 type Props = {
   isOpen: boolean;
@@ -88,7 +90,7 @@ const ProfileModal: React.FC<Props> = (props) => {
           <Block center>
             <Button
               round
-              color="lightcoral"
+              color={COLORS.PINK}
               opacity={0.9}
               style={styles.bottomButton}
               onPress={() => {
@@ -96,13 +98,13 @@ const ProfileModal: React.FC<Props> = (props) => {
                 navigation.navigate("ProfileEditor");
               }}
             >
-              <Text color="white" size={16}>
-                <Icon
+              <Text color="white" size={16} bold>
+                {/* <Icon
                   name="pencil"
                   family="font-awesome"
                   color="white"
                   size={16}
-                />{" "}
+                />{" "} */}
                 プロフィールを編集する
               </Text>
             </Button>
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   bottomButton: {
-    shadowColor: "lightcoral",
+    shadowColor: COLORS.PINK,
     alignSelf: "center",
     marginVertical: theme.SIZES.BASE * 2,
   },
