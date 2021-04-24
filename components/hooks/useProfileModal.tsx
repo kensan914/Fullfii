@@ -78,7 +78,7 @@ const useProfileModal: (
         setCanPressBackdrop(true);
         requestReport();
       },
-      cancelOnPress: () => setCanPressBackdrop(true),
+      onCancel: () => setCanPressBackdrop(true),
     });
   };
 
@@ -115,7 +115,7 @@ const useProfileModal: (
         setCanPressBackdrop(true);
         requestBlock();
       },
-      cancelOnPress: () => setCanPressBackdrop(true),
+      onCancel: () => setCanPressBackdrop(true),
     });
   };
 

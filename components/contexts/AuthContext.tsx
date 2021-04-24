@@ -14,6 +14,7 @@ import {
   AuthDispatch,
   TokenNullable,
   AuthStatusNullable,
+  DeletedType,
 } from "../types/Types.context";
 
 const authReducer = (prevState: AuthState, action: AuthActionType) => {
@@ -93,11 +94,25 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
         isShowSpinner: Boolean(action.value),
       };
 
+    case "DELETE_ACCOUNT": {
+      /** auth stateを初期化.
+       * @param {Object} action [type] */
+
+      const deleteAccountStatus = DELETED;
+      asyncStoreItem("status", deleteAccountStatus);
+      return {
+        ...prevState,
+        status: deleteAccountStatus,
+      };
+    }
+
     case "DANGEROUSLY_RESET":
       /** auth stateを初期化.
        * @param {Object} action [type] */
 
-      return { ...initAuthState };
+      console.log({ ...initSignupBuffer });
+      console.log({ ...initAuthState });
+      return { ...initAuthState, ...{ signupBuffer: { ...initSignupBuffer } } };
 
     default:
       console.warn(`Not found this action.type`);
@@ -113,6 +128,7 @@ const initSignupBuffer: SignupBuffer = Object.freeze({
 export const UNAUTHENTICATED: UnauthenticatedType = "Unauthenticated"; // signup処理前. AppIntro描画
 export const AUTHENTICATING: AuthenticatingType = "Authenticating"; // signup処理中. SignUp描画
 export const AUTHENTICATED: AuthenticatedType = "Authenticated"; // signup処理後. Home描画
+export const DELETED: DeletedType = "Deleted"; // アカウント削除されている状態. 「無事削除されました」描画
 
 const initAuthState = Object.freeze({
   status: UNAUTHENTICATED,
@@ -120,7 +136,7 @@ const initAuthState = Object.freeze({
   signupBuffer: { ...initSignupBuffer },
   isShowSpinner: false,
 });
-const authStateContext = createContext<AuthState>(initAuthState);
+const authStateContext = createContext<AuthState>({ ...initAuthState });
 const authDispatchContext = createContext<AuthDispatch>(() => {
   return void 0;
 });
@@ -151,7 +167,9 @@ export const AuthProvider: React.FC<Props> = ({
     signupBuffer: signupBuffer ? signupBuffer : { ...initSignupBuffer },
     isShowSpinner: false,
   };
-  const [authState, authDispatch] = useReducer(authReducer, initAuthState);
+  const [authState, authDispatch] = useReducer(authReducer, {
+    ...initAuthState,
+  });
 
   return (
     <authStateContext.Provider value={authState}>

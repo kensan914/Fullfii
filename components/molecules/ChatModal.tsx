@@ -131,7 +131,9 @@ const ChatModal: React.FC<Props> = (props) => {
                   {isOnlyShuffle ? (
                     <TouchableOpacity
                       style={styles.onlyShuffleButton}
-                      onPress={onPressShuffle}
+                      onPress={() => {
+                        onPressShuffle();
+                      }}
                     >
                       <Block flex row>
                         <Block

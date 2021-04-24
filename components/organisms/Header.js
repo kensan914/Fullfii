@@ -180,6 +180,8 @@ const Header = (props) => {
         return "つぶやく";
       case "WorrySelect":
         return "悩み選択";
+      case "AccountDelete":
+        return "アカウント削除";
       default:
         return name;
     }

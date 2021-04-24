@@ -15,6 +15,7 @@ import {
   TalkTicketJsonIoTs,
   TalkTicketKey,
 } from "./Types.context";
+import { Dispatch } from "react";
 
 //--------- App.tsx ---------//
 export type Assets = { [key: string]: Asset };
@@ -32,6 +33,7 @@ export type RootStackParamList = {
   };
   Chat: { talkTicketKey: TalkTicketKey };
   Settings: undefined;
+  AccountDelete: undefined;
   Authenticated: undefined;
   SignUp: undefined;
 };
@@ -181,6 +183,23 @@ export type PressBubble = (key: TalkTicketKey) => void;
 export type BubbleItem = { key: string; label: string };
 export type BubbleItems = BubbleItem[];
 //--------- BubbleList.tsx ---------//
+
+//--------- FormTemplate.tsx ---------//
+export type Forms = Form[];
+export type Form = {
+  type: "INPUT_TEXTAREA";
+  value: string;
+  setValue: Dispatch<string>;
+  title?: string;
+  maxLength?: number;
+};
+export type SubmitSettings = {
+  label: string;
+  onSubmit: () => void;
+  isLoading?: boolean;
+  canSubmit?: boolean;
+};
+//--------- FormTemplate.tsx ---------//
 
 //--------- axios ---------//
 export type AxiosMethod = "get" | "post" | "delete" | "put" | "patch";

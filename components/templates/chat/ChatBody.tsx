@@ -30,7 +30,7 @@ import {
 import { AppendOfflineMessage, SendWsMessage } from "../../types/Types";
 import { useChatDispatch } from "../../contexts/ChatContext";
 import useGifted from "./Gifted";
-import { getBottomSpace } from 'react-native-iphone-x-helper'
+import { getBottomSpace } from "react-native-iphone-x-helper";
 
 const { width } = Dimensions.get("screen");
 
@@ -295,6 +295,7 @@ const ChatBody: React.FC<Props> = (props) => {
         justifyContent: "center",
         // backgroundColor: "red",
         paddingHorizontal: 14,
+        paddingRight: 27,
       }}
     >
       <Icon size={20} name="send" family="font-awesome" color={COLORS.PINK} />

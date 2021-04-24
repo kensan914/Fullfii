@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Platform, ScrollView } from "react-native";
+import { Dimensions, StyleSheet, ScrollView } from "react-native";
 import { Block, theme } from "galio-framework";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { HeaderHeight } from "../../../constants/utils";
 import useSlideView from "./useSlideView";
 import SignUpPageFirst from "./signupPages/SignUpPageFirst";
 import SignUpPageSelectWorry from "./signupPages/SignUpPageSelectWorry";
@@ -64,7 +63,7 @@ export default SignUpTemplate;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
+    marginTop: 0,
   },
   input: {
     width: width * 0.9,

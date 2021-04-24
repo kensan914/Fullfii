@@ -13,6 +13,7 @@ export type AuthDispatch = React.Dispatch<AuthActionType>;
 export type UnauthenticatedType = t.TypeOf<typeof UnauthenticatedTypeIoTs>;
 export type AuthenticatingType = t.TypeOf<typeof AuthenticatingTypeIoTs>;
 export type AuthenticatedType = t.TypeOf<typeof AuthenticatedTypeIoTs>;
+export type DeletedType = t.TypeOf<typeof DeletedTypeIoTs>;
 export type AuthStatus = t.TypeOf<typeof AuthStatusIoTs>;
 export type AuthStatusNullable = AuthStatus | null;
 export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
@@ -23,6 +24,7 @@ export type AuthActionType =
   | { type: "COMPLETE_SIGNUP"; token: string; password: string }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
+  | { type: "DELETE_ACCOUNT" }
   | { type: "DANGEROUSLY_RESET" };
 //========== Auth ==========//
 
@@ -30,10 +32,12 @@ export type AuthActionType =
 export const UnauthenticatedTypeIoTs = t.literal("Unauthenticated");
 export const AuthenticatingTypeIoTs = t.literal("Authenticating");
 export const AuthenticatedTypeIoTs = t.literal("Authenticated");
+export const DeletedTypeIoTs = t.literal("Deleted");
 export const AuthStatusIoTs = t.union([
   UnauthenticatedTypeIoTs,
   AuthenticatingTypeIoTs,
   AuthenticatedTypeIoTs,
+  DeletedTypeIoTs,
 ]);
 //========== Auth io-ts ==========//
 
