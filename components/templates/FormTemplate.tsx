@@ -4,7 +4,7 @@ import { Block, theme } from "galio-framework";
 import { Forms, SubmitSettings } from "../types/Types";
 import SubmitButton from "../atoms/SubmitButton";
 import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { width } from "../../constants";
+import { width } from "../../constants/utils";
 
 type Props = {
   forms: Forms;
