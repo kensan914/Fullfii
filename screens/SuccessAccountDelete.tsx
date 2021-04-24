@@ -3,7 +3,7 @@ import { Block, Text, Button } from "galio-framework";
 import { StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
 
-import { width } from "../constants";
+import { width } from "../constants/utils";
 import { COLORS } from "../constants/Theme";
 import { LottieSource } from "../components/types/Types";
 import useAllContext from "../components/contexts/ContextUtils";
