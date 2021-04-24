@@ -164,8 +164,10 @@ const styles = StyleSheet.create({
     borderColor: "silver",
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
     backgroundColor: "white",
+    textAlignVertical: 'top',
   },
   touchableOpacity: {
     width: 300,
