@@ -23,6 +23,7 @@ import {
 } from "../constants/env";
 // import Admob from "../components/molecules/Admob";
 import { OnPress } from "../components/types/Types";
+import { useNavigation } from "@react-navigation/core";
 
 const { width } = Dimensions.get("screen");
 
@@ -42,6 +43,8 @@ const Settings: React.FC = () => {
   const _handleOpenWithWebBrowserAccountDeletion = () => {
     WebBrowser.openBrowserAsync(ACCOUNT_DELETION_URL);
   };
+
+  const navigation = useNavigation();
 
   return (
     <Block flex center>
@@ -66,7 +69,9 @@ const Settings: React.FC = () => {
         <SettingsCard
           title="アカウント削除"
           titleColor="#f44336"
-          onPress={_handleOpenWithWebBrowserAccountDeletion}
+          onPress={() => {
+            navigation.navigate("AccountDelete");
+          }}
         />
       </ScrollView>
 

@@ -1,4 +1,10 @@
-import { AsyncStorage, Alert, Platform, Dimensions } from "react-native";
+import {
+  AsyncStorage,
+  Alert,
+  Platform,
+  Dimensions,
+  AlertButton,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import { isRight } from "fp-ts/lib/Either";
 
@@ -289,8 +295,9 @@ type alertModalProps = {
   subText?: string;
   cancelButton?: string;
   okButton?: string;
+  okButtonStyle?: "destructive" | "default" | "cancel" | undefined;
   onPress?: () => void;
-  cancelOnPress?: () => void;
+  onCancel?: () => void;
 };
 /**
  *  @example
@@ -308,20 +315,22 @@ type alertModalProps = {
 export const alertModal = ({
   mainText,
   subText,
-  cancelButton,
   okButton,
+  okButtonStyle = "default",
   onPress,
-  cancelOnPress,
+  cancelButton,
+  onCancel,
 }: alertModalProps): void => {
   Alert.alert(mainText ? mainText : "", subText ? subText : "", [
     {
       text: cancelButton ? cancelButton : "キャンセル",
-      onPress: cancelOnPress,
+      onPress: onCancel,
       style: "cancel",
     },
     {
       text: okButton ? okButton : "OK",
       onPress: onPress,
+      style: okButtonStyle,
     },
   ]);
 };
