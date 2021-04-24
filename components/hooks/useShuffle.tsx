@@ -21,7 +21,7 @@ import { showAdMobInterstitial } from "../molecules/Admob";
 const useShuffle = (
   talkTicketKey: TalkTicketKey,
   setIsOpen?: (val: boolean) => void,
-  isShowIntersticial = true
+  isShowIntersticial = true /* 現在インタースティシャル廃止しているのでisShowIntersticial指定しても表示しない */
 ): {
   topic: string;
   setTopic: Dispatch<string>;
@@ -38,7 +38,11 @@ const useShuffle = (
   canPressBackdrop: boolean;
   setCanPressBackdrop: Dispatch<boolean>;
   onPressStop: () => void;
-  onPressShuffle: () => void;
+  onPressShuffle: (
+    customMainText?: string,
+    customSubText?: string,
+    customOkButtonText?: string
+  ) => void;
   closeChatModal: () => void;
   isSecretJob: boolean;
   isSecretGender: boolean;
@@ -97,14 +101,16 @@ const useShuffle = (
           setIsOpenEndTalk(true);
         } else {
           closeChatModal();
-          if (!isExpo && isShowIntersticial) {
-            authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
-            showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
-              authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
-            });
-          } else {
-            authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
-          }
+          // if (!isExpo && isShowIntersticial) {
+          //   authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
+          //   showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
+          //     authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+          //   });
+          // } else {
+          //   authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+          // }
+          // インタースティシャル廃止
+          authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
         }
       },
       catchCallback: () => {
@@ -155,15 +161,17 @@ const useShuffle = (
         // 遅延したchatDispatchを実行(同時にマッチしていた場合はSTART_TALKが実行される)
         chatDispatch({ type: "TURN_OFF_DELAY" });
         setIsShowSpinner(false);
-        if (!isExpo && isShowIntersticial) {
-          authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
-          showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
-            authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
-            navigation.navigate("Home");
-          });
-        } else {
-          authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
-        }
+        // if (!isExpo && isShowIntersticial) {
+        //   authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
+        //   showAdMobInterstitial(ADMOB_UNIT_ID_AFTER_SHUFFLE, () => {
+        //     authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+        //     navigation.navigate("Home");
+        //   });
+        // } else {
+        //   authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
+        // }
+        // インタースティシャル廃止
+        authDispatch({ type: "SET_IS_SHOW_SPINNER", value: false });
       },
       didRequestCallback: () => {
         authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
@@ -203,11 +211,15 @@ const useShuffle = (
           },
         });
       },
-      cancelOnPress: () => setCanPressBackdrop(true),
+      onCancel: () => setCanPressBackdrop(true),
     });
   };
 
-  const onPressShuffle = () => {
+  const onPressShuffle = (
+    customMainText?: string,
+    customSubText?: string,
+    customOkButtonText?: string
+  ) => {
     setCanPressBackdrop(false);
     const jobSubText = canTalkDifferentJob
       ? "全ての職業を許可"
@@ -216,13 +228,25 @@ const useShuffle = (
     const genderSubText = canTalkHeterosexual
       ? "話し相手に異性を含む"
       : "話し相手を同性に絞る";
+
+    const mainText =
+      typeof customMainText !== "undefined"
+        ? customMainText
+        : `以下の条件で「${talkTicket.worry.label}」の話し相手を探します。`;
+    const subText =
+      typeof customSubText !== "undefined"
+        ? customSubText
+        : `\n・${
+            isSpeaker ? "話したい" : "聞きたい"
+          }\n\n今までのトーク内容は端末から削除されます。`;
+    const okButtonText =
+      typeof customOkButtonText !== "undefined" ? customOkButtonText : "探す";
+
     alertModal({
-      mainText: `以下の条件で「${talkTicket.worry.label}」の話し相手を探します。`,
-      subText: `\n・${
-        isSpeaker ? "話したい" : "聞きたい"
-      }\n\n今までのトーク内容は端末から削除されます。`,
+      mainText: mainText,
+      subText: subText,
       cancelButton: "キャンセル",
-      okButton: "探す",
+      okButton: okButtonText,
       onPress: () => {
         logEvent(
           "shuffle_talk_button",
@@ -249,7 +273,7 @@ const useShuffle = (
           },
         });
       },
-      cancelOnPress: () => setCanPressBackdrop(true),
+      onCancel: () => setCanPressBackdrop(true),
     });
   };
 

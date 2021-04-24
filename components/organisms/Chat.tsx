@@ -9,13 +9,14 @@ import { TouchableOpacity } from "react-native";
 import ChatModal from "../molecules/ChatModal";
 import { useAxios } from "../modules/axios";
 import { BASE_URL, isExpo } from "../../constants/env";
-import { useAuthDispatch } from "../contexts/AuthContext";
+import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
 import { logEvent } from "../modules/firebase/logEvent";
 import { useProfileState } from "../contexts/ProfileContext";
 import { TalkTicketKey } from "../types/Types.context";
 import { LottieSource } from "../types/Types";
 import SvgUri from "react-native-svg-uri";
 import { useNavigation } from "@react-navigation/core";
+import useShuffle from "../hooks/useShuffle";
 
 const { width } = Dimensions.get("screen");
 
@@ -46,14 +47,24 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
   const { talkTicketKey, disable = false } = props;
   const [isOpen, setIsOpen] = useState(false);
   const profileState = useProfileState();
+  const authState = useAuthState();
+
+  const { isOpenEndTalk, onPressShuffle, closeChatModal, roomId } = useShuffle(
+    talkTicketKey,
+    undefined,
+    false
+  );
+
   return (
     <>
       <TouchableOpacity
         style={[styles.TalkMenuButton]}
         onPress={() => {
           if (!disable) {
-            setIsOpen(true);
+            // setIsOpen(true);
             logEvent("shuffle_option_button", {}, profileState);
+
+            onPressShuffle("さよなら", "", "ばいばい");
           }
         }}
       >
@@ -62,15 +73,25 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
           <SvgUri
             width={24}
             height={24}
-            source={require("../../assets/icons/pinkLoop.svg")}
+            source={require("../../assets/icons/bye.svg")}
           />
         )}
-        <ChatModal
+
+        {/* EndScreenがあるので残し↓ */}
+        {/* <ChatModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           talkTicketKey={talkTicketKey}
           EndTalkScreen={EndTalkScreen}
-        />
+        /> */}
+        {roomId.current && authState.token && (
+          <EndTalkScreen
+            isOpen={isOpenEndTalk}
+            closeChatModal={closeChatModal}
+            roomId={roomId.current}
+            token={authState.token}
+          />
+        )}
       </TouchableOpacity>
     </>
   );

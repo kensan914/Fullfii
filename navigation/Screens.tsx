@@ -8,16 +8,23 @@ import ChatScreen from "../screens/Chat";
 import ProfileEditorScreen from "../screens/ProfileEditor";
 import ProfileInputScreen from "../screens/ProfileInput";
 import SettingsScreen from "../screens/Settings";
+import AccountDeleteScreen from "../screens/AccountDelete";
 import SignUpScreen from "../screens/SignUp";
 import WorrySelectScreen from "../screens/WorrySelect";
 import {
   useAuthState,
   AUTHENTICATED,
+  UNAUTHENTICATED,
+  DELETED,
+  AUTHENTICATING,
 } from "../components/contexts/AuthContext";
 import { useProfileState } from "../components/contexts/ProfileContext";
 import { useChatState } from "../components/contexts/ChatContext";
 import Spinner from "../components/atoms/Spinner";
 import { RootStackParamList } from "../components/types/Types";
+import SuccessAccountDelete from "../screens/SuccessAccountDelete";
+import { alertModal } from "../components/modules/support";
+import { Alert } from "react-native";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -134,6 +141,23 @@ const HomeStack = () => {
           },
         }}
       />
+      <Stack.Screen
+        name="AccountDelete"
+        component={AccountDeleteScreen}
+        options={{
+          header: ({ navigation, scene }) => {
+            return (
+              <Header
+                back
+                name={"AccountDelete"}
+                navigation={navigation}
+                scene={scene}
+                profile={profileState.profile}
+              />
+            );
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -141,40 +165,57 @@ const HomeStack = () => {
 const AppStack: React.FC = () => {
   const authState = useAuthState();
 
+  const render = () => {
+    switch (authState.status) {
+      case AUTHENTICATED:
+        return (
+          <Stack.Navigator mode="card" headerMode="none">
+            <Stack.Screen name="Authenticated">
+              {() => (
+                <>
+                  <HomeStack />
+                  {authState.isShowSpinner && <Spinner />}
+                </>
+              )}
+            </Stack.Screen>
+          </Stack.Navigator>
+        );
+
+      case UNAUTHENTICATED:
+      case AUTHENTICATING:
+        return (
+          <Stack.Navigator
+            // mode="card"
+            mode="modal"
+            headerMode="none"
+            screenOptions={
+              {
+                // gestureEnabled: false,  // backを可能に。
+              }
+            }
+          >
+            <Stack.Screen name="SignUp">
+              {() => {
+                return <SignUpScreen />;
+              }}
+            </Stack.Screen>
+          </Stack.Navigator>
+        );
+
+      case DELETED:
+        return <SuccessAccountDelete />;
+
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white" }}
       forceInset={{ bottom: "never" }}
     >
-      {authState.status === AUTHENTICATED ? (
-        <Stack.Navigator mode="card" headerMode="none">
-          <Stack.Screen name="Authenticated">
-            {() => (
-              <>
-                <HomeStack />
-                {authState.isShowSpinner && <Spinner />}
-              </>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      ) : (
-        <Stack.Navigator
-          // mode="card"
-          mode="modal"
-          headerMode="none"
-          screenOptions={
-            {
-              // gestureEnabled: false,  // backを可能に。
-            }
-          }
-        >
-          <Stack.Screen name="SignUp">
-            {() => {
-              return <SignUpScreen />;
-            }}
-          </Stack.Screen>
-        </Stack.Navigator>
-      )}
+      {render()}
     </SafeAreaView>
   );
 };

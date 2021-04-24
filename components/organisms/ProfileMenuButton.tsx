@@ -74,7 +74,7 @@ const handleBlockUser = (
       setCanPressBackdrop(true);
       requestPatchBlock(token, user, setIsShowSpinner);
     },
-    cancelOnPress: () => {
+    onCancel: () => {
       setCanPressBackdrop(true);
     },
   });
@@ -94,7 +94,7 @@ const handleReportUser = (
       setCanPressBackdrop(true);
       WebBrowser.openBrowserAsync(REPORT_URL);
     },
-    cancelOnPress: () => {
+    onCancel: () => {
       setCanPressBackdrop(true);
     },
   });
