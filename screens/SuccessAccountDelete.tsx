@@ -59,7 +59,7 @@ const SuccessAccountDelete: React.FC = () => {
           無事アカウントが{"\n"}削除されました
         </Text>
         <Text size={16} bold style={styles.subTitle}>
-          サービス改善に努めて参りますので、再度ご利用いただける日を心からお待ちしています
+          サービス改善に努めて参りますので、再度ご利用いただける日を心からお待ちしています！
         </Text>
       </Block>
 

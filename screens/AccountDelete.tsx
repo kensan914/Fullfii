@@ -64,7 +64,7 @@ const AccountDelete: React.FC = () => {
       subText:
         "アカウントを削除すると、端末上からアカウントのすべての情報が削除され、元に戻すことができません。アカウントを削除しますか？",
       cancelButton: "キャンセル",
-      okButton: "削除",
+      okButton: "削除する",
       okButtonStyle: "destructive",
       onPress: () => {
         finalVerification();

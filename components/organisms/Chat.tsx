@@ -64,7 +64,12 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
             // setIsOpen(true);
             logEvent("shuffle_option_button", {}, profileState);
 
-            onPressShuffle("さよなら", "", "ばいばい");
+            onPressShuffle(
+              "トークを終了しますか？",
+              "",
+              "終了する",
+              "まだ話したい"
+            );
           }
         }}
       >

@@ -41,7 +41,8 @@ const useShuffle = (
   onPressShuffle: (
     customMainText?: string,
     customSubText?: string,
-    customOkButtonText?: string
+    customOkButtonText?: string,
+    customCancelButtonText?: string
   ) => void;
   closeChatModal: () => void;
   isSecretJob: boolean;
@@ -218,7 +219,8 @@ const useShuffle = (
   const onPressShuffle = (
     customMainText?: string,
     customSubText?: string,
-    customOkButtonText?: string
+    customOkButtonText?: string,
+    customCancelButtonText?: string
   ) => {
     setCanPressBackdrop(false);
     const jobSubText = canTalkDifferentJob
@@ -241,11 +243,15 @@ const useShuffle = (
           }\n\n今までのトーク内容は端末から削除されます。`;
     const okButtonText =
       typeof customOkButtonText !== "undefined" ? customOkButtonText : "探す";
+    const cancelButtonText =
+      typeof customCancelButtonText !== "undefined"
+        ? customCancelButtonText
+        : "キャンセル";
 
     alertModal({
       mainText: mainText,
       subText: subText,
-      cancelButton: "キャンセル",
+      cancelButton: cancelButtonText,
       okButton: okButtonText,
       onPress: () => {
         logEvent(
