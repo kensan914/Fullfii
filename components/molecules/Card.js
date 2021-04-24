@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -14,11 +14,10 @@ import StatusIcon from "../atoms/StatusIcon";
 import {
   ADMOB_BANNER_HEIGHT,
   ADMOB_BANNER_WIDTH,
-  ADMOB_UNIT_ID_HOME,
   isExpo,
 } from "../../constants/env";
-
-import Admob from "../molecules/Admob";
+import { AdView } from "./AdView";
+import { ADMOB_UNIT_ID_NATIVE } from "../../constants/env";
 
 const { width } = Dimensions.get("screen");
 
@@ -34,6 +33,7 @@ const Card = (props) => {
   const titleSize = 17;
   const contentSize = 13;
   const backgroundColor = !item.isAdmob ? item.color : COLORS.PINK;
+  const [mediaType, setMediaType] = useState("image");
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -142,22 +142,28 @@ const Card = (props) => {
             )}
           </LinearGradient>
         ) : (
-          <Block
-            style={[
-              styles.card,
-              {
-                backgroundColor: "transparent",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-                // minHeight: 90,
-              },
-            ]}
-          >
-            <Block style={styles.adMobBanner}>
-              {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
-            </Block>
-          </Block>
+          // <Block
+          //   style={[
+          //     styles.card,
+          //     {
+          //       backgroundColor: "transparent",
+          //       justifyContent: "center",
+          //       alignItems: "center",
+          //       borderRadius: 5,
+          //       // minHeight: 90,
+          //     },
+          //   ]}
+          // >
+          //   <Block style={styles.adMobBanner}>
+          //     {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
+          //   </Block>
+          // </Block>S
+          <AdView
+            media={false}
+            type="image"
+            index={1}
+            adUnitId={ADMOB_UNIT_ID_NATIVE.image}
+          />
         )}
       </Block>
     </TouchableWithoutFeedback>

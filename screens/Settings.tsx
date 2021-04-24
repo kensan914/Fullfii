@@ -21,7 +21,7 @@ import {
   ADMOB_BANNER_WIDTH,
   isExpo,
 } from "../constants/env";
-import Admob from "../components/molecules/Admob";
+// import Admob from "../components/molecules/Admob";
 import { OnPress } from "../components/types/Types";
 
 const { width } = Dimensions.get("screen");
@@ -70,9 +70,9 @@ const Settings: React.FC = () => {
         />
       </ScrollView>
 
-      <Block style={styles.adMobBanner}>
+      {/* <Block style={styles.adMobBanner}>
         {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_SETTINGS} />}
-      </Block>
+      </Block> */}
     </Block>
   );
 };

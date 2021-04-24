@@ -65,7 +65,7 @@ export default HomeTemplate;
 const styles = StyleSheet.create({
   home: {
     width: width,
-    backgroundColor: "#fff9f5",
+    backgroundColor: "#fff",
   },
   list: {
     width: width,
