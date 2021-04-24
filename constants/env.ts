@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 const DEBUG = true;
 // const DEBUG = false;
 const ADMOB_DEBUG = true;
@@ -31,6 +33,10 @@ export const FREE_PLAN = Object.freeze({
 const ADMOB_UNIT_ID_DEBUG_BANNER = "ca-app-pub-3940256099942544/2934735716";
 const ADMOB_UNIT_ID_DEBUG_INT = "ca-app-pub-3940256099942544/4411468910";
 const ADMOB_UNIT_ID_DEBUG_INT_MOV = "ca-app-pub-3940256099942544/5135589807";
+const ADMOB_UNIT_ID_DEBUG_NATIVE_HOME =
+  "ca-app-pub-3940256099942544/3986624511";
+const ADMOB_UNIT_ID_DEBUG_NATIVE_WAITING =
+  "ca-app-pub-3940256099942544/2521693316";
 export const ADMOB_UNIT_ID_HOME = ADMOB_DEBUG
   ? ADMOB_UNIT_ID_DEBUG_BANNER
   : "ca-app-pub-1754293395940427/5865171200";
@@ -46,6 +52,22 @@ export const ADMOB_UNIT_ID_EDIT_PROFILE = ADMOB_DEBUG
 export const ADMOB_UNIT_ID_AFTER_SHUFFLE = ADMOB_DEBUG
   ? ADMOB_UNIT_ID_DEBUG_INT
   : "ca-app-pub-1754293395940427/3594231086";
+
+export const ADMOB_UNIT_ID_NATIVE = {
+  image:
+    Platform.OS === "ios"
+      ? ADMOB_DEBUG
+        ? ADMOB_UNIT_ID_DEBUG_NATIVE_HOME //ios&&debug
+        : "ca-app-pub-1754293395940427/8231741791" //ios&&prod
+      : "ca-app-pub-3940256099942544/2247696110",
+  video:
+    Platform.OS === "ios"
+      ? ADMOB_DEBUG
+        ? ADMOB_UNIT_ID_DEBUG_NATIVE_WAITING //ios&&debug
+        : "ca-app-pub-1754293395940427/4100925091" //ios&&prod
+      : "ca-app-pub-3940256099942544/1044960115",
+};
+
 export const ADMOB_BANNER_WIDTH = 320;
 export const ADMOB_BANNER_HEIGHT = 50;
 
