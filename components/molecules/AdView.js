@@ -7,12 +7,10 @@ import {
   Text,
 } from "react-native";
 import NativeAdView, {
-  AdvertiserView,
   CallToActionView,
   HeadlineView,
   IconView,
   StarRatingView,
-  TaglineView,
   MediaView,
   StoreView,
 } from "react-native-admob-native-ads";

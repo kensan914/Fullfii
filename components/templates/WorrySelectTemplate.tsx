@@ -29,7 +29,6 @@ import {
   WorriesResJson,
   WorriesResJsonIoTs,
 } from "../types/Types.context";
-// import {AdView} from "../molecules/AdView"
 
 const { width, height } = Dimensions.get("screen");
 
@@ -167,10 +166,6 @@ const WorrySelectTemplate: React.FC = () => {
           submit={submit}
         />
       </Block>
-
-      {/* <Block style={styles.adMobBanner}>
-        {!isExpo && <AdView media={false} type={"image"} adUnitId={ADMOB_UNIT_ID_SELECT_WORRY} />}
-      </Block> */}
     </Block>
   );
 };

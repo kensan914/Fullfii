@@ -8,8 +8,8 @@ import { CommonMessage } from "./Chat";
 import SvgButton from "../atoms/SvgButton";
 import useShuffle from "../hooks/useShuffle";
 import ChatModal from "../molecules/ChatModal";
-import { AdView } from "../molecules/AdView";
-import {ADMOB_UNIT_ID_NATIVE} from "../../constants/env"
+import { ADMOB_UNIT_ID_NATIVE } from "../../constants/env";
+import useAdView from "../hooks/useAdView";
 const { width } = Dimensions.get("screen");
 
 type Props = {
@@ -23,6 +23,7 @@ const WaitingChatBody: React.FC<Props> = (props) => {
   const { onPressStop } = useShuffle(talkTicketKey);
 
   const [isOpenChatModal, setIsOpenChatModal] = useState(false);
+  const adViewModule = useAdView();
 
   return (
     <Block flex={1}>
@@ -67,29 +68,36 @@ const WaitingChatBody: React.FC<Props> = (props) => {
         >
           話し相手が見つかり次第通知でお知らせします！
         </Text>
-          <Block row center style={{ justifyContent: "center", marginTop: 20 }}>
-            <Block flex={0.45} center>
-              <SvgButton
-                source={require("../../assets/icons/exit-room.svg")}
-                onPress={onPressStop}
-                diameter={width / 5.5}
-                shadowColor={"#a9a9a9"}
-              />
-            </Block>
-            <Block />
-            <Block flex={0.45} center>
-              <SvgButton
-                source={require("../../assets/icons/pinkLoop.svg")}
-                onPress={() => {
-                  setIsOpenChatModal(true);
-                }}
-                diameter={width / 5.5}
-              />
-            </Block>
+        <Block row center style={{ justifyContent: "center", marginTop: 20 }}>
+          <Block flex={0.45} center>
+            <SvgButton
+              source={require("../../assets/icons/exit-room.svg")}
+              onPress={onPressStop}
+              diameter={width / 5.5}
+              shadowColor={"#a9a9a9"}
+            />
           </Block>
-          <Block style={{width: "98%", paddingTop: 40}}>
-            <AdView media={false} type="video" index={2} adUnitId={ADMOB_UNIT_ID_NATIVE.video}/>
+          <Block />
+          <Block flex={0.45} center>
+            <SvgButton
+              source={require("../../assets/icons/pinkLoop.svg")}
+              onPress={() => {
+                setIsOpenChatModal(true);
+              }}
+              diameter={width / 5.5}
+            />
           </Block>
+        </Block>
+        {typeof adViewModule !== "undefined" && (
+          <Block style={{ width: "98%", paddingTop: 40 }}>
+            <adViewModule.AdView
+              media={false}
+              type="video"
+              index={2}
+              adUnitId={ADMOB_UNIT_ID_NATIVE.video}
+            />
+          </Block>
+        )}
       </Block>
 
       <ChatModal
