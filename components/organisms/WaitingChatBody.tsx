@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
 import LottieView from "lottie-react-native";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 import { AllMessage, TalkTicket, TalkTicketKey } from "../types/Types.context";
 import { CommonMessage } from "./Chat";

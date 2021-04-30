@@ -581,3 +581,10 @@ export const formatGender = (
 
   return { key, label, isNotSet, realGenderKey: gender.key };
 };
+
+export const includeUrl = (targetText: string): boolean => {
+  const keyWordsToJudgeUrl = ["https://", "http://"];
+  return keyWordsToJudgeUrl.some((kw) => {
+    return targetText.includes(kw);
+  });
+};

@@ -110,8 +110,6 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
       /** auth stateを初期化.
        * @param {Object} action [type] */
 
-      console.log({ ...initSignupBuffer });
-      console.log({ ...initAuthState });
       return { ...initAuthState, ...{ signupBuffer: { ...initSignupBuffer } } };
 
     default:

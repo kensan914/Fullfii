@@ -18,7 +18,11 @@ import { COLORS } from "../../../constants/Theme";
 import Icon from "../../atoms/Icon";
 import { logEvent } from "../../modules/firebase/logEvent";
 import { useProfileState } from "../../contexts/ProfileContext";
-import { generateUuid4, fmtfromDateToStr } from "../../modules/support";
+import {
+  generateUuid4,
+  fmtfromDateToStr,
+  includeUrl,
+} from "../../modules/support";
 import useTurnOnRead from "./TurnOnRead";
 import {
   AllMessages,
@@ -116,6 +120,9 @@ const ChatBody: React.FC<Props> = (props) => {
         return;
       } else if (!existUser) {
         Alert.alert("話し相手が見つかりません。");
+        return;
+      } else if (includeUrl(_giftedMessage.text)) {
+        Alert.alert("このメッセージは送信することができません。");
         return;
       }
 

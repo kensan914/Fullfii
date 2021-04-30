@@ -38,17 +38,25 @@ const Home: React.FC = () => {
       //     Object.values(CARD_COLORS)[0];
       //   }
       // }
-      return CARD_COLORS[talkTicket.worry.key];
+      if (talkTicket.worry.key in CARD_COLORS) {
+        return CARD_COLORS[talkTicket.worry.key];
+      } else {
+        return [""];
+      }
     };
 
-    const choiseImg = () => {
-      return HOME_IMG[talkTicket.worry.key]
-    }
+    const choiceImg = () => {
+      if (talkTicket.worry.key in HOME_IMG) {
+        return HOME_IMG[talkTicket.worry.key];
+      } else {
+        return "";
+      }
+    };
 
     return {
       title: talkTicket.worry.label,
       color: choiceColor(),
-      image: choiseImg(),
+      image: choiceImg(),
       content:
         talkTicket.room.messages[talkTicket.room.messages.length - 1]?.message,
       onPress: () => {
@@ -72,8 +80,8 @@ const Home: React.FC = () => {
   };
 
   const admobItem: AdmobItem = {
-    isAdmob: true
-  }
+    isAdmob: true,
+  };
 
   const items: HomeItems = [admobItem, firstItem, ...rooms];
 
@@ -83,8 +91,6 @@ const Home: React.FC = () => {
         {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
       </Block> */}
       <HomeTemplate items={items} />
-
-
     </Block>
   );
 };

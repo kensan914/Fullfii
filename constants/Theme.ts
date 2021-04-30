@@ -44,6 +44,7 @@ export const CARD_COLORS = {
   e: ["#fcd5ce", "#f78b78"], //夢目標["#FBDA61", "#ff9472"]
   f: ["#fec89a", "#ffa462"], //人間関係["#FBDA61", "#FF6A88"]
   g: ["#fcd5ce", "#f78b78"], //ただ話したい ["#ff9472", "#f2709c"]
+  h: ["#fcd5ce", "#f78b78"],
 };
 
 // 派手バージョん

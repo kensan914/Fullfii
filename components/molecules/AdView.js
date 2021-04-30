@@ -29,7 +29,7 @@ export const AdView = (props) => {
   const _onAdFailedToLoad = (event) => {
     setError(true);
     setLoading(false);
-    Logger("AD", "FAILED", event.error.message);
+    Logger("AD", "FAILED", event?.error?.message);
   };
 
   const _onAdLoaded = () => {

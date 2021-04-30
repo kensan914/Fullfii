@@ -31,15 +31,18 @@ import {
   WsSettings,
   WsResNotificationIoTs,
   WsResNotification,
+  Request,
 } from "../components/types/Types";
 import { Alert } from "react-native";
 import { requestPatchProfile } from "./ProfileInput";
 import { checkUpdateVersion } from "../components/modules/versionUpdate";
 import { alertDeleteAuth } from "../components/modules/auth/crud";
+import usePostWorry from "../components/hooks/usePostWorry";
 
 const StartUpManager: React.FC = (props) => {
   const { children } = props;
   const [states, dispatches] = useAllContext();
+  const { requestPostWorry } = usePostWorry(states.authState.token);
 
   // global stateとは別に即時反映されるmeProfile
   const [meProfileTemp, setMeProfileTemp] = useState<MeProfile>();
@@ -90,6 +93,12 @@ const StartUpManager: React.FC = (props) => {
         setMeProfileTemp
       );
   }, [states.authState.token]);
+
+  useEffect(() => {
+    if (states.profileState.profileParams) {
+      requestPostWorry(states.profileState.profileParams);
+    }
+  }, [states.authState.token, states.profileState.profileParams]);
 
   return <Block flex>{children}</Block>;
 };

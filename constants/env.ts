@@ -79,3 +79,5 @@ export const setIsExpo = (val: boolean): void => {
 import Config from "react-native-config";
 export const CAN_APP_TRACKING_TRANSPARENCY =
   Config.CAN_APP_TRACKING_TRANSPARENCY === "false" ? false : true;
+
+export const USER_EMPTY_ICON_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/static/images/user_empty_icon.png`;

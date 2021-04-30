@@ -1,4 +1,5 @@
 import { IMessage, User } from "react-native-gifted-chat";
+import { USER_EMPTY_ICON_URL } from "../../../constants/env";
 import { AllMessages, MeProfile, Profile } from "../../types/Types.context";
 
 type ConvertMessagesToGifted = (messages: AllMessages) => IMessage[];
@@ -22,7 +23,9 @@ const useGifted = (
             : {
                 _id: targetUser.id,
                 name: targetUser.name,
-                avatar: targetUser.image ? targetUser.image : "",
+                avatar: targetUser.image
+                  ? targetUser.image
+                  : USER_EMPTY_ICON_URL,
               };
 
         const giftedMessage = {

@@ -23,6 +23,7 @@ import {
 } from "../../../types/Types";
 import GenderInputButtonList from "../../../molecules/GenderInputButtonList";
 import { GenderKey } from "../../../types/Types.context";
+import usePostWorry from "../../../hooks/usePostWorry";
 
 const { width } = Dimensions.get("window");
 
@@ -60,17 +61,20 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
   };
 
   const [password] = useState(generatePassword());
+  const { requestPostWorry } = usePostWorry("");
   const { isLoading, request } = useAxios(
     URLJoin(BASE_URL, "signup/"),
     "post",
     SignupResDataIoTs,
     {
       data: {
-        username: username,
-        password: password,
-        genre_of_worries: authState.signupBuffer.worries,
-        gender: genderKey,
-        job: jobKey,
+        ...{
+          username: username,
+          password: password,
+          gender: genderKey,
+          job: jobKey,
+        },
+        ...requestPostWorry(profileState.profileParams),
       },
       thenCallback: (resData) => {
         const _resData = resData as SignupResData;

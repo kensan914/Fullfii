@@ -224,7 +224,7 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
                 color="#b0b0b0"
                 shadowColor="#b0b0b0"
                 style={styles.modalButton}
-                onPress={onPressReport}
+                onPress={onPressBlock}
               >
                 <Block row space="between">
                   <Block center style={{ paddingRight: 5 }}>
