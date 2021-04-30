@@ -12,6 +12,7 @@ import Icon from "../atoms/Icon";
 import { COLORS } from "../../constants/Theme";
 import { ADMOB_BANNER_HEIGHT, ADMOB_BANNER_WIDTH } from "../../constants/env";
 import { ADMOB_UNIT_ID_NATIVE } from "../../constants/env";
+import { height } from "../../constants/utils";
 import useAdView from "../hooks/useAdView";
 
 const { width } = Dimensions.get("screen");
@@ -25,73 +26,24 @@ const { width } = Dimensions.get("screen");
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Card = (props) => {
   const { item, style, onPress, countNum } = props;
-  const titleSize = 17;
-  const contentSize = 13;
+  const titleSize = 16;
+  const contentSize = 14;
   const backgroundColor = !item.isAdmob ? item.color : COLORS.PINK;
   const [mediaType, setMediaType] = useState("image");
   const adViewModule = useAdView();
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <Block>
-        {item.onPress ? (
-          <LinearGradient
-            // Background Linear Gradient
-            colors={backgroundColor} //["#56ab2f", "#a8e063"]["#d4fc79", "#50cc7f"]
-            start={{ x: 1, y: 1 }}
-            end={{ x: 0, y: 0 }}
-            style={[
-              styles.card,
-              style,
-              {
-                minHeight: item.icon === "plus" ? 65 : 114,
-                borderRadius: 5,
-              },
-              {
-                backgroundColor: backgroundColor,
-                shadowColor: backgroundColor,
-              },
-              item.borderColor && {
-                borderWidth: 2,
-                borderColor: item.borderColor,
-              },
-              item.borderLess ? {} : styles.shadow,
-            ]}
-          >
-            {item.icon ? (
-              <Block center flex justifyContent="center">
-                <Icon
-                  family={item.iconFamily ? item.iconFamily : "fontawesome"}
-                  size={60}
-                  name={item.icon}
-                  color={item.iconColor ? item.iconColor : "white"}
-                />
-              </Block>
-            ) : (
-              <>
-                <Image
-                  source={item.image}
-                  style={{
-                    width: 110,
-                    height: 120,
-                    position: "absolute",
-                    right: 5,
-                    top: 30,
-                    zIndex: 4,
-                  }}
-                />
-                <Block flex style={styles.content}>
-                  {/* {item.content &&
-                    item.content.includes("話し相手が見つかりました！") && (
-                      <StatusIcon />
-                    )} */}
-                  <Block
-                    row
-                    style={[styles.titleContainer, { height: titleSize + 5 }]}
-                  >
+      {item.onPress ? (
+        <Block flex={1} style={styles.card}>
+          {
+            <>
+              <Block column>
+                <Block row flex={0.4}>
+                  <Block flex={0.9} style={{ height: 25 }}>
                     <Text
                       bold
-                      color="white"
+                      color={COLORS.BLACK}
                       size={titleSize}
                       style={styles.title}
                       numberOfLines={1}
@@ -100,70 +52,74 @@ const Card = (props) => {
                       {item.title}
                     </Text>
                   </Block>
-
-                  {Number.isInteger(countNum) && countNum > 0 ? (
-                    <Block
-                      style={[
-                        styles.counter,
-                        {
-                          position: "absolute",
-                          top: titleSize / 3,
-                          right: titleSize / 3,
-                          height: titleSize + 5,
-                          borderRadius: (titleSize + 5) / 2,
-                          minWidth: titleSize + 5,
-                        },
-                      ]}
-                    >
-                      <Text color="white" size={titleSize - 2}>
-                        {countNum}
-                      </Text>
-                    </Block>
-                  ) : (
-                    <></>
-                  )}
-
-                  <Block style={styles.messageContainer}>
-                    <Text
-                      size={contentSize}
-                      style={[styles.textPale, { lineHeight: contentSize + 2 }]}
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                    >
-                      {item.content}
-                    </Text>
+                  <Block flex={0.1} style={{ position: "relative" }}>
+                    {Number.isInteger(countNum) && countNum > 0 ? (
+                      <Block
+                        style={[
+                          styles.counter,
+                          {
+                            position: "absolute",
+                            top: titleSize / 3 - 5,
+                            right: titleSize / 3,
+                            height: titleSize + 5,
+                            borderRadius: (titleSize + 5) / 2,
+                            minWidth: titleSize + 5,
+                          },
+                        ]}
+                      >
+                        <Text color="white" size={titleSize - 2}>
+                          {countNum}
+                        </Text>
+                      </Block>
+                    ) : (
+                      <></>
+                    )}
                   </Block>
                 </Block>
-              </>
-            )}
-          </LinearGradient>
-        ) : (
-          // <Block
-          //   style={[
-          //     styles.card,
-          //     {
-          //       backgroundColor: "transparent",
-          //       justifyContent: "center",
-          //       alignItems: "center",
-          //       borderRadius: 5,
-          //       // minHeight: 90,
-          //     },
-          //   ]}
-          // >
-          //   <Block style={styles.adMobBanner}>
-          //     {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
-          //   </Block>
-          // </Block>S
-          typeof adViewModule !== "undefined" && (
-            <adViewModule.AdView
-              media={false}
-              type="image"
-              index={1}
-              adUnitId={ADMOB_UNIT_ID_NATIVE.image}
-            />
-          )
-        )}
-      </Block>
+                <Block row flex={0.6}>
+                  <Block
+                    flex={0.3}
+                    style={{ alignItems: "center", marginRight: 15 }}
+                  >
+                    <Image
+                      source={item.image}
+                      style={{
+                        width: 100,
+                        height: 100,
+                      }}
+                    />
+                  </Block>
+                  <Block column flex={0.7}>
+                    <Block style={{ paddingBottom: 30, paddingTop: 15 }}>
+                      <Text
+                        size={contentSize}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        color={COLORS.GRAY}
+                      >
+                        {item.content}
+                      </Text>
+                    </Block>
+                    <Block row>
+                      <Text color={COLORS.GRAY}>80</Text>
+                      <Icon name="person" family="Ionicons" color="gray" />
+                    </Block>
+                  </Block>
+                </Block>
+              </Block>
+            </>
+          }
+        </Block>
+      ) : (
+        typeof adViewModule !== "undefined" && (
+          <adViewModule.AdView
+            media={false}
+            type="image"
+            index={1}
+            adUnitId={ADMOB_UNIT_ID_NATIVE.image}
+          />
+        )
+      )}
     </TouchableWithoutFeedback>
   );
 };
@@ -172,45 +128,32 @@ export default Card;
 
 const styles = StyleSheet.create({
   card: {
+    paddingVertical: 18,
+    paddingHorizontal: 15,
     marginVertical: 5,
-    borderWidth: 0,
     position: "relative",
     width: width - theme.SIZES.BASE * 1.8,
     marginRight: "auto",
     marginLeft: "auto",
+    minHeight: 150,
+    borderRadius: 20,
+    backgroundColor: COLORS.WHITE,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.26,
+    shadowRadius: 0,
+    elevation: 1,
   },
-  content: {
-    padding: theme.SIZES.BASE / 2,
-    justifyContent: "space-between",
-  },
-  shadow: {
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 3,
-    shadowOpacity: 0.9,
-    elevation: 2,
-  },
-  textPale: {
-    color: "white",
-  },
-  messageContainer: {
-    justifyContent: "flex-end",
-    position: "relative",
-    width: width * 0.62,
-  },
-  titleContainer: {
-    justifyContent: "space-between",
+  bottomContent: {
     alignItems: "center",
   },
-  title: {},
   counter: {
     backgroundColor: COLORS.ALERT,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 6,
-  },
-  adMobBanner: {
-    width: ADMOB_BANNER_WIDTH,
-    height: ADMOB_BANNER_HEIGHT,
-    zIndex: 2,
   },
 });

@@ -3,6 +3,8 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 import Modal from "react-native-modal";
 
+import { COLORS } from "../../constants/Theme";
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const MenuModal = (props) => {
   const {
@@ -33,7 +35,7 @@ export const MenuModal = (props) => {
               onPress={item.onPress}
               style={styles.menuItem}
             >
-              <Text style={{}} size={20} bold color="dimgray">
+              <Text style={{}} size={20} bold color={COLORS.GRAY}>
                 {item.icon && <>{item.icon} </>}
                 {item.title}
               </Text>
@@ -46,7 +48,7 @@ export const MenuModal = (props) => {
           color="lightgray"
           onPress={() => setIsOpen(false)}
         >
-          <Text bold color="white">
+          <Text bold size={16} color={COLORS.WHITE}>
             閉じる
           </Text>
         </Button>
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   menuContainer: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     padding: 22,
     paddingBottom: 40,
     justifyContent: "center",

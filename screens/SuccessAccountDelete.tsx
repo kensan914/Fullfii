@@ -55,10 +55,10 @@ const SuccessAccountDelete: React.FC = () => {
   return (
     <Block flex middle style={styles.container}>
       <Block flex={0.3} style={styles.titleContainer}>
-        <Text size={26} bold color={COLORS.PINK} style={styles.title}>
+        <Text size={26} bold color="#6a6a6a" style={styles.title}>
           無事アカウントが{"\n"}削除されました
         </Text>
-        <Text size={16} bold style={styles.subTitle}>
+        <Text size={16} bold color="gray" style={styles.subTitle}>
           サービス改善に努めて参りますので、再度ご利用いただける日を心からお待ちしています！
         </Text>
       </Block>
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     paddingHorizontal: 2,
     textAlign: "center",
-    color: "pink",
   },
   goNextButton: {
     alignSelf: "center",

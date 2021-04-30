@@ -11,7 +11,6 @@ import {
 } from "../constants/env";
 import { Platform, StyleSheet } from "react-native";
 import { Block } from "galio-framework";
-import Admob from "../components/molecules/Admob";
 import { ProfileEditorTemplate } from "../components/templates/ProfileEditorTemplate";
 import { RequestPostProfileImage } from "../components/types/Types";
 import { MeProfile, MeProfileIoTs } from "../components/types/Types.context";
@@ -22,10 +21,6 @@ const ProfileEditor: React.FC = () => {
       <ProfileEditorTemplate
         requestPostProfileImage={requestPostProfileImage}
       />
-
-      <Block style={styles.adMobBanner}>
-        {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_EDIT_PROFILE} />}
-      </Block>
     </Block>
   );
 };

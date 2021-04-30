@@ -81,7 +81,7 @@ const AccountDelete: React.FC = () => {
           setValue: setDeleteReason,
           maxLength: 500,
           title:
-            "ご希望に添えず申し訳ございません😭😭😭アカウント削除のきっかけとなる不満と感じた点を教えていただけませんか？",
+            "ご希望に添えず申し訳ございません。アカウント削除のきっかけとなる不満点を教えていただけませんか？",
         },
       ]}
       submitSettings={{

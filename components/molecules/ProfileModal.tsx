@@ -47,7 +47,7 @@ const ProfileModal: React.FC<Props> = (props) => {
       <Block style={styles.modalContents}>
         <Block row center style={{ marginTop: 24, marginHorizontal: 15 }}>
           <Block flex={0.4} center>
-            <Text bold size={15} color="dimgray">
+            <Text bold size={15} color={COLORS.GRAY}>
               {user.name}
             </Text>
           </Block>
@@ -55,7 +55,7 @@ const ProfileModal: React.FC<Props> = (props) => {
             <Avatar size={75} image={user.image} border={false} />
           </Block>
           <Block flex={0.4} center>
-            <Text bold size={15} color="dimgray">
+            <Text bold size={15} color={COLORS.GRAY}>
               {user.job.label}
             </Text>
           </Block>
@@ -64,10 +64,10 @@ const ProfileModal: React.FC<Props> = (props) => {
         {user.me && (
           <Block row center style={{ marginVertical: 28 }}>
             <Block center column>
-              <Text bold size={16} color="#333333">
+              <Text bold size={16} color={COLORS.BLACK}>
                 {user.numOfThunks}
               </Text>
-              <Text muted size={15}>
+              <Text muted size={15} color={COLORS.GRAY}>
                 <Icon
                   name="heart"
                   family="font-awesome"
@@ -98,7 +98,7 @@ const ProfileModal: React.FC<Props> = (props) => {
                 navigation.navigate("ProfileEditor");
               }}
             >
-              <Text color="white" size={16} bold>
+              <Text color={COLORS.WHITE} size={16} bold>
                 {/* <Icon
                   name="pencil"
                   family="font-awesome"
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContents: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     flexDirection: "column",
     alignItems: "center",
     borderTopRightRadius: 17,

@@ -13,6 +13,7 @@ import {
   RequestPutGender,
 } from "../types/Types";
 import { ProfileSubmitButton } from "../molecules/ProfileSubmitButton";
+import {COLORS} from "../../constants/Theme"
 
 type Props = {
   requestPatchProfile: RequestPatchProfile;
@@ -66,7 +67,7 @@ export default ProfileInputTemplate;
 
 const styles = StyleSheet.create({
   scrollView: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.BEIGE,
   },
   container: {
     paddingHorizontal: theme.SIZES.BASE,

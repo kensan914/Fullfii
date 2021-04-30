@@ -14,6 +14,7 @@ import WaitingChatBody from "../organisms/WaitingChatBody";
 import StoppingChatBody from "../organisms/StoppingChatBody";
 import ApprovingChatBody from "../organisms/ApprovingChatBody";
 import ChatBody from "./chat/ChatBody";
+import {COLORS} from "../../constants/Theme"
 
 const { width } = Dimensions.get("screen");
 
@@ -101,7 +102,7 @@ export default ChatTemplate;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.BEIGE,
   },
   messageFormContainer: {
     maxHeight: theme.SIZES.BASE * 12 + 10,

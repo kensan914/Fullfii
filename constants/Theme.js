@@ -31,11 +31,23 @@ const materialTheme = {
 export default materialTheme;
 
 export const COLORS = {
-  PINK: "#F69896",
+  PINK: "#f5b5a7", //#f5b5a7, #f6bab2
   GREEN: "#3cc47c",
   ALERT: "#F44336",
+  BEIGE: "#eee2d3",
+  BROWN: "#c39c89",
+  BROWN_RGBA: "rgba(195, 156, 137, 0.4)",
+  BROWN_RGBA_1: "rgba(195, 156, 137, 0.2)",
+  WHITE: "#f8fcfb",
+  WHITE_RGBA: "rgba(248, 252, 251, 0.3)",
+  BLACK: "#333333",
+  GRAY: "#555555",
+  LIGHT_GRAY: "#6a6a6a",
 };
 
+//オイスターパープル: "#f3e7ea",
+//オイリーグリーン: "#d7d486",
+//おーパールソフトグリーン: "#d2e7df"
 export const CARD_COLORS = {
   a: ["#fec5bb", "#ffc0cb"], //失恋["#FF9A8B", "#FF6A88"]
   b: ["#fec5bb", "#ffc0cb"], //片想い["#ff9472", "#f2709c"]

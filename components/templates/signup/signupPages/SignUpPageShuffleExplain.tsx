@@ -141,7 +141,7 @@ const SignUpPageShuffleExplain: React.FC<Props> = (props) => {
           <Text
             bold
             size={18}
-            color={COLORS.PINK}
+            color={COLORS.LIGHT_GRAY}
             style={{
               height: 40,
               width: width,

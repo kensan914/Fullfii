@@ -25,9 +25,10 @@ import {
 import { formatGender } from "../modules/support";
 import { MenuModal } from "../molecules/Menu";
 import { requestPatchProfile } from "../../screens/ProfileInput";
+import {COLORS} from "../../constants/Theme"
 
 const { width } = Dimensions.get("screen");
-const ProfileHr = () => <Hr h={1} mb={5} color="#e6e6e6" />;
+const ProfileHr = () => <Hr h={1} mb={5} color={COLORS.BROWN_RGBA} />;
 const profileImageHeight = 500;
 const editButtonRate = { content: 9, button: 1 };
 
@@ -48,10 +49,10 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
 
   const formattedGender = formatGender(user.gender, user.isSecretGender);
   return (
-    <ScrollView style={{ width: width, backgroundColor: "white" }}>
+    <ScrollView style={{ width: width, backgroundColor: COLORS.BEIGE }}>
       <Block style={[styles.profileContentBottom]}>
         <Block style={styles.profileTextBlock}>
-          <Text size={16} bold style={{ marginBottom: 10 }}>
+          <Text size={16} bold color={COLORS.BLACK} style={{ marginBottom: 10 }}>
             ユーザネーム
           </Text>
           <EditorBlock
@@ -65,6 +66,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
             content={
               <Text
                 size={14}
+                color={COLORS.GRAY}
                 style={{ lineHeight: 18, flex: editButtonRate.content }}
               >
                 {user.name}
@@ -75,7 +77,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
         <ProfileHr />
 
         <Block style={styles.profileTextBlock}>
-          <Text size={16} bold style={{ marginBottom: 10 }}>
+          <Text size={16} bold color={COLORS.BLACK} style={{ marginBottom: 10 }}>
             性別
           </Text>
           <EditorBlock
@@ -89,6 +91,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
             content={
               <Text
                 size={14}
+                color={COLORS.GRAY}
                 style={{ lineHeight: 18, flex: editButtonRate.content }}
               >
                 {formattedGender.label}
@@ -99,7 +102,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
         <ProfileHr />
 
         <Block style={styles.profileTextBlock}>
-          <Text size={16} bold style={{ marginBottom: 10 }}>
+          <Text size={16} bold color={COLORS.BLACK} style={{ marginBottom: 10 }}>
             職業
           </Text>
           <EditorBlock
@@ -109,6 +112,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
             content={
               <Text
                 size={14}
+                color={COLORS.GRAY}
                 style={{ lineHeight: 18, flex: editButtonRate.content }}
               >
                 {user.job.label}
@@ -154,7 +158,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
         <ProfileHr />
 
         <Block style={styles.profileTextBlock}>
-          <Text size={16} bold style={{ marginBottom: 10 }}>
+          <Text size={16} bold color={COLORS.BLACK} style={{ marginBottom: 10 }}>
             プロフィール画像
           </Text>
           <EditorBlock
@@ -295,7 +299,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.SIZES.BASE,
     paddingTop: 10,
     paddingBottom: theme.SIZES.BASE * 3,
-    backgroundColor: "white",
+    backgroundColor: COLORS.BEIGE,
     height: "100%",
   },
   profileTextBlock: {
