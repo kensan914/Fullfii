@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -10,15 +10,10 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Icon from "../atoms/Icon";
 import { COLORS } from "../../constants/Theme";
-import StatusIcon from "../atoms/StatusIcon";
-import {
-  ADMOB_BANNER_HEIGHT,
-  ADMOB_BANNER_WIDTH,
-  isExpo,
-} from "../../constants/env";
-import { AdView } from "./AdView";
+import { ADMOB_BANNER_HEIGHT, ADMOB_BANNER_WIDTH } from "../../constants/env";
 import { ADMOB_UNIT_ID_NATIVE } from "../../constants/env";
 import { height } from "../../constants/utils";
+import useAdView from "../hooks/useAdView";
 
 const { width } = Dimensions.get("screen");
 
@@ -35,6 +30,7 @@ const Card = (props) => {
   const contentSize = 14;
   const backgroundColor = !item.isAdmob ? item.color : COLORS.PINK;
   const [mediaType, setMediaType] = useState("image");
+  const adViewModule = useAdView();
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -115,12 +111,14 @@ const Card = (props) => {
           }
         </Block>
       ) : (
-        <AdView
-          media={false}
-          type="image"
-          index={1}
-          adUnitId={ADMOB_UNIT_ID_NATIVE.image}
-        />
+        typeof adViewModule !== "undefined" && (
+          <adViewModule.AdView
+            media={false}
+            type="image"
+            index={1}
+            adUnitId={ADMOB_UNIT_ID_NATIVE.image}
+          />
+        )
       )}
     </TouchableWithoutFeedback>
   );
