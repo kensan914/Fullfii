@@ -12,11 +12,11 @@ const SubmitButton = (props) => {
   let pressedFunc;
   if (canSubmit) {
     color = COLORS.PINK;
-    textColor = "white";
+    textColor = COLORS.WHITE;
     pressedFunc = submit;
   } else {
-    color = "gainsboro";
-    textColor = "white";
+    color = "lightgray";
+    textColor = COLORS.WHITE;
   }
 
   return (

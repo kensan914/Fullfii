@@ -3,6 +3,8 @@ import { Block } from "galio-framework";
 import Icon from "./Icon";
 import { Image, StyleSheet } from "react-native";
 
+import { COLORS } from "../../constants/Theme";
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const Avatar = (props) => {
   const { size, border, style, image } = props;
@@ -58,7 +60,7 @@ export default Avatar;
 
 const styles = StyleSheet.create({
   avatarContainer: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     shadowColor: "gray",
     shadowOffset: {
       width: 0,

@@ -24,6 +24,7 @@ import {
 // import Admob from "../components/molecules/Admob";
 import { OnPress } from "../components/types/Types";
 import { useNavigation } from "@react-navigation/core";
+import {COLORS} from "../constants/Theme"
 
 const { width } = Dimensions.get("screen");
 
@@ -47,7 +48,7 @@ const Settings: React.FC = () => {
   const navigation = useNavigation();
 
   return (
-    <Block flex center>
+    <Block flex center style={{backgroundColor: COLORS.BEIGE}}>
       <ScrollView>
         <SettingsTitle title="Fullfiiについて" />
         <SettingsLabel title="バージョン" content={VERSION} />
@@ -89,7 +90,7 @@ const SettingsTitle: React.FC<{ title: string }> = (props) => {
   return (
     <Block
       flex
-      style={{ paddingHorizontal: 15, paddingVertical: 10, marginTop: 5 }}
+      style={{ paddingHorizontal: 15, paddingVertical: 10, marginTop: 5}}
     >
       <Text size={18} bold color="gray">
         {title}
@@ -124,7 +125,7 @@ const SettingsCard: React.FC<{
           <Icon
             name="angle-right"
             family="font-awesome"
-            color="gray"
+            color={COLORS.GRAY}
             size={22}
           />
         </Block>
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   settingsCard: {
     height: 60,
     width: width,
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     alignItems: "center",
   },
   container: {

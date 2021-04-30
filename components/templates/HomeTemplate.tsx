@@ -5,7 +5,7 @@ import { Block, theme } from "galio-framework";
 import Card from "../molecules/Card";
 import { ADMOB_BANNER_HEIGHT } from "../../constants/env";
 import { HomeItems } from "../types/Types";
-
+import {COLORS} from "../../constants/Theme"
 const { width } = Dimensions.get("screen");
 
 type Props = {
@@ -65,7 +65,7 @@ export default HomeTemplate;
 const styles = StyleSheet.create({
   home: {
     width: width,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.BEIGE,
   },
   list: {
     width: width,

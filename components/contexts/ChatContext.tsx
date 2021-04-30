@@ -668,7 +668,8 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
       message["messageId"] = "COMMON_MESSAGE_WAITING_TALK";
       message[
         "message"
-      ] = `あなたに合う話し相手を探しています（最終更新：${hour}:${min}）`;
+        //`あなたに合う話し相手を探しています（最終更新：${hour}:${min}）`
+      ] = "あなたに合う話し相手を探しています";
       break;
     }
     case "stopping": {

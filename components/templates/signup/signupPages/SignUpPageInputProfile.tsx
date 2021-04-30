@@ -120,13 +120,13 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
             bgColor="transparent"
             placeholderTextColor="darkgray"
             borderless
-            color="lightcoral"
+            color={COLORS.BLACK}
             placeholder="ユーザ名"
             autoCapitalize="none"
             style={[
               styles.usernameInput,
               username
-                ? { borderBottomColor: COLORS.PINK }
+                ? { borderBottomColor: COLORS.BROWN }
                 : { borderBottomColor: "silver" },
               isActiveUsername ? styles.usernameInputActive : null,
             ]}
@@ -136,7 +136,7 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
             maxLength={maxUsernameLen}
           />
           <Block style={styles.usernameCounter}>
-            <Text size={10} color="darkgray">
+            <Text size={10} color={COLORS.GRAY}>
               {`${username.length}/${maxUsernameLen}`}
             </Text>
           </Block>
@@ -159,12 +159,12 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
             onPress={() => setIsOpenJobModal(true)}
             style={[
               styles.jobInput,
-              jobKey ? { borderColor: COLORS.PINK } : { borderColor: "silver" },
+              jobKey ? { borderColor: COLORS.BROWN_RGBA } : { borderColor: "silver" },
             ]}
           >
             <Block flex style={styles.jobInputContent}>
               <Text
-                color={jobKey ? "lightcoral" : "darkgray"}
+                color={jobKey ? COLORS.GRAY : "darkgray"}
                 bold={Boolean(jobKey)}
               >
                 {jobKey && profileState.profileParams?.job
@@ -174,7 +174,7 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
               <Icon
                 name="angle-down"
                 family="font-awesome"
-                color={jobKey ? COLORS.PINK : "gray"}
+                color={jobKey ? COLORS.BROWN: "gray"}
                 size={22}
               />
             </Block>
@@ -202,13 +202,14 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
           <Block style={styles.agreeInput}>
             <Checkbox
               label=""
-              color={COLORS.PINK}
+              color={COLORS.BROWN}
               style={{ marginHorizontal: 8 }}
               initialValue={isAgreedUserpolicy}
               onChange={(value: boolean) => setIsAgreedUserpolicy(value)}
             />
             <Text
-              color="lightcoral"
+            bold
+              color={COLORS.BROWN}
               onPress={() => WebBrowser.openBrowserAsync(USER_POLICY_URL)}
               style={{ textDecorationLine: "underline" }}
             >
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   usernameInputActive: {
     borderBottomWidth: 2,
-    borderBottomColor: COLORS.PINK,
+    borderBottomColor: COLORS.BROWN,
   },
   usernameCounter: {
     alignItems: "flex-end",

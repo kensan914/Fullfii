@@ -10,6 +10,7 @@ import useShuffle from "../hooks/useShuffle";
 import ChatModal from "../molecules/ChatModal";
 import { AdView } from "../molecules/AdView";
 import {ADMOB_UNIT_ID_NATIVE} from "../../constants/env"
+import {COLORS} from "../../constants/Theme"
 const { width } = Dimensions.get("screen");
 
 type Props = {
@@ -43,7 +44,7 @@ const WaitingChatBody: React.FC<Props> = (props) => {
       >
         <LottieView
           style={{
-            width: "70%",
+            width: "100%",
           }}
           loop
           autoPlay
@@ -59,14 +60,14 @@ const WaitingChatBody: React.FC<Props> = (props) => {
           { justifyContent: "space-evenly" },
         ]}
       >
-        <Text
+        {/* <Text
           bold
-          color="#737373"
-          size={15}
+          color={COLORS.GRAY}
+          size={14}
           style={{ lineHeight: 20, textAlign: "center" }}
         >
           話し相手が見つかり次第通知でお知らせします！
-        </Text>
+        </Text> */}
           <Block row center style={{ justifyContent: "center", marginTop: 20 }}>
             <Block flex={0.45} center>
               <SvgButton
@@ -84,6 +85,7 @@ const WaitingChatBody: React.FC<Props> = (props) => {
                   setIsOpenChatModal(true);
                 }}
                 diameter={width / 5.5}
+                shadowColor={"#ed775d"}
               />
             </Block>
           </Block>

@@ -90,7 +90,7 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
               style={{ alignSelf: "center", lineHeight: 18 }}
               bold
               size={14}
-              color="#F69896"
+              color={COLORS.GRAY}
             >
               {commonMessage?.message}
             </Text>
@@ -98,23 +98,30 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
         </Block>
         <Block
           shadow={true}
-          shadowColor={"#676767"}
           style={[
             styles.modalContents,
             {
-              backgroundColor: "white",
+              backgroundColor: COLORS.WHITE,
               alignItems: "center",
               justifyContent: "center",
               margin: 20,
               borderRadius: 20,
               paddingVertical: 30,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.26,
+              shadowRadius: 0,
+              elevation: 1,
             },
           ]}
           flex={0.5}
         >
           <Block row center style={{ marginTop: 24, marginHorizontal: 15 }}>
             <Block flex={0.4} center>
-              <Text bold size={15} color="dimgray">
+              <Text bold size={15} color={COLORS.GRAY}>
                 {user.name}
               </Text>
             </Block>
@@ -123,12 +130,12 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
             </Block>
             <Block flex={0.4} center>
               <Block style={{ paddingVertical: 5 }}>
-                <Text bold size={15} color="dimgray">
+                <Text bold size={15} color={COLORS.GRAY}>
                   性別：{user.gender.label}
                 </Text>
               </Block>
               <Block style={{ paddingVertical: 5 }}>
-                <Text bold size={15} color="dimgray">
+                <Text bold size={15} color={COLORS.GRAY}>
                   職業：{user.job.label}
                 </Text>
               </Block>
@@ -136,7 +143,7 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
           </Block>
           <Block row center style={{ marginVertical: 28 }}>
             <Block center column>
-              <Text bold size={16} color="#333333">
+              <Text bold size={16} color={COLORS.GRAY}>
                 {user.numOfThunks}
               </Text>
               <Text muted size={15}>
@@ -177,12 +184,12 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
                     <Icon
                       name="notification"
                       family="AntDesign"
-                      color="white"
+                      color={COLORS.WHITE}
                       size={25}
                     />
                   </Block>
                   <Block center>
-                    <Text size={16} color="white" bold>
+                    <Text size={16} color={COLORS.WHITE} bold>
                       通報
                     </Text>
                   </Block>
@@ -231,12 +238,12 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
                     <Icon
                       name="block"
                       family="Entypo"
-                      color="white"
+                      color={COLORS.WHITE}
                       size={25}
                     />
                   </Block>
                   <Block center>
-                    <Text size={16} color="white" bold>
+                    <Text size={16} color={COLORS.WHITE} bold>
                       ブロック
                     </Text>
                   </Block>
@@ -249,7 +256,7 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
           <Button
             round
             color={COLORS.PINK}
-            shadowColor="#ee504d"
+            shadowColor={COLORS.PINK}
             style={[styles.goNextButton]}
             loading={isLoading}
             onPress={() => {
@@ -268,9 +275,15 @@ const ApprovingChatBody: React.FC<Props> = (props) => {
 
           <Button
             round
-            color={"white"}
-            shadowColor="#cccccc"
-            style={{ marginTop: 16 }}
+            color={COLORS.WHITE}
+            style={{ marginTop: 16, shadowColor: COLORS.GRAY,
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.26,
+              shadowRadius: 0,
+              elevation: 1, }}
             onPress={() => {
               setIsOpenChatModal(true);
             }}
@@ -295,7 +308,7 @@ export default ApprovingChatBody;
 
 const styles = StyleSheet.create({
   commonMessage: {
-    backgroundColor: "lavenderblush",
+    backgroundColor: COLORS.BROWN_RGBA_1,
     width: "80%",
     alignSelf: "center",
     padding: theme.SIZES.BASE / 2,
@@ -315,6 +328,14 @@ const styles = StyleSheet.create({
   },
   goNextButton: {
     alignSelf: "center",
+    shadowColor: "#ed775d",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.26,
+    shadowRadius: 3,
+    elevation: 1,
   },
   modal: {
     justifyContent: "center",
@@ -327,6 +348,14 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     width: 120,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.26,
+    shadowRadius: 0,
+    elevation: 1,
   },
   settingsCard: {
     backgroundColor: "white",

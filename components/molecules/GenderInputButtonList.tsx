@@ -22,7 +22,7 @@ const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (props) => {
         {genderKeys.map((_genderKey, i) => {
           const isActive = genderKey === _genderKey;
           const contentsColor = isActive ? COLORS.PINK : "lightgray";
-          const shadowColor = isActive ? COLORS.PINK : "white";
+          const shadowColor = isActive ? COLORS.PINK : COLORS.WHITE;
           const genderAddInfo: {
             [key: string]: { iconName: string; title: string };
           } = {
@@ -34,7 +34,7 @@ const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (props) => {
           return (
             <Block key={i} flex style={styles.genderInput}>
               <Button
-                color="white"
+                color={COLORS.WHITE}
                 shadowColor={shadowColor}
                 style={styles.genderInputButton}
                 onPress={() => setGenderKey(_genderKey)}

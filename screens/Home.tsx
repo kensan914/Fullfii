@@ -60,22 +60,12 @@ const Home: React.FC = () => {
     };
   });
 
-  const firstItem: HomeFirstItem = {
-    icon: "plus",
-    iconFamily: "Feather",
-    iconColor: "white",
-    color: ["#d3d8dd", "#d3d8dd"],
-    borderLess: true,
-    onPress: () => {
-      navigation.navigate("WorrySelect");
-    },
-  };
 
   const admobItem: AdmobItem = {
     isAdmob: true
   }
 
-  const items: HomeItems = [admobItem, firstItem, ...rooms];
+  const items: HomeItems = [admobItem, ...rooms];
 
   return (
     <Block flex style={styles.container}>
