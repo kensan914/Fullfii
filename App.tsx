@@ -12,11 +12,7 @@ enableScreens();
 import Screens from "./navigation/Screens";
 import materialTheme from "./constants/Theme";
 import { AuthProvider } from "./components/contexts/AuthContext";
-import {
-  asyncGetItem,
-  asyncGetJson,
-  asyncRemoveItem,
-} from "./components/modules/support";
+import { asyncGetItem, asyncGetJson } from "./components/modules/support";
 import { ProfileProvider } from "./components/contexts/ProfileContext";
 import { ChatProvider } from "./components/contexts/ChatContext";
 import StartUpManager from "./screens/StartUpManager";
@@ -38,7 +34,7 @@ import { setVersion } from "./constants/env";
 LogBox.ignoreAllLogs(true);
 
 const assetImages: { logo: number } = {
-  logo: require("./assets/images/icon_2/ios/Icon-512.png"),
+  logo: require("./assets/images/icon/icon.png"),
 };
 
 function cacheImages(images: (string | number)[]): Promise<Asset>[] {

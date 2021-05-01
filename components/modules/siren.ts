@@ -9,6 +9,7 @@ import {
 import requestAxios from "./axios";
 import { alertModal, asyncGetItem, asyncStoreItem } from "../modules/support";
 import { Alert, Linking } from "react-native";
+import { checkUpdateVersion } from "./versionUpdate";
 
 const fetchLatestVersion = (): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -160,6 +161,8 @@ const exeSiren = async (): Promise<void> => {
         showUpdatePrompt(skipUpdateVersion, currentVersion, false);
         break;
       case "LATEST":
+        // アップデート直後だった場合、任意の処理を実行
+        checkUpdateVersion();
         break;
       default:
         console.error(

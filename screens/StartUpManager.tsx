@@ -114,7 +114,6 @@ export const startUpLoggedin = (
   setMeProfileTemp: React.Dispatch<MeProfile>
 ): void => {
   if (typeof token !== "undefined") {
-    checkUpdateVersion();
     exeSiren();
     requestGetProfile(token, dispatches, setMeProfileTemp);
     connectWsNotification(token, states, dispatches);
