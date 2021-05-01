@@ -282,6 +282,7 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
             }
           });
 
+        // 余分なトークチケットがある
         Object.keys(_prevTalkTicketCollection).forEach((key) => {
           if (!talkTickets.some((talkTicket) => talkTicket.worry.key === key)) {
             dispatches.chatDispatch({
@@ -290,6 +291,33 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
             });
           }
         });
+
+        // 足りないトークチケットがある
+        if (
+          talkTickets.some((_talkTicket) => {
+            if (!(_talkTicket.worry.key in _prevTalkTicketCollection)) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+        ) {
+          // リセット (HACK:ぎみ)
+          dispatches.chatDispatch({
+            type: "UPDATE_TALK_TICKETS",
+            talkTickets: talkTickets,
+          });
+          talkTickets
+            .filter((talkTicket) => talkTicket.status.key === "talking")
+            .forEach((talkTicket) => {
+              if (talkTicket.room) {
+                startApprovingTalk(
+                  dispatches.chatDispatch,
+                  talkTicket.worry.key
+                );
+              }
+            });
+        }
       } else {
         // signup直後一回のみ
         dispatches.chatDispatch({
