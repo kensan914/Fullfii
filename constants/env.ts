@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import DeviceInfo from "react-native-device-info";
 
 const DEBUG = true;
 // const DEBUG = false;
@@ -19,8 +20,9 @@ export const REPORT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLScuWE_hUXY8GN2Nu4CpMa7rNsUTtVRfcL0_avj5h69XwwjD8g/viewform";
 export const ACCOUNT_DELETION_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSclvk_l4JsWCMQf6a6qh2AmoAkiM9ReU6eZOaYTUoTz9MP3gw/viewform?usp=sf_link";
-export const VERSION = "2.4.2";
-export const VERSION_NUM = 242;
+export const VERSION = DeviceInfo.getVersion();
+const _VERSION_NUM = Number(VERSION.split(".").join(""));
+export const VERSION_NUM = isNaN(_VERSION_NUM) ? 0 : _VERSION_NUM;
 
 export const PRODUCT_ID_LIST = ["com.fullfii.fullfii.normal_plan"];
 
@@ -79,3 +81,15 @@ export const setIsExpo = (val: boolean): void => {
 import Config from "react-native-config";
 export const CAN_APP_TRACKING_TRANSPARENCY =
   Config.CAN_APP_TRACKING_TRANSPARENCY === "false" ? false : true;
+
+export const USER_EMPTY_ICON_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/static/images/user_empty_icon.png`;
+
+export const appId = "1533306689";
+export const ITUNES_LOOKUP_URL = `https://itunes.apple.com/lookup/?id=${appId}&country=JP`;
+export const APP_STORE_URI_ITMS_APPS = `itms-apps://itunes.apple.com/jp/app/id${appId}/?mt=8`;
+// export const APP_STORE_URI_ITMS_APPS = `itms-apps://apps.apple.com/jp/app/id${appId}/?mt=8`;
+export const APP_STORE_URL = `https://itunes.apple.com/jp/app/id${appId}/?mt=8`;
+// export const APP_STORE_URL = `https://apps.apple.com/jp/app/id${appId}/?mt=8`;
+
+// async storage key
+export const AS_KEY_SKIP_UPDATE_VERSION = "skipUpdateVersion";

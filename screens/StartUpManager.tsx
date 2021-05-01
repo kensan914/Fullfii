@@ -36,10 +36,13 @@ import { Alert } from "react-native";
 import { requestPatchProfile } from "./ProfileInput";
 import { checkUpdateVersion } from "../components/modules/versionUpdate";
 import { alertDeleteAuth } from "../components/modules/auth/crud";
+import usePostWorry from "../components/hooks/usePostWorry";
+import exeSiren from "../components/modules/siren";
 
 const StartUpManager: React.FC = (props) => {
   const { children } = props;
   const [states, dispatches] = useAllContext();
+  const { requestPostWorry } = usePostWorry(states.authState.token);
 
   // global stateとは別に即時反映されるmeProfile
   const [meProfileTemp, setMeProfileTemp] = useState<MeProfile>();
@@ -91,6 +94,12 @@ const StartUpManager: React.FC = (props) => {
       );
   }, [states.authState.token]);
 
+  useEffect(() => {
+    if (states.profileState.profileParams) {
+      requestPostWorry(states.profileState.profileParams);
+    }
+  }, [states.authState.token, states.profileState.profileParams]);
+
   return <Block flex>{children}</Block>;
 };
 
@@ -106,7 +115,7 @@ export const startUpLoggedin = (
 ): void => {
   if (typeof token !== "undefined") {
     checkUpdateVersion();
-    // checkAndPromptSiren(); // 先延ばし
+    exeSiren();
     requestGetProfile(token, dispatches, setMeProfileTemp);
     connectWsNotification(token, states, dispatches);
     updateTalk(token, states, dispatches);
@@ -144,6 +153,11 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
     token: token,
     thenCallback: async (resData) => {
       const _resData = resData as TalkInfoJson;
+      dispatches.chatDispatch({
+        type: "SET_LENGTH_PARTICIPANTS",
+        lengthParticipants: _resData["lengthParticipants"],
+      });
+
       const talkTickets = _resData["talkTickets"];
 
       // connect wsChat
@@ -268,6 +282,7 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
             }
           });
 
+        // 余分なトークチケットがある
         Object.keys(_prevTalkTicketCollection).forEach((key) => {
           if (!talkTickets.some((talkTicket) => talkTicket.worry.key === key)) {
             dispatches.chatDispatch({
@@ -276,6 +291,33 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
             });
           }
         });
+
+        // 足りないトークチケットがある
+        if (
+          talkTickets.some((_talkTicket) => {
+            if (!(_talkTicket.worry.key in _prevTalkTicketCollection)) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+        ) {
+          // リセット (HACK:ぎみ)
+          dispatches.chatDispatch({
+            type: "UPDATE_TALK_TICKETS",
+            talkTickets: talkTickets,
+          });
+          talkTickets
+            .filter((talkTicket) => talkTicket.status.key === "talking")
+            .forEach((talkTicket) => {
+              if (talkTicket.room) {
+                startApprovingTalk(
+                  dispatches.chatDispatch,
+                  talkTicket.worry.key
+                );
+              }
+            });
+        }
       } else {
         // signup直後一回のみ
         dispatches.chatDispatch({

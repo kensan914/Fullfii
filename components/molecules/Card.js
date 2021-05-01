@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -6,14 +6,14 @@ import {
   Image,
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
-import { LinearGradient } from "expo-linear-gradient";
 
 import Icon from "../atoms/Icon";
 import { COLORS } from "../../constants/Theme";
-import { ADMOB_BANNER_HEIGHT, ADMOB_BANNER_WIDTH } from "../../constants/env";
+// import { ADMOB_BANNER_HEIGHT, ADMOB_BANNER_WIDTH } from "../../constants/env";
 import { ADMOB_UNIT_ID_NATIVE } from "../../constants/env";
-import { height } from "../../constants/utils";
+// import { height } from "../../constants/utils";
 import useAdView from "../hooks/useAdView";
+import { useChatState } from "../contexts/ChatContext";
 
 const { width } = Dimensions.get("screen");
 
@@ -28,9 +28,10 @@ const Card = (props) => {
   const { item, style, onPress, countNum } = props;
   const titleSize = 16;
   const contentSize = 14;
-  const backgroundColor = !item.isAdmob ? item.color : COLORS.PINK;
-  const [mediaType, setMediaType] = useState("image");
+  // const backgroundColor = !item.isAdmob ? item.color : COLORS.PINK;
+  // const [mediaType, setMediaType] = useState("image");
   const adViewModule = useAdView();
+  const chatState = useChatState();
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -101,7 +102,11 @@ const Card = (props) => {
                       </Text>
                     </Block>
                     <Block row>
-                      <Text color={COLORS.GRAY}>80</Text>
+                      <Text color={COLORS.GRAY}>
+                        {item.key in chatState.lengthParticipants
+                          ? chatState.lengthParticipants[item.key]
+                          : "- "}
+                      </Text>
                       <Icon name="person" family="Ionicons" color="gray" />
                     </Block>
                   </Block>
@@ -111,14 +116,16 @@ const Card = (props) => {
           }
         </Block>
       ) : (
-        typeof adViewModule !== "undefined" && (
-          <adViewModule.AdView
-            media={false}
-            type="image"
-            index={1}
-            adUnitId={ADMOB_UNIT_ID_NATIVE.image}
-          />
-        )
+        <>
+          {typeof adViewModule !== "undefined" && (
+            <adViewModule.AdView
+              media={false}
+              type="image"
+              index={1}
+              adUnitId={ADMOB_UNIT_ID_NATIVE.image}
+            />
+          )}
+        </>
       )}
     </TouchableWithoutFeedback>
   );

@@ -67,6 +67,7 @@ export type ProfileInputScreen =
 
 //--------- Home.tsx ---------//
 export type HomeRooms = {
+  key: string;
   title: string;
   color: string[];
   image: string;

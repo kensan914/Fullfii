@@ -587,6 +587,16 @@ const chatReducer = (
       };
     }
 
+    case "SET_LENGTH_PARTICIPANTS": {
+      /** set lengthParticipants
+       * @param {Object} action [type, lengthParticipants] */
+
+      return {
+        ...prevState,
+        lengthParticipants: action.lengthParticipants,
+      };
+    }
+
     case "DANGEROUSLY_RESET":
       /** chat stateを初期化.
        * @param {Object} action [type] */
@@ -662,9 +672,9 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
       break;
     }
     case "waiting": {
-      const now = new Date();
-      const hour = now.getHours();
-      const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
+      // const now = new Date();
+      // const hour = now.getHours();
+      // const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
       message["messageId"] = "COMMON_MESSAGE_WAITING_TALK";
       message[
         "message"
@@ -733,6 +743,7 @@ const initChatState: ChatState = Object.freeze({
   totalUnreadNum: 0,
   talkTicketCollection: {},
   chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
+  lengthParticipants: {},
 });
 const ChatStateContext = createContext<ChatState>(initChatState);
 const ChatDispatchContext = createContext<ChatDispatch>(() => {
@@ -761,6 +772,7 @@ export const ChatProvider: React.FC<Props> = ({
       ? cvtDateStringToDateObject(talkTicketCollection)
       : {},
     chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
+    lengthParticipants: {},
   });
 
   // delayモードが終了した時にtaskを全て実行

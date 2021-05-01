@@ -48,7 +48,7 @@ export const COLORS = {
 //オイスターパープル: "#f3e7ea",
 //オイリーグリーン: "#d7d486",
 //おーパールソフトグリーン: "#d2e7df"
-export const CARD_COLORS = {
+export const CARD_COLORS: { [key: string]: string[] } = {
   a: ["#fec5bb", "#ffc0cb"], //失恋["#FF9A8B", "#FF6A88"]
   b: ["#fec5bb", "#ffc0cb"], //片想い["#ff9472", "#f2709c"]
   c: ["#D8E2DC", "#a5bcaf"], //アルバイト["#FBDA61", "#FF6A88"]
@@ -56,6 +56,7 @@ export const CARD_COLORS = {
   e: ["#fcd5ce", "#f78b78"], //夢目標["#FBDA61", "#ff9472"]
   f: ["#fec89a", "#ffa462"], //人間関係["#FBDA61", "#FF6A88"]
   g: ["#fcd5ce", "#f78b78"], //ただ話したい ["#ff9472", "#f2709c"]
+  h: ["#fcd5ce", "#f78b78"],
 };
 
 // 派手バージョん

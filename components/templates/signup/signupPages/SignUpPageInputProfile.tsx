@@ -23,20 +23,21 @@ import {
 } from "../../../types/Types";
 import GenderInputButtonList from "../../../molecules/GenderInputButtonList";
 import { GenderKey } from "../../../types/Types.context";
+import usePostWorry from "../../../hooks/usePostWorry";
 
 const { width } = Dimensions.get("window");
 
 type Props = {
   goToPage: GoToPage;
+  progressNum: number;
 };
 const SignUpPageInputProfile: React.FC<Props> = (props) => {
-  const { goToPage } = props;
+  const { goToPage, progressNum } = props;
 
   const authState = useAuthState();
   const authDispatch = useAuthDispatch();
   const profileDispatch = useProfileDispatch();
   const profileState = useProfileState();
-  const progressNum = 4;
 
   const [username, setUsername] = useState("");
   const [isActiveUsername, setIsActiveUsername] = useState(false);
@@ -60,17 +61,21 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
   };
 
   const [password] = useState(generatePassword());
+  const { genePostWorryData } = usePostWorry("");
   const { isLoading, request } = useAxios(
     URLJoin(BASE_URL, "signup/"),
     "post",
     SignupResDataIoTs,
     {
       data: {
-        username: username,
-        password: password,
-        genre_of_worries: authState.signupBuffer.worries,
-        gender: genderKey,
-        job: jobKey,
+        ...{
+          username: username,
+          password: password,
+          gender: genderKey,
+          job: jobKey,
+        },
+        ...(profileState.profileParams &&
+          genePostWorryData(profileState.profileParams)),
       },
       thenCallback: (resData) => {
         const _resData = resData as SignupResData;
@@ -159,7 +164,9 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
             onPress={() => setIsOpenJobModal(true)}
             style={[
               styles.jobInput,
-              jobKey ? { borderColor: COLORS.BROWN_RGBA } : { borderColor: "silver" },
+              jobKey
+                ? { borderColor: COLORS.BROWN_RGBA }
+                : { borderColor: "silver" },
             ]}
           >
             <Block flex style={styles.jobInputContent}>
@@ -174,7 +181,7 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
               <Icon
                 name="angle-down"
                 family="font-awesome"
-                color={jobKey ? COLORS.BROWN: "gray"}
+                color={jobKey ? COLORS.BROWN : "gray"}
                 size={22}
               />
             </Block>
@@ -208,7 +215,7 @@ const SignUpPageInputProfile: React.FC<Props> = (props) => {
               onChange={(value: boolean) => setIsAgreedUserpolicy(value)}
             />
             <Text
-            bold
+              bold
               color={COLORS.BROWN}
               onPress={() => WebBrowser.openBrowserAsync(USER_POLICY_URL)}
               style={{ textDecorationLine: "underline" }}

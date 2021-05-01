@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import NativeAdView, {
   CallToActionView,
-  HeadlineView,
   IconView,
   StarRatingView,
   MediaView,
   StoreView,
+  TaglineView,
 } from "react-native-admob-native-ads";
 
 import { Events, Logger } from "../../constants/utils";
@@ -30,7 +30,7 @@ export const AdView = (props) => {
   const _onAdFailedToLoad = (event) => {
     setError(true);
     setLoading(false);
-    Logger("AD", "FAILED", event.error.message);
+    Logger("AD", "FAILED", event?.error?.message);
   };
 
   const _onAdLoaded = () => {
