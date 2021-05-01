@@ -33,6 +33,7 @@ import {
 } from "./components/types/Types.context";
 import { Assets } from "./components/types/Types";
 import AttManager from "./screens/AttManager";
+import { setVersion } from "./constants/env";
 
 LogBox.ignoreAllLogs(true);
 
@@ -59,6 +60,8 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    setVersion(false);
+
     loadResourcesAsync().then((assetList) => {
       const downloadedAssets: Assets = {};
       assetList.forEach((elm: Asset) => {
