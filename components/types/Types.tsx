@@ -67,6 +67,7 @@ export type ProfileInputScreen =
 
 //--------- Home.tsx ---------//
 export type HomeRooms = {
+  key: string;
   title: string;
   color: string[];
   image: string;
@@ -85,7 +86,7 @@ export type HomeFirstItem = {
 export type AdmobItem = {
   isAdmob: boolean;
 };
-export type HomeItems = [AdmobItem, HomeFirstItem, ...HomeRooms];
+export type HomeItems = [AdmobItem, ...HomeRooms];
 //--------- Home.tsx ---------//
 
 //--------- HomeTemplate.tsx ---------//

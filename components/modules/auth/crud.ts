@@ -3,7 +3,10 @@ import * as WebBrowser from "expo-web-browser";
 
 import { Dispatches } from "../../types/Types.context";
 import { alertModal, asyncRemoveItem } from "../support";
-import { CONTACT_US_URL } from "../../../constants/env";
+import {
+  AS_KEY_SKIP_UPDATE_VERSION,
+  CONTACT_US_URL,
+} from "../../../constants/env";
 
 /**
  * async storageからtokenを含む全ての認証情報を削除するため復帰ができません。
@@ -19,6 +22,7 @@ export const dangerouslyDelete = (
     "signupBuffer",
     "talkTicketCollection",
     "versionNum",
+    AS_KEY_SKIP_UPDATE_VERSION,
   ];
   willRemoveItemKeys.forEach((willRemoveItemKey) => {
     if (!excludeKeys?.includes(willRemoveItemKey)) {

@@ -5,6 +5,7 @@ import { Forms, SubmitSettings } from "../types/Types";
 import SubmitButton from "../atoms/SubmitButton";
 import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { width } from "../../constants/utils";
+import {COLORS} from "../../constants/Theme"
 
 type Props = {
   forms: Forms;
@@ -71,7 +72,7 @@ export default FormTemplate;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.BEIGE,
     paddingVertical: 20,
     paddingHorizontal: 18,
   },
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     width: width - 30,
   },
   formTitle: {
-    color: "dimgray",
+    color: COLORS.GRAY,
     paddingHorizontal: 4,
     marginBottom: 10,
   },

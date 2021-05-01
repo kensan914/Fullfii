@@ -5,11 +5,11 @@ import SignUpPageTemplate from "./SignUpPageTemplate";
 
 type Props = {
   goToPage: GoToPage;
+  progressNum: number;
 };
 const SignUpPageFirst: React.FC<Props> = (props) => {
-  const { goToPage } = props;
+  const { goToPage, progressNum } = props;
   const authDispatch = useAuthDispatch();
-  const progressNum = 1;
   const pressButton = () => {
     authDispatch({
       type: "TO_PROGRESS_SIGNUP",

@@ -8,14 +8,15 @@ import {
 } from "react-native";
 import NativeAdView, {
   CallToActionView,
-  HeadlineView,
   IconView,
   StarRatingView,
   MediaView,
   StoreView,
+  TaglineView,
 } from "react-native-admob-native-ads";
 
 import { Events, Logger } from "../../constants/utils";
+import { COLORS } from "../../constants/Theme";
 
 export const AdView = (props) => {
   const { index, media, type, adUnitId } = props;
@@ -150,7 +151,7 @@ export const AdView = (props) => {
           style={{
             width: "100%",
             height: "100%",
-            backgroundColor: "#f0f0f0",
+            backgroundColor: COLORS.BEIGE,
             position: "absolute",
             justifyContent: "center",
             alignItems: "center",
@@ -173,7 +174,7 @@ export const AdView = (props) => {
             // shadowRadius: 3.84,
 
             // elevation: 5,
-            backgroundColor: "#fff",
+            backgroundColor: COLORS.BEIGE,
             flexDirection: "row",
             justifyContent: "space-evenly",
             alignItems: "center",
@@ -187,24 +188,26 @@ export const AdView = (props) => {
               paddingHorizontal: 6,
             }}
           >
-            <HeadlineView
+            {/* <HeadlineView
               hello="abc"
               style={{
                 fontWeight: "bold",
                 fontSize: 16,
                 marginRight: "auto",
               }}
-            />
-            {/* <TaglineView
+            /> */}
+            <TaglineView
               numberOfLines={2}
               style={{
+                fontWeight: "bold",
                 fontSize: 16,
+                marginRight: "auto",
               }}
-            /> */}
+            />
             {/* <AdvertiserView
               style={{
                 fontSize: 16,
-                color: 'gray',
+                color: "gray",
               }}
             /> */}
 

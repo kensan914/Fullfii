@@ -62,7 +62,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
             )}
           </Block>
           <Block flex={0.1} style={styles.subTitle}>
-            <Text bold color="#909090">
+            <Text bold color={COLORS.GRAY}>
               {genePlaceholder(talkTicketKey)[0]}
             </Text>
           </Block>
@@ -71,14 +71,17 @@ const StoppingChatBody: React.FC<Props> = (props) => {
             style={[styles.dividedContainer, styles.centralContainer]}
           >
             <Block>
-              <Block style={{ justifyContent: "center" }}>
+              <Block style={{ justifyContent: "center",  }}>
                 <ChatSwitch
                   title="話したい"
+                  modal={false}
                   value={isSpeaker}
                   onChange={(val) => setIsSpeaker(val)}
                 />
                 <ChatSwitch
                   title="聞きたい"
+                  modal={false}
+
                   value={!isSpeaker}
                   onChange={(val) => setIsSpeaker(!val)}
                 />
@@ -86,7 +89,7 @@ const StoppingChatBody: React.FC<Props> = (props) => {
             </Block>
           </Block>
           <Block flex={0.1} style={styles.subTitle}>
-            <Text bold color="#909090">
+            <Text bold color={COLORS.GRAY}>
               {genePlaceholder(talkTicketKey)[1]}
             </Text>
           </Block>
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     height: 150,
     marginHorizontal: 20,
     marginTop: 10,
-    backgroundColor: "white",
+    backgroundColor: COLORS.BEIGE,
   },
   textArea: {
     height: 150,
@@ -166,20 +169,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 8,
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     textAlignVertical: 'top',
   },
   touchableOpacity: {
     width: 300,
     height: 50,
     borderRadius: 50,
-    backgroundColor: "white",
-    shadowColor: COLORS.PINK,
-    shadowOpacity: 1,
+    backgroundColor: COLORS.WHITE,
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
+    shadowOpacity: 0.26,
+    shadowRadius: 0,
+    elevation: 1,
   },
   buttonSvgIcon: {
     justifyContent: "center",

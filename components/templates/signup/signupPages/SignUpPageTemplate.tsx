@@ -44,10 +44,10 @@ const SignUpPageTemplate: React.FC<Props> = (props) => {
     <>
       <Block flex middle style={styles.signupContainer}>
         <Block flex={0.2} style={styles.signupTitleContainer}>
-          <Text size={26} bold color={COLORS.PINK} style={styles.title}>
+          <Text size={26} bold color={COLORS.GRAY} style={styles.title}>
             {title}
           </Text>
-          <Text size={14} bold color={COLORS.PINK} style={styles.subTitle}>
+          <Text size={14} bold color={COLORS.LIGHT_GRAY} style={styles.subTitle}>
             {subTitle}
           </Text>
         </Block>
@@ -67,7 +67,7 @@ const SignUpPageTemplate: React.FC<Props> = (props) => {
             loading={isLoading}
             onPress={pressCallback}
           >
-            <Text bold color="white" size={16}>
+            <Text bold color={COLORS.WHITE} size={16}>
               {buttonTitle}
             </Text>
           </Button>
@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     paddingHorizontal: 2,
     textAlign: "center",
-    color: "pink",
   },
   goNextButton: {
     alignSelf: "center",

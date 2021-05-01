@@ -85,7 +85,7 @@ const ChatModal: React.FC<Props> = (props) => {
                   bold
                   size={15}
                   style={{ textAlign: "center", paddingBottom: 18 }}
-                  color={COLORS.PINK}
+                  color={COLORS.GRAY}
                 >
                   気楽に話し相手をシャッフルしましょう
                 </Text>
@@ -95,11 +95,13 @@ const ChatModal: React.FC<Props> = (props) => {
                   <ChatSwitch
                     title="話したい"
                     value={isSpeaker}
+                    modal={true}
                     onChange={(val) => setIsSpeaker(val)}
                   />
                   <ChatSwitch
                     title="聞きたい"
                     value={!isSpeaker}
+                    modal={true}
                     onChange={(val) => setIsSpeaker(!val)}
                   />
                 </Block>
@@ -174,6 +176,7 @@ const ChatModal: React.FC<Props> = (props) => {
                           source={require("../../assets/icons/pinkLoop.svg")}
                           onPress={onPressShuffle}
                           diameter={width / 5.5}
+                          shadowColor="#ed775d"
                         />
                       </Block>
                     </>
@@ -203,6 +206,7 @@ export default ChatModal;
 
 type ChatSwitchProps = {
   title: string;
+  modal: boolean,
   onChange: (val: boolean) => void;
   value: boolean;
   disable?: boolean;
@@ -211,6 +215,7 @@ type ChatSwitchProps = {
 export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
   const {
     title,
+    modal,
     onChange,
     value,
     disable = false,
@@ -219,12 +224,13 @@ export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
 
   return (
     <>
-      <Block row space="between" style={styles.settingsCard}>
+      <Block row space="between" style={{backgroundColor: modal ? COLORS.WHITE : COLORS.BEIGE,
+    alignItems: "center",}}>
         <Block>
           <Text
             bold
             size={15}
-            color={disable ? "silver" : "dimgray"}
+            color={COLORS.GRAY}
             style={{ marginRight: 40 }}
           >
             {title}
@@ -234,9 +240,9 @@ export const ChatSwitch: React.FC<ChatSwitchProps> = (props) => {
           <Switch
             trackColor={{
               false: disable ? "gainsboro" : "dimgray",
-              true: "#F69896",
+              true: COLORS.PINK,
             }}
-            ios_backgroundColor={disable ? "gainsboro" : "gray"}
+            ios_backgroundColor={disable ? "gainsboro" : "#6a6a6a"}
             value={disable ? false : value}
             style={{ marginVertical: 8, marginLeft: 40 }}
             onValueChange={(val) => {
@@ -257,7 +263,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContents: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     justifyContent: "center",
     alignItems: "center",
     borderTopRightRadius: 17,
@@ -266,8 +272,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   settingsCard: {
-    backgroundColor: "white",
-    alignItems: "center",
+
   },
   textAreaContainer: {
     height: 150,
@@ -275,7 +280,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
 
     marginHorizontal: 30,
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
   },
   textArea: {
     width: width * 0.8,
@@ -286,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 8,
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
   },
 
   onlyShuffleButton: {

@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 import { CAN_APP_TRACKING_TRANSPARENCY, isExpo } from "../constants/env";
 import { useAuthState } from "../components/contexts/AuthContext";
+import {COLORS} from "../constants/Theme"
 
 const AttManager: React.FC = (props) => {
   const { children } = props;
@@ -83,10 +84,10 @@ const AttModal: React.FC<Props> = (props) => {
       style={styles.attModal}
     >
       <Block style={styles.attContainer}>
-        <Text size={21} bold style={styles.attTitle}>
+        <Text size={21} bold color={COLORS.BLACK} style={styles.attTitle}>
           広告をカスタマイズしましょう
         </Text>
-        <Text style={styles.attDescription}>
+        <Text color={COLORS.GRAY} style={styles.attDescription}>
           Fullfiiは広告の収益に支えられています。
           <Text color="#ff5576">関連性の低い広告</Text>
           を表示させずにより
@@ -95,7 +96,7 @@ const AttModal: React.FC<Props> = (props) => {
         </Text>
         <Button
           round
-          color="#1997d2"
+          color={COLORS.PINK}
           shadowless
           style={styles.attOnButton}
           onPress={onPress}
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   attContainer: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     padding: 22,
     justifyContent: "center",
     alignItems: "center",

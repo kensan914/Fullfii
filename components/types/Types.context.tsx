@@ -138,6 +138,7 @@ export type ChatState = {
   totalUnreadNum: TotalUnreadNum;
   talkTicketCollection: TalkTicketCollection;
   chatDispatchTask: ChatDispatchTask;
+  lengthParticipants: { [worryKey: string]: number };
 };
 export type ChatDispatch = React.Dispatch<ChatActionType>;
 export type ChatActionType =
@@ -198,6 +199,10 @@ export type ChatActionType =
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
   | { type: "EXECUTED_DELAY_DISPATCH" }
+  | {
+      type: "SET_LENGTH_PARTICIPANTS";
+      lengthParticipants: { [worryKey: string]: number };
+    }
   | { type: "DANGEROUSLY_RESET" };
 
 export type TotalUnreadNum = number;
@@ -353,6 +358,7 @@ export const TalkTicketCollectionAsyncIoTs = t.record(
 );
 export const TalkInfoJsonIoTs = t.type({
   talkTickets: t.array(TalkTicketJsonIoTs),
+  lengthParticipants: t.record(t.string, t.number),
 });
 //========== Chat io-ts ==========//
 

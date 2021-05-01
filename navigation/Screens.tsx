@@ -25,6 +25,7 @@ import { RootStackParamList } from "../components/types/Types";
 import SuccessAccountDelete from "../screens/SuccessAccountDelete";
 import { alertModal } from "../components/modules/support";
 import { Alert } from "react-native";
+import {COLORS} from "../constants/Theme"
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -212,7 +213,7 @@ const AppStack: React.FC = () => {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white" }}
+      style={{ flex: 1, backgroundColor: COLORS.BEIGE }}
       forceInset={{ bottom: "never" }}
     >
       {render()}

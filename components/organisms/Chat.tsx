@@ -17,6 +17,7 @@ import { LottieSource } from "../types/Types";
 import SvgUri from "react-native-svg-uri";
 import { useNavigation } from "@react-navigation/core";
 import useShuffle from "../hooks/useShuffle";
+import {COLORS} from "../../constants/Theme"
 
 const { width } = Dimensions.get("screen");
 
@@ -28,10 +29,10 @@ export const CommonMessage: React.FC<CommonMessageType> = (props) => {
   return (
     <Block style={styles.commonMessage}>
       <Text
+      bold
         style={{ alignSelf: "center", lineHeight: 18 }}
-        bold
         size={14}
-        color="#F69896"
+        color={COLORS.GRAY}
       >
         {message.replace("\\n", "\n")}
       </Text>
@@ -76,8 +77,8 @@ export const TalkMenuButton: React.FC<TalkMenuButtonType> = (props) => {
         {/* <Icon family="MaterialIcons" size={25} name="loop" color="gray" /> */}
         {!disable && (
           <SvgUri
-            width={24}
-            height={24}
+            width={30}
+            height={30}
             source={require("../../assets/icons/bye.svg")}
           />
         )}
@@ -260,12 +261,13 @@ export const EndTalkScreen: React.FC<EndTalkScreenType> = (props) => {
 
 const styles = StyleSheet.create({
   commonMessage: {
-    backgroundColor: "lavenderblush",
-    width: "80%",
+    marginBottom: 15,
+    backgroundColor: COLORS.BROWN_RGBA_1,
+    paddingVertical: 8,
+    paddingHorizontal:14,
+    width: width * 0.8,
     alignSelf: "center",
-    padding: theme.SIZES.BASE / 2,
-    borderRadius: theme.SIZES.BASE,
-    marginVertical: theme.SIZES.BASE / 2,
+    borderRadius: 14,
   },
   endTalkModal: {
     margin: 0,
@@ -279,7 +281,7 @@ const styles = StyleSheet.create({
   },
   endTalkContainer: {
     width: width,
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     padding: 22,
     paddingBottom: 40,
     justifyContent: "flex-start",

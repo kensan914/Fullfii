@@ -13,12 +13,12 @@ const { width } = Dimensions.get("window");
 
 type Props = {
   goToPage: GoToPage;
+  progressNum: number;
 };
 const SignUpPageShuffleExplain: React.FC<Props> = (props) => {
-  const { goToPage } = props;
+  const { goToPage, progressNum } = props;
   const authDispatch = useAuthDispatch();
   const authState = useAuthState();
-  const progressNum = 2;
 
   const [
     lottieShuffleSource,
@@ -141,7 +141,7 @@ const SignUpPageShuffleExplain: React.FC<Props> = (props) => {
           <Text
             bold
             size={18}
-            color={COLORS.PINK}
+            color={COLORS.LIGHT_GRAY}
             style={{
               height: 40,
               width: width,

@@ -31,13 +31,13 @@ import {
   WsSettings,
   WsResNotificationIoTs,
   WsResNotification,
-  Request,
 } from "../components/types/Types";
 import { Alert } from "react-native";
 import { requestPatchProfile } from "./ProfileInput";
 import { checkUpdateVersion } from "../components/modules/versionUpdate";
 import { alertDeleteAuth } from "../components/modules/auth/crud";
 import usePostWorry from "../components/hooks/usePostWorry";
+import exeSiren from "../components/modules/siren";
 
 const StartUpManager: React.FC = (props) => {
   const { children } = props;
@@ -115,7 +115,7 @@ export const startUpLoggedin = (
 ): void => {
   if (typeof token !== "undefined") {
     checkUpdateVersion();
-    // checkAndPromptSiren(); // 先延ばし
+    exeSiren();
     requestGetProfile(token, dispatches, setMeProfileTemp);
     connectWsNotification(token, states, dispatches);
     updateTalk(token, states, dispatches);
@@ -153,6 +153,11 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
     token: token,
     thenCallback: async (resData) => {
       const _resData = resData as TalkInfoJson;
+      dispatches.chatDispatch({
+        type: "SET_LENGTH_PARTICIPANTS",
+        lengthParticipants: _resData["lengthParticipants"],
+      });
+
       const talkTickets = _resData["talkTickets"];
 
       // connect wsChat

@@ -6,16 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useChatState } from "../components/contexts/ChatContext";
 import HomeTemplate from "../components/templates/HomeTemplate";
 import { CARD_COLORS } from "../constants/Theme";
-import {
-  ADMOB_BANNER_HEIGHT,
-  ADMOB_BANNER_WIDTH,
-  ADMOB_UNIT_ID_HOME,
-  isExpo,
-} from "../constants/env";
-import Admob from "../components/molecules/Admob";
+import { ADMOB_BANNER_HEIGHT, ADMOB_BANNER_WIDTH } from "../constants/env";
 import {
   AdmobItem,
-  HomeFirstItem,
   HomeItems,
   HomeNavigationProp,
   HomeRooms,
@@ -28,68 +21,57 @@ const Home: React.FC = () => {
   const chatState = useChatState();
   const talkTickets = Object.values(chatState.talkTicketCollection);
 
-  const rooms: HomeRooms = talkTickets.map((talkTicket) => {
-    const choiceColor = () => {
-      // if (!CARD_COLORS[talkTicket.worry.key]) {
-      //   const talkTicketKey = talkTicket.worry.key;
-      //   if (isNaN(Number(talkTicketKey)))
-      //     return CARD_COLORS[Number(talkTicketKey) % 10];
-      //   else {
-      //     Object.values(CARD_COLORS)[0];
-      //   }
-      // }
-      if (talkTicket.worry.key in CARD_COLORS) {
-        return CARD_COLORS[talkTicket.worry.key];
+  const rooms: HomeRooms = talkTickets
+    .map((talkTicket) => {
+      const choiceColor = () => {
+        if (talkTicket.worry.key in CARD_COLORS) {
+          return CARD_COLORS[talkTicket.worry.key];
+        } else {
+          return [""];
+        }
+      };
+
+      const choiceImg = () => {
+        if (talkTicket.worry.key in HOME_IMG) {
+          return HOME_IMG[talkTicket.worry.key];
+        } else {
+          return "";
+        }
+      };
+
+      return {
+        key: talkTicket.worry.key,
+        title: talkTicket.worry.label,
+        color: choiceColor(),
+        image: choiceImg(),
+        content:
+          talkTicket.room.messages[talkTicket.room.messages.length - 1]
+            ?.message,
+        onPress: () => {
+          navigation.navigate("Chat", {
+            talkTicketKey: talkTicket.worry.key,
+          });
+        },
+        countNum: talkTicket.room.unreadNum,
+      };
+    })
+    .sort((roomA, roomB) => {
+      // 降順
+      if (roomA.key < roomB.key) {
+        return 1;
       } else {
-        return [""];
+        return -1;
       }
-    };
-
-    const choiceImg = () => {
-      if (talkTicket.worry.key in HOME_IMG) {
-        return HOME_IMG[talkTicket.worry.key];
-      } else {
-        return "";
-      }
-    };
-
-    return {
-      title: talkTicket.worry.label,
-      color: choiceColor(),
-      image: choiceImg(),
-      content:
-        talkTicket.room.messages[talkTicket.room.messages.length - 1]?.message,
-      onPress: () => {
-        navigation.navigate("Chat", {
-          talkTicketKey: talkTicket.worry.key,
-        });
-      },
-      countNum: talkTicket.room.unreadNum,
-    };
-  });
-
-  const firstItem: HomeFirstItem = {
-    icon: "plus",
-    iconFamily: "Feather",
-    iconColor: "white",
-    color: ["#d3d8dd", "#d3d8dd"],
-    borderLess: true,
-    onPress: () => {
-      navigation.navigate("WorrySelect");
-    },
-  };
+    });
 
   const admobItem: AdmobItem = {
     isAdmob: true,
   };
 
-  const items: HomeItems = [admobItem, firstItem, ...rooms];
+  const items: HomeItems = [admobItem, ...rooms];
 
   return (
     <Block flex style={styles.container}>
-      {/* <Block style={styles.adMobBanner}>
-        {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_HOME} />}
-      </Block> */}
       <HomeTemplate items={items} />
     </Block>
   );

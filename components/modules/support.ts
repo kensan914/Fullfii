@@ -298,6 +298,7 @@ type alertModalProps = {
   okButtonStyle?: "destructive" | "default" | "cancel" | undefined;
   onPress?: () => void;
   onCancel?: () => void;
+  cancelable?: boolean;
 };
 /**
  *  @example
@@ -317,22 +318,26 @@ export const alertModal = ({
   subText,
   okButton,
   okButtonStyle = "default",
-  onPress,
+  onPress = () => void 0,
   cancelButton,
-  onCancel,
+  onCancel = () => void 0,
+  cancelable,
 }: alertModalProps): void => {
-  Alert.alert(mainText ? mainText : "", subText ? subText : "", [
-    {
+  const buttonSettings: AlertButton[] = [];
+  (typeof cancelable === "undefined" || cancelable) &&
+    buttonSettings.push({
       text: cancelButton ? cancelButton : "キャンセル",
       onPress: onCancel,
       style: "cancel",
-    },
-    {
-      text: okButton ? okButton : "OK",
-      onPress: onPress,
-      style: okButtonStyle,
-    },
-  ]);
+    });
+
+  buttonSettings.push({
+    text: okButton ? okButton : "OK",
+    onPress: onPress,
+    style: okButtonStyle,
+  });
+
+  Alert.alert(mainText ? mainText : "", subText ? subText : "", buttonSettings);
 };
 
 export const isString = (str: unknown): str is string => {

@@ -203,13 +203,20 @@ const ChatBody: React.FC<Props> = (props) => {
       <View style={{ flexDirection: "column" }}>
         <Bubble
           {...props}
+          textStyle={{
+            right: {
+              color: COLORS.WHITE,
+            },
+            left: {
+              color: COLORS.BLACK,
+            }
+          }}
           wrapperStyle={{
             right: {
-              backgroundColor: COLORS.PINK,
+              backgroundColor: COLORS.BROWN,
               paddingRight: 4,
               paddingLeft: 4,
               paddingVertical: 4,
-
               borderRadius: borderRadius,
               borderTopRightRadius: isFirst ? borderRadius : 0,
               borderBottomRightRadius:
@@ -222,7 +229,7 @@ const ChatBody: React.FC<Props> = (props) => {
               paddingRight: 4,
               paddingLeft: 4,
               paddingVertical: 4,
-
+              backgroundColor: COLORS.WHITE,
               borderRadius: borderRadius,
               borderTopLeftRadius: isFirst ? borderRadius : 0,
               borderBottomLeftRadius:
@@ -241,12 +248,12 @@ const ChatBody: React.FC<Props> = (props) => {
               marginBottom: 10,
               marginHorizontal: 2,
               flexDirection: "row",
-              justifyContent: position === "right" ? "flex-end" : "flex-start",
+              justifyContent: position === "right" ? "flex-end" : "flex-start"
             }}
           >
             <Text
               size={12}
-              color={"gray"}
+              color={COLORS.GRAY}
               style={{
                 textAlign: position,
               }}
@@ -257,7 +264,7 @@ const ChatBody: React.FC<Props> = (props) => {
             {position === "right" && currentMessage && !currentMessage.sent && (
               <Text
                 size={12}
-                color={"darkgray"}
+                color={COLORS.GRAY}
                 style={{
                   textAlign: position,
                   marginLeft: 4,
@@ -273,7 +280,7 @@ const ChatBody: React.FC<Props> = (props) => {
   };
 
   const renderInputToolbar = (props: InputToolbarProps) => {
-    return <InputToolbar {...props} containerStyle={{}} />;
+    return <InputToolbar {...props} containerStyle={{backgroundColor: COLORS.BEIGE, borderTopWidth: 0}} />;
   };
 
   const renderSystemMessage = (props: SystemMessageProps<IMessage>) => {
@@ -282,7 +289,7 @@ const ChatBody: React.FC<Props> = (props) => {
         {...props}
         containerStyle={{
           marginBottom: 15,
-          backgroundColor: "whitesmoke",
+          backgroundColor: COLORS.BROWN_RGBA_1,
           padding: 8,
           width: width * 0.8,
           alignSelf: "center",
@@ -290,6 +297,8 @@ const ChatBody: React.FC<Props> = (props) => {
         }}
         textStyle={{
           fontSize: 14,
+          fontWeight: "bold",
+          color: COLORS.GRAY
         }}
       />
     );
@@ -305,7 +314,7 @@ const ChatBody: React.FC<Props> = (props) => {
         paddingRight: 27,
       }}
     >
-      <Icon size={20} name="send" family="font-awesome" color={COLORS.PINK} />
+      <Icon size={23} name="send-o" family="font-awesome" color={COLORS.GRAY} />
     </Send>
   );
 
@@ -353,8 +362,10 @@ const ChatBody: React.FC<Props> = (props) => {
         locale="ja"
         placeholder="メッセージを入力"
         textInputStyle={{
-          paddingHorizontal: 6,
-          paddingTop: 8,
+          paddingHorizontal: 10,
+          paddingTop: 9,
+          borderRadius: 18,
+          backgroundColor: COLORS.WHITE,
         }}
         bottomOffset={getBottomSpace()} // textInput下部に時たま余白ができてしまうため固定
         listViewProps={{
@@ -384,7 +395,7 @@ const ChatBody: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, backgroundColor: COLORS.BEIGE },
 });
 
 export default ChatBody;

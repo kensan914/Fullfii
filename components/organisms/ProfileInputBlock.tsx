@@ -10,6 +10,8 @@ import { useProfileState } from "../contexts/ProfileContext";
 import { formatGender } from "../modules/support";
 import GenderInputButtonList from "../molecules/GenderInputButtonList";
 import { GenderKey } from "../types/Types.context";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import {COLORS} from "../../constants/Theme"
 
 type InputBlockProps = {
   screen: ProfileInputScreen;
@@ -142,7 +144,7 @@ const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
           padding: 10,
           marginVertical: 10,
           borderRadius: 10,
-          backgroundColor: "white",
+          backgroundColor: COLORS.WHITE,
         }}
         maxLength={maxLength}
         value={value}
@@ -155,8 +157,8 @@ const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
       <Input
         placeholder={""}
         rounded
-        color="black"
-        style={{ borderColor: "silver" }}
+        color={COLORS.BLACK}
+        style={{ borderColor: "silver", backgroundColor: COLORS.WHITE, }}
         placeholderTextColor="gray"
         maxLength={maxLength}
         value={value}
@@ -168,7 +170,7 @@ const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
   return (
     <>
       <Block flex style={{ alignItems: "flex-end", marginRight: 10 }}>
-        <Text color="gray">
+        <Text color={COLORS.GRAY}>
           {length.toString()}/{maxLength}
         </Text>
       </Block>

@@ -7,9 +7,12 @@ import { useAuthDispatch } from "../../../contexts/AuthContext";
 
 const { width } = Dimensions.get("window");
 
-const SignUpPagePushNotification: React.FC = () => {
+type Props = {
+  progressNum: number;
+};
+const SignUpPagePushNotification: React.FC<Props> = (props) => {
+  const { progressNum } = props;
   const authDispatch = useAuthDispatch();
-  const progressNum = 5;
   const pressButton = () => {
     authDispatch({
       type: "TO_PROGRESS_SIGNUP",

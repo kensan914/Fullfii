@@ -14,12 +14,12 @@ const { height } = Dimensions.get("screen");
 
 type Props = {
   goToPage: GoToPage;
+  progressNum: number;
 };
 const SignUpPageSelectWorry: React.FC<Props> = (props) => {
-  const { goToPage } = props;
+  const { goToPage, progressNum } = props;
   const authDispatch = useAuthDispatch();
   const profileState = useProfileState();
-  const progressNum = 3;
   const minSelectWorryNum = 1;
 
   const [

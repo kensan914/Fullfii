@@ -14,4 +14,5 @@ export const HOME_IMG = {
   e: goal_img, //目標夢
   f: relationships_img, //人間関係
   g: want_to_talk_img, //話したい
+  h: part_time_job_img,
 };

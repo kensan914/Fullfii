@@ -10,6 +10,7 @@ import SignUpPageInputProfile from "./signupPages/SignUpPageInputProfile";
 import { useAuthState } from "../../contexts/AuthContext";
 import SignUpPageShuffleExplain from "./signupPages/SignUpPageShuffleExplain";
 import SignUpPagePushNotification from "./signupPages/SignUpPagePushNotification";
+import { COLORS } from "../../../constants/Theme";
 
 const { width } = Dimensions.get("window");
 
@@ -24,11 +25,11 @@ const SignUpTemplate: React.FC = () => {
   const [, scrollViewRef, goToPage] = useSlideView(initPage);
 
   const [pageStack, setPageStack] = useState([
-    <SignUpPageFirst goToPage={goToPage} key={1} />,
-    <SignUpPageShuffleExplain goToPage={goToPage} key={2} />,
-    <SignUpPageSelectWorry goToPage={goToPage} key={3} />,
-    <SignUpPageInputProfile goToPage={goToPage} key={4} />,
-    <SignUpPagePushNotification key={5} />,
+    <SignUpPageFirst goToPage={goToPage} key={1} progressNum={1} />,
+    <SignUpPageShuffleExplain goToPage={goToPage} key={2} progressNum={2} />,
+    // <SignUpPageSelectWorry goToPage={goToPage} key={3} progressNum={3} />,
+    <SignUpPageInputProfile goToPage={goToPage} key={3} progressNum={3} />,
+    <SignUpPagePushNotification key={4} progressNum={4} />,
   ]);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const SignUpTemplate: React.FC = () => {
       start={{ x: 0, y: 0 }}
       end={{ x: 0.25, y: 1.1 }}
       locations={[0.2, 1]}
-      colors={["white", "white"]}
+      colors={[COLORS.BEIGE, COLORS.BEIGE]}
       style={[styles.container, { flex: 1, paddingTop: theme.SIZES.BASE * 4 }]}
     >
       <ScrollView

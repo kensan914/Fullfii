@@ -12,6 +12,7 @@ import { ProfileMenuButton } from "./ProfileMenuButton";
 import { useProfileState } from "../contexts/ProfileContext";
 import ProfileModal from "../molecules/ProfileModal";
 import { useAuthState } from "../contexts/AuthContext";
+import { COLORS } from "../../constants/Theme";
 
 const { width } = Dimensions.get("window");
 
@@ -20,12 +21,7 @@ const SettingsButton = ({ isWhite, style, navigation }) => (
     style={[styles.button, style]}
     onPress={() => navigation.navigate("Settings")}
   >
-    <Icon
-      family="font-awesome"
-      size={22}
-      name="gear"
-      color={isWhite ? "white" : "dimgray"}
-    />
+    <Icon family="AntDesign" size={25} name="setting" color={COLORS.GRAY} />
     {/* <Block middle style={styles.notify} /> */}
   </TouchableOpacity>
 );
@@ -101,14 +97,14 @@ const Header = (props) => {
             family="font-awesome"
             size={30}
             name="angle-left"
-            color={transparent ? "white" : "dimgray"}
+            color={COLORS.GRAY}
           />
         </TouchableOpacity>
       );
     } else {
       return (
         <TouchableOpacity onPress={() => handleLeftPress(setIsOpenProfile)}>
-          <Avatar size={34} image={profile.image} />
+          <Avatar size={35} image={profile.image} />
         </TouchableOpacity>
       );
     }
@@ -188,9 +184,9 @@ const Header = (props) => {
   };
 
   const hasShadow = !["Home", "Profile", "Worry"].includes(name);
-  const hasBorder = ["Home", "Worry"].includes(name);
+  const hasBorder = ["Worry"].includes(name);
   const headerStyles = [
-    hasShadow ? styles.shadow : null,
+    // hasShadow ? styles.shadow : null,
     transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
     hasBorder ? { borderBottomColor: "silver", borderBottomWidth: 0.5 } : null,
   ];
@@ -202,10 +198,7 @@ const Header = (props) => {
         style={[styles.navbar]}
         transparent={transparent}
         title={convertNameToTitle(name)}
-        titleStyle={[
-          styles.title,
-          { color: theme.COLORS[white ? "WHITE" : "ICON"] },
-        ]}
+        titleStyle={[styles.title, { color: COLORS.GRAY }]}
         right={renderRight()}
         rightStyle={{ alignItems: "flex-end" }}
         left={renderLeft(setIsOpenProfile)}
@@ -237,6 +230,7 @@ const styles = StyleSheet.create({
   navbar: {
     zIndex: 5,
     height: 54,
+    backgroundColor: COLORS.BEIGE,
   },
   shadow: {
     backgroundColor: theme.COLORS.WHITE,
@@ -256,7 +250,7 @@ const styles = StyleSheet.create({
     right: 8,
   },
   header: {
-    backgroundColor: theme.COLORS.WHITE,
+    backgroundColor: theme.COLORS.BEIGE,
   },
   divider: {
     borderRightWidth: 0.3,
