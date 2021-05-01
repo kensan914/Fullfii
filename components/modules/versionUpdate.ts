@@ -28,10 +28,13 @@ export const checkUpdateVersion = async (): Promise<void | null> => {
       const _versionNum = Number(_versionNumOrStr);
       if (_versionNum < VERSION_NUM) {
         // アップデートした
+        console.log("アップデートした");
+
         onUpdateVersion(_versionNum);
         asyncStoreItem(versionNumKey, VERSION_NUM.toString());
       } else {
         // 最新バージョン(通常時)
+        console.log("最新バージョンです");
       }
     }
   }
@@ -49,7 +52,8 @@ const onUpdateVersion = (prevVersionNum: number) => {
       asyncRemoveItem("talkTicketCollection");
       break;
     }
-    case 220: {
+    case 240: {
+      console.log("2.2.0から最新バージョンにアップデートしました");
       break;
     }
   }

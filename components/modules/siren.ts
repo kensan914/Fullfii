@@ -2,12 +2,14 @@ import {
   APP_STORE_URI_ITMS_APPS,
   APP_STORE_URL,
   AS_KEY_SKIP_UPDATE_VERSION,
+  isExpo,
   ITUNES_LOOKUP_URL,
+  VERSION,
 } from "../../constants/env";
 import requestAxios from "./axios";
-import DeviceInfo from "react-native-device-info";
 import { alertModal, asyncGetItem, asyncStoreItem } from "../modules/support";
 import { Alert, Linking } from "react-native";
+import { checkUpdateVersion } from "./versionUpdate";
 
 const fetchLatestVersion = (): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -138,30 +140,36 @@ const showUpdatePrompt = (
 };
 
 const exeSiren = async (): Promise<void> => {
-  const latestVersion = await fetchLatestVersion();
-  const currentVersion = DeviceInfo.getVersion();
-  const skipUpdateVersion = await asyncGetItem(AS_KEY_SKIP_UPDATE_VERSION);
+  if (!isExpo) {
+    const latestVersion = await fetchLatestVersion();
+    const DeviceInfoModule = await import("react-native-device-info");
+    const DeviceInfo = DeviceInfoModule.default;
+    const currentVersion = DeviceInfo.getVersion();
+    const skipUpdateVersion = await asyncGetItem(AS_KEY_SKIP_UPDATE_VERSION);
 
-  const compareVersionResult = compareLatestVerWithCurrentVer(
-    latestVersion,
-    currentVersion
-  );
-  if (compareVersionResult === null) return;
-  switch (compareVersionResult) {
-    case "OLD_MAJOR":
-    case "OLD_MINOR":
-      showUpdatePrompt(skipUpdateVersion, currentVersion, true);
-      break;
-    case "OLD_MAINTENANCE":
-      showUpdatePrompt(skipUpdateVersion, currentVersion, false);
-      break;
-    case "LATEST":
-      break;
-    default:
-      console.error(
-        `compareVersionResult(${compareVersionResult}) is not supported.`
-      );
-      break;
+    const compareVersionResult = compareLatestVerWithCurrentVer(
+      latestVersion,
+      currentVersion
+    );
+    if (compareVersionResult === null) return;
+    switch (compareVersionResult) {
+      case "OLD_MAJOR":
+      case "OLD_MINOR":
+        showUpdatePrompt(skipUpdateVersion, currentVersion, true);
+        break;
+      case "OLD_MAINTENANCE":
+        showUpdatePrompt(skipUpdateVersion, currentVersion, false);
+        break;
+      case "LATEST":
+        // アップデート直後だった場合、任意の処理を実行
+        checkUpdateVersion();
+        break;
+      default:
+        console.error(
+          `compareVersionResult(${compareVersionResult}) is not supported.`
+        );
+        break;
+    }
   }
 };
 

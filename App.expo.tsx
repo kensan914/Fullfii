@@ -18,7 +18,7 @@ import {
 import { ProfileProvider } from "./components/contexts/ProfileContext";
 import { ChatProvider } from "./components/contexts/ChatContext";
 import StartUpManager from "./screens/StartUpManager";
-import { setIsExpo } from "./constants/env";
+import { setIsExpo, setVersion } from "./constants/env";
 import {
   AuthStatus,
   AuthStatusIoTs,
@@ -40,6 +40,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     setIsExpo(true);
+    setVersion(true);
     setIsFinishLoadingResources(true);
   }, []);
 

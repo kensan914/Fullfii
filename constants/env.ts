@@ -1,5 +1,4 @@
 import { Platform } from "react-native";
-import DeviceInfo from "react-native-device-info";
 
 const DEBUG = true;
 // const DEBUG = false;
@@ -20,9 +19,19 @@ export const REPORT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLScuWE_hUXY8GN2Nu4CpMa7rNsUTtVRfcL0_avj5h69XwwjD8g/viewform";
 export const ACCOUNT_DELETION_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSclvk_l4JsWCMQf6a6qh2AmoAkiM9ReU6eZOaYTUoTz9MP3gw/viewform?usp=sf_link";
-export const VERSION = DeviceInfo.getVersion();
-const _VERSION_NUM = Number(VERSION.split(".").join(""));
-export const VERSION_NUM = isNaN(_VERSION_NUM) ? 0 : _VERSION_NUM;
+export let VERSION = "";
+export let VERSION_NUM = 0; // 243
+
+export const setVersion = (isExpo: boolean): void => {
+  if (!isExpo)
+    import("react-native-device-info").then((DeviceInfoModule) => {
+      const DeviceInfo = DeviceInfoModule.default;
+      VERSION = DeviceInfo.getVersion();
+
+      const _VERSION_NUM = Number(VERSION.split(".").join(""));
+      VERSION_NUM = isNaN(_VERSION_NUM) ? 0 : _VERSION_NUM;
+    });
+};
 
 export const PRODUCT_ID_LIST = ["com.fullfii.fullfii.normal_plan"];
 
