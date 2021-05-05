@@ -1,0 +1,180 @@
+import React from "react";
+import {
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { Block, theme, Text } from "galio-framework";
+import * as WebBrowser from "expo-web-browser";
+import { useNavigation } from "@react-navigation/core";
+
+import Icon from "src/components/atoms/Icon";
+import Hr from "src/components/atoms/Hr";
+import {
+  USER_POLICY_URL,
+  VERSION,
+  CONTACT_US_URL,
+  ACCOUNT_DELETION_URL,
+  PRIVACY_POLICY_URL,
+  ADMOB_BANNER_HEIGHT,
+  ADMOB_BANNER_WIDTH,
+} from "src/constants/env";
+import { OnPress } from "src/types/Types";
+import { COLORS } from "src/constants/theme";
+
+const { width } = Dimensions.get("screen");
+
+const Settings: React.FC = () => {
+  const _handleOpenWithWebBrowser = () => {
+    WebBrowser.openBrowserAsync(USER_POLICY_URL);
+  };
+
+  const _handleOpenWithWebBrowserPrivacyPolicy = () => {
+    WebBrowser.openBrowserAsync(PRIVACY_POLICY_URL);
+  };
+
+  const _handleOpenWithWebBrowserContactUsForm = () => {
+    WebBrowser.openBrowserAsync(CONTACT_US_URL);
+  };
+
+  const _handleOpenWithWebBrowserAccountDeletion = () => {
+    WebBrowser.openBrowserAsync(ACCOUNT_DELETION_URL);
+  };
+
+  const navigation = useNavigation();
+
+  return (
+    <Block flex center style={{ backgroundColor: COLORS.BEIGE }}>
+      <ScrollView>
+        <SettingsTitle title="Fullfiiについて" />
+        <SettingsLabel title="バージョン" content={VERSION} />
+        <SettingsCard
+          title="利用規約"
+          titleColor="dimgray"
+          onPress={_handleOpenWithWebBrowser}
+        />
+        <SettingsCard
+          title="プライバシーポリシー"
+          titleColor="dimgray"
+          onPress={_handleOpenWithWebBrowserPrivacyPolicy}
+        />
+        <SettingsCard
+          title="お問い合わせ"
+          titleColor="dimgray"
+          onPress={_handleOpenWithWebBrowserContactUsForm}
+        />
+        <SettingsCard
+          title="アカウント削除"
+          titleColor="#f44336"
+          onPress={() => {
+            navigation.navigate("AccountDelete");
+          }}
+        />
+      </ScrollView>
+
+      {/* <Block style={styles.adMobBanner}>
+        {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_SETTINGS} />}
+      </Block> */}
+    </Block>
+  );
+};
+
+export default Settings;
+
+const SettingsTitle: React.FC<{ title: string }> = (props) => {
+  const { title } = props;
+  return (
+    <Block
+      flex
+      style={{ paddingHorizontal: 15, paddingVertical: 10, marginTop: 5 }}
+    >
+      <Text size={18} bold color="gray">
+        {title}
+      </Text>
+    </Block>
+  );
+};
+
+const SettingsCard: React.FC<{
+  title: string;
+  titleColor: string;
+  onPress: OnPress;
+}> = (props) => {
+  const { title, titleColor, onPress } = props;
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Block flex row style={styles.settingsCard}>
+        <Block flex={0.9}>
+          <Text
+            bold
+            size={15}
+            color={titleColor}
+            style={{ marginHorizontal: 15 }}
+          >
+            {title}
+          </Text>
+        </Block>
+        <Block
+          flex={0.1}
+          style={{ alignItems: "center", justifyContent: "center" }}
+        >
+          <Icon
+            name="angle-right"
+            family="font-awesome"
+            color={COLORS.GRAY}
+            size={22}
+          />
+        </Block>
+      </Block>
+      <Hr h={1} color="whitesmoke" />
+    </TouchableOpacity>
+  );
+};
+
+const SettingsLabel: React.FC<{ title: string; content: string }> = (props) => {
+  const { title, content } = props;
+  return (
+    <>
+      <Block flex row space="between" style={styles.settingsCard}>
+        <Block>
+          <Text bold size={15} color="dimgray" style={{ marginHorizontal: 15 }}>
+            {title}
+          </Text>
+        </Block>
+        <Block style={{ alignItems: "center", justifyContent: "center" }}>
+          <Text size={15} color="dimgray" style={{ marginHorizontal: 15 }}>
+            {content}
+          </Text>
+        </Block>
+      </Block>
+      <Hr h={1} color="whitesmoke" />
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  settingsCard: {
+    height: 60,
+    width: width,
+    backgroundColor: COLORS.WHITE,
+    alignItems: "center",
+  },
+  container: {
+    paddingHorizontal: theme.SIZES.BASE,
+    marginVertical: theme.SIZES.BASE,
+  },
+  submitButton: {
+    alignSelf: "center",
+    marginTop: 10,
+    marginBottom: 20,
+    shadowColor: "lightcoral",
+  },
+  adMobBanner: {
+    width: ADMOB_BANNER_WIDTH,
+    height: ADMOB_BANNER_HEIGHT,
+    zIndex: 2,
+    position: "absolute",
+    bottom: 0,
+  },
+});
