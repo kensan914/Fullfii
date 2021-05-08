@@ -10,7 +10,6 @@ import ProfileInputScreen from "src/screens/ProfileInput";
 import SettingsScreen from "src/screens/Settings";
 import AccountDeleteScreen from "src/screens/AccountDelete";
 import SignUpScreen from "src/screens/SignUp";
-import WorrySelectScreen from "src/screens/WorrySelect";
 import {
   useAuthState,
   AUTHENTICATED,
@@ -24,6 +23,8 @@ import Spinner from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";
+import { RoomsScreenDev } from "src/screens/RoomsScreenDev";
+import { MyRoomsScreenDev } from "src/screens/MyRoomsScreenDev";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,7 +36,8 @@ const HomeStack = () => {
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="Home"
-        component={HomeScreen}
+        // component={RoomsScreenDev}
+        component={MyRoomsScreenDev}
         options={() => {
           return {
             header: ({ navigation, scene }) => {
@@ -49,21 +51,6 @@ const HomeStack = () => {
               );
             },
           };
-        }}
-      />
-      <Stack.Screen
-        name="WorrySelect"
-        component={WorrySelectScreen}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              back
-              name="WorrySelect"
-              navigation={navigation}
-              scene={scene}
-              profile={profileState.profile}
-            />
-          ),
         }}
       />
       <Stack.Screen
