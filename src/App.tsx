@@ -33,7 +33,7 @@ import { setVersion } from "src/constants/env";
 LogBox.ignoreAllLogs(true);
 
 const assetImages: { logo: number } = {
-  logo: require("src/assets/images/icon/icon.png"),
+  logo: require("src/assets/images/icon/icon.jpg"),
 };
 
 function cacheImages(images: (string | number)[]): Promise<Asset>[] {
