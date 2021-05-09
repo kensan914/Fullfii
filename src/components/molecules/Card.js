@@ -99,14 +99,14 @@ const Card = (props) => {
                         {item.content}
                       </Text>
                     </Block>
-                    <Block row>
+                    {/* <Block row>
                       <Text color={COLORS.GRAY}>
                         {item.key in chatState.lengthParticipants
                           ? chatState.lengthParticipants[item.key]
                           : "- "}
                       </Text>
                       <Icon name="person" family="Ionicons" color="gray" />
-                    </Block>
+                    </Block> */}
                   </Block>
                 </Block>
               </Block>
