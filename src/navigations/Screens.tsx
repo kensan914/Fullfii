@@ -36,8 +36,8 @@ const HomeStack = () => {
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="Home"
-        // component={RoomsScreenDev} // JIRAタスク「デザイン実装①, ②」はこっち
-        component={MyRoomsScreenDev} // JIRAタスク「デザイン実装③」はこっち
+        component={RoomsScreenDev} // JIRAタスク「デザイン実装①, ②」はこっち
+        // component={MyRoomsScreenDev} // JIRAタスク「デザイン実装③」はこっち
         options={() => {
           return {
             header: ({ navigation, scene }) => {

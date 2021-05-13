@@ -32,17 +32,19 @@ export default materialTheme;
 
 export const COLORS = {
   PINK: "#f5b5a7", //#f5b5a7, #f6bab2
-  GREEN: "#3cc47c",
+  GREEN: "#71DDA1",
   ALERT: "#F44336",
   BEIGE: "#eee2d3",
+  BEIGE_RGBA: "rgba(238, 226, 211, 0.8)",
   BROWN: "#c39c89",
   BROWN_RGBA: "rgba(195, 156, 137, 0.4)",
   BROWN_RGBA_1: "rgba(195, 156, 137, 0.2)",
   WHITE: "#f8fcfb",
-  WHITE_RGBA: "rgba(248, 252, 251, 0.3)",
+  WHITE_RGBA: "rgba(248, 252, 251, 0.4)",
   BLACK: "#333333",
   GRAY: "#555555",
   LIGHT_GRAY: "#6a6a6a",
+  HILIGHT_GRAY: "#d0d0d0",
 };
 
 //オイスターパープル: "#f3e7ea",
