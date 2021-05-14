@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
@@ -19,17 +19,16 @@ import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 
 const { width } = Dimensions.get("screen");
 
-const CreateRoomModal = (props) => {
+const RoomEditorModal = (props) => {
   const {
-    openFirst,
-    setOpenFirst,
-    openSecond,
-    setOpenSecond,
-    topic,
-    setTopic,
-    roomImage,
-    setRoomImage,
+    isOpenRoomEditorModal,
+    setIsOpenRoomEditorModal,
+    isCreateNew,
   } = props;
+
+  const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
+  const [topic, setTopic] = useState("");
+  const [roomImage, setRoomImage] = useState(null);
 
   const [
     isExcludeDifferentGender,
@@ -38,10 +37,10 @@ const CreateRoomModal = (props) => {
 
   return (
     <Modal
-      isVisible={openFirst}
+      isVisible={isOpenRoomEditorModal}
       deviceWidth={width}
       onBackdropPress={() => {
-        setOpenFirst(false);
+        setIsOpenRoomEditorModal(false);
       }}
       style={styles.firstModal}
     >
@@ -50,7 +49,7 @@ const CreateRoomModal = (props) => {
           <TouchableOpacity
             style={styles.closeIcon}
             onPress={() => {
-              setOpenFirst(false);
+              setIsOpenRoomEditorModal(false);
             }}
           >
             <IconExtra
@@ -64,7 +63,7 @@ const CreateRoomModal = (props) => {
         <TouchableOpacity
           style={styles.addMore}
           onPress={() => {
-            setOpenSecond(true);
+            setIsOpenOptionModal(true);
           }}
         >
           <Block column>
@@ -175,7 +174,7 @@ const CreateRoomModal = (props) => {
           >
             <Block row center space="between" style={styles.submitButtonInner}>
               <IconExtra
-                name="pluscircleo"
+                name={isCreateNew ? "pluscircleo" : "save"}
                 family="AntDesign"
                 size={40}
                 color={COLORS.WHITE}
@@ -183,7 +182,7 @@ const CreateRoomModal = (props) => {
               />
               <Block style={styles.submitButtonText}>
                 <Text size={20} color={COLORS.WHITE} bold>
-                  ルームを作成する
+                  {isCreateNew ? "ルームを作成する" : "修正を反映する"}
                 </Text>
               </Block>
             </Block>
@@ -192,10 +191,10 @@ const CreateRoomModal = (props) => {
       </Block>
 
       <Modal
-        isVisible={openSecond}
+        isVisible={isOpenOptionModal}
         deviceWidth={width}
         onBackdropPress={() => {
-          setOpenSecond(false);
+          setIsOpenOptionModal(false);
         }}
       >
         <Block style={styles.secondModal}>
@@ -204,7 +203,7 @@ const CreateRoomModal = (props) => {
               <TouchableOpacity
                 style={styles.closeIcon}
                 onPress={() => {
-                  setOpenSecond(false);
+                  setIsOpenOptionModal(false);
                 }}
               >
                 <IconExtra
@@ -266,7 +265,7 @@ const CreateRoomModal = (props) => {
                   color={COLORS.BROWN}
                   shadowless
                   onPress={() => {
-                    setOpenSecond(false);
+                    setIsOpenOptionModal(false);
                   }}
                 >
                   <Text size={20} color={COLORS.WHITE} bold>
@@ -430,4 +429,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateRoomModal;
+export default RoomEditorModal;

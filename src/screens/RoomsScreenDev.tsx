@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
 import {COLORS} from "src/constants/theme"
 import { HOME_IMG } from "src/constants/imagePath";
@@ -6,6 +6,7 @@ import { HOME_IMG } from "src/constants/imagePath";
 
 export const RoomsScreenDev: React.FC = () => {
   const [hiddenRooms, setHiddenRooms] = React.useState([]);
+  const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false)
 
   const items = [
     {
@@ -76,5 +77,5 @@ export const RoomsScreenDev: React.FC = () => {
 
 
 
-  return <RoomsTemplate items={items} hiddenRooms={hiddenRooms} setHiddenRooms={setHiddenRooms}/>;
+  return <RoomsTemplate items={items} hiddenRooms={hiddenRooms} setHiddenRooms={setHiddenRooms} isOpenRoomEditorModal={isOpenRoomEditorModal} setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}/>;
 };

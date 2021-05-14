@@ -45,6 +45,7 @@ export const COLORS = {
   GRAY: "#555555",
   LIGHT_GRAY: "#6a6a6a",
   HILIGHT_GRAY: "#d0d0d0",
+  RED: "#EC6D62",
 };
 
 //オイスターパープル: "#f3e7ea",

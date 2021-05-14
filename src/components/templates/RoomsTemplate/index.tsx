@@ -8,22 +8,12 @@ import {
 
 import { COLORS } from "src/constants/theme";
 import RoomCard from "src/components/molecules/RoomCard"
-import CreateRoomModal from "src/components/molecules/CreateRoomModal"
+import RoomEditorModal from "src/components/organisms/RoomEditorModal"
 
 const { width } = Dimensions.get("screen");
 export const RoomsTemplate: React.FC = (props) => {
   const numColumns = 1;
-  const { items, hiddenRooms, setHiddenRooms } = props;
-  const [openFirst, setOpenFirst] = React.useState(false)
-  const [openSecond, setOpenSecond] = React.useState(false)
-  const [displayRange, setDisplayRange] = React.useState()
-  const [topic, setTopic] = React.useState()
-  const [roomImage, setRoomImage] = React.useState(false)
-  const [circleFullRangeColor, setCircleFullRangeColor] = React.useState(COLORS.BEIGE)
-
-  const setTopicAndImage = () => {
-    setOpenSecond(false)
-  }
+  const { items, hiddenRooms, setHiddenRooms, isOpenRoomEditorModal, setIsOpenRoomEditorModal } = props;
 
   return (
     <>
@@ -54,8 +44,6 @@ export const RoomsTemplate: React.FC = (props) => {
                 item={item}
                 hiddenRooms={hiddenRooms}
                 setHiddenRooms={setHiddenRooms}
-                circleFullRangeColor={circleFullRangeColor}
-                setCircleFullRangeColor={setCircleFullRangeColor}
               />
             )
             }
@@ -70,7 +58,7 @@ export const RoomsTemplate: React.FC = (props) => {
           style={styles.button}
           color={COLORS.BROWN}
           shadowless
-          onPress={()=>{setOpenFirst(true)}}
+          onPress={()=>{setIsOpenRoomEditorModal(true)}}
         >
           <Text size={20} color={COLORS.WHITE} bold>
             悩みを話す
@@ -80,17 +68,10 @@ export const RoomsTemplate: React.FC = (props) => {
     <Block style={styles.footer}>{/* 仮置き */}
       </Block>
     </Block>
-    <CreateRoomModal
-      openFirst={openFirst}
-      setOpenFirst={setOpenFirst}
-      openSecond={openSecond}
-      setOpenSecond={setOpenSecond}
-      topic={topic}
-      setTopic={setTopic}
-      roomImage={roomImage}
-      setRoomImage={setRoomImage}
-      circleFullRangeColor={circleFullRangeColor}
-      setCircleFullRangeColor={setCircleFullRangeColor}
+    <RoomEditorModal
+      isOpenRoomEditorModal={isOpenRoomEditorModal}
+      setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
+      isCreateNew
       />
     </>
   )
