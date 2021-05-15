@@ -223,10 +223,7 @@ const Header = (props) => {
 export default withNavigation(Header);
 
 const styles = StyleSheet.create({
-  button: {
-    padding: 12,
-    position: "relative",
-  },
+  button: {},
   title: {
     width: "100%",
     fontSize: 16,

@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
-import {COLORS} from "src/constants/theme"
+import { COLORS } from "src/constants/theme";
 import { HOME_IMG } from "src/constants/imagePath";
-
 
 export const RoomsScreenDev: React.FC = () => {
   const [hiddenRooms, setHiddenRooms] = React.useState([]);
-  const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false)
+  const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false);
 
   const items = [
     {
       key: 1,
-      title: "悩み相談ここここここここここここここここ悩み相談ここここここここここここここここ",
+      title:
+        "悩み相談ここここここここここここここここ悩み相談ここここここここここここここここ",
       image: HOME_IMG.a,
-      avatar: null,
+      avatar: "",
       userName: "杉浦夏帆",
       userGender: "女性",
       userJob: "高校生",
@@ -29,7 +29,7 @@ export const RoomsScreenDev: React.FC = () => {
       key: 2,
       title: "この文章はダミーです。文字の大きさ、量、字間、行間等を確認す",
       image: HOME_IMG.b,
-      avatar: null,
+      avatar: "",
       userName: "ミッキー",
       userGender: "女性",
       userJob: "大学生",
@@ -45,7 +45,7 @@ export const RoomsScreenDev: React.FC = () => {
       key: 3,
       title: "最近の若者はどうかしてるぜ。全くどう思います？",
       image: HOME_IMG.c,
-      avatar: HOME_IMG.a,
+      avatar: "",
       userName: "頑固親父",
       userGender: "男性",
       userJob: "主婦",
@@ -59,9 +59,10 @@ export const RoomsScreenDev: React.FC = () => {
     },
     {
       key: 4,
-      title: "悩み相談ここここここここここここここここ悩み相談ここここここここここここここここ",
+      title:
+        "悩み相談ここここここここここここここここ悩み相談ここここここここここここここここ",
       image: HOME_IMG.a,
-      avatar: null,
+      avatar: "",
       userName: "杉浦夏帆",
       userGender: "女性",
       userJob: "高校生",
@@ -73,9 +74,15 @@ export const RoomsScreenDev: React.FC = () => {
       // onPress: () => {},
       countNum: 1,
     },
-  ]
+  ];
 
-
-
-  return <RoomsTemplate items={items} hiddenRooms={hiddenRooms} setHiddenRooms={setHiddenRooms} isOpenRoomEditorModal={isOpenRoomEditorModal} setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}/>;
+  return (
+    <RoomsTemplate
+      items={items}
+      hiddenRooms={hiddenRooms}
+      setHiddenRooms={setHiddenRooms}
+      isOpenRoomEditorModal={isOpenRoomEditorModal}
+      setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
+    />
+  );
 };
