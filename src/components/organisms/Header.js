@@ -18,7 +18,7 @@ const { width } = Dimensions.get("window");
 
 const SettingsButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
-    style={[styles.button, style]}
+    style={[style]}
     onPress={() => navigation.navigate("Settings")}
   >
     <Icon family="AntDesign" size={32} name="setting" color={COLORS.BROWN} />
@@ -205,7 +205,7 @@ const Header = (props) => {
         title={convertNameToTitle(name)}
         titleStyle={[styles.title, { color: COLORS.GRAY }]}
         right={renderRight()}
-        rightStyle={{ alignItems: "flex-end" }}
+        rightStyle={{ flex: 0.3 }}
         left={renderLeft(setIsOpenProfile)}
         leftStyle={styles.leftStyle}
         leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
