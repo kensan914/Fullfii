@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   closeIcon: {
-    marginBottom: 8,
+    marginBottom: 32,
     width: 32,
   },
   modalTitle: {
