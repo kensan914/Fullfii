@@ -18,14 +18,13 @@ export const BottomTabNavigator: React.FC = () => {
           let badgeCount;
           // const routeName = getFocusedRouteNameFromRoute(route);
           const routeName = route.name;
-          console.log(routeName);
 
           if (routeName === "Rooms") {
             iconName = focused ? "home" : "home";
           } else if (routeName === "MyRooms") {
             iconName = focused ? "commenting" : "commenting-o";
           } else if (routeName === "Profile") {
-            iconName = focused ? "comments" : "comments-o";
+            iconName = focused ? "user" : "user";
             // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Talk") {
             iconName = focused ? "comments" : "comments-o";

@@ -24,6 +24,7 @@ import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";
 import { BottomTabNavigator } from "./BottomTabNavigator";
+import { TopScreen } from "src/screens/TopScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -199,7 +200,11 @@ const AppStack: React.FC = () => {
       style={{ flex: 1, backgroundColor: COLORS.BEIGE }}
       forceInset={{ bottom: "never" }}
     >
+      {/* HACK: */}
+      {/* if 通常時:  */}
       {render()}
+      {/* else if トップスクリーン開発時 */}
+      {/* <TopScreen /> */}
     </SafeAreaView>
   );
 };
