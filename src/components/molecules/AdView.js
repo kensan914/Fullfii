@@ -18,6 +18,8 @@ import NativeAdView, {
 import { Events, Logger } from "src/constants";
 import { COLORS } from "src/constants/theme";
 
+const { width } = Dimensions.get("screen");
+
 export const AdView = (props) => {
   const { index, media, type, adUnitId } = props;
   let loadOnMount = true;
@@ -135,7 +137,7 @@ export const AdView = (props) => {
       onUnifiedNativeAdLoaded={_onUnifiedNativeAdLoaded}
       refreshInterval={60000 * 2}
       style={{
-        width: "98%",
+        width: width - 40,
         alignSelf: "center",
         marginVertical: 10,
       }}

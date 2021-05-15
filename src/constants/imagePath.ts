@@ -5,6 +5,9 @@ import part_time_job_img from "src/assets/images/homeTransparent/part_time_job.p
 import relationships_img from "src/assets/images/homeTransparent/relationships.png";
 import unrequited_love_img from "src/assets/images/homeTransparent/unrequited_love.png";
 import want_to_talk_img from "src/assets/images/homeTransparent/want_to_talk.png";
+import man_and_woman_img from "src/assets/images/createRoomModal/manAndWoman.png";
+import men_img from "src/assets/images/createRoomModal/men.png";
+import women_img from "src/assets/images/createRoomModal/women.png";
 
 export const HOME_IMG: { [key: string]: string } = {
   a: broken_heart_img, //失恋
@@ -15,4 +18,10 @@ export const HOME_IMG: { [key: string]: string } = {
   f: relationships_img, //人間関係
   g: want_to_talk_img, //話したい
   h: part_time_job_img,
+};
+
+export const DISCLOSURE_RANGE_IMAGE: { [key: string]: string } = {
+  a: man_and_woman_img,
+  b: men_img,
+  c: women_img,
 };

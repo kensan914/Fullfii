@@ -23,8 +23,8 @@ import Spinner from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";
-import { RoomsScreenDev } from "src/screens/RoomsScreenDev";
-import { MyRoomsScreenDev } from "src/screens/MyRoomsScreenDev";
+import { BottomTabNavigator } from "./BottomTabNavigator";
+import { TopScreen } from "src/screens/TopScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -36,8 +36,7 @@ const HomeStack = () => {
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="Home"
-        // component={RoomsScreenDev} // JIRAタスク「デザイン実装①, ②」はこっち
-        component={MyRoomsScreenDev} // JIRAタスク「デザイン実装③」はこっち
+        component={BottomTabNavigator}
         options={() => {
           return {
             header: ({ navigation, scene }) => {
@@ -201,7 +200,11 @@ const AppStack: React.FC = () => {
       style={{ flex: 1, backgroundColor: COLORS.BEIGE }}
       forceInset={{ bottom: "never" }}
     >
+      {/* HACK: */}
+      {/* if 通常時:  */}
       {render()}
+      {/* else if トップスクリーン開発時 */}
+      {/* <TopScreen /> */}
     </SafeAreaView>
   );
 };

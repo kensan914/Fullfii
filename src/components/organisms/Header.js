@@ -18,10 +18,10 @@ const { width } = Dimensions.get("window");
 
 const SettingsButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
-    style={[styles.button, style]}
+    style={[style]}
     onPress={() => navigation.navigate("Settings")}
   >
-    <Icon family="AntDesign" size={25} name="setting" color={COLORS.GRAY} />
+    <Icon family="AntDesign" size={32} name="setting" color={COLORS.BROWN} />
     {/* <Block middle style={styles.notify} /> */}
   </TouchableOpacity>
 );
@@ -104,7 +104,12 @@ const Header = (props) => {
     } else {
       return (
         <TouchableOpacity onPress={() => handleLeftPress(setIsOpenProfile)}>
-          <Avatar size={35} image={profile.image} />
+          <Icon
+            family="AntDesign"
+            size={32}
+            name="reload1"
+            color={COLORS.BROWN}
+          />
         </TouchableOpacity>
       );
     }
@@ -200,7 +205,7 @@ const Header = (props) => {
         title={convertNameToTitle(name)}
         titleStyle={[styles.title, { color: COLORS.GRAY }]}
         right={renderRight()}
-        rightStyle={{ alignItems: "flex-end" }}
+        rightStyle={{ flex: 0.3 }}
         left={renderLeft(setIsOpenProfile)}
         leftStyle={styles.leftStyle}
         leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
@@ -218,14 +223,12 @@ const Header = (props) => {
 export default withNavigation(Header);
 
 const styles = StyleSheet.create({
-  button: {
-    padding: 12,
-    position: "relative",
-  },
+  button: {},
   title: {
     width: "100%",
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
   },
   navbar: {
     zIndex: 5,
