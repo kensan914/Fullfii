@@ -21,7 +21,7 @@ const SettingsButton = ({ isWhite, style, navigation }) => (
     style={[styles.button, style]}
     onPress={() => navigation.navigate("Settings")}
   >
-    <Icon family="AntDesign" size={25} name="setting" color={COLORS.GRAY} />
+    <Icon family="AntDesign" size={32} name="setting" color={COLORS.BROWN} />
     {/* <Block middle style={styles.notify} /> */}
   </TouchableOpacity>
 );
@@ -104,7 +104,12 @@ const Header = (props) => {
     } else {
       return (
         <TouchableOpacity onPress={() => handleLeftPress(setIsOpenProfile)}>
-          <Avatar size={35} image={profile.image} />
+          <Icon
+            family="AntDesign"
+            size={32}
+            name="reload1"
+            color={COLORS.BROWN}
+          />
         </TouchableOpacity>
       );
     }
@@ -226,6 +231,7 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
   },
   navbar: {
     zIndex: 5,
