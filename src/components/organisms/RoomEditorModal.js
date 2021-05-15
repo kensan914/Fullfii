@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   circleButtons: {
     paddingHorizontal: 64,
-    marginBottom: 24,
+    marginBottom: 32,
   },
   circleButton: {
     height: 84,
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   textArea: {
     width: width * 0.8,
     alignSelf: "center",
-    height: 70,
+    height: "auto",
     borderColor: "silver",
     borderWidth: 1,
     borderRadius: 10,
@@ -415,6 +415,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   addTopicButton: {
+    marginBottom: 16,
     width: 303,
     height: 48,
     borderRadius: 30,

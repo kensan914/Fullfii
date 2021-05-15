@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginLeft: 20,
     marginTop: 10,
+    height: "auto",
   },
   card: {
     paddingVertical: 16,
@@ -151,7 +152,6 @@ const styles = StyleSheet.create({
     position: "relative",
     width: width - 40,
     borderRadius: 20,
-    minHeight: 171,
     backgroundColor: COLORS.WHITE,
     shadowColor: "#000",
     shadowOffset: {
