@@ -3,16 +3,16 @@ import { Block, Text } from "galio-framework";
 import {
   StyleSheet,
   Dimensions,
-  TouchableHighlight,
   TouchableOpacity,
   Image,
   ActionSheetIOS,
 } from "react-native";
-import IconExtra from "src/components/atoms/Icon";
 
+import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import Avatar from "src/components/atoms/Avatar";
 import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+
 const { width } = Dimensions.get("screen");
 
 const JoinedRoomCard = (props) => {
@@ -78,7 +78,7 @@ const JoinedRoomCard = (props) => {
           </Block>
           <Block flex column>
             <Block row>
-              <Avatar size={32} image={item.avatar} style={styles.avater} />
+              <Avatar size={32} image={item.avatar} style={styles.avatar} />
               <Block column style={styles.userInfo}>
                 <Block style={styles.userName}>
                   <Text
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  avater: {
+  avatar: {
     marginLeft: 16,
   },
   userInfo: {

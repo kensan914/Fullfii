@@ -1,64 +1,61 @@
 import React from "react";
 import { Block, Button, Text } from "galio-framework";
-import {
-  StyleSheet,
-  Dimensions,
-  FlatList,
-  ScrollView
-} from "react-native";
+import { StyleSheet, Dimensions, ScrollView } from "react-native";
 
 import { COLORS } from "src/constants/theme";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal"
-import JoinedRoomCard from "src/components/organisms/JoinedRoomCard"
+import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import JoinedRoomCard from "src/components/organisms/JoinedRoomCard";
 const { width } = Dimensions.get("screen");
 
 export const MyRoomsTemplate: React.FC = (props) => {
   const numColumns = 1;
-  const {
-    item,
-    isOpenRoomEditorModal,
-    setIsOpenRoomEditorModal,
-  } = props;
+  const { item, isOpenRoomEditorModal, setIsOpenRoomEditorModal } = props;
 
-  const isHavingRoom = false
+  const isHavingRoom = false;
 
   return (
     <>
       <Block flex center style={styles.container}>
         <ScrollView>
-          {isHavingRoom ?
+          {isHavingRoom ? (
             <>
-            {/* ルームに一つも属していない場合に表示 */}
+              {/* ルームに一つも属していない場合に表示 */}
               <Block center style={styles.emptyStateTitle}>
-                <Text size={16} bold color={COLORS.BLACK}>まだ参加しているルームがありません</Text>
+                <Text size={16} bold color={COLORS.BLACK}>
+                  まだ参加しているルームがありません
+                </Text>
               </Block>
               <Block center style={styles.emptyStateSubTitle}>
-                <Text size={14} color={COLORS.BLACK}>新しいルームを探しにいきませんか？</Text>
+                <Text size={14} color={COLORS.BLACK}>
+                  新しいルームを探しにいきませんか？
+                </Text>
               </Block>
             </>
-          : null}
+          ) : null}
           <Block top style={styles.joinRoomContainer}>
             <Block style={styles.cardSubTitle}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>参加ルーム0/1</Text>
+              <Text size={12} color={COLORS.LIGHT_GRAY}>
+                参加ルーム0/1
+              </Text>
             </Block>
-            <JoinedRoomCard
-              item={item}
-            />
+            <JoinedRoomCard item={item} />
           </Block>
           <Block top style={styles.makeRoomContainer}>
             <Block style={styles.cardSubTitle}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>作成ルーム0/1</Text>
+              <Text size={12} color={COLORS.LIGHT_GRAY}>
+                作成ルーム0/1
+              </Text>
             </Block>
-            <JoinedRoomCard
-              item={item}
-            />
+            <JoinedRoomCard item={item} />
           </Block>
-          <Block style={styles.buttonContainer} >
+          <Block style={styles.buttonContainer}>
             <Button
               style={styles.button}
               color={COLORS.BROWN}
               shadowless
-              onPress={()=>{setIsOpenRoomEditorModal(true)}}
+              onPress={() => {
+                setIsOpenRoomEditorModal(true);
+              }}
             >
               <Text size={20} color={COLORS.WHITE} bold>
                 悩みを話す
@@ -68,9 +65,9 @@ export const MyRoomsTemplate: React.FC = (props) => {
         </ScrollView>
       </Block>
       <RoomEditorModal
-      isOpenRoomEditorModal={isOpenRoomEditorModal}
-      setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-      isCreateNew
+        isOpenRoomEditorModal={isOpenRoomEditorModal}
+        setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
+        isCreateNew
       />
     </>
   );
@@ -82,19 +79,19 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   emptyStateTitle: {
-    marginTop: 40
+    marginTop: 40,
   },
   emptyStateSubTitle: {
-    marginTop: 16
+    marginTop: 16,
   },
   joinRoomContainer: {
-    marginTop: 16
+    marginTop: 16,
   },
   makeRoomContainer: {
-    marginTop: 32
+    marginTop: 32,
   },
   cardSubTitle: {
-    paddingLeft: 20
+    paddingLeft: 20,
   },
   list: {
     width: width,
@@ -117,4 +114,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-})
+});
