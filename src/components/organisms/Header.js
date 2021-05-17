@@ -13,8 +13,11 @@ import { useProfileState } from "src/contexts/ProfileContext";
 import ProfileModal from "src/components/molecules/ProfileModal";
 import { useAuthState } from "src/contexts/AuthContext";
 import { COLORS } from "src/constants/theme";
+import { useDomDispatch } from "src/contexts/DomContext";
 
 const { width } = Dimensions.get("window");
+
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const SettingsButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
@@ -34,17 +37,17 @@ const Header = (props) => {
     white,
     transparent,
     navigation,
-    scene,
-    profile,
     talkTicketKey,
   } = props;
   const profileState = useProfileState();
   const chatDispatch = useChatDispatch();
+  const domDispatch = useDomDispatch();
   const authState = useAuthState();
   const chatState = useChatState();
+  const route = useRoute();
 
   const renderRight = () => {
-    const routeName = scene.route.name;
+    const routeName = route.name;
 
     const talkStatusKey =
       talkTicketKey && chatState.talkTicketCollection[talkTicketKey].status.key;
@@ -59,18 +62,9 @@ const Header = (props) => {
       );
     switch (name) {
       case "Profile":
-        if (scene.route.params && scene.route.params.item) {
-          if (!scene.route.params.item.me)
-            return (
-              <ProfileMenuButton
-                key="ProfileMenuButton"
-                navigation={navigation}
-                user={scene.route.params.item}
-              />
-            );
-        }
-        break;
       case "Home":
+      case "Rooms":
+      case "MyRooms":
       case "WorryList":
       case "Talk":
       case "Notification":
@@ -102,16 +96,24 @@ const Header = (props) => {
         </TouchableOpacity>
       );
     } else {
-      return (
-        <TouchableOpacity onPress={() => handleLeftPress(setIsOpenProfile)}>
-          <Icon
-            family="AntDesign"
-            size={32}
-            name="reload1"
-            color={COLORS.BROWN}
-          />
-        </TouchableOpacity>
-      );
+      const routeName = route.name;
+      switch (routeName) {
+        case "Rooms":
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                domDispatch({ type: "SCHEDULE_TASK", taskKey: "refreshRooms" });
+              }}
+            >
+              <Icon
+                family="AntDesign"
+                size={32}
+                name="reload1"
+                color={COLORS.BROWN}
+              />
+            </TouchableOpacity>
+          );
+      }
     }
   };
 
@@ -130,7 +132,7 @@ const Header = (props) => {
       authState.token &&
         chatDispatch({
           type: "READ_BY_ROOM",
-          talkTicketKey: scene.route.params.talkTicketKey,
+          talkTicketKey: route.params.talkTicketKey,
           token: authState.token,
         });
     }
@@ -139,13 +141,16 @@ const Header = (props) => {
   const convertNameToTitle = (name) => {
     switch (name) {
       case "Home":
+      case "Rooms":
         return "ホーム";
+      case "MyRooms":
+        return "作成したルーム";
       case "Talk":
         return "トーク";
       case "Notification":
         return "通知";
       case "Profile":
-        return "";
+        return "プロフィール";
       case "ProfileEditor":
         return "プロフィール編集";
       case "InputName":

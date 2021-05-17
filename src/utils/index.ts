@@ -116,17 +116,24 @@ export const fmtfromDateToStr = (date: Date, format: string): string => {
  **/
 export const deepCvtKeyFromSnakeToCamel = (
   obj: Record<string, unknown>
-): Record<string, unknown> => {
+): Record<string, unknown> | unknown[] => {
+  if (Array.isArray(obj)) {
+    return obj.map((elm) => deepCvtKeyFromSnakeToCamel(elm));
+  }
+  if (!isObject(obj)) return obj; // string | number | boolean
+
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => {
       let _v;
       if (isObject(v)) {
         // object
-        _v = deepCvtKeyFromSnakeToCamel(v as Record<string, unknown>);
+        _v = deepCvtKeyFromSnakeToCamel(v);
       } else if (Array.isArray(v)) {
         // Array
         _v = v.map((elm) =>
-          isObject(elm) ? deepCvtKeyFromSnakeToCamel(elm) : elm
+          isObject(elm) || Array.isArray(elm)
+            ? deepCvtKeyFromSnakeToCamel(elm)
+            : elm
         );
       } else {
         _v = v;

@@ -9,8 +9,8 @@ const BASE_HOST = DEBUG ? "192.168.11.46:8080" : "fullfii.com";
 const URL_SCHEME_HTTP = DEBUG ? "http" : "https";
 const WS_SCHEME_HTTP = DEBUG ? "ws" : "wss";
 
-export const BASE_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/api/v3/`;
-export const BASE_URL_WS = `${WS_SCHEME_HTTP}://${BASE_HOST}/ws/v2/`;
+export const BASE_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/api/v4/`;
+export const BASE_URL_WS = `${WS_SCHEME_HTTP}://${BASE_HOST}/ws/v4/`;
 export const USER_POLICY_URL = "https://fullfii.com/terms-of-service/";
 export const PRIVACY_POLICY_URL = "https://fullfii.com/privacy-policy/";
 export const CONTACT_US_URL =

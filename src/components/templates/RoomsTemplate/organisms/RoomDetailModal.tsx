@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { Block, NavBar, theme, Text, Button } from "galio-framework";
 import {
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ActionSheetIOS,
+  Alert,
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import Modal from "react-native-modal";
@@ -13,13 +14,32 @@ import IconExtra from "src/components/atoms/Icon";
 
 import { COLORS } from "src/constants/theme";
 import Avatar from "src/components/atoms/Avatar";
+import { width } from "src/constants";
+import { Room } from "src/types/Types.context";
 
-const { width } = Dimensions.get("screen");
+type Props = {
+  room: Room;
+  isMaxed: boolean;
+  participantIconName: string;
+  participantIconColor: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<boolean>;
+  hiddenRoomIds: string[];
+  setHiddenRoomIds: Dispatch<string[]>;
+};
+export const RoomDetailModal: React.FC<Props> = (props) => {
+  const {
+    room,
+    isMaxed,
+    participantIconName,
+    participantIconColor,
+    isOpen,
+    setIsOpen,
+    hiddenRoomIds,
+    setHiddenRoomIds,
+  } = props;
 
-const ShowRoomModal = (props) => {
-  const { item, isOpen, setIsOpen, hiddenRooms, setHiddenRooms } = props;
-
-  const ActionSheet = () => {
+  const openRoomDetailActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: ["キャンセル", "非表示", "ブロック"],
@@ -32,7 +52,7 @@ const ShowRoomModal = (props) => {
           // cancel action
         } else if (buttonIndex === 1) {
           setIsOpen(false);
-          setHiddenRooms([...hiddenRooms, item.key]);
+          setHiddenRoomIds([...hiddenRoomIds, room.id]);
           //card非表示
         } else if (buttonIndex === 2) {
           //ブロック処理
@@ -42,7 +62,7 @@ const ShowRoomModal = (props) => {
   };
 
   const goNext = () => {
-    alert("チャット画面に遷移");
+    Alert.alert("チャット画面に遷移");
   };
 
   return (
@@ -65,7 +85,7 @@ const ShowRoomModal = (props) => {
             name="close"
             family="Ionicons"
             size={32}
-            color={COLORS.HILIGHT_GRAY}
+            color={COLORS.HIGHLIGHT_GRAY}
           />
         </TouchableOpacity>
         <Block style={styles.modalTitle}>
@@ -76,13 +96,13 @@ const ShowRoomModal = (props) => {
             numberOfLines={3}
             ellipsizeMode="tail"
           >
-            {item.title}
+            {room.name}
           </Text>
         </Block>
         <TouchableOpacity
           style={styles.touchableOpacity}
           onPress={() => {
-            ActionSheet();
+            openRoomDetailActionSheet();
           }}
         >
           <IconExtra
@@ -93,10 +113,18 @@ const ShowRoomModal = (props) => {
           />
         </TouchableOpacity>
         <Block row>
-          <Image source={item.image} style={styles.modalImage} />
+          {room.image ? (
+            <Image source={{ uri: room.image }} style={styles.modalImage} />
+          ) : (
+            <Block style={styles.modalImage}></Block>
+          )}
           <Block flex column>
             <Block row>
-              <Avatar size={32} image={item.avatar} style={styles.avater} />
+              <Avatar
+                size={32}
+                image={room.owner.image}
+                style={styles.avatar}
+              />
               <Block column style={styles.userInfo}>
                 <Block style={styles.userName}>
                   <Text
@@ -105,7 +133,7 @@ const ShowRoomModal = (props) => {
                     numberOfLines={1}
                     ellipsizeMode="tail"
                   >
-                    {item.userName}
+                    {room.owner.name}
                   </Text>
                 </Block>
                 <Block row>
@@ -116,17 +144,17 @@ const ShowRoomModal = (props) => {
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {item.userGender}
+                      {room.owner.gender.label}
                     </Text>
                   </Block>
-                  <Block style={styles.userJob}>
+                  <Block>
                     <Text
                       size={14}
                       color={COLORS.LIGHT_GRAY}
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {item.userJob}
+                      {room.owner.job.label}
                     </Text>
                   </Block>
                 </Block>
@@ -136,15 +164,15 @@ const ShowRoomModal = (props) => {
               <Block flex row style={styles.member}>
                 <Block>
                   <IconExtra
-                    name={item.memberIconName}
+                    name={participantIconName}
                     family="Ionicons"
                     size={32}
-                    color={item.memberColor}
+                    color={participantIconColor}
                   />
                 </Block>
                 <Block style={styles.memberText}>
                   <Text size={14} color={COLORS.LIGHT_GRAY}>
-                    {item.joinNum}/{item.maxNum}
+                    {room.participants.length}/{room.maxNumParticipants}
                   </Text>
                 </Block>
               </Block>
@@ -167,8 +195,6 @@ const ShowRoomModal = (props) => {
     </Modal>
   );
 };
-
-export default ShowRoomModal;
 
 const styles = StyleSheet.create({
   modal: {
@@ -212,10 +238,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-  touchableHightlight: {
+  touchableHighlight: {
     borderRadius: 20,
   },
-  avater: {
+  avatar: {
     marginLeft: 16,
   },
   userInfo: {

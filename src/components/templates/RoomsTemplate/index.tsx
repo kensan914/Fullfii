@@ -1,26 +1,46 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import { StyleSheet, Dimensions, FlatList } from "react-native";
+import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import { COLORS } from "src/constants/theme";
-import RoomCard from "src/components/molecules/RoomCard";
+import { RoomCard } from "src/components/templates/RoomsTemplate/organisms/RoomCard";
 import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { width } from "src/constants";
+import { Room } from "src/types/Types.context";
+import { LinearGradient } from "expo-linear-gradient";
 
-const { width } = Dimensions.get("screen");
-export const RoomsTemplate: React.FC = (props) => {
+type Props = {
+  rooms: Room[];
+  hiddenRoomIds: string[];
+  setHiddenRoomIds: Dispatch<string[]>;
+  isOpenRoomEditorModal: boolean;
+  setIsOpenRoomEditorModal: Dispatch<boolean>;
+  onEndReached: () => void;
+  handleRefresh: () => void;
+  isRefreshing: boolean;
+  hasMore: boolean;
+  isLoadingGetRooms: boolean;
+};
+export const RoomsTemplate: React.FC<Props> = (props) => {
   const numColumns = 1;
   const {
-    items,
-    hiddenRooms,
-    setHiddenRooms,
+    rooms,
+    hiddenRoomIds,
+    setHiddenRoomIds,
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
+    onEndReached,
+    handleRefresh,
+    isRefreshing,
+    hasMore,
+    isLoadingGetRooms,
   } = props;
 
+  const isHiddenAll = rooms.length === hiddenRoomIds.length && !hasMore;
   return (
     <>
       <Block flex style={styles.container}>
-        {items.length === hiddenRooms.length ? (
+        {isHiddenAll ? (
           <Block center style={styles.restoreContainer}>
             <Block style={styles.restoreTitle}>
               <Text size={15} color={COLORS.BLACK}>
@@ -35,16 +55,16 @@ export const RoomsTemplate: React.FC = (props) => {
           </Block>
         ) : (
           <FlatList
-            data={items}
-            renderItem={({ item, index }) => {
-              if (hiddenRooms.includes(item.key)) {
+            data={rooms}
+            renderItem={({ item }) => {
+              if (hiddenRoomIds.includes(item.id)) {
                 return <></>;
               } else {
                 return (
                   <RoomCard
-                    item={item}
-                    hiddenRooms={hiddenRooms}
-                    setHiddenRooms={setHiddenRooms}
+                    room={item}
+                    hiddenRoomIds={hiddenRoomIds}
+                    setHiddenRoomIds={setHiddenRoomIds}
                   />
                 );
               }
@@ -52,9 +72,30 @@ export const RoomsTemplate: React.FC = (props) => {
             style={styles.list}
             numColumns={numColumns}
             keyExtractor={(item, index) => index.toString()}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0}
+            ListFooterComponent={() =>
+              hasMore && !isRefreshing ? (
+                <ActivityIndicator
+                  size="large"
+                  style={{ marginVertical: 16 }}
+                />
+              ) : (
+                <></>
+              )
+            }
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            contentContainerStyle={{ paddingBottom: bottomButtonHeight }}
           />
         )}
-        <Block style={styles.buttonContainer}>
+        {/* <Block style={styles.buttonContainer}> */}
+        <LinearGradient
+          colors={[COLORS.TRANSPARENT, COLORS.BEIGE]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.buttonContainer}
+        >
           <Button
             style={styles.button}
             color={COLORS.BROWN}
@@ -67,7 +108,8 @@ export const RoomsTemplate: React.FC = (props) => {
               悩みを話す
             </Text>
           </Button>
-        </Block>
+        </LinearGradient>
+        {/* </Block> */}
       </Block>
       <RoomEditorModal
         isOpenRoomEditorModal={isOpenRoomEditorModal}
@@ -78,6 +120,7 @@ export const RoomsTemplate: React.FC = (props) => {
   );
 };
 
+const bottomButtonHeight = 80;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.BEIGE,
@@ -107,14 +150,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: width,
-    height: 64,
-    backgroundColor: COLORS.BEIGE_RGBA,
+    height: bottomButtonHeight,
     alignItems: "center",
     position: "absolute",
     bottom: 0,
     zIndex: 2,
   },
   button: {
+    marginTop: 16,
     width: 335,
     height: 48,
     borderRadius: 30,
@@ -129,6 +172,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: width,
-    height: 64,
+    height: bottomButtonHeight,
   },
 });

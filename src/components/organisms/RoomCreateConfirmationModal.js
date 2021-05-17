@@ -43,7 +43,7 @@ const RoomCreateConfirmationModal = (props) => {
             name="close"
             family="Ionicons"
             size={32}
-            color={COLORS.HILIGHT_GRAY}
+            color={COLORS.HIGHLIGHT_GRAY}
           />
         </TouchableOpacity>
         <Block center style={styles.checkIcon}>

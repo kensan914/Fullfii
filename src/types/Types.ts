@@ -13,6 +13,7 @@ import {
   MeProfileIoTs,
   MessageJsonIoTs,
   ProfileDispatch,
+  RoomJsonIoTs,
   TalkTicketJsonIoTs,
   TalkTicketKey,
 } from "src/types/Types.context";
@@ -268,6 +269,11 @@ export const SignupResDataIoTs = t.type({
 export type PutGenderResData = t.TypeOf<typeof PutGenderResDataIoTs>;
 export const PutGenderResDataIoTs = t.type({
   me: MeProfileIoTs,
+});
+export type GetRoomsResData = t.TypeOf<typeof GetRoomsResDataIoTs>;
+export const GetRoomsResDataIoTs = t.type({
+  rooms: t.array(RoomJsonIoTs),
+  hasMore: t.boolean,
 });
 //--------- axios res.data ---------//
 

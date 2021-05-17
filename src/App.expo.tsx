@@ -25,6 +25,7 @@ import {
   TalkTicketCollectionAsync,
   TalkTicketCollectionAsyncIoTs,
 } from "src/types/Types.context";
+import { DomProvider } from "./contexts/DomContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -98,14 +99,16 @@ const RootNavigator: React.FC<Props> = (props) => {
         <AuthProvider status={status} token={token} signupBuffer={signupBuffer}>
           <ProfileProvider profile={profile}>
             <ChatProvider talkTicketCollection={talkTicketCollection}>
-              <GalioProvider theme={materialTheme}>
-                <StartUpManager>
-                  {Platform.OS === "ios" && (
-                    <StatusBar barStyle="dark-content" />
-                  )}
-                  <Screens />
-                </StartUpManager>
-              </GalioProvider>
+              <DomProvider>
+                <GalioProvider theme={materialTheme}>
+                  <StartUpManager>
+                    {Platform.OS === "ios" && (
+                      <StatusBar barStyle="dark-content" />
+                    )}
+                    <Screens />
+                  </StartUpManager>
+                </GalioProvider>
+              </DomProvider>
             </ChatProvider>
           </ProfileProvider>
         </AuthProvider>

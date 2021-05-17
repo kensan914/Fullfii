@@ -29,6 +29,7 @@ import {
 import { Assets } from "src/types/Types";
 import AttManager from "src/screens/AttManager";
 import { setVersion } from "src/constants/env";
+import { DomProvider } from "./contexts/DomContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -137,16 +138,18 @@ const RootNavigator: React.FC<Props> = (props) => {
         <AuthProvider status={status} token={token} signupBuffer={signupBuffer}>
           <ProfileProvider profile={profile}>
             <ChatProvider talkTicketCollection={talkTicketCollection}>
-              <GalioProvider theme={materialTheme}>
-                <StartUpManager>
-                  <AttManager>
-                    {Platform.OS === "ios" && (
-                      <StatusBar barStyle="dark-content" />
-                    )}
-                    <Screens />
-                  </AttManager>
-                </StartUpManager>
-              </GalioProvider>
+              <DomProvider>
+                <GalioProvider theme={materialTheme}>
+                  <StartUpManager>
+                    <AttManager>
+                      {Platform.OS === "ios" && (
+                        <StatusBar barStyle="dark-content" />
+                      )}
+                      <Screens />
+                    </AttManager>
+                  </StartUpManager>
+                </GalioProvider>
+              </DomProvider>
             </ChatProvider>
           </ProfileProvider>
         </AuthProvider>

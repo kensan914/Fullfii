@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Block, Button, Text } from "galio-framework";
 import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
@@ -8,58 +8,61 @@ import IconExtra from "src/components/atoms/Icon";
 const { width } = Dimensions.get("screen");
 
 export const ProfileTemplate: React.FC = (props) => {
-  const [close, setClose] = useState(false)
+  const [close, setClose] = useState(false);
   // const {close, setClose} = props
   return (
     <Block flex style={styles.container}>
-      {
-        !close ?
-          <Block center>
-            <Block style={styles.alret}>
-              <TouchableOpacity
-                style={styles.closeIcon}
-                onPress={() => {
-                  setClose(true);
-                }}
-              >
-                <IconExtra
-                  name="close"
-                  family="Ionicons"
-                  size={32}
-                  color={COLORS.HILIGHT_GRAY}
-                />
-              </TouchableOpacity>
-              <Block style={styles.messageContainer}>
-                <Text size={16} color={COLORS.BLACK}>
-                  プロフィールを入力すると他のユーザーがあなたのルームに入りやすくなります
-                </Text>
-              </Block>
-              <Block center style={styles.notification}>
-                <Text bold size={15} color={COLORS.WHITE}>
-                  1{/* 100以上は99表示 */}
-                </Text>
-              </Block>
+      {!close ? (
+        <Block center>
+          <Block style={styles.alret}>
+            <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={() => {
+                setClose(true);
+              }}
+            >
+              <IconExtra
+                name="close"
+                family="Ionicons"
+                size={32}
+                color={COLORS.HIGHLIGHT_GRAY}
+              />
+            </TouchableOpacity>
+            <Block style={styles.messageContainer}>
+              <Text size={16} color={COLORS.BLACK}>
+                プロフィールを入力すると他のユーザーがあなたのルームに入りやすくなります
+              </Text>
+            </Block>
+            <Block center style={styles.notification}>
+              <Text bold size={15} color={COLORS.WHITE}>
+                1{/* 100以上は99表示 */}
+              </Text>
             </Block>
           </Block>
-      : <></>
-      }
+        </Block>
+      ) : (
+        <></>
+      )}
 
       <Block center style={styles.iconContainer}>
-      <IconExtra
-        name="user"
-        family="AntDesign"
-        size={80}
-        color={COLORS.LIGHT_GRAY}
-      />
+        <IconExtra
+          name="user"
+          family="AntDesign"
+          size={80}
+          color={COLORS.LIGHT_GRAY}
+        />
       </Block>
       <Block center style={styles.textContainer}>
-        <Text size={16} color={COLORS.BLACK}>プロフィールを作成しましょう</Text>
+        <Text size={16} color={COLORS.BLACK}>
+          プロフィールを作成しましょう
+        </Text>
       </Block>
       <Block center>
-      <Button style={styles.button}>
-        <Text size={20} bold color={COLORS.WHITE}
-        >作成</Text>
-      </Button>
+        <Button style={styles.button}>
+          <Text size={20} bold color={COLORS.WHITE}>
+            作成
+          </Text>
+        </Button>
       </Block>
     </Block>
   );
@@ -105,10 +108,10 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginTop: "25%",
-    marginBottom: 40
+    marginBottom: 40,
   },
   textContainer: {
-    marginBottom: 40
+    marginBottom: 40,
   },
   button: {
     backgroundColor: COLORS.BROWN,
@@ -123,5 +126,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 1,
-  }
+  },
 });

@@ -100,7 +100,6 @@ export const JobIoTs = t.type({
 export const JobsIoTs = t.record(t.string, JobIoTs);
 export const ProfileParamsIoTs = t.type({
   gender: GendersIoTs,
-  genreOfWorries: GenreOfWorriesCollectionIoTs,
   job: JobsIoTs,
 });
 
@@ -115,16 +114,12 @@ export const ProfileIoTs = t.type({
   isSecretGender: t.boolean,
   job: JobIoTs,
   introduction: t.string,
-  numOfThunks: t.number,
-  genreOfWorries: GenreOfWorriesIoTs,
   image: t.union([t.string, t.null]),
   me: t.boolean,
 });
 export const MeProfileIoTs = t.intersection([
   t.type({
     dateJoined: t.string,
-    plan: PlanIoTs,
-    canTalkHeterosexual: t.boolean,
     deviceToken: t.union([t.string, t.null]),
     isActive: t.boolean,
   }),
@@ -220,18 +215,27 @@ export type TalkTicketCollectionAsync = t.TypeOf<
   typeof TalkTicketCollectionAsyncIoTs
 >;
 export type TalkInfoJson = t.TypeOf<typeof TalkInfoJsonIoTs>;
+
+export type BaseRoom = t.TypeOf<typeof BaseRoomIoTs>;
+
+type RoomCreatedAt = {
+  createdAt: Date;
+};
+/** RoomJsonとの違い: createdAtのtypeがDate */
+export type Room = BaseRoom & RoomCreatedAt;
+/** Roomとの違い: createdAtのtypeがstring|null */
 export type RoomJson = t.TypeOf<typeof RoomJsonIoTs>;
-export type RoomAdd = {
+
+export type TalkingRoomParts = {
   messages: AllMessages;
   offlineMessages: OfflineMessage[];
   unreadNum: number;
   ws: WsNullable;
-  isEnd: boolean;
 };
-/** RoomAsyncとの違い: wsのtypeがWsNullable */
-export type Room = RoomAdd & RoomJson;
-/** Roomとの違い: wsのtypeがnull */
-export type RoomAsync = t.TypeOf<typeof RoomAsyncIoTs>;
+/** TalkingRoomJsonとの違い: wsのtypeがWsNullable, createdAtのtypeがDate */
+export type TalkingRoom = TalkingRoomParts & Room;
+/** TalkingRoomとの違い: wsのtypeがnull, createdAtのtypeがstring|null */
+export type TalkingRoomJson = t.TypeOf<typeof TalkingRoomJsonIoTs>;
 export type WsNullable = WebSocket | null;
 
 export type OfflineMessage = t.TypeOf<typeof OfflineMessageIoTs>;
@@ -261,14 +265,14 @@ export const DateType = new t.Type<Date, string, unknown>(
   (a) => a.toISOString()
 );
 export const BaseMessageIoTs = t.type({
-  messageId: t.string,
-  message: t.string,
-  isMe: t.boolean,
+  id: t.string,
+  text: t.string,
+  senderId: t.string,
 });
 export const OfflineMessageIoTs = t.type({
-  messageId: t.string,
-  message: t.string,
-  isMe: t.boolean,
+  id: t.string,
+  text: t.string,
+  senderId: t.string,
   time: DateType,
   isOffline: t.boolean,
 });
@@ -285,10 +289,10 @@ export const MessageJsonIoTs = t.intersection([
   }),
 ]);
 export const CommonMessageIoTs = t.type({
-  messageId: t.string,
-  message: t.string,
+  id: t.string,
+  text: t.string,
   time: DateType,
-  common: t.boolean,
+  isCommon: t.boolean,
 });
 export const AllMessageIoTs = t.union([
   OfflineMessageIoTs,
@@ -297,23 +301,35 @@ export const AllMessageIoTs = t.union([
 ]);
 export const AllMessagesIoTs = t.array(AllMessageIoTs);
 
-export const RoomJsonIoTs = t.type({
+export const BaseRoomIoTs = t.type({
   id: t.string,
-  user: ProfileIoTs,
-  startedAt: t.union([t.string, t.null]),
-  endedAt: t.union([t.string, t.null]),
-  isAlert: t.boolean,
-  isTimeOut: t.boolean,
-  userTopic: t.string,
+  name: t.string,
+  image: t.union([t.string, t.null]),
+  owner: ProfileIoTs,
+  participants: t.array(ProfileIoTs),
+  maxNumParticipants: t.number,
+  isExcludeDifferentGender: t.boolean,
+  isEnd: t.boolean,
+  isActive: t.boolean,
 });
-export const RoomAddJsonIoTs = t.type({
+const RoomCreatedAtJsonIoTs = t.type({
+  createdAt: t.union([t.string, t.null]),
+});
+export const RoomJsonIoTs = t.intersection([
+  BaseRoomIoTs,
+  RoomCreatedAtJsonIoTs,
+]);
+
+export const TalkingRoomPartsJsonIoTs = t.type({
   messages: AllMessagesIoTs,
   offlineMessages: t.array(OfflineMessageIoTs),
   unreadNum: t.number,
   ws: t.null,
-  isEnd: t.boolean,
 });
-export const RoomAsyncIoTs = t.intersection([RoomAddJsonIoTs, RoomJsonIoTs]);
+export const TalkingRoomJsonIoTs = t.intersection([
+  TalkingRoomPartsJsonIoTs,
+  RoomJsonIoTs,
+]);
 
 export const TalkStatusIoTs = t.type({
   key: t.string,
@@ -343,7 +359,7 @@ export const TalkTicketJsonIoTs = t.intersection([
 export const TalkTicketAsyncIoTs = t.intersection([
   TalkTicketJsonExceptRoomIoTs,
   t.type({
-    room: RoomAsyncIoTs,
+    room: RoomJsonIoTs,
   }),
 ]);
 /** TalkTicketCollectionAsyncIoTsとの違い: roomがnullable & roomJson */
@@ -361,6 +377,17 @@ export const TalkInfoJsonIoTs = t.type({
   lengthParticipants: t.record(t.string, t.number),
 });
 //========== Chat io-ts ==========//
+
+//========== Dom ==========//
+export type TaskSchedulesKey = "refreshRooms";
+export type DomState = {
+  taskSchedules: { [key in TaskSchedulesKey]: boolean };
+};
+export type DomDispatch = React.Dispatch<DomActionType>;
+export type DomActionType =
+  | { type: "SCHEDULE_TASK"; taskKey: TaskSchedulesKey }
+  | { type: "DONE_TASK"; taskKey: TaskSchedulesKey };
+//========== Dom ==========//
 
 //========== ContextUtils ==========//
 export type States = {

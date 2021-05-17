@@ -37,51 +37,24 @@ const HomeStack = () => {
       <Stack.Screen
         name="Home"
         component={BottomTabNavigator}
-        options={() => {
-          return {
-            header: ({ navigation, scene }) => {
-              return (
-                <Header
-                  name={"Home"}
-                  navigation={navigation}
-                  scene={scene}
-                  profile={profileState.profile}
-                />
-              );
-            },
-          };
-        }}
+        options={() => ({
+          header: () => null,
+        })}
       />
       <Stack.Screen
         name="ProfileEditor"
         component={ProfileEditorScreen}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              back
-              name="ProfileEditor"
-              navigation={navigation}
-              scene={scene}
-              profile={profileState.profile}
-            />
-          ),
-        }}
+        options={() => ({
+          header: () => <Header back name={"ProfileEditor"} />,
+        })}
       />
       <Stack.Screen
         name="ProfileInput"
         component={ProfileInputScreen}
         options={({ route }) => ({
-          header: ({ navigation, scene }) => {
+          header: () => {
             const name = route.params.screen;
-            return (
-              <Header
-                back
-                name={name}
-                navigation={navigation}
-                scene={scene}
-                profile={profileState.profile}
-              />
-            );
+            return <Header back name={name} />;
           },
         })}
       />
@@ -90,7 +63,7 @@ const HomeStack = () => {
         component={ChatScreen}
         options={({ route }) => {
           return {
-            header: ({ navigation, scene }) => {
+            header: () => {
               const talkTicketKey = route.params.talkTicketKey;
               const talkTicket = chatState.talkTicketCollection[talkTicketKey];
               const title = talkTicket ? talkTicket.worry.label : "";
@@ -100,9 +73,6 @@ const HomeStack = () => {
                   name={"Chat"}
                   talkTicketKey={talkTicketKey}
                   back
-                  navigation={navigation}
-                  scene={scene}
-                  profile={profileState.profile}
                 />
               );
             },
@@ -113,34 +83,14 @@ const HomeStack = () => {
         name="Settings"
         component={SettingsScreen}
         options={{
-          header: ({ navigation, scene }) => {
-            return (
-              <Header
-                back
-                name={"Settings"}
-                navigation={navigation}
-                scene={scene}
-                profile={profileState.profile}
-              />
-            );
-          },
+          header: () => <Header back name={"Settings"} />,
         }}
       />
       <Stack.Screen
         name="AccountDelete"
         component={AccountDeleteScreen}
         options={{
-          header: ({ navigation, scene }) => {
-            return (
-              <Header
-                back
-                name={"AccountDelete"}
-                navigation={navigation}
-                scene={scene}
-                profile={profileState.profile}
-              />
-            );
-          },
+          header: () => <Header back name={"AccountDelete"} />,
         }}
       />
     </Stack.Navigator>

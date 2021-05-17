@@ -2,13 +2,17 @@ import React from "react";
 import { Text, Block } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+import Header from "src/components/organisms/Header";
 import Icon from "src/components/atoms/Icon";
 import { RoomsScreenDev } from "src/screens/RoomsScreenDev";
 import { MyRoomsScreenDev } from "src/screens/MyRoomsScreenDev";
 import { ProfileScreen } from "src/screens/ProfileScreen";
+import { RoomsScreen } from "src/screens/RoomsScreen";
+import { createStackNavigator } from "@react-navigation/stack";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
 
   return (
     <Tab.Navigator
@@ -81,9 +85,45 @@ export const BottomTabNavigator: React.FC = () => {
         showLabel: false,
       }}
     >
-      <Tab.Screen name="Rooms" component={RoomsScreenDev} />
-      <Tab.Screen name="MyRooms" component={MyRoomsScreenDev} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Rooms">
+        {() => (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Rooms"
+              component={RoomsScreen}
+              options={() => ({
+                header: () => <Header name={"Rooms"} />,
+              })}
+            />
+          </Stack.Navigator>
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="MyRooms">
+        {() => (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="MyRooms"
+              component={MyRoomsScreenDev}
+              options={() => ({
+                header: () => <Header name={"MyRooms"} />,
+              })}
+            />
+          </Stack.Navigator>
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="Profile">
+        {() => (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={() => ({
+                header: () => <Header name={"Profile"} />,
+              })}
+            />
+          </Stack.Navigator>
+        )}
+      </Tab.Screen>
       {/* <Tab.Screen name="Talk" component={TalkScreen} /> */}
       {/* <Tab.Screen
         name="Notification"

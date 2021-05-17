@@ -56,7 +56,7 @@ const RoomEditorModal = (props) => {
               name="close"
               family="Ionicons"
               size={32}
-              color={COLORS.HILIGHT_GRAY}
+              color={COLORS.HIGHLIGHT_GRAY}
             />
           </TouchableOpacity>
         </Block>
@@ -210,7 +210,7 @@ const RoomEditorModal = (props) => {
                   name="close"
                   family="Ionicons"
                   size={32}
-                  color={COLORS.HILIGHT_GRAY}
+                  color={COLORS.HIGHLIGHT_GRAY}
                 />
               </TouchableOpacity>
               <Block row space="between" style={styles.subTitleTextInput}>
@@ -255,7 +255,7 @@ const RoomEditorModal = (props) => {
                     name="image"
                     family="Feather"
                     size={48}
-                    color={COLORS.HILIGHT_GRAY}
+                    color={COLORS.HIGHLIGHT_GRAY}
                   />
                 </TouchableOpacity>
               </Block>
