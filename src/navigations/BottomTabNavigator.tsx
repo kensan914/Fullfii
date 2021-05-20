@@ -1,11 +1,19 @@
 import React from "react";
 import { Text, Block } from "galio-framework";
+import {
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  Image,
+} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import SvgUri from "react-native-svg-uri";
 
 import Icon from "src/components/atoms/Icon";
 import { RoomsScreenDev } from "src/screens/RoomsScreenDev";
 import { MyRoomsScreenDev } from "src/screens/MyRoomsScreenDev";
 import { ProfileScreen } from "src/screens/ProfileScreen";
+import { COLORS } from "src/constants/theme";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -19,12 +27,12 @@ export const BottomTabNavigator: React.FC = () => {
           // const routeName = getFocusedRouteNameFromRoute(route);
           const routeName = route.name;
 
-          if (routeName === "Rooms") {
-            iconName = focused ? "home" : "home";
-          } else if (routeName === "MyRooms") {
-            iconName = focused ? "commenting" : "commenting-o";
-          } else if (routeName === "Profile") {
-            iconName = focused ? "user" : "user";
+          if (routeName === "ホーム") {
+            iconName = focused ? require('../assets/icons/homeIcon.svg') : require('../assets/icons/homeIcon.svg');
+          } else if (routeName === "トーク") {
+            iconName = focused ? require('../assets/icons/chatIcon.svg') : require('../assets/icons/chatIcon.svg');
+          } else if (routeName === "マイページ") {
+            iconName = focused ? require('../assets/icons/mypageIcon.svg') : require('../assets/icons/mypageIcon.svg');
             // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Talk") {
             iconName = focused ? "comments" : "comments-o";
@@ -40,12 +48,18 @@ export const BottomTabNavigator: React.FC = () => {
                 alignItems: "center",
               }}
             >
-              <Icon
+              <SvgUri
+                width={32}
+                height={32}
+                source={iconName}
+                fill={color}
+              />
+              {/* <Icon
                 family="font-awesome"
                 name={iconName}
                 size={size}
                 color={color}
-              />
+              /> */}
               {typeof badgeCount !== "undefined" && badgeCount !== null && (
                 <Block
                   style={{
@@ -78,12 +92,13 @@ export const BottomTabNavigator: React.FC = () => {
       tabBarOptions={{
         activeTintColor: "#F69896",
         inactiveTintColor: "gray",
-        showLabel: false,
+        showLabel: true,
+        style: { backgroundColor: COLORS.BEIGE, },
       }}
     >
-      <Tab.Screen name="Rooms" component={RoomsScreenDev} />
-      <Tab.Screen name="MyRooms" component={MyRoomsScreenDev} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="ホーム" component={RoomsScreenDev} />
+      <Tab.Screen name="トーク" component={MyRoomsScreenDev} />
+      <Tab.Screen name="マイページ" component={ProfileScreen} />
       {/* <Tab.Screen name="Talk" component={TalkScreen} /> */}
       {/* <Tab.Screen
         name="Notification"

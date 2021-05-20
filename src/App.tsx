@@ -7,6 +7,7 @@ import SplashScreen from "react-native-splash-screen";
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
+import Toast from 'react-native-toast-message';
 
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
@@ -144,6 +145,7 @@ const RootNavigator: React.FC<Props> = (props) => {
                       <StatusBar barStyle="dark-content" />
                     )}
                     <Screens />
+                    <Toast ref={(ref) => Toast.setRef(ref)} />
                   </AttManager>
                 </StartUpManager>
               </GalioProvider>

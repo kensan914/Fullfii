@@ -14,6 +14,7 @@ import NativeAdView, {
   StoreView,
   TaglineView,
 } from "react-native-admob-native-ads";
+import { Block } from "galio-framework";
 
 import { Events, Logger } from "src/constants";
 import { COLORS } from "src/constants/theme";
@@ -137,23 +138,36 @@ export const AdView = (props) => {
       onUnifiedNativeAdLoaded={_onUnifiedNativeAdLoaded}
       refreshInterval={60000 * 2}
       style={{
-        width: width - 40,
-        alignSelf: "center",
-        marginVertical: 10,
+        marginRight: 20,
+        marginLeft: 20,
+        marginTop: 10,
+        height: "auto",
       }}
       adUnitID={adUnitId} // REPLACE WITH NATIVE_AD_VIDEO_ID for video ads.
     >
-      <View
+      <Block
         style={{
-          width: "100%",
-          alignItems: "center",
+          position: "relative",
+          width: width - 40,
+          borderRadius: 20,
+          backgroundColor: COLORS.WHITE,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.26,
+          shadowRadius: 0,
+          elevation: 1,
         }}
       >
-        <View
+        <Block
           style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: COLORS.BEIGE,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            margin: "auto",
             position: "absolute",
             justifyContent: "center",
             alignItems: "center",
@@ -161,35 +175,21 @@ export const AdView = (props) => {
         >
           {loading && <ActivityIndicator size={28} color="#a9a9a9" />}
           {error && <Text style={{ color: "#a9a9a9" }}>:-(</Text>}
-        </View>
+        </Block>
 
-        <View
+        <Block
+          flex
+          space="between"
+          row
           style={{
-            height: 85,
-            width: "100%",
-            // shadowColor: "#000",
-            // shadowOffset: {
-            //   width: 0,
-            //   height: -1,
-            // },
-            // shadowOpacity: 0.25,
-            // shadowRadius: 3.84,
-
-            // elevation: 5,
-            backgroundColor: COLORS.BEIGE,
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
+            paddingVertical: 16,
+            paddingHorizontal: 16,
+            borderRadius: 20,
+            backgroundColor: COLORS.WHITE,
             opacity: loading || error || !adLoaded ? 0 : 1,
           }}
         >
-          <View
-            style={{
-              width: "60%",
-              maxWidth: "60%",
-              paddingHorizontal: 6,
-            }}
-          >
+          <View flex={0.65} style={{}}>
             {/* <HeadlineView
               hello="abc"
               style={{
@@ -199,7 +199,7 @@ export const AdView = (props) => {
               }}
             /> */}
             <TaglineView
-              numberOfLines={2}
+              numberOfLines={3}
               style={{
                 fontWeight: "bold",
                 fontSize: 16,
@@ -213,10 +213,10 @@ export const AdView = (props) => {
               }}
             /> */}
 
-            <View
+            <Block
+              row
               style={{
-                flexDirection: "row",
-                alignItems: "center",
+                paddingTop: 4,
                 paddingBottom: 8,
               }}
             >
@@ -234,7 +234,7 @@ export const AdView = (props) => {
                   marginLeft: 10,
                 }}
               />
-            </View>
+            </Block>
             <CallToActionView
               starSize={12}
               style={{ marginRight: "auto" }}
@@ -250,26 +250,28 @@ export const AdView = (props) => {
               }}
             />
           </View>
-          {media ? (
-            <IconView
-              style={{
-                width: 100,
-                height: 70,
-                borderRadius: 8,
-                overflow: "hidden",
-              }}
-            />
-          ) : (
-            <MediaView
-              style={{
-                width: 100,
-                height: 70,
-                overflow: "hidden",
-                borderRadius: 8,
-              }}
-            />
-          )}
-        </View>
+          <Block flex={0.35} center style={{ marginLeft: 8 }}>
+            {media ? (
+              <IconView
+                style={{
+                  width: 100,
+                  height: 70,
+                  borderRadius: 8,
+                  overflow: "hidden",
+                }}
+              />
+            ) : (
+              <MediaView
+                style={{
+                  width: "100%",
+                  height: 70,
+                  overflow: "hidden",
+                  borderRadius: 8,
+                }}
+              />
+            )}
+          </Block>
+        </Block>
 
         {media ? (
           <MediaView
@@ -289,7 +291,7 @@ export const AdView = (props) => {
             }}
           />
         ) : null}
-      </View>
+      </Block>
     </NativeAdView>
   );
 };
