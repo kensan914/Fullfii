@@ -20,8 +20,5 @@ export const HOME_IMG: { [key: string]: string } = {
   h: part_time_job_img,
 };
 
-export const DISCLOSURE_RANGE_IMAGE: { [key: string]: string } = {
-  a: man_and_woman_img,
-  b: men_img,
-  c: women_img,
-};
+export const MAN_AND_WOMAN_IMG = man_and_woman_img;
+export const MEN_IMG = men_img;

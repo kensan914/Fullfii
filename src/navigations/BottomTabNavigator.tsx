@@ -4,8 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Header from "src/components/organisms/Header";
 import Icon from "src/components/atoms/Icon";
-import { RoomsScreenDev } from "src/screens/RoomsScreenDev";
-import { MyRoomsScreenDev } from "src/screens/MyRoomsScreenDev";
+import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { RoomsScreen } from "src/screens/RoomsScreen";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -103,7 +102,7 @@ export const BottomTabNavigator: React.FC = () => {
           <Stack.Navigator>
             <Stack.Screen
               name="MyRooms"
-              component={MyRoomsScreenDev}
+              component={MyRoomsScreen}
               options={() => ({
                 header: () => <Header name={"MyRooms"} />,
               })}

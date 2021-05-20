@@ -1,23 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Block, Button, Text } from "galio-framework";
-import {
-  StyleSheet,
-  Dimensions,
-  Keyboard,
-  KeyboardAvoidingView,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { DISCLOSURE_RANGE_IMAGE } from "src/constants/imagePath";
-import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
-
-const { width } = Dimensions.get("screen");
+import { width } from "src/constants";
 
 const NotificationModal = (props) => {
   const { isOpenNotificationModal, setIsOpenNotificationModal } = props;
@@ -26,7 +14,7 @@ const NotificationModal = (props) => {
     <Modal
       isVisible={isOpenNotificationModal}
       deviceWidth={width}
-      style={styles.Modal}
+      style={styles.modal}
     >
       <Block column style={styles.modalContent}>
         <Block center style={styles.checkIcon}>

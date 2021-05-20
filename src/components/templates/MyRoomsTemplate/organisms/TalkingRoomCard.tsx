@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
 import {
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   Image,
   ActionSheetIOS,
@@ -12,16 +11,20 @@ import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import Avatar from "src/components/atoms/Avatar";
 import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { width } from "src/constants";
+import { TalkingRoom } from "src/types/Types.context";
+import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 
-const { width } = Dimensions.get("screen");
-
-const JoinedRoomCard = (props) => {
-  const { item } = props;
+type Props = {
+  talkingRoom: TalkingRoom;
+};
+export const TalkingRoomCard: React.FC<Props> = (props) => {
+  const { talkingRoom } = props;
 
   const [isToggleUp, setIsToggleUp] = useState(true);
   const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false);
 
-  const ActionSheet = () => {
+  const openTalkingRoomCardActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: ["キャンセル", "修正する", "削除する"],
@@ -42,19 +45,24 @@ const JoinedRoomCard = (props) => {
     );
   };
 
-  const RoomContent = () => {
+  const {
+    // isMaxed,
+    participantIconName,
+    participantIconColor,
+  } = useRoomParticipantsNum(talkingRoom);
+  const TalkingRoomCardContent: React.FC = () => {
     return (
       <>
         <Block row space="between">
           <Block style={styles.title}>
             <Text size={16} color={COLORS.BLACK} bold ellipsizeMode="tail">
-              {item.title}
+              {talkingRoom.name}
             </Text>
           </Block>
           <TouchableOpacity
             style={styles.threeDotsIcon}
             onPress={() => {
-              ActionSheet();
+              openTalkingRoomCardActionSheet();
             }}
           >
             <IconExtra
@@ -67,18 +75,19 @@ const JoinedRoomCard = (props) => {
         </Block>
         <Block row>
           <Block>
-            <Image
-              source={item.image}
-              style={{
-                width: 88,
-                height: 88,
-                borderRadius: 20,
-              }}
-            />
+            {talkingRoom.image ? (
+              <Image source={{ uri: talkingRoom.image }} style={styles.image} />
+            ) : (
+              <Block style={styles.image}></Block>
+            )}
           </Block>
           <Block flex column>
             <Block row>
-              <Avatar size={32} image={item.avatar} style={styles.avatar} />
+              <Avatar
+                size={32}
+                image={talkingRoom.owner.image}
+                style={styles.avatar}
+              />
               <Block column style={styles.userInfo}>
                 <Block style={styles.userName}>
                   <Text
@@ -87,7 +96,7 @@ const JoinedRoomCard = (props) => {
                     numberOfLines={1}
                     ellipsizeMode="tail"
                   >
-                    {item.userName}
+                    {talkingRoom.owner.name}
                   </Text>
                 </Block>
                 <Block row>
@@ -98,17 +107,17 @@ const JoinedRoomCard = (props) => {
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {item.userGender}
+                      {talkingRoom.owner.gender.label}
                     </Text>
                   </Block>
-                  <Block style={styles.userJob}>
+                  <Block>
                     <Text
                       size={14}
                       color={COLORS.LIGHT_GRAY}
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {item.userJob}
+                      {talkingRoom.owner.job.label}
                     </Text>
                   </Block>
                 </Block>
@@ -118,15 +127,16 @@ const JoinedRoomCard = (props) => {
               <Block flex row style={styles.member}>
                 <Block>
                   <IconExtra
-                    name={item.memberIconName}
+                    name={participantIconName}
                     family="Ionicons"
                     size={32}
-                    color={item.memberColor}
+                    color={participantIconColor}
                   />
                 </Block>
                 <Block style={styles.memberText}>
                   <Text size={14} color={COLORS.LIGHT_GRAY}>
-                    {item.joinNum}/{item.maxNum}
+                    {talkingRoom.participants.length}/
+                    {talkingRoom.maxNumParticipants}
                   </Text>
                 </Block>
               </Block>
@@ -151,7 +161,8 @@ const JoinedRoomCard = (props) => {
             numberOfLines={2}
             ellipsizeMode="tail"
           >
-            最近いじめられ始めてどうしたらいいかわからんティー
+            {talkingRoom.messages.length > 0 &&
+              talkingRoom.messages[talkingRoom.messages.length - 1].text}
           </Text>
         </Block>
         <Block>
@@ -169,19 +180,18 @@ const JoinedRoomCard = (props) => {
             />
           </TouchableOpacity>
         </Block>
-        <Block center style={styles.notification}>
-          <Text bold size={15} color={COLORS.WHITE}>
-            99
-            {/* 100以上は99表示 */}
-          </Text>
-        </Block>
-        {isToggleUp ? <RoomContent /> : null}
+        {talkingRoom.unreadNum > 0 && (
+          <Block center style={styles.notification}>
+            <Text bold size={15} color={COLORS.WHITE}>
+              {talkingRoom.unreadNum >= 100 ? 99 : talkingRoom.unreadNum}
+            </Text>
+          </Block>
+        )}
+        {isToggleUp ? <TalkingRoomCardContent /> : null}
       </Block>
     </Block>
   );
 };
-
-export default JoinedRoomCard;
 
 const styles = StyleSheet.create({
   container: {
@@ -264,5 +274,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 16,
     right: 16,
+  },
+  image: {
+    width: 88,
+    height: 88,
+    borderRadius: 20,
   },
 });

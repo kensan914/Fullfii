@@ -36,6 +36,7 @@ import exeSiren from "src/utils/siren";
 const StartUpManager: React.FC = (props) => {
   const { children } = props;
   const [states, dispatches] = useAllContext();
+  const { requestPostWorry } = usePostWorry(states.authState.token);
 
   // global stateとは別に即時反映されるmeProfile
   const [meProfileTemp, setMeProfileTemp] = useState<MeProfile>();
@@ -87,6 +88,12 @@ const StartUpManager: React.FC = (props) => {
       );
   }, [states.authState.token]);
 
+  useEffect(() => {
+    if (states.profileState.profileParams) {
+      requestPostWorry(states.profileState.profileParams);
+    }
+  }, [states.authState.token, states.profileState.profileParams]);
+
   return <Block flex>{children}</Block>;
 };
 
@@ -103,8 +110,8 @@ export const startUpLoggedin = (
   if (typeof token !== "undefined") {
     exeSiren();
     requestGetProfile(token, dispatches, setMeProfileTemp);
-    // connectWsNotification(token, states, dispatches);
-    // updateTalk(token, states, dispatches);
+    connectWsNotification(token, states, dispatches);
+    updateTalk(token, states, dispatches);
   }
 };
 

@@ -1,39 +1,86 @@
-import React, { useState } from "react";
+import React, { Dispatch, useRef, useState } from "react";
 import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
-  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  TouchableHighlight,
   ImageBackground,
+  Image,
 } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { DISCLOSURE_RANGE_IMAGE } from "src/constants/imagePath";
+import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
+import { width } from "src/constants";
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
+import { useRequestRoom } from "src/hooks/useRequestRoom";
 
-const { width } = Dimensions.get("screen");
-
-const RoomEditorModal = (props) => {
+type Props = {
+  isOpenRoomEditorModal: boolean;
+  setIsOpenRoomEditorModal: Dispatch<boolean>;
+  isCreateNew?: boolean;
+  setIsOpenRoomCreatedModal?: Dispatch<boolean>;
+};
+const RoomEditorModal: React.FC<Props> = (props) => {
   const {
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
-    isCreateNew,
+    isCreateNew = false,
+    setIsOpenRoomCreatedModal,
   } = props;
 
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
-  const [topic, setTopic] = useState("");
-  const [roomImage, setRoomImage] = useState(null);
 
-  const [
+  const [roomName, setRoomName] = useState("");
+  const [draftRoomName, setDraftRoomName] = useState("");
+  const maxTopicLength = 60;
+  const [roomImage, setRoomImage] = useState<ImageInfo | null>(null);
+  const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(null);
+
+  const [isExcludeDifferentGender, setIsExcludeDifferentGender] = useState<
+    boolean | null
+  >(null);
+
+  /** この値がtrueの状態でモーダルを閉じるとルーム作成モーダルが表示される */
+  const willOpenRoomCreatedModalRef = useRef(false);
+
+  const canPost = isExcludeDifferentGender !== null;
+
+  const resetDraftOption = () => {
+    setDraftRoomName("");
+    setDraftRoomImage(null);
+  };
+  /** ルーム作成後、全てのstateをリセット */
+  const resetState = () => {
+    resetDraftOption();
+    setRoomName("");
+    setRoomImage(null);
+    setIsExcludeDifferentGender(null);
+  };
+  const addRoomOption = () => {
+    resetDraftOption();
+    setRoomName(draftRoomName);
+    setRoomImage(draftRoomImage);
+  };
+  const openOptionModal = () => {
+    setDraftRoomName(roomName);
+    setDraftRoomImage(roomImage);
+    setIsOpenOptionModal(true);
+  };
+
+  const { requestPostRoom, isLoadingPostRoom } = useRequestRoom(
+    roomName,
     isExcludeDifferentGender,
-    setIsExcludeDifferentGender,
-  ] = React.useState(null);
+    roomImage,
+    resetState,
+    setIsOpenRoomEditorModal,
+    "", // init roomId
+    willOpenRoomCreatedModalRef
+  );
 
   return (
     <Modal
@@ -43,6 +90,12 @@ const RoomEditorModal = (props) => {
         setIsOpenRoomEditorModal(false);
       }}
       style={styles.firstModal}
+      onModalHide={() => {
+        if (willOpenRoomCreatedModalRef.current) {
+          setIsOpenRoomCreatedModal && setIsOpenRoomCreatedModal(true);
+          willOpenRoomCreatedModalRef.current = false;
+        }
+      }}
     >
       <Block column style={styles.firstModalContent}>
         <Block row>
@@ -63,7 +116,7 @@ const RoomEditorModal = (props) => {
         <TouchableOpacity
           style={styles.addMore}
           onPress={() => {
-            setIsOpenOptionModal(true);
+            openOptionModal();
           }}
         >
           <Block column>
@@ -82,7 +135,7 @@ const RoomEditorModal = (props) => {
             </Block>
           </Block>
         </TouchableOpacity>
-        {topic ? (
+        {roomName ? (
           <Block row center style={styles.checkRoomTopic}>
             <IconExtra
               name="check-circle"
@@ -130,7 +183,7 @@ const RoomEditorModal = (props) => {
             }}
           >
             <ImageBackground
-              source={DISCLOSURE_RANGE_IMAGE.a}
+              source={MAN_AND_WOMAN_IMG}
               style={styles.disclosureRangeImage}
             >
               <Block style={styles.disclosureRangeText}>
@@ -152,7 +205,7 @@ const RoomEditorModal = (props) => {
             }}
           >
             <ImageBackground
-              source={DISCLOSURE_RANGE_IMAGE.b}
+              source={MEN_IMG}
               style={styles.disclosureRangeImage}
             >
               <Block style={styles.disclosureRangeText}>
@@ -165,12 +218,29 @@ const RoomEditorModal = (props) => {
         </Block>
         <Block center style={styles.submitButtonContainer}>
           <Button
-            style={styles.submitButton}
-            color={COLORS.BROWN}
             shadowless
             onPress={() => {
-              alert(`悩みは${topic}です`);
+              if (isCreateNew) {
+                requestPostRoom();
+              }
             }}
+            color={canPost ? COLORS.BROWN : "lightgray"}
+            style={[
+              styles.submitButton,
+              canPost
+                ? {
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowColor: "#000",
+                    shadowOpacity: 0.4,
+                    shadowRadius: 4,
+                  }
+                : {},
+            ]}
+            disabled={!canPost}
+            loading={isLoadingPostRoom}
           >
             <Block row center space="between" style={styles.submitButtonInner}>
               <IconExtra
@@ -203,6 +273,7 @@ const RoomEditorModal = (props) => {
               <TouchableOpacity
                 style={styles.closeIcon}
                 onPress={() => {
+                  resetDraftOption();
                   setIsOpenOptionModal(false);
                 }}
               >
@@ -221,7 +292,7 @@ const RoomEditorModal = (props) => {
                 </Block>
                 <Block>
                   <Text size={12} color={COLORS.GRAY}>
-                    0/60
+                    {draftRoomName.length}/{maxTopicLength}
                   </Text>
                 </Block>
               </Block>
@@ -230,9 +301,9 @@ const RoomEditorModal = (props) => {
                 numberOfLines={4}
                 editable
                 placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-                maxLength={60}
-                value={topic}
-                onChangeText={setTopic}
+                maxLength={maxTopicLength}
+                value={draftRoomName}
+                onChangeText={setDraftRoomName}
                 returnKeyType="done"
                 blurOnSubmit
                 style={styles.textArea}
@@ -248,17 +319,48 @@ const RoomEditorModal = (props) => {
               <Block center>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  underlayColor="#DDDDDD"
-                  style={styles.roomImage}
+                  // underlayColor="#DDDDDD"
+                  style={styles.roomImageContainer}
+                  onPress={async () => {
+                    const result = await getPermissionAsync();
+                    if (result) {
+                      pickImage().then((image) => {
+                        if (image) {
+                          setDraftRoomImage(image);
+                        }
+                      });
+                    }
+                  }}
                 >
-                  <IconExtra
-                    name="image"
-                    family="Feather"
-                    size={48}
-                    color={COLORS.HIGHLIGHT_GRAY}
-                  />
+                  {draftRoomImage ? (
+                    <Image style={styles.roomImage} source={draftRoomImage} />
+                  ) : (
+                    <IconExtra
+                      name="image"
+                      family="Feather"
+                      size={48}
+                      color={COLORS.HIGHLIGHT_GRAY}
+                    />
+                  )}
                 </TouchableOpacity>
               </Block>
+
+              <Block center>
+                <Button
+                  style={styles.addTopicButton}
+                  color={COLORS.BROWN}
+                  shadowless
+                  onPress={() => {
+                    addRoomOption();
+                    setIsOpenOptionModal(false);
+                  }}
+                >
+                  <Text size={20} color={COLORS.WHITE} bold>
+                    追加する
+                  </Text>
+                </Button>
+              </Block>
+              {/* 
               <Block center>
                 <Button
                   style={styles.addTopicButton}
@@ -269,10 +371,10 @@ const RoomEditorModal = (props) => {
                   }}
                 >
                   <Text size={20} color={COLORS.WHITE} bold>
-                    追加する
+                    キャンセル
                   </Text>
                 </Button>
-              </Block>
+              </Block> */}
             </KeyboardAvoidingView>
           </Block>
         </Block>
@@ -356,13 +458,6 @@ const styles = StyleSheet.create({
     width: 335,
     height: 48,
     borderRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
     elevation: 1,
   },
   submitButtonIcon: {
@@ -396,8 +491,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     marginBottom: 24,
   },
-  roomImageContainer: {},
-  roomImage: {
+  roomImageContainer: {
     marginBottom: 32,
     height: 80,
     width: 80,
@@ -413,6 +507,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 1,
+  },
+  roomImage: {
+    height: 72,
+    width: 72,
+    borderRadius: 8,
   },
   addTopicButton: {
     marginBottom: 16,

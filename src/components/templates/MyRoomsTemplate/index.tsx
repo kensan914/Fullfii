@@ -1,23 +1,76 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import { StyleSheet, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 
 import { COLORS } from "src/constants/theme";
 import RoomEditorModal from "src/components/organisms/RoomEditorModal";
-import JoinedRoomCard from "src/components/organisms/JoinedRoomCard";
-const { width } = Dimensions.get("screen");
+import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
+import { width } from "src/constants";
+import { TalkingRoom } from "src/types/Types.context";
+import { RoomCreatedModal } from "../RoomsTemplate/organisms/RoomCreatedModal";
 
-export const MyRoomsTemplate: React.FC = (props) => {
-  const numColumns = 1;
-  const { item, isOpenRoomEditorModal, setIsOpenRoomEditorModal } = props;
+type Props = {
+  participatingRooms: TalkingRoom[];
+  createdRooms: TalkingRoom[];
+  isOpenRoomEditorModal: boolean;
+  setIsOpenRoomEditorModal: Dispatch<boolean>;
+  isOpenRoomCreatedModal: boolean;
+  setIsOpenRoomCreatedModal: Dispatch<boolean>;
+};
+export const MyRoomsTemplate: React.FC<Props> = (props) => {
+  const {
+    participatingRooms,
+    createdRooms,
+    isOpenRoomEditorModal,
+    setIsOpenRoomEditorModal,
+    isOpenRoomCreatedModal,
+    setIsOpenRoomCreatedModal,
+  } = props;
 
-  const isHavingRoom = false;
-
+  const maxParticipatingRoomsLength = 1; // 参加ルームの最大数 (ver3.0.0現在)
+  const maxCreatedRoomsLength = 1; // 作成ルームの最大数 (ver3.0.0現在)
+  const isExistTalkingRooms = !(
+    createdRooms.length <= 0 && participatingRooms.length <= 0
+  );
   return (
     <>
       <Block flex center style={styles.container}>
-        <ScrollView>
-          {isHavingRoom ? (
+        <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+          {isExistTalkingRooms ? (
+            <>
+              <Block top style={styles.joinRoomContainer}>
+                <Block style={styles.cardSubTitle}>
+                  <Text size={12} color={COLORS.LIGHT_GRAY}>
+                    参加ルーム{participatingRooms.length}/
+                    {maxParticipatingRoomsLength}
+                  </Text>
+                </Block>
+                {participatingRooms.map((participatingRoom) => {
+                  return (
+                    <TalkingRoomCard
+                      key={participatingRoom.id}
+                      talkingRoom={participatingRoom}
+                    />
+                  );
+                })}
+              </Block>
+              <Block top style={styles.makeRoomContainer}>
+                <Block style={styles.cardSubTitle}>
+                  <Text size={12} color={COLORS.LIGHT_GRAY}>
+                    作成ルーム{createdRooms.length}/{maxCreatedRoomsLength}
+                  </Text>
+                </Block>
+                {createdRooms.map((createdRoom) => {
+                  return (
+                    <TalkingRoomCard
+                      key={createdRoom.id}
+                      talkingRoom={createdRoom}
+                    />
+                  );
+                })}
+              </Block>
+            </>
+          ) : (
             <>
               {/* ルームに一つも属していない場合に表示 */}
               <Block center style={styles.emptyStateTitle}>
@@ -31,23 +84,7 @@ export const MyRoomsTemplate: React.FC = (props) => {
                 </Text>
               </Block>
             </>
-          ) : null}
-          <Block top style={styles.joinRoomContainer}>
-            <Block style={styles.cardSubTitle}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>
-                参加ルーム0/1
-              </Text>
-            </Block>
-            <JoinedRoomCard item={item} />
-          </Block>
-          <Block top style={styles.makeRoomContainer}>
-            <Block style={styles.cardSubTitle}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>
-                作成ルーム0/1
-              </Text>
-            </Block>
-            <JoinedRoomCard item={item} />
-          </Block>
+          )}
           <Block style={styles.buttonContainer}>
             <Button
               style={styles.button}
@@ -68,10 +105,16 @@ export const MyRoomsTemplate: React.FC = (props) => {
         isOpenRoomEditorModal={isOpenRoomEditorModal}
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
         isCreateNew
+        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+      />
+      <RoomCreatedModal
+        isOpenRoomCreatedModal={isOpenRoomCreatedModal}
+        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
       />
     </>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.BEIGE,

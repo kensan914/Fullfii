@@ -16,6 +16,7 @@ import { COLORS } from "src/constants/theme";
 import Avatar from "src/components/atoms/Avatar";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
+import { BlockRoom, HideRoom } from "src/types/Types";
 
 type Props = {
   room: Room;
@@ -25,7 +26,8 @@ type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<boolean>;
   hiddenRoomIds: string[];
-  setHiddenRoomIds: Dispatch<string[]>;
+  hideRoom: HideRoom;
+  blockRoom: BlockRoom;
 };
 export const RoomDetailModal: React.FC<Props> = (props) => {
   const {
@@ -36,7 +38,8 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
     isOpen,
     setIsOpen,
     hiddenRoomIds,
-    setHiddenRoomIds,
+    hideRoom,
+    blockRoom,
   } = props;
 
   const openRoomDetailActionSheet = () => {
@@ -51,11 +54,13 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
         if (buttonIndex === 0) {
           // cancel action
         } else if (buttonIndex === 1) {
-          setIsOpen(false);
-          setHiddenRoomIds([...hiddenRoomIds, room.id]);
           //card非表示
+          setIsOpen(false);
+          hideRoom(room.id);
         } else if (buttonIndex === 2) {
           //ブロック処理
+          setIsOpen(false);
+          blockRoom(room.id);
         }
       }
     );

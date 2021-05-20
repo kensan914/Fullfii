@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
 import {
   StyleSheet,
@@ -13,24 +13,25 @@ import Avatar from "src/components/atoms/Avatar";
 import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
+import { BlockRoom, HideRoom } from "src/types/Types";
+import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 
 type Props = {
   room: Room;
   hiddenRoomIds: string[];
-  setHiddenRoomIds: Dispatch<string[]>;
+  hideRoom: HideRoom;
+  blockRoom: BlockRoom;
 };
 export const RoomCard: React.FC<Props> = (props) => {
-  const { room, hiddenRoomIds, setHiddenRoomIds } = props;
+  const { room, hiddenRoomIds, hideRoom, blockRoom } = props;
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [isMaxed, setIsMaxed] = useState(false);
-  useEffect(() => {
-    setIsMaxed(room.participants.length >= room.maxNumParticipants);
-  }, [room.participants.length]);
-
-  const participantIconName = isMaxed ? "person" : "person-outline";
-  const participantIconColor = isMaxed ? COLORS.GREEN : COLORS.LIGHT_GRAY;
+  const {
+    isMaxed,
+    participantIconName,
+    participantIconColor,
+  } = useRoomParticipantsNum(room);
   return (
     <>
       <Block style={styles.container}>
@@ -125,7 +126,7 @@ export const RoomCard: React.FC<Props> = (props) => {
             <TouchableOpacity
               style={styles.eyeIcon}
               onPress={() => {
-                setHiddenRoomIds([...hiddenRoomIds, room.id]);
+                hideRoom(room.id);
               }}
             >
               <IconExtra
@@ -146,7 +147,8 @@ export const RoomCard: React.FC<Props> = (props) => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         hiddenRoomIds={hiddenRoomIds}
-        setHiddenRoomIds={setHiddenRoomIds}
+        hideRoom={hideRoom}
+        blockRoom={blockRoom}
       />
     </>
   );

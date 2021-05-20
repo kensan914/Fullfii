@@ -11,21 +11,26 @@ import {
   isString,
   closeWsSafely,
   asyncStoreTalkTicketCollection,
+  isObject,
+  isTalkTicket,
+  isRoom,
 } from "src/utils";
 import {
   ChatState,
   ChatDispatch,
+  RoomAdd,
   TalkTicketCollection,
   ChatActionType,
   TalkTicket,
   CommonMessage,
   Message,
   OfflineMessage,
+  RoomJson,
   AllMessages,
-  TalkingRoom,
-  TalkingRoomCollection,
-  Room,
+  TalkTicketJson,
+  TalkTicketKey,
 } from "src/types/Types.context";
+import { initProfile } from "src/contexts/ProfileContext";
 
 /**
  * dispatchを遅延するべきか判定し、遅延する場合actionをchatDispatchTask.queueにエンキューしreturn
@@ -66,67 +71,77 @@ const chatReducer = (
   let _offlineMessages: OfflineMessage[];
   let _talkTicketCollection: TalkTicketCollection;
   let _talkTicket: TalkTicket;
-  let _talkingRoomCollection: TalkingRoomCollection;
+  // let _chatDispatchTask: ChatDispatchTask;
 
   // 遅延するべきか判定 ? return chatState : return null;
   const resultDelay = checkAndDoDelayDispatch(prevState, action);
   if (resultDelay) return resultDelay;
 
   switch (action.type) {
-    case "APPEND_TALKING_ROOM": {
-      /** room(Room | RoomJson)を受け取り、TalkingRoomParts部分を追加してtalkingRoomCollectionに追加. 既に存在する場合は更新する.
-       * @param {Object} action [type, room] */
+    case "UPDATE_TALK_TICKETS": {
+      /** update talkTickets to talkTicketCollection.(worry.keyをkeyに持つObjectに変換)
+       * action.talkTicketsをtalkTicketCollectionにマージ. すでに存在する同一keyのtalkTicketがtalkingだった時、更新しない.
+       * @param {Object} action [type, talkTickets] */
+      _talkTicketCollection = prevState.talkTicketCollection;
+      action.talkTickets.forEach((talkTicketJson) => {
+        const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
+        if (_talkTicket === null) return { ...prevState };
 
-      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
-
-      // RoomJsonの場合、createdAtをインスタンス化し、Roomに
-      const roomJson = action.room;
-      const room: Room = { ...roomJson, ...{ createdAt: new Date() } };
-      if (roomJson.createdAt) {
-        room.createdAt = new Date(roomJson.createdAt);
-      }
-
-      const talkingRoom = {
-        ...room,
-        messages: [],
-        offlineMessages: [],
-        unreadNum: 0,
-        ws: null,
-      };
-
-      _talkingRoomCollection[talkingRoom.id] = talkingRoom;
+        if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
+          _talkTicket.room.messages = [geneCommonMessage("waiting")];
+        } else if (_talkTicket.status.key === "stopping") {
+          _talkTicket.room.messages = [geneCommonMessage("stopping")];
+        }
+        _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
+      });
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
 
       return {
         ...prevState,
-        talkingRoomCollection: _talkingRoomCollection,
+        talkTicketCollection: _talkTicketCollection,
       };
     }
 
-    case "UPDATE_TALKING_ROOM_PROPERTIES": {
-      /** 受け取ったroomJsonから既に登録されている該当のtalkingRoomのプロパティを更新.
-       * TalkingRoomParts部分(messages等)は更新しない.
-       * @param {Object} action [type, roomJson] */
+    case "FORCE_UPDATE_TALK_TICKETS": {
+      /** force update talkTickets to talkTicketCollection.(worry.keyをkeyに持つObjectに変換)
+       * 上記のUPDATE_TALK_TICKETSと変更処理は同じだが、こちらはどんなtalkTicketでもupdateをする
+       * @param {Object} action [type, talkTickets] */
+      _talkTicketCollection = prevState.talkTicketCollection;
+      action.talkTickets.forEach((talkTicketJson) => {
+        const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
+        if (_talkTicket === null) return { ...prevState };
 
-      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
-
-      const roomJson = action.roomJson;
-      const room: Room = { ...roomJson, ...{ createdAt: new Date() } };
-      if (roomJson.createdAt) {
-        room.createdAt = new Date(roomJson.createdAt);
-      }
-
-      console.log(room);
-
-      _talkingRoomCollection[roomJson.id] = {
-        ..._talkingRoomCollection[roomJson.id],
-        ...room,
-      };
-
-      console.log(_talkingRoomCollection);
+        if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
+          _talkTicket.room.messages = [geneCommonMessage("waiting")];
+        } else if (_talkTicket.status.key === "stopping") {
+          _talkTicket.room.messages = [geneCommonMessage("stopping")];
+        }
+        _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
+      });
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
 
       return {
         ...prevState,
-        talkingRoomCollection: _talkingRoomCollection,
+        talkTicketCollection: _talkTicketCollection,
+      };
+    }
+
+    case "START_APPROVING_TALK": {
+      /** マッチング時に実行. 承認の準備. initMessage追加.
+       * @param {Object} action [type, talkTicketKey, ws] */
+
+      _talkTicketCollection = prevState.talkTicketCollection;
+      _talkTicket = _talkTicketCollection[action.talkTicketKey];
+      if (!_talkTicket) return { ...prevState };
+
+      // initMessage付与。
+      _talkTicket.room.messages = [geneCommonMessage("approving")];
+
+      _talkTicketCollection[action.talkTicketKey] = _talkTicket;
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      return {
+        ...prevState,
+        talkTicketCollection: _talkTicketCollection,
       };
     }
 
@@ -443,7 +458,7 @@ const chatReducer = (
     }
 
     case "READ_BY_ROOM": {
-      /** トーキングルームごとの既読処理 該当のチャットルームの全てのmessageを既読に チャットルームを開いたときに実行
+      /** チャットルームごとの既読処理 該当のチャットルームの全てのmessageを既読に チャットルームを開いたときに実行
        * @param {Object} action [type, talkTicketKey] */
 
       _talkTicketCollection = prevState.talkTicketCollection;
@@ -479,6 +494,55 @@ const chatReducer = (
         ...prevState,
         talkTicketCollection: _talkTicketCollection,
         totalUnreadNum: totalUnreadNum,
+      };
+    }
+
+    case "OVERWRITE_TALK_TICKET": {
+      /** 強制的にtalkTicketを上書き. 既存のtalkTicketが削除されるので、トークが完全に終了している場合のみに使用。
+       * @param {Object} action [type, talkTicket] */
+
+      _talkTicketCollection = prevState.talkTicketCollection;
+      const _talkTicket = changeTalkTicketFromJsonToObject(action.talkTicket);
+      if (_talkTicket === null) return { ...prevState };
+
+      if (_talkTicket.status.key === "waiting") {
+        _talkTicket.room.messages = [geneCommonMessage("waiting")];
+      } else if (_talkTicket.status.key === "stopping") {
+        _talkTicket.room.messages = [geneCommonMessage("stopping")];
+      }
+      _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
+
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
+
+      return {
+        ...prevState,
+        talkTicketCollection: _talkTicketCollection,
+      };
+    }
+
+    case "REMOVE_TALK_TICKETS": {
+      /** talkTicketsを削除
+       * @param {Object} action [type, talkTicketKeys] */
+
+      _talkTicketCollection = prevState.talkTicketCollection;
+
+      action.talkTicketKeys.forEach((talkTicketKey) => {
+        _talkTicket = _talkTicketCollection[talkTicketKey];
+        if (!_talkTicket) return;
+        if (
+          isObject(_talkTicket.room?.ws) &&
+          Object.keys(_talkTicket.room?.ws).length
+        ) {
+          // null || {} の場合があり得る
+          closeWsSafely(_talkTicket.room.ws);
+        }
+        delete _talkTicketCollection[talkTicketKey];
+      });
+
+      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      return {
+        ...prevState,
+        talkTicketCollection: _talkTicketCollection,
       };
     }
 
@@ -524,6 +588,16 @@ const chatReducer = (
       };
     }
 
+    case "SET_LENGTH_PARTICIPANTS": {
+      /** set lengthParticipants
+       * @param {Object} action [type, lengthParticipants] */
+
+      return {
+        ...prevState,
+        lengthParticipants: action.lengthParticipants,
+      };
+    }
+
     case "DANGEROUSLY_RESET":
       /** chat stateを初期化.
        * @param {Object} action [type] */
@@ -536,46 +610,64 @@ const chatReducer = (
   }
 };
 
+const initRoomBase: RoomJson = Object.freeze({
+  id: "",
+  user: initProfile,
+  startedAt: "",
+  endedAt: "",
+  isAlert: false,
+  isTimeOut: false,
+  userTopic: "",
+});
+
+const initRoomAdd: RoomAdd = Object.freeze({
+  messages: [],
+  offlineMessages: [],
+  unreadNum: 0,
+  ws: null,
+  isEnd: false,
+});
+
 const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
   const message: CommonMessage = {
-    id: "INIT_COMMON_MESSAGE",
-    text: "",
+    messageId: "INIT_COMMON_MESSAGE",
+    message: "",
     time: new Date(Date.now()),
-    isCommon: true,
+    common: true,
   };
   switch (type) {
     case "approving": {
-      message["id"] = "COMMON_MESSAGE_START_APPROVING_TALK";
-      message["text"] = "条件に合う話し相手がみつかりました";
+      message["messageId"] = "COMMON_MESSAGE_START_APPROVING_TALK";
+      message["message"] = "条件に合う話し相手がみつかりました";
       break;
     }
     case "initSpeak": {
-      message["id"] = "COMMON_MESSAGE_START_TALK_VER_SPEAKER";
+      message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_SPEAKER";
       message[
-        "text"
+        "message"
       ] = `話し相手が見つかりました！${userName}さんに話を聞いてもらいましょう`;
       break;
     }
     case "initListen": {
-      message["id"] = "COMMON_MESSAGE_START_TALK_VER_LISTENER";
+      message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_LISTENER";
       message[
-        "text"
+        "message"
       ] = `話し相手が見つかりました！${userName}さんのお話を聞いてあげましょう`;
       break;
     }
     case "alert": {
-      message["id"] = "COMMON_MESSAGE_ALERT";
-      message["text"] = "残り5分で自動退室となります";
+      message["messageId"] = "COMMON_MESSAGE_ALERT";
+      message["message"] = "残り5分で自動退室となります";
       break;
     }
     case "end": {
-      message["id"] = "COMMON_MESSAGE_FINISHING_TALK";
+      message["messageId"] = "COMMON_MESSAGE_FINISHING_TALK";
       if (timeOut) {
-        message["text"] =
+        message["message"] =
           "トークが開始されてから2週間が経過したため、自動退室されました。右上のボタンからトークを更新または終了してください。";
       } else {
         message[
-          "text"
+          "message"
         ] = `${userName}さんが退室しました。右上のボタンからトークを更新または終了してください。`;
       }
       break;
@@ -584,26 +676,77 @@ const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
       // const now = new Date();
       // const hour = now.getHours();
       // const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
-      message["id"] = "COMMON_MESSAGE_WAITING_TALK";
+      message["messageId"] = "COMMON_MESSAGE_WAITING_TALK";
       message[
-        "text"
+        "message"
         //`あなたに合う話し相手を探しています（最終更新：${hour}:${min}）`
       ] = "あなたに合う話し相手を探しています";
       break;
     }
     case "stopping": {
-      message["id"] = "COMMON_MESSAGE_STOPPING_TALK";
-      message["text"] = "タップしてあなたに合う話し相手を探しましょう";
+      message["messageId"] = "COMMON_MESSAGE_STOPPING_TALK";
+      message["message"] = "タップしてあなたに合う話し相手を探しましょう";
       break;
     }
   }
   return message;
 };
 
+/**
+ * talkTicketJsonをtalkTicketに変換
+ * @param talkTicketJson
+ */
+const changeTalkTicketFromJsonToObject = (
+  talkTicketJson: TalkTicketJson
+): TalkTicket | null => {
+  // 既にmessagesが存在する時(messageをAsyncStorageからgetした時)
+  if (
+    talkTicketJson.room &&
+    isRoom(talkTicketJson.room) &&
+    isTalkTicket(talkTicketJson)
+  ) {
+    return talkTicketJson;
+  }
+  // messagesを所持していない時(messageをAPIレスポンスとして受け取った時)
+  if (talkTicketJson.room === null) {
+    talkTicketJson.room = { ...initRoomBase, ...initRoomAdd };
+  } else {
+    talkTicketJson.room = { ...talkTicketJson.room, ...initRoomAdd };
+  }
+
+  if (talkTicketJson.room && !isRoom(talkTicketJson.room)) {
+    return null;
+  }
+  if (!isTalkTicket(talkTicketJson)) {
+    return null;
+  }
+
+  return talkTicketJson;
+};
+
+// const cvtDateStringToDateObject = (
+//   talkTicketCollection: TalkTicketCollection
+// ) => {
+//   Object.keys(talkTicketCollection).forEach((talkTicketKey: TalkTicketKey) => {
+//     const _talkTicket = talkTicketCollection[talkTicketKey];
+//     _talkTicket.room.messages.forEach((message, i) => {
+//       const _targetMessage = _talkTicket.room.messages[i];
+//       if ("time" in _targetMessage && "time" in message) {
+//         _targetMessage.time = new Date(message.time);
+//       }
+//     });
+//   });
+
+//   return talkTicketCollection;
+// };
+
 const initChatState: ChatState = Object.freeze({
+  // talkTicketCollection: {},
+  // lengthParticipants: {},
+
   chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
   totalUnreadNum: 0,
-  talkingRoomCollection: {},
+  talkingRooms: [],
 });
 const ChatStateContext = createContext<ChatState>(initChatState);
 const ChatDispatchContext = createContext<ChatDispatch>(() => {
@@ -619,45 +762,21 @@ export const useChatDispatch = (): ChatDispatch => {
   return context;
 };
 
-const kariTalkingRoomsData: TalkingRoom = {
-  id: "test",
-  name: "テストデータです",
-  image: "https://otapick.com/media/blog_images/2_6/32356/mobEgnnBJ.jpg",
-  owner: {
-    id: "test_owner",
-    name: "私",
-    gender: { key: "female", name: "FEMALE", label: "女性" },
-    isSecretGender: false,
-    job: { key: "hs-student", name: "HS_STUDENT", label: "高校生" },
-    introduction: "はじめました",
-    image: "https://otapick.com/media/member_images/2_12/1000_1000_102400.jpg",
-  },
-  participants: [],
-  maxNumParticipants: 1,
-  isExcludeDifferentGender: false,
-  createdAt: new Date(),
-  isEnd: false,
-  isActive: true,
-  messages: [
-    {
-      id: "test_message",
-      text: "テストメッセージです",
-      time: new Date(),
-      senderId: "test_owner",
-    },
-  ],
-  offlineMessages: [],
-  unreadNum: 33,
-  ws: null,
+type Props = {
+  // talkTicketCollection: TalkTicketCollection | null;
 };
-
-export const ChatProvider: React.FC = ({ children }) => {
+export const ChatProvider: React.FC<Props> = ({
+  children,
+  // talkTicketCollection: talkTicketCollection,
+}) => {
   const [chatState, chatDispatch] = useReducer(chatReducer, {
+    // talkTicketCollection: talkTicketCollection
+    //   ? cvtDateStringToDateObject(talkTicketCollection)
+    //   : {},
+    // lengthParticipants: {},
     chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
     totalUnreadNum: 0,
-    talkingRoomCollection: {
-      // test: kariTalkingRoomsData,
-    },
+    talkingRooms: [],
   });
 
   // delayモードが終了した時にtaskを全て実行

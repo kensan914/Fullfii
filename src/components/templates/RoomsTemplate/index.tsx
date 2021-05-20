@@ -8,32 +8,42 @@ import RoomEditorModal from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { LinearGradient } from "expo-linear-gradient";
+import { BlockRoom, HideRoom } from "src/types/Types";
+import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
 
 type Props = {
   rooms: Room[];
   hiddenRoomIds: string[];
-  setHiddenRoomIds: Dispatch<string[]>;
+  hideRoom: HideRoom;
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
+  isOpenRoomCreatedModal: boolean;
+  setIsOpenRoomCreatedModal: Dispatch<boolean>;
   onEndReached: () => void;
   handleRefresh: () => void;
   isRefreshing: boolean;
   hasMore: boolean;
   isLoadingGetRooms: boolean;
+  resetHiddenRooms: () => void;
+  blockRoom: BlockRoom;
 };
 export const RoomsTemplate: React.FC<Props> = (props) => {
   const numColumns = 1;
   const {
     rooms,
     hiddenRoomIds,
-    setHiddenRoomIds,
+    hideRoom,
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
+    isOpenRoomCreatedModal,
+    setIsOpenRoomCreatedModal,
     onEndReached,
     handleRefresh,
     isRefreshing,
     hasMore,
     isLoadingGetRooms,
+    resetHiddenRooms,
+    blockRoom,
   } = props;
 
   const isHiddenAll = rooms.length === hiddenRoomIds.length && !hasMore;
@@ -47,7 +57,12 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                 全てのルームが非表示になっています
               </Text>
             </Block>
-            <Button style={styles.button} color={COLORS.BROWN} shadowless>
+            <Button
+              style={styles.button}
+              color={COLORS.BROWN}
+              shadowless
+              onPress={resetHiddenRooms}
+            >
               <Text size={20} color={COLORS.WHITE} bold>
                 元に戻す
               </Text>
@@ -64,7 +79,8 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                   <RoomCard
                     room={item}
                     hiddenRoomIds={hiddenRoomIds}
-                    setHiddenRoomIds={setHiddenRoomIds}
+                    hideRoom={hideRoom}
+                    blockRoom={blockRoom}
                   />
                 );
               }
@@ -115,6 +131,11 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
         isOpenRoomEditorModal={isOpenRoomEditorModal}
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
         isCreateNew
+        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+      />
+      <RoomCreatedModal
+        isOpenRoomCreatedModal={isOpenRoomCreatedModal}
+        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
       />
     </>
   );

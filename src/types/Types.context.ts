@@ -115,13 +115,13 @@ export const ProfileIoTs = t.type({
   job: JobIoTs,
   introduction: t.string,
   image: t.union([t.string, t.null]),
-  me: t.boolean,
 });
 export const MeProfileIoTs = t.intersection([
   t.type({
     dateJoined: t.string,
     deviceToken: t.union([t.string, t.null]),
     isActive: t.boolean,
+    me: t.boolean,
   }),
   ProfileIoTs,
 ]);
@@ -131,9 +131,8 @@ export const MeProfileIoTs = t.intersection([
 //========== Chat ==========//
 export type ChatState = {
   totalUnreadNum: TotalUnreadNum;
-  talkTicketCollection: TalkTicketCollection;
   chatDispatchTask: ChatDispatchTask;
-  lengthParticipants: { [worryKey: string]: number };
+  talkingRoomCollection: { [talkingRoomId: string]: TalkingRoom };
 };
 export type ChatDispatch = React.Dispatch<ChatActionType>;
 export type ChatActionType =
@@ -191,6 +190,9 @@ export type ChatActionType =
     }
   | { type: "OVERWRITE_TALK_TICKET"; talkTicket: TalkTicket | TalkTicketJson }
   | { type: "REMOVE_TALK_TICKETS"; talkTicketKeys: TalkTicketKey[] }
+  /////// ↑未使用
+  | { type: "APPEND_TALKING_ROOM"; room: Room | RoomJson }
+  | { type: "UPDATE_TALKING_ROOM_PROPERTIES"; roomJson: RoomJson }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
   | { type: "EXECUTED_DELAY_DISPATCH" }
@@ -216,6 +218,7 @@ export type TalkTicketCollectionAsync = t.TypeOf<
 >;
 export type TalkInfoJson = t.TypeOf<typeof TalkInfoJsonIoTs>;
 
+export type TalkingRoomCollection = { [roomId: string]: TalkingRoom };
 export type BaseRoom = t.TypeOf<typeof BaseRoomIoTs>;
 
 type RoomCreatedAt = {

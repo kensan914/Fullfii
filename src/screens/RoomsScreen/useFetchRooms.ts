@@ -1,27 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import { Dispatch, useEffect, useRef, useState } from "react";
 
-import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
 import { Room } from "src/types/Types.context";
-import { useProfileState } from "src/contexts/ProfileContext";
 import { useAxios } from "src/hooks/useAxios";
 import { BASE_URL } from "src/constants/env";
-import { useAuthState } from "src/contexts/AuthContext";
 import { URLJoin } from "src/utils";
 import { GetRoomsResDataIoTs, GetRoomsResData } from "src/types/Types";
+import { useAuthState } from "src/contexts/AuthContext";
 import { useDomDispatch, useDomState } from "src/contexts/DomContext";
 
-export const RoomsScreen: React.FC = () => {
-  const profileState = useProfileState();
+export const useFetchRooms = (
+  rooms: Room[],
+  setRooms: Dispatch<Room[]>
+): {
+  onEndReached: () => void;
+  handleRefresh: () => void;
+  isRefreshing: boolean;
+  hasMore: boolean;
+  isLoadingGetRooms: boolean;
+} => {
   const authState = useAuthState();
   const domState = useDomState();
   const domDispatch = useDomDispatch();
-
-  const [hiddenRoomIds, setHiddenRoomIds] = useState<string[]>([]);
-  const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState<boolean>(
-    false
-  );
-
-  const [rooms, setRooms] = useState<Room[]>([]);
 
   const page = useRef(1);
   const [hasMore, setHasMore] = useState(true);
@@ -89,23 +88,17 @@ export const RoomsScreen: React.FC = () => {
     }
   };
 
+  // ヘッダーからの再読み込みトリガー
   useEffect(() => {
     handleRefresh();
     domDispatch({ type: "DONE_TASK", taskKey: "refreshRooms" });
   }, [domState.taskSchedules.refreshRooms]);
 
-  return (
-    <RoomsTemplate
-      rooms={rooms}
-      hiddenRoomIds={hiddenRoomIds}
-      setHiddenRoomIds={setHiddenRoomIds}
-      isOpenRoomEditorModal={isOpenRoomEditorModal}
-      setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-      onEndReached={onEndReached}
-      handleRefresh={handleRefresh}
-      isRefreshing={isRefreshing}
-      hasMore={hasMore}
-      isLoadingGetRooms={isLoadingGetRooms}
-    />
-  );
+  return {
+    onEndReached,
+    handleRefresh,
+    isRefreshing,
+    hasMore,
+    isLoadingGetRooms,
+  };
 };

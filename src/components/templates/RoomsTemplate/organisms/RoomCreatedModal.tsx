@@ -1,42 +1,35 @@
-import React, { useState } from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import {
-  StyleSheet,
-  Dimensions,
-  Keyboard,
-  KeyboardAvoidingView,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { DISCLOSURE_RANGE_IMAGE } from "src/constants/imagePath";
-import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 
 const { width } = Dimensions.get("screen");
 
-const RoomCreateConfirmationModal = (props) => {
-  const { isOpenConfirmationModal, setIsOpenConfirmationModal } = props;
+type Props = {
+  isOpenRoomCreatedModal: boolean;
+  setIsOpenRoomCreatedModal: Dispatch<boolean>;
+};
+export const RoomCreatedModal: React.FC<Props> = (props) => {
+  const { isOpenRoomCreatedModal, setIsOpenRoomCreatedModal } = props;
 
   return (
-    //RoomEditorModal.jsのModalコンポーネントのModalHideでsetIsOpenConfirmationModal(true)を呼び出す
+    //RoomEditorModal.jsのModalコンポーネントのModalHideでsetIsOpenRoomCreatedModal(true)を呼び出す
     <Modal
-      isVisible={isOpenConfirmationModal}
+      isVisible={isOpenRoomCreatedModal}
       deviceWidth={width}
       onBackdropPress={() => {
-        setIsOpenConfirmationModal(false);
+        setIsOpenRoomCreatedModal(false);
       }}
-      style={styles.Modal}
+      style={styles.modal}
     >
       <Block column style={styles.modalContent}>
         <TouchableOpacity
           style={styles.closeIcon}
           onPress={() => {
-            setIsOpenConfirmationModal(false);
+            setIsOpenRoomCreatedModal(false);
           }}
         >
           <IconExtra
@@ -70,7 +63,7 @@ const RoomCreateConfirmationModal = (props) => {
             color={COLORS.BROWN}
             shadowless
             onPress={() => {
-              setIsOpenConfirmationModal(false);
+              setIsOpenRoomCreatedModal(false);
             }}
           >
             <Text size={20} color={COLORS.WHITE} bold>
@@ -82,8 +75,6 @@ const RoomCreateConfirmationModal = (props) => {
     </Modal>
   );
 };
-
-export default RoomCreateConfirmationModal;
 
 const styles = StyleSheet.create({
   modal: {},

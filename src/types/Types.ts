@@ -368,3 +368,8 @@ export const WsResChatIoTs = t.union([
 //--------- Utils ---------//
 export type OnPress = (event: GestureResponderEvent) => void;
 //--------- Utils ---------//
+
+//--------- RoomsScreen ---------//
+export type HideRoom = (roomId: string) => void;
+export type BlockRoom = (roomId: string) => void;
+//--------- RoomsScreen ---------//
