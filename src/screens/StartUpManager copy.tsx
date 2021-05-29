@@ -4,7 +4,8 @@ import { Alert } from "react-native";
 
 import useAllContext from "src/contexts/ContextUtils";
 import { BASE_URL, BASE_URL_WS, isExpo } from "src/constants/env";
-import { URLJoin, asyncGetJson, closeWsSafely, Ws } from "src/utils";
+import { URLJoin, closeWsSafely, Ws } from "src/utils";
+import { asyncGetObject } from "src/utils/asyncStorage";
 import requestAxios from "src/hooks/useAxios";
 import {
   Dispatches,
@@ -154,7 +155,7 @@ const updateTalk = (token: string, states: States, dispatches: Dispatches) => {
       const talkTickets = _resData["talkTickets"];
 
       // connect wsChat
-      const prevTalkTicketCollection = await asyncGetJson(
+      const prevTalkTicketCollection = await asyncGetObject(
         "talkTicketCollection",
         TalkTicketCollectionJsonIoTs
       );

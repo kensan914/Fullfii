@@ -3,13 +3,13 @@ import { Alert, Linking } from "react-native";
 import {
   APP_STORE_URI_ITMS_APPS,
   APP_STORE_URL,
-  AS_KEY_SKIP_UPDATE_VERSION,
   isExpo,
   ITUNES_LOOKUP_URL,
 } from "src/constants/env";
 import requestAxios from "src/hooks/useAxios";
-import { alertModal, asyncGetItem, asyncStoreItem } from "src/utils";
+import { alertModal } from "src/utils";
 import { checkUpdateVersion } from "src/utils/versionUpdate";
+import { asyncGetItem, asyncStoreItem } from "./asyncStorage";
 
 const fetchLatestVersion = (): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -113,7 +113,7 @@ const showUpdatePrompt = (
           {
             text: "やめとく",
             onPress: () => {
-              asyncStoreItem(AS_KEY_SKIP_UPDATE_VERSION, currentVersion);
+              asyncStoreItem("skipUpdateVersion", currentVersion);
             },
             style: "cancel",
           },
@@ -145,7 +145,7 @@ const exeSiren = async (): Promise<void> => {
     const DeviceInfoModule = await import("react-native-device-info");
     const DeviceInfo = DeviceInfoModule.default;
     const currentVersion = DeviceInfo.getVersion();
-    const skipUpdateVersion = await asyncGetItem(AS_KEY_SKIP_UPDATE_VERSION);
+    const skipUpdateVersion = await asyncGetItem("skipUpdateVersion");
 
     const compareVersionResult = compareLatestVerWithCurrentVer(
       latestVersion,

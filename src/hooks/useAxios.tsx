@@ -13,6 +13,7 @@ import {
   UseAxiosActionType,
 } from "src/types/Types";
 import { checkCorrectKey, deepCvtKeyFromSnakeToCamel } from "src/utils";
+import { Alert } from "react-native";
 
 /**
  * カスタムHooks ver, Function verの共通init処理
@@ -72,7 +73,10 @@ const useCommonThen = (
     }
     return;
   }
-  const formattedResData = deepCvtKeyFromSnakeToCamel(res.data);
+  const formattedResData = deepCvtKeyFromSnakeToCamel(res.data) as Record<
+    string,
+    unknown
+  >;
   const typeIoTsResult = typeIoTsOfResData.decode(formattedResData);
   if (!isRight(typeIoTsResult)) {
     console.group();
@@ -98,6 +102,14 @@ const useCommonCatch = (
 ): void => {
   if (err.response) {
     console.error(err.response);
+
+    // 共通エラーアラート (バックから {error: {alert: True}} がレスポンスされた場合、アラートを表示)
+    if (err.response.data?.error?.alert) {
+      Alert.alert(
+        err.response.data?.error?.title,
+        err.response.data?.error?.message
+      );
+    }
   } else {
     console.error(err);
   }
@@ -143,7 +155,7 @@ export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
     "shouldRequestDidMount",
     "limitRequest",
   ];
-  const correctRequestActionKeys = ["url", "data"];
+  const correctRequestActionKeys = ["url", "data", "thenCallback"];
   //---------- constants ----------//
 
   // init axios
@@ -198,6 +210,15 @@ export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
       );
       if (reAction.url) _axiosSettings["url"] = reAction.url;
       if (reAction.data) _axiosSettings["data"] = reAction.data;
+      // thenCallback追加
+      if (reAction.thenCallback) {
+        const tempThenCallback =
+          action.thenCallback && action.thenCallback.bind({});
+        action.thenCallback = (resData: unknown, res: AxiosResponse<any>) => {
+          tempThenCallback && tempThenCallback(resData, res);
+          reAction.thenCallback && reAction.thenCallback(resData, res);
+        };
+      }
     }
 
     axiosInstance

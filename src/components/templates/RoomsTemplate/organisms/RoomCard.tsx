@@ -123,7 +123,8 @@ export const RoomCard: React.FC<Props> = (props) => {
                 </Block>
               </Block>
             </Block>
-            <TouchableOpacity
+            {/* 非表示見送り */}
+            {/* <TouchableOpacity
               style={styles.eyeIcon}
               onPress={() => {
                 hideRoom(room.id);
@@ -135,7 +136,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                 size={32}
                 color={COLORS.BROWN}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </Block>
         </TouchableHighlight>
       </Block>

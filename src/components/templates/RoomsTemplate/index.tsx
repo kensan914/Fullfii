@@ -10,6 +10,10 @@ import { Room } from "src/types/Types.context";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
+import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
+import { AdView } from "src/components/molecules/AdView";
+import { ADMOB_UNIT_ID_NATIVE } from "src/constants/env";
+import { RoundButton } from "src/components/atoms/RoundButton";
 
 type Props = {
   rooms: Room[];
@@ -19,6 +23,8 @@ type Props = {
   setIsOpenRoomEditorModal: Dispatch<boolean>;
   isOpenRoomCreatedModal: boolean;
   setIsOpenRoomCreatedModal: Dispatch<boolean>;
+  isOpenNotificationReminderModal: boolean;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
   onEndReached: () => void;
   handleRefresh: () => void;
   isRefreshing: boolean;
@@ -26,6 +32,7 @@ type Props = {
   isLoadingGetRooms: boolean;
   resetHiddenRooms: () => void;
   blockRoom: BlockRoom;
+  checkCanCreateRoom: () => boolean;
 };
 export const RoomsTemplate: React.FC<Props> = (props) => {
   const numColumns = 1;
@@ -37,6 +44,8 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
     setIsOpenRoomEditorModal,
     isOpenRoomCreatedModal,
     setIsOpenRoomCreatedModal,
+    isOpenNotificationReminderModal,
+    setIsOpenNotificationReminderModal,
     onEndReached,
     handleRefresh,
     isRefreshing,
@@ -44,9 +53,11 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
     isLoadingGetRooms,
     resetHiddenRooms,
     blockRoom,
+    checkCanCreateRoom,
   } = props;
 
-  const isHiddenAll = rooms.length === hiddenRoomIds.length && !hasMore;
+  const isHiddenAll =
+    rooms.length === hiddenRoomIds.length && !hasMore && rooms.length > 0;
   return (
     <>
       <Block flex style={styles.container}>
@@ -57,31 +68,32 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                 全てのルームが非表示になっています
               </Text>
             </Block>
-            <Button
-              style={styles.button}
-              color={COLORS.BROWN}
-              shadowless
-              onPress={resetHiddenRooms}
-            >
-              <Text size={20} color={COLORS.WHITE} bold>
-                元に戻す
-              </Text>
-            </Button>
+            <RoundButton label="元に戻す" onPress={resetHiddenRooms} />
           </Block>
         ) : (
           <FlatList
             data={rooms}
-            renderItem={({ item }) => {
+            renderItem={({ item, index }) => {
               if (hiddenRoomIds.includes(item.id)) {
                 return <></>;
               } else {
                 return (
-                  <RoomCard
-                    room={item}
-                    hiddenRoomIds={hiddenRoomIds}
-                    hideRoom={hideRoom}
-                    blockRoom={blockRoom}
-                  />
+                  <>
+                    <RoomCard
+                      room={item}
+                      hiddenRoomIds={hiddenRoomIds}
+                      hideRoom={hideRoom}
+                      blockRoom={blockRoom}
+                    />
+                    {/* {index > 0 && (index + 1) % 3 === 0 && (
+                      <AdView
+                        media={false}
+                        type="video"
+                        index={2}
+                        adUnitId={ADMOB_UNIT_ID_NATIVE.image}
+                      />
+                    )} */}
+                  </>
                 );
               }
             }}
@@ -112,30 +124,33 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
           end={{ x: 0, y: 1 }}
           style={styles.buttonContainer}
         >
-          <Button
-            style={styles.button}
-            color={COLORS.BROWN}
-            shadowless
+          <RoundButton
+            label="悩みを話す"
             onPress={() => {
-              setIsOpenRoomEditorModal(true);
+              if (checkCanCreateRoom()) {
+                setIsOpenRoomEditorModal(true);
+              }
             }}
-          >
-            <Text size={20} color={COLORS.WHITE} bold>
-              悩みを話す
-            </Text>
-          </Button>
+          />
         </LinearGradient>
         {/* </Block> */}
       </Block>
       <RoomEditorModal
         isOpenRoomEditorModal={isOpenRoomEditorModal}
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-        isCreateNew
-        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+        propsDependsOnMode={{
+          mode: "CREATE",
+          setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
+        }}
       />
       <RoomCreatedModal
         isOpenRoomCreatedModal={isOpenRoomCreatedModal}
         setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
+      />
+      <NotificationReminderModal
+        isOpenNotificationReminderModal={isOpenNotificationReminderModal}
+        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       />
     </>
   );

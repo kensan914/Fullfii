@@ -4,7 +4,7 @@ import messaging, {
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 
-const requestPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+export const requestPermissionOfIOSPushNotification = async (): Promise<boolean> => {
   const authStatus = await messaging().requestPermission();
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -13,14 +13,25 @@ const requestPermissionOfIOSPushNotification = async (): Promise<boolean> => {
   return enabled;
 };
 
-const configurePushNotification = (): Promise<null | string> => {
-  const initPushNotification = async (): Promise<null | string> => {
-    const enabled = await requestPermissionOfIOSPushNotification();
+export const hasPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+  const authStatus = await messaging().hasPermission();
+  return authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+};
 
-    if (enabled) {
+const configurePushNotification = (
+  onlyConfig?: boolean /* requestPermission */
+): Promise<null | string> => {
+  const initPushNotification = async (): Promise<null | string> => {
+    if (onlyConfig) {
       return initFcm();
     } else {
-      return initFcm();
+      const enabled = await requestPermissionOfIOSPushNotification();
+
+      if (enabled) {
+        return initFcm();
+      } else {
+        return initFcm();
+      }
     }
   };
 

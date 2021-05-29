@@ -1,14 +1,12 @@
 import React, { Dispatch } from "react";
-import { Block, NavBar, theme, Text, Button } from "galio-framework";
+import { Block, Text, Button } from "galio-framework";
 import {
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   Image,
   ActionSheetIOS,
   Alert,
 } from "react-native";
-import * as WebBrowser from "expo-web-browser";
 import Modal from "react-native-modal";
 import IconExtra from "src/components/atoms/Icon";
 
@@ -17,6 +15,9 @@ import Avatar from "src/components/atoms/Avatar";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
+import { useRequestPostRoomParticipant } from "src/hooks/requests/useRequestRoomMembers";
+import { useCanParticipateRoom } from "src/screens/RoomsScreen/useCanAction";
+import { useNavigation } from "@react-navigation/core";
 
 type Props = {
   room: Room;
@@ -42,13 +43,14 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
     blockRoom,
   } = props;
 
+  const navigation = useNavigation();
+
   const openRoomDetailActionSheet = () => {
     ActionSheetIOS.showActionSheetWithOptions(
       {
         options: ["キャンセル", "非表示", "ブロック"],
         destructiveButtonIndex: 2,
         cancelButtonIndex: 0,
-        userInterfaceStyle: "light",
       },
       (buttonIndex) => {
         if (buttonIndex === 0) {
@@ -66,9 +68,17 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
     );
   };
 
-  const goNext = () => {
-    Alert.alert("チャット画面に遷移");
-  };
+  const {
+    requestPostRoomParticipants,
+    isLoadingPostRoomParticipants,
+  } = useRequestPostRoomParticipant(room.id, (_roomJson) => {
+    setIsOpen(false);
+    navigation.navigate("Chat", {
+      roomId: _roomJson.id,
+    });
+  });
+
+  const { checkCanParticipateRoom } = useCanParticipateRoom();
 
   return (
     <Modal
@@ -189,7 +199,12 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             style={styles.modalButton}
             color={COLORS.BROWN}
             shadowless
-            onPress={() => goNext()}
+            loading={isLoadingPostRoomParticipants}
+            onPress={() => {
+              if (checkCanParticipateRoom()) {
+                requestPostRoomParticipants();
+              }
+            }}
           >
             <Text size={20} color={COLORS.WHITE} bold>
               聞いてみる！

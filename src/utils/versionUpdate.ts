@@ -2,10 +2,10 @@ import { VERSION_NUM } from "src/constants/env";
 import { TalkTicketCollectionJsonIoTs } from "src/types/Types.context";
 import {
   asyncGetItem,
-  asyncGetJson,
+  asyncGetObject,
   asyncRemoveItem,
   asyncStoreItem,
-} from "src/utils";
+} from "src/utils/asyncStorage";
 
 export const checkUpdateVersion = async (): Promise<void | null> => {
   const versionNumKey = "versionNum";
@@ -14,7 +14,7 @@ export const checkUpdateVersion = async (): Promise<void | null> => {
   if (_versionNumOrStr === null) {
     // 新規ユーザ or 既存ユーザ(v2.0.0時点)
     if (
-      await asyncGetJson("talkTicketCollection", TalkTicketCollectionJsonIoTs)
+      await asyncGetObject("talkTicketCollection", TalkTicketCollectionJsonIoTs)
     ) {
       // 既存ユーザ(v2.0.0時点)
       onUpdateVersion(200);

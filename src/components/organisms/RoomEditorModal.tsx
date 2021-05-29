@@ -17,49 +17,88 @@ import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import { width } from "src/constants";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
-import { useRequestRoom } from "src/hooks/useRequestRoom";
+import {
+  useRequestPatchRoom,
+  useRequestPostRoom,
+} from "src/hooks/requests/useRequestRooms";
+import { TalkingRoom } from "src/types/Types.context";
+import { showToast } from "src/utils/customModules";
+import { TOAST_SETTINGS } from "src/constants/alertMessages";
 
+type PropsDependsOnMode =
+  | {
+      mode: "CREATE";
+      setIsOpenRoomCreatedModal: Dispatch<boolean>;
+    }
+  | {
+      mode: "FIX";
+      talkingRoom: TalkingRoom;
+    };
 type Props = {
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
-  isCreateNew?: boolean;
-  setIsOpenRoomCreatedModal?: Dispatch<boolean>;
+  propsDependsOnMode: PropsDependsOnMode;
 };
 const RoomEditorModal: React.FC<Props> = (props) => {
   const {
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
-    isCreateNew = false,
-    setIsOpenRoomCreatedModal,
+    propsDependsOnMode,
   } = props;
 
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
 
-  const [roomName, setRoomName] = useState("");
-  const [draftRoomName, setDraftRoomName] = useState("");
-  const maxTopicLength = 60;
-  const [roomImage, setRoomImage] = useState<ImageInfo | null>(null);
-  const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(null);
+  // ====== init post or patch data ======
+  const [initRoomName] = useState(
+    propsDependsOnMode.mode === "CREATE"
+      ? null
+      : propsDependsOnMode.talkingRoom.name
+  );
+  const [initDraftRoomName] = useState(null);
+  const [initRoomImage] = useState(null);
+  const [initDraftRoomImage] = useState(null);
+  const [initIsExcludeDifferentGender] = useState(
+    propsDependsOnMode.mode === "CREATE"
+      ? null
+      : propsDependsOnMode.talkingRoom.isExcludeDifferentGender
+  );
+  // ====== init post or patch data ======
 
+  // ====== post or patch data ======
+  const [roomName, setRoomName] = useState<string | null>(initRoomName);
+  const [draftRoomName, setDraftRoomName] = useState<string | null>(
+    initDraftRoomName
+  );
+  const [roomImage, setRoomImage] = useState<ImageInfo | null>(initRoomImage);
+  const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(
+    initDraftRoomImage
+  );
   const [isExcludeDifferentGender, setIsExcludeDifferentGender] = useState<
     boolean | null
-  >(null);
+  >(initIsExcludeDifferentGender);
+  // ====== post or patch data ======
 
-  /** この値がtrueの状態でモーダルを閉じるとルーム作成モーダルが表示される */
+  const maxTopicLength = 60;
+
+  /** この値がtrueの状態でモーダルを閉じるとルーム作成モーダルが表示される(作成時のみ) */
   const willOpenRoomCreatedModalRef = useRef(false);
 
-  const canPost = isExcludeDifferentGender !== null;
+  // canPostは作成時のみ。修正時は常にpatchできる
+  const canPost =
+    propsDependsOnMode.mode === "CREATE"
+      ? isExcludeDifferentGender !== null
+      : true;
 
   const resetDraftOption = () => {
-    setDraftRoomName("");
-    setDraftRoomImage(null);
+    setDraftRoomName(initDraftRoomName);
+    setDraftRoomImage(initDraftRoomImage);
   };
   /** ルーム作成後、全てのstateをリセット */
   const resetState = () => {
     resetDraftOption();
-    setRoomName("");
-    setRoomImage(null);
-    setIsExcludeDifferentGender(null);
+    setRoomName(initRoomName);
+    setRoomImage(initRoomImage);
+    setIsExcludeDifferentGender(initIsExcludeDifferentGender);
   };
   const addRoomOption = () => {
     resetDraftOption();
@@ -72,15 +111,69 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     setIsOpenOptionModal(true);
   };
 
-  const { requestPostRoom, isLoadingPostRoom } = useRequestRoom(
+  // ルーム作成用
+  const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
     roomName,
     isExcludeDifferentGender,
     roomImage,
-    resetState,
-    setIsOpenRoomEditorModal,
-    "", // init roomId
-    willOpenRoomCreatedModalRef
+    () => {
+      // then時、実行
+      if (willOpenRoomCreatedModalRef) {
+        willOpenRoomCreatedModalRef.current = true;
+      }
+      resetState();
+      setIsOpenRoomEditorModal(false);
+    }
   );
+
+  // ルーム修正用
+  const { requestPatchRoom, isLoadingPatchRoom } = useRequestPatchRoom(
+    propsDependsOnMode.mode === "FIX" ? propsDependsOnMode.talkingRoom.id : "",
+    roomName,
+    isExcludeDifferentGender,
+    roomImage,
+    () => {
+      // then時、実行
+      resetState();
+      setIsOpenRoomEditorModal(false);
+      showToast(TOAST_SETTINGS["FIX_ROOM"]);
+    }
+  );
+
+  const renderRoomImage = () => {
+    const emptyRoomImage = (
+      <IconExtra
+        name="image"
+        family="Feather"
+        size={48}
+        color={COLORS.HIGHLIGHT_GRAY}
+      />
+    );
+
+    if (propsDependsOnMode.mode === "FIX") {
+      if (draftRoomImage !== null) {
+        return <Image style={styles.roomImage} source={draftRoomImage} />;
+      } else {
+        if (propsDependsOnMode.talkingRoom.image) {
+          return (
+            <Image
+              style={styles.roomImage}
+              source={{ uri: propsDependsOnMode.talkingRoom.image }}
+            />
+          );
+        } else {
+          return emptyRoomImage;
+        }
+      }
+    } else if (propsDependsOnMode.mode === "CREATE") {
+      if (draftRoomImage !== null) {
+        return <Image style={styles.roomImage} source={draftRoomImage} />;
+      } else {
+        return emptyRoomImage;
+      }
+    }
+    return null;
+  };
 
   return (
     <Modal
@@ -92,7 +185,8 @@ const RoomEditorModal: React.FC<Props> = (props) => {
       style={styles.firstModal}
       onModalHide={() => {
         if (willOpenRoomCreatedModalRef.current) {
-          setIsOpenRoomCreatedModal && setIsOpenRoomCreatedModal(true);
+          propsDependsOnMode.mode === "CREATE" &&
+            propsDependsOnMode.setIsOpenRoomCreatedModal(true);
           willOpenRoomCreatedModalRef.current = false;
         }
       }}
@@ -150,7 +244,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             </Block>
           </Block>
         ) : null}
-        {roomImage ? (
+        {roomImage ||
+        (propsDependsOnMode.mode === "FIX" &&
+          propsDependsOnMode.talkingRoom.image) ? (
           <Block row center style={styles.checkRoomImage}>
             <IconExtra
               name="check-circle"
@@ -220,8 +316,10 @@ const RoomEditorModal: React.FC<Props> = (props) => {
           <Button
             shadowless
             onPress={() => {
-              if (isCreateNew) {
+              if (propsDependsOnMode.mode === "CREATE") {
                 requestPostRoom();
+              } else if (propsDependsOnMode.mode === "FIX") {
+                requestPatchRoom();
               }
             }}
             color={canPost ? COLORS.BROWN : "lightgray"}
@@ -240,11 +338,17 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 : {},
             ]}
             disabled={!canPost}
-            loading={isLoadingPostRoom}
+            loading={
+              propsDependsOnMode.mode === "CREATE"
+                ? isLoadingPostRoom
+                : isLoadingPatchRoom
+            }
           >
             <Block row center space="between" style={styles.submitButtonInner}>
               <IconExtra
-                name={isCreateNew ? "pluscircleo" : "save"}
+                name={
+                  propsDependsOnMode.mode === "CREATE" ? "pluscircleo" : "save"
+                }
                 family="AntDesign"
                 size={40}
                 color={COLORS.WHITE}
@@ -252,7 +356,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               />
               <Block style={styles.submitButtonText}>
                 <Text size={20} color={COLORS.WHITE} bold>
-                  {isCreateNew ? "ルームを作成する" : "修正を反映する"}
+                  {propsDependsOnMode.mode === "CREATE"
+                    ? "ルームを作成する"
+                    : "修正を反映する"}
                 </Text>
               </Block>
             </Block>
@@ -263,9 +369,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
       <Modal
         isVisible={isOpenOptionModal}
         deviceWidth={width}
-        onBackdropPress={() => {
-          setIsOpenOptionModal(false);
-        }}
+        // onBackdropPress={() => {
+        //   // setIsOpenOptionModal(false);
+        // }}
       >
         <Block style={styles.secondModal}>
           <Block column style={styles.secondModalContent}>
@@ -292,7 +398,8 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 </Block>
                 <Block>
                   <Text size={12} color={COLORS.GRAY}>
-                    {draftRoomName.length}/{maxTopicLength}
+                    {draftRoomName === null ? 0 : draftRoomName.length}/
+                    {maxTopicLength}
                   </Text>
                 </Block>
               </Block>
@@ -302,7 +409,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 editable
                 placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
                 maxLength={maxTopicLength}
-                value={draftRoomName}
+                value={draftRoomName === null ? "" : draftRoomName}
                 onChangeText={setDraftRoomName}
                 returnKeyType="done"
                 blurOnSubmit
@@ -332,16 +439,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                     }
                   }}
                 >
-                  {draftRoomImage ? (
-                    <Image style={styles.roomImage} source={draftRoomImage} />
-                  ) : (
-                    <IconExtra
-                      name="image"
-                      family="Feather"
-                      size={48}
-                      color={COLORS.HIGHLIGHT_GRAY}
-                    />
-                  )}
+                  {renderRoomImage()}
                 </TouchableOpacity>
               </Block>
 
@@ -360,21 +458,6 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   </Text>
                 </Button>
               </Block>
-              {/* 
-              <Block center>
-                <Button
-                  style={styles.addTopicButton}
-                  color={COLORS.BROWN}
-                  shadowless
-                  onPress={() => {
-                    setIsOpenOptionModal(false);
-                  }}
-                >
-                  <Text size={20} color={COLORS.WHITE} bold>
-                    キャンセル
-                  </Text>
-                </Button>
-              </Block> */}
             </KeyboardAvoidingView>
           </Block>
         </Block>

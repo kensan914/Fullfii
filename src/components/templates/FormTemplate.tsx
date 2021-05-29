@@ -3,7 +3,7 @@ import { Block, theme } from "galio-framework";
 import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
 
 import { Forms, SubmitSettings } from "src/types/Types";
-import SubmitButton from "src/components/atoms/SubmitButton";
+import { SubmitButton } from "src/components/atoms/SubmitButton";
 import { width } from "src/constants";
 import { COLORS } from "src/constants/theme";
 
@@ -48,6 +48,7 @@ const FormTemplate: React.FC<Props> = (props) => {
       </ScrollView>
       <Block style={styles.submitButtonWrapper}>
         <SubmitButton
+          label={submitSettings.label}
           style={styles.submitButton}
           canSubmit={
             typeof submitSettings.canSubmit !== "undefined"
@@ -60,9 +61,7 @@ const FormTemplate: React.FC<Props> = (props) => {
               : false
           }
           submit={submitSettings.onSubmit}
-        >
-          {submitSettings.label}
-        </SubmitButton>
+        />
       </Block>
     </>
   );

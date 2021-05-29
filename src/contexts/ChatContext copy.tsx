@@ -10,11 +10,11 @@ import { isExpo } from "src/constants/env";
 import {
   isString,
   closeWsSafely,
-  asyncStoreTalkTicketCollection,
   isObject,
   isTalkTicket,
   isRoom,
 } from "src/utils";
+import { asyncStoreTalkingRoomCollection } from "src/utils/asyncStorage";
 import {
   ChatState,
   ChatDispatch,

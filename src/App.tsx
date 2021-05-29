@@ -7,27 +7,29 @@ import SplashScreen from "react-native-splash-screen";
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
+import Toast from "react-native-toast-message";
 
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
-import { asyncGetItem, asyncGetJson } from "src/utils";
+import {
+  asyncGetItem,
+  asyncGetObject,
+  asyncRemoveItem,
+} from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
-import StartUpManager from "src/screens/StartUpManager";
+import { StartUpManager } from "src/screens/StartUpManager";
 import {
-  SignupBufferIoTs,
-  SignupBuffer,
   MeProfile,
   AuthStatus,
   AuthStatusIoTs,
-  TalkTicketCollection,
-  TalkTicketCollectionAsyncIoTs,
-  TalkTicketCollectionAsync,
   MeProfileIoTs,
+  TalkingRoomCollectionAsync,
+  TalkingRoomCollectionAsyncIoTs,
 } from "src/types/Types.context";
 import { Assets } from "src/types/Types";
-import AttManager from "src/screens/AttManager";
+import { AttManager } from "src/screens/AttManager";
 import { setVersion } from "src/constants/env";
 import { DomProvider } from "./contexts/DomContext";
 
@@ -66,6 +68,8 @@ const App: React.FC = () => {
       setAssets(downloadedAssets);
       setIsFinishLoadingResources(true);
     });
+
+    // asyncRemoveItem("talkingRoomCollection"); // TODO:
   }, []);
 
   return (
@@ -84,10 +88,9 @@ const RootNavigator: React.FC<Props> = (props) => {
   type InitState<T> = undefined | null | T;
   const [status, setStatus] = useState<InitState<AuthStatus>>();
   const [token, setToken] = useState<InitState<string>>();
-  const [signupBuffer, setSignupBuffer] = useState<InitState<SignupBuffer>>();
   const [profile, setProfile] = useState<InitState<MeProfile>>();
-  const [talkTicketCollection, setTalkTicketCollection] = useState<
-    InitState<TalkTicketCollection>
+  const [talkingRoomCollection, setTalkingRoomCollection] = useState<
+    InitState<TalkingRoomCollectionAsync>
   >();
 
   useEffect(() => {
@@ -99,22 +102,17 @@ const RootNavigator: React.FC<Props> = (props) => {
       setStatus(_status ? _status : null);
       const _token = await asyncGetItem("token");
       setToken(_token ? _token : null);
-      const _signupBuffer = (await asyncGetJson(
-        "signupBuffer",
-        SignupBufferIoTs
-      )) as SignupBuffer;
-      setSignupBuffer(_signupBuffer ? _signupBuffer : null);
-      const _profile = (await asyncGetJson(
+      const _profile = (await asyncGetObject(
         "profile",
         MeProfileIoTs
       )) as MeProfile;
       setProfile(_profile ? _profile : null);
-      const _talkTicketCollectionJson = (await asyncGetJson(
-        "talkTicketCollection",
-        TalkTicketCollectionAsyncIoTs
-      )) as TalkTicketCollectionAsync;
-      setTalkTicketCollection(
-        _talkTicketCollectionJson ? _talkTicketCollectionJson : null
+      const _talkingRoomCollection = (await asyncGetObject(
+        "talkingRoomCollection",
+        TalkingRoomCollectionAsyncIoTs
+      )) as TalkingRoomCollectionAsync;
+      setTalkingRoomCollection(
+        _talkingRoomCollection ? _talkingRoomCollection : null
       );
     })();
   }, []);
@@ -122,9 +120,8 @@ const RootNavigator: React.FC<Props> = (props) => {
   if (
     typeof status === "undefined" ||
     typeof token === "undefined" ||
-    typeof signupBuffer === "undefined" ||
     typeof profile === "undefined" ||
-    typeof talkTicketCollection === "undefined" ||
+    typeof talkingRoomCollection === "undefined" ||
     !props.isFinishLoadingResources
   ) {
     return <></>; // AppLording
@@ -135,9 +132,9 @@ const RootNavigator: React.FC<Props> = (props) => {
 
     return (
       <NavigationContainer>
-        <AuthProvider status={status} token={token} signupBuffer={signupBuffer}>
+        <AuthProvider status={status} token={token}>
           <ProfileProvider profile={profile}>
-            <ChatProvider talkTicketCollection={talkTicketCollection}>
+            <ChatProvider talkingRoomCollection={talkingRoomCollection}>
               <DomProvider>
                 <GalioProvider theme={materialTheme}>
                   <StartUpManager>
@@ -146,6 +143,7 @@ const RootNavigator: React.FC<Props> = (props) => {
                         <StatusBar barStyle="dark-content" />
                       )}
                       <Screens />
+                      <Toast ref={(ref) => Toast.setRef(ref)} />
                     </AttManager>
                   </StartUpManager>
                 </GalioProvider>

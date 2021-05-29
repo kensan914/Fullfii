@@ -4,7 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ActionSheetIOS,
+  Alert,
+  TouchableHighlight,
 } from "react-native";
 
 import IconExtra from "src/components/atoms/Icon";
@@ -14,6 +15,12 @@ import RoomEditorModal from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
+import { useProfileState } from "src/contexts/ProfileContext";
+import { showActionSheet, showToast } from "src/utils/customModules";
+import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
+import { useNavigation } from "@react-navigation/core";
+import { alertModal, cvtBadgeCount } from "src/utils";
+import { useRequestDeleteRoom } from "src/hooks/requests/useRequestRooms";
 
 type Props = {
   talkingRoom: TalkingRoom;
@@ -21,28 +28,64 @@ type Props = {
 export const TalkingRoomCard: React.FC<Props> = (props) => {
   const { talkingRoom } = props;
 
+  const profileState = useProfileState();
+  const navigation = useNavigation();
+
   const [isToggleUp, setIsToggleUp] = useState(true);
   const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false);
 
+  const isCreatedRoom = profileState.profile.id === talkingRoom.owner.id;
+  // 三点リーダは作成ルームのみ表示
+  const isShow3PointReader = isCreatedRoom;
+  // 一人でも参加者がいた場合、修正できない
+  const canFix = talkingRoom.participants.length <= 0;
+
+  const { requestDeleteRoom } = useRequestDeleteRoom(talkingRoom.id);
+
   const openTalkingRoomCardActionSheet = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
+    const actionSheetSettings = [
       {
-        options: ["キャンセル", "修正する", "削除する"],
-        destructiveButtonIndex: 2,
-        cancelButtonIndex: 0,
-        userInterfaceStyle: "light",
+        label: "キャンセル",
+        cancel: true,
       },
-      (buttonIndex) => {
-        if (buttonIndex === 0) {
-          // cancel action
-        } else if (buttonIndex === 1) {
-          //card修正する
-          setIsOpenRoomEditorModal(true);
-        } else if (buttonIndex === 2) {
-          //削除する処理
-        }
-      }
-    );
+      {
+        label: "修正する",
+        onPress: () => {
+          if (canFix) {
+            setIsOpenRoomEditorModal(true);
+          } else {
+            Alert.alert(...ALERT_MESSAGES["CANNOT_FIX_TALKING_ROOM"]);
+          }
+        },
+      },
+      {
+        label: "削除する",
+        destructive: true,
+        onPress: () => {
+          if (talkingRoom.isStart) {
+            Alert.alert(...ALERT_MESSAGES["CANNOT_DELETE_TALKING_ROOM"]);
+          } else {
+            const _mainText = "作成ルームを削除";
+            const _subText = "本当にこのルームを削除してよろしいですか？";
+            alertModal({
+              mainText: _mainText,
+              subText: _subText,
+              cancelButton: "キャンセル",
+              okButton: "削除する",
+              okButtonStyle: "destructive",
+              onPress: () => {
+                requestDeleteRoom({
+                  thenCallback: () => {
+                    showToast(TOAST_SETTINGS["DELETE_ROOM"]);
+                  },
+                });
+              },
+            });
+          }
+        },
+      },
+    ];
+    showActionSheet(actionSheetSettings);
   };
 
   const {
@@ -59,19 +102,21 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
               {talkingRoom.name}
             </Text>
           </Block>
-          <TouchableOpacity
-            style={styles.threeDotsIcon}
-            onPress={() => {
-              openTalkingRoomCardActionSheet();
-            }}
-          >
-            <IconExtra
-              name="dots-three-horizontal"
-              family="Entypo"
-              size={32}
-              color={COLORS.BROWN}
-            />
-          </TouchableOpacity>
+          {isShow3PointReader && (
+            <TouchableOpacity
+              style={styles.threeDotsIcon}
+              onPress={() => {
+                openTalkingRoomCardActionSheet();
+              }}
+            >
+              <IconExtra
+                name="dots-three-horizontal"
+                family="Entypo"
+                size={32}
+                color={COLORS.BROWN}
+              />
+            </TouchableOpacity>
+          )}
         </Block>
         <Block row>
           <Block>
@@ -146,6 +191,10 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
         <RoomEditorModal
           isOpenRoomEditorModal={isOpenRoomEditorModal}
           setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
+          propsDependsOnMode={{
+            mode: "FIX",
+            talkingRoom: talkingRoom,
+          }}
         />
       </>
     );
@@ -153,42 +202,53 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
 
   return (
     <Block style={styles.container}>
-      <Block style={styles.card}>
-        <Block style={styles.messageContainer}>
-          <Text
-            size={16}
-            color={COLORS.BLACK}
-            numberOfLines={2}
-            ellipsizeMode="tail"
-          >
-            {talkingRoom.messages.length > 0 &&
-              talkingRoom.messages[talkingRoom.messages.length - 1].text}
-          </Text>
-        </Block>
-        <Block>
-          <TouchableOpacity
-            style={styles.toggleIcon}
-            onPress={() => {
-              setIsToggleUp(!isToggleUp);
-            }}
-          >
-            <IconExtra
-              name={isToggleUp ? "upcircleo" : "circledowno"}
-              family="AntDesign"
-              size={32}
-              color={COLORS.BROWN}
-            />
-          </TouchableOpacity>
-        </Block>
-        {talkingRoom.unreadNum > 0 && (
-          <Block center style={styles.notification}>
-            <Text bold size={15} color={COLORS.WHITE}>
-              {talkingRoom.unreadNum >= 100 ? 99 : talkingRoom.unreadNum}
+      <TouchableHighlight
+        onPress={() => {
+          navigation.navigate("Chat", {
+            roomId: talkingRoom.id,
+          });
+        }}
+        activeOpacity={0.7}
+        underlayColor="#DDDDDD"
+        style={styles.touchableHighlight}
+      >
+        <Block style={styles.card}>
+          <Block style={styles.messageContainer}>
+            <Text
+              size={16}
+              color={COLORS.BLACK}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
+              {talkingRoom.messages.length > 0 &&
+                talkingRoom.messages[talkingRoom.messages.length - 1].text}
             </Text>
           </Block>
-        )}
-        {isToggleUp ? <TalkingRoomCardContent /> : null}
-      </Block>
+          <Block>
+            <TouchableOpacity
+              style={styles.toggleIcon}
+              onPress={() => {
+                setIsToggleUp(!isToggleUp);
+              }}
+            >
+              <IconExtra
+                name={isToggleUp ? "upcircleo" : "circledowno"}
+                family="AntDesign"
+                size={32}
+                color={COLORS.BROWN}
+              />
+            </TouchableOpacity>
+          </Block>
+          {talkingRoom.unreadNum > 0 && (
+            <Block center style={styles.notification}>
+              <Text bold size={15} color={COLORS.WHITE}>
+                {cvtBadgeCount(talkingRoom.unreadNum)}
+              </Text>
+            </Block>
+          )}
+          {isToggleUp ? <TalkingRoomCardContent /> : null}
+        </Block>
+      </TouchableHighlight>
     </Block>
   );
 };
@@ -198,6 +258,9 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginLeft: 20,
     marginTop: 10,
+    borderRadius: 20,
+  },
+  touchableHighlight: {
     borderRadius: 20,
   },
   card: {

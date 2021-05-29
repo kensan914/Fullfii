@@ -36,3 +36,5 @@ export const routes = [
     type: "list",
   },
 ];
+
+export const NO_NAME_LABEL = "名無し";

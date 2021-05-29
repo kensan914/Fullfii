@@ -5,33 +5,42 @@ import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-
-const { width } = Dimensions.get("screen");
+import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
+import { width } from "src/constants";
 
 type Props = {
   isOpenRoomCreatedModal: boolean;
   setIsOpenRoomCreatedModal: Dispatch<boolean>;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
 };
 export const RoomCreatedModal: React.FC<Props> = (props) => {
-  const { isOpenRoomCreatedModal, setIsOpenRoomCreatedModal } = props;
+  const {
+    isOpenRoomCreatedModal,
+    setIsOpenRoomCreatedModal,
+    setIsOpenNotificationReminderModal,
+  } = props;
+
+  const { isPermission } = useConfigPushNotification();
+
+  const close = () => {
+    setIsOpenRoomCreatedModal(false);
+  };
 
   return (
     //RoomEditorModal.jsのModalコンポーネントのModalHideでsetIsOpenRoomCreatedModal(true)を呼び出す
     <Modal
       isVisible={isOpenRoomCreatedModal}
       deviceWidth={width}
-      onBackdropPress={() => {
-        setIsOpenRoomCreatedModal(false);
-      }}
+      onBackdropPress={close}
       style={styles.modal}
+      onModalHide={() => {
+        if (!isPermission) {
+          setIsOpenNotificationReminderModal(true);
+        }
+      }}
     >
       <Block column style={styles.modalContent}>
-        <TouchableOpacity
-          style={styles.closeIcon}
-          onPress={() => {
-            setIsOpenRoomCreatedModal(false);
-          }}
-        >
+        <TouchableOpacity style={styles.closeIcon} onPress={close}>
           <IconExtra
             name="close"
             family="Ionicons"
@@ -62,9 +71,7 @@ export const RoomCreatedModal: React.FC<Props> = (props) => {
             style={styles.okButton}
             color={COLORS.BROWN}
             shadowless
-            onPress={() => {
-              setIsOpenRoomCreatedModal(false);
-            }}
+            onPress={close}
           >
             <Text size={20} color={COLORS.WHITE} bold>
               OK

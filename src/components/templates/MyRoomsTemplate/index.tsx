@@ -7,7 +7,8 @@ import RoomEditorModal from "src/components/organisms/RoomEditorModal";
 import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
-import { RoomCreatedModal } from "../RoomsTemplate/organisms/RoomCreatedModal";
+import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
+import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
 
 type Props = {
   participatingRooms: TalkingRoom[];
@@ -16,6 +17,9 @@ type Props = {
   setIsOpenRoomEditorModal: Dispatch<boolean>;
   isOpenRoomCreatedModal: boolean;
   setIsOpenRoomCreatedModal: Dispatch<boolean>;
+  isOpenNotificationReminderModal: boolean;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
+  checkCanCreateRoom: () => boolean;
 };
 export const MyRoomsTemplate: React.FC<Props> = (props) => {
   const {
@@ -25,91 +29,124 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
     setIsOpenRoomEditorModal,
     isOpenRoomCreatedModal,
     setIsOpenRoomCreatedModal,
+    isOpenNotificationReminderModal,
+    setIsOpenNotificationReminderModal,
+    checkCanCreateRoom,
   } = props;
 
   const maxParticipatingRoomsLength = 1; // 参加ルームの最大数 (ver3.0.0現在)
   const maxCreatedRoomsLength = 1; // 作成ルームの最大数 (ver3.0.0現在)
-  const isExistTalkingRooms = !(
-    createdRooms.length <= 0 && participatingRooms.length <= 0
-  );
+  // const isExistTalkingRooms = !(
+  //   createdRooms.length <= 0 && participatingRooms.length <= 0
+  // );
   return (
     <>
       <Block flex center style={styles.container}>
         <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-          {isExistTalkingRooms ? (
-            <>
-              <Block top style={styles.joinRoomContainer}>
-                <Block style={styles.cardSubTitle}>
-                  <Text size={12} color={COLORS.LIGHT_GRAY}>
-                    参加ルーム{participatingRooms.length}/
-                    {maxParticipatingRoomsLength}
+          <>
+            <Block top style={styles.joinRoomContainer}>
+              <Block style={styles.cardSubTitle}>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  参加ルーム{" "}
+                  <Text
+                    bold
+                    color={
+                      participatingRooms.length >= maxParticipatingRoomsLength
+                        ? COLORS.GREEN
+                        : COLORS.LIGHT_GRAY
+                    }
+                  >
+                    {participatingRooms.length}/{maxParticipatingRoomsLength}
                   </Text>
-                </Block>
-                {participatingRooms.map((participatingRoom) => {
+                </Text>
+              </Block>
+              {participatingRooms.length > 0 ? (
+                participatingRooms.map((participatingRoom) => {
                   return (
                     <TalkingRoomCard
                       key={participatingRoom.id}
                       talkingRoom={participatingRoom}
                     />
                   );
-                })}
-              </Block>
-              <Block top style={styles.makeRoomContainer}>
-                <Block style={styles.cardSubTitle}>
-                  <Text size={12} color={COLORS.LIGHT_GRAY}>
-                    作成ルーム{createdRooms.length}/{maxCreatedRoomsLength}
-                  </Text>
+                })
+              ) : (
+                <Block style={{ width: width }}>
+                  {/* ルームに一つも属していない場合に表示 */}
+                  <Block center style={styles.emptyStateTitle}>
+                    <Text size={16} bold color={COLORS.BLACK}>
+                      まだ参加しているルームがありません
+                    </Text>
+                  </Block>
+                  <Block center style={styles.emptyStateSubTitle}>
+                    <Text size={14} color={COLORS.BLACK}>
+                      新しいルームを探しにいきませんか？
+                    </Text>
+                  </Block>
                 </Block>
-                {createdRooms.map((createdRoom) => {
-                  return (
-                    <TalkingRoomCard
-                      key={createdRoom.id}
-                      talkingRoom={createdRoom}
-                    />
-                  );
-                })}
-              </Block>
-            </>
-          ) : (
-            <>
-              {/* ルームに一つも属していない場合に表示 */}
-              <Block center style={styles.emptyStateTitle}>
-                <Text size={16} bold color={COLORS.BLACK}>
-                  まだ参加しているルームがありません
+              )}
+            </Block>
+            <Block top style={styles.makeRoomContainer}>
+              <Block style={styles.cardSubTitle}>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  作成ルーム{" "}
+                  <Text
+                    bold
+                    color={
+                      createdRooms.length >= maxCreatedRoomsLength
+                        ? COLORS.GREEN
+                        : COLORS.LIGHT_GRAY
+                    }
+                  >
+                    {createdRooms.length}/{maxCreatedRoomsLength}
+                  </Text>
                 </Text>
               </Block>
-              <Block center style={styles.emptyStateSubTitle}>
-                <Text size={14} color={COLORS.BLACK}>
-                  新しいルームを探しにいきませんか？
+              {createdRooms.map((createdRoom) => {
+                return (
+                  <TalkingRoomCard
+                    key={createdRoom.id}
+                    talkingRoom={createdRoom}
+                  />
+                );
+              })}
+            </Block>
+          </>
+          {createdRooms.length <= 0 && (
+            <Block style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                color={COLORS.BROWN}
+                shadowless
+                onPress={() => {
+                  if (checkCanCreateRoom()) {
+                    setIsOpenRoomEditorModal(true);
+                  }
+                }}
+              >
+                <Text size={20} color={COLORS.WHITE} bold>
+                  悩みを話す
                 </Text>
-              </Block>
-            </>
+              </Button>
+            </Block>
           )}
-          <Block style={styles.buttonContainer}>
-            <Button
-              style={styles.button}
-              color={COLORS.BROWN}
-              shadowless
-              onPress={() => {
-                setIsOpenRoomEditorModal(true);
-              }}
-            >
-              <Text size={20} color={COLORS.WHITE} bold>
-                悩みを話す
-              </Text>
-            </Button>
-          </Block>
         </ScrollView>
       </Block>
       <RoomEditorModal
         isOpenRoomEditorModal={isOpenRoomEditorModal}
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-        isCreateNew
-        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+        propsDependsOnMode={{
+          mode: "CREATE",
+          setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
+        }}
       />
       <RoomCreatedModal
         isOpenRoomCreatedModal={isOpenRoomCreatedModal}
         setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
+      />
+      <NotificationReminderModal
+        isOpenNotificationReminderModal={isOpenNotificationReminderModal}
+        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       />
     </>
   );
@@ -122,6 +159,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   emptyStateTitle: {
+    alignItems: "center",
     marginTop: 40,
   },
   emptyStateSubTitle: {

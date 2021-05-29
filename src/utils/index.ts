@@ -1,11 +1,4 @@
-import {
-  AsyncStorage,
-  Alert,
-  Platform,
-  Dimensions,
-  AlertButton,
-} from "react-native";
-import Toast from "react-native-toast-message";
+import { Alert, Platform, Dimensions, AlertButton } from "react-native";
 import { isRight } from "fp-ts/lib/Either";
 
 import { FREE_PLAN } from "src/constants/env";
@@ -13,7 +6,6 @@ import { CODE } from "src/constants/statusCodes";
 import {
   FormattedGender,
   FormattedGenderKey,
-  TypeIoTsOfResData,
   WsSettings,
 } from "src/types/Types";
 import {
@@ -22,7 +14,6 @@ import {
   Room,
   RoomJson,
   TalkTicket,
-  TalkTicketCollection,
   TalkTicketJson,
 } from "src/types/Types.context";
 
@@ -115,8 +106,8 @@ export const fmtfromDateToStr = (date: Date, format: string): string => {
  * (deep Ver)スネークケースのobjのkeyをすべてキャメルケースに変換
  **/
 export const deepCvtKeyFromSnakeToCamel = (
-  obj: Record<string, unknown>
-): Record<string, unknown> | unknown[] => {
+  obj: Record<string, unknown> | unknown[] | unknown
+): Record<string, unknown> | unknown[] | unknown => {
   if (Array.isArray(obj)) {
     return obj.map((elm) => deepCvtKeyFromSnakeToCamel(elm));
   }
@@ -167,134 +158,16 @@ export const fromSnakeToCamel = (text: string): string => {
   });
 };
 
-export const cvtBadgeCount = (badgeCount: number): string => {
+export const cvtBadgeCount = (badgeCount: number): number | null => {
   if (badgeCount <= 0) {
-    return "";
+    return null;
   } else {
     if (badgeCount > 99) {
-      return "99";
+      return 99;
     } else {
-      return badgeCount.toString();
+      return badgeCount;
     }
   }
-};
-
-export const asyncStoreItem = async (
-  key: string,
-  value: string
-): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const asyncStoreJson = async (
-  key: string,
-  value: Record<string, unknown>
-): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-/**
- * async storageからstringをget.
- * type checkがleftでもobjectを返しエラーのみ出力する.
- * (アップデート時, 古いデータがleftされる可能性がある & async storageのデータはAPIレスより安全であると判断)
- **/
-export const asyncGetItem = async (
-  key: string,
-  typeIoTsOfResData?: TypeIoTsOfResData
-): Promise<string | null> => {
-  try {
-    const str = await AsyncStorage.getItem(key);
-    if (str === null) return null;
-    if (typeof typeIoTsOfResData !== "undefined") {
-      const typeIoTsResult = typeIoTsOfResData.decode(str);
-      if (!isRight(typeIoTsResult)) {
-        console.group();
-        console.error(
-          `Type does not match(asyncGetItem). key is "${key}". value can be found below.`
-        );
-        console.error(str);
-        console.groupEnd();
-        return str;
-      }
-    }
-    return str;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-/**
- * async storageからobjectをget.
- * type checkがleftでもobjectを返しエラーのみ出力する.
- * (アップデート時, 古いデータがleftされる可能性がある & async storageのデータはAPIレスより安全であると判断)
- **/
-export const asyncGetJson = async (
-  key: string,
-  typeIoTsOfResData: TypeIoTsOfResData
-): Promise<Record<string, unknown> | null> => {
-  try {
-    const json = await AsyncStorage.getItem(key);
-    if (json === null) return null;
-    else {
-      const obj = JSON.parse(json);
-      const formattedObj = deepCvtKeyFromSnakeToCamel(obj);
-      const typeIoTsResult = typeIoTsOfResData.decode(formattedObj);
-
-      if (isRight(typeIoTsResult)) {
-        return formattedObj;
-      } else {
-        console.group();
-        console.error(
-          `Type does not match(asyncGetJson). key is "${key}". value can be found below.`
-        );
-        console.error({ ...formattedObj });
-        console.groupEnd();
-        return formattedObj;
-      }
-    }
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-export const asyncRemoveItem = async (key: string): Promise<void> => {
-  try {
-    await AsyncStorage.removeItem(key);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const asyncRemoveAll = async (): Promise<void> => {
-  try {
-    const keys = await AsyncStorage.getAllKeys();
-    await AsyncStorage.multiRemove(keys);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const asyncStoreTalkTicketCollection = async (
-  talkTicketCollection: TalkTicketCollection
-): Promise<void> => {
-  const _talkTicketCollection: TalkTicketCollection = deepCopy(
-    talkTicketCollection,
-    ["ws"]
-  ) as TalkTicketCollection; // deep copy
-  Object.keys(_talkTicketCollection).forEach((key) => {
-    _talkTicketCollection[key].room.ws = null;
-  });
-  asyncStoreJson("talkTicketCollection", _talkTicketCollection);
 };
 
 type alertModalProps = {
@@ -374,7 +247,7 @@ export const isObject = (val: unknown): val is Record<string, unknown> => {
   return val !== null && typeof val === "object" && !Array.isArray(val);
 };
 
-/**
+/** TODO: いらない
  * Object.keys(webSetting) >>> [url, onopen, onmessage, onclose, registerWs]
  * axios.ts同様、wsSettings.onmessageのeDataは整形済みであり型安全が保証されているためasしても構わない
  * @param wsSettings
@@ -453,7 +326,7 @@ export const closeWsSafely = (ws: WebSocket): void => {
     };
     ws.close();
   } else {
-    ("ws is empty object");
+    console.log("ws is empty object");
   }
 };
 
@@ -482,29 +355,6 @@ export const checkiPhoneX = (Dimensions: Dimensions): boolean => {
     Platform.OS === "ios" &&
     (height === 812 || width === 812 || height === 896 || width === 896);
   return iPhoneX;
-};
-
-type ShowToastSettings = {
-  type?: "success" | "error" | "info";
-  position?: "top" | "bottom";
-  text1: string;
-  text2?: string;
-  visibilityTime?: number;
-  autoHide?: boolean;
-  topOffset?: number;
-  bottomOffset?: number;
-  onShow?: () => void;
-  onHide?: () => void;
-  onPress?: () => void;
-};
-/**
- * custom Toast.show()
- */
-export const showToast = (settings: ShowToastSettings): void => {
-  Toast.show({
-    ...settings,
-    topOffset: checkiPhoneX(Dimensions) ? 50 : 30,
-  });
 };
 
 /** オブジェクトに不正なkeyが含まれていないか判定
@@ -585,7 +435,7 @@ export const formatGender = (
   let label;
   if (isSecretGender || (gender.key !== "male" && gender.key !== "female")) {
     key = "secret";
-    label = "内緒";
+    label = "性別内緒";
   } else {
     key = gender.key;
     label = gender.label;
@@ -599,4 +449,27 @@ export const includeUrl = (targetText: string): boolean => {
   return keyWordsToJudgeUrl.some((kw) => {
     return targetText.includes(kw);
   });
+};
+
+type EqualsArray = (a: unknown[], b: unknown[], order?: boolean) => boolean;
+/**配列の要素がobjectの場合等は未対応
+ */
+export const equalsArray: EqualsArray = (
+  a,
+  b,
+  order = true /* falseの場合順不同 */
+) => {
+  if (!Array.isArray(a)) return false;
+  if (!Array.isArray(b)) return false;
+  if (a.length != b.length) return false;
+
+  for (let i = 0, n = a.length; i < n; ++i) {
+    if (a.length != b.length) return false;
+    if (order) {
+      if (a[i] !== b[i]) return false;
+    } else {
+      if (!b.includes(a[i])) return false;
+    }
+  }
+  return true;
 };

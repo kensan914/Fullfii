@@ -6,6 +6,8 @@ import { BASE_URL } from "src/constants/env";
 import { URLJoin } from "src/utils";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
+import { showToast } from "src/utils/customModules";
+import { TOAST_SETTINGS } from "src/constants/alertMessages";
 
 export const useHideRoom = (
   handleRefresh: () => void,
@@ -65,6 +67,9 @@ export const useHideRoom = (
       data: {
         room_id: roomId,
       },
+      thenCallback: () => {
+        showToast(TOAST_SETTINGS["HIDE_ROOM"]);
+      },
     });
   };
 
@@ -77,6 +82,9 @@ export const useHideRoom = (
     requestPatchBlockedRooms({
       data: {
         room_id: roomId,
+      },
+      thenCallback: () => {
+        showToast(TOAST_SETTINGS["BLOCK_ROOM"]);
       },
     });
   };

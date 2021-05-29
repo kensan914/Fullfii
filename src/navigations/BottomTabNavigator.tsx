@@ -1,79 +1,91 @@
 import React from "react";
-import { Text, Block } from "galio-framework";
+import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import SvgUri from "react-native-svg-uri";
 
-import Header from "src/components/organisms/Header";
-import Icon from "src/components/atoms/Icon";
+import { Header } from "src/components/organisms/Header";
 import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { RoomsScreen } from "src/screens/RoomsScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import { COLORS } from "src/constants/theme";
+import { cvtBadgeCount } from "src/utils";
+import { useChatState } from "src/contexts/ChatContext";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
 
+  const chatState = useChatState();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
-          let badgeCount;
-          // const routeName = getFocusedRouteNameFromRoute(route);
+          let label: string | undefined;
+          let badgeCount: number | null | undefined;
+
           const routeName = route.name;
 
           if (routeName === "Rooms") {
-            iconName = focused ? "home" : "home";
+            iconName = focused
+              ? require("../assets/icons/homeIcon.svg")
+              : require("../assets/icons/homeIcon.svg");
+            label = "ホーム";
           } else if (routeName === "MyRooms") {
-            iconName = focused ? "commenting" : "commenting-o";
+            iconName = focused
+              ? require("../assets/icons/chatIcon.svg")
+              : require("../assets/icons/chatIcon.svg");
+            label = "トーク";
+            badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Profile") {
-            iconName = focused ? "user" : "user";
-            // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
-          } else if (routeName === "Talk") {
-            iconName = focused ? "comments" : "comments-o";
+            iconName = focused
+              ? require("../assets/icons/mypageIcon.svg")
+              : require("../assets/icons/mypageIcon.svg");
+            label = "マイページ";
             // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           }
           return (
             <Block
               style={{
                 position: "relative",
-                height: 40,
-                width: 40,
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <Icon
-                family="font-awesome"
-                name={iconName}
-                size={size}
-                color={color}
-              />
-              {typeof badgeCount !== "undefined" && badgeCount !== null && (
-                <Block
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "#F69896",
-                    right: 0,
-                    top: 0,
-                    height: 18,
-                    minWidth: 18,
-                    borderRadius: 9,
-                    borderColor: "white",
-                    borderWidth: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    size={13}
-                    color="white"
-                    style={{ paddingHorizontal: 3 }}
+              <SvgUri width={32} height={32} source={iconName} fill={color} />
+              <Text bold size={12} style={{ color: color }}>
+                {label}
+              </Text>
+
+              {typeof badgeCount !== "undefined" &&
+                badgeCount !== null &&
+                badgeCount > 0 && (
+                  <Block
+                    style={{
+                      position: "absolute",
+                      backgroundColor: "#F69896",
+                      right: -10,
+                      top: -4,
+                      height: 24,
+                      minWidth: 24,
+                      borderRadius: 12,
+                      borderColor: COLORS.BEIGE,
+                      borderWidth: 2,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    {badgeCount}
-                  </Text>
-                </Block>
-              )}
+                    <Text
+                      size={13}
+                      color="white"
+                      style={{ paddingHorizontal: 3 }}
+                    >
+                      {badgeCount}
+                    </Text>
+                  </Block>
+                )}
             </Block>
           );
         },
@@ -82,65 +94,56 @@ export const BottomTabNavigator: React.FC = () => {
         activeTintColor: "#F69896",
         inactiveTintColor: "gray",
         showLabel: false,
+        style: {
+          backgroundColor: COLORS.BEIGE,
+        },
       }}
     >
       <Tab.Screen name="Rooms">
         {() => (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Rooms"
-              component={RoomsScreen}
-              options={() => ({
-                header: () => <Header name={"Rooms"} />,
-              })}
-            />
-          </Stack.Navigator>
+          <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Rooms"
+                component={RoomsScreen}
+                options={() => ({
+                  header: () => <Header name={"Rooms"} />,
+                })}
+              />
+            </Stack.Navigator>
+          </Block>
         )}
       </Tab.Screen>
       <Tab.Screen name="MyRooms">
         {() => (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="MyRooms"
-              component={MyRoomsScreen}
-              options={() => ({
-                header: () => <Header name={"MyRooms"} />,
-              })}
-            />
-          </Stack.Navigator>
+          <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="MyRooms"
+                component={MyRoomsScreen}
+                options={() => ({
+                  header: () => <Header name={"MyRooms"} />,
+                })}
+              />
+            </Stack.Navigator>
+          </Block>
         )}
       </Tab.Screen>
       <Tab.Screen name="Profile">
         {() => (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={() => ({
-                header: () => <Header name={"Profile"} />,
-              })}
-            />
-          </Stack.Navigator>
+          <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={() => ({
+                  header: () => <Header name={"Profile"} />,
+                })}
+              />
+            </Stack.Navigator>
+          </Block>
         )}
       </Tab.Screen>
-      {/* <Tab.Screen name="Talk" component={TalkScreen} /> */}
-      {/* <Tab.Screen
-        name="Notification"
-        options={{
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              activeOpacity={1}
-              {...props}
-              onPress={() => {
-                // additional processing
-                props.onPress();
-              }}
-            />
-          ),
-        }}
-      >
-        {() => <NotificationScreen notificationState={notificationState} />}
-      </Tab.Screen> */}
     </Tab.Navigator>
   );
 };

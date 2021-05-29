@@ -19,7 +19,7 @@ type Props = {
   requestPatchProfile: RequestPatchProfile;
   requestPutGender: RequestPutGender;
 };
-const ProfileInputTemplate: React.FC<Props> = (props) => {
+export const ProfileInputTemplate: React.FC<Props> = (props) => {
   const { requestPatchProfile, requestPutGender } = props;
   const route = useRoute<ProfileInputRouteProp>();
   const { prevValue, screen: profileInputScreen } = route.params;
@@ -62,8 +62,6 @@ const ProfileInputTemplate: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default ProfileInputTemplate;
 
 const styles = StyleSheet.create({
   scrollView: {

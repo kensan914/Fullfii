@@ -5,14 +5,15 @@ import { NavigationContainer } from "@react-navigation/native";
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
+import Toast from "react-native-toast-message";
 
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
-import { asyncGetItem, asyncGetJson } from "src/utils";
+import { asyncGetItem, asyncGetObject } from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
-import StartUpManager from "src/screens/StartUpManager";
+import { StartUpManager } from "src/screens/StartUpManager";
 import { setIsExpo, setVersion } from "src/constants/env";
 import {
   AuthStatus,
@@ -25,7 +26,7 @@ import {
   TalkTicketCollectionAsync,
   TalkTicketCollectionAsyncIoTs,
 } from "src/types/Types.context";
-import { DomProvider } from "./contexts/DomContext";
+import { DomProvider } from "src/contexts/DomContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -65,17 +66,17 @@ const RootNavigator: React.FC<Props> = (props) => {
       setStatus(_status ? _status : null);
       const _token = await asyncGetItem("token");
       setToken(_token ? _token : null);
-      const _signupBuffer = (await asyncGetJson(
+      const _signupBuffer = (await asyncGetObject(
         "signupBuffer",
         SignupBufferIoTs
       )) as SignupBuffer;
       setSignupBuffer(_signupBuffer ? _signupBuffer : null);
-      const _profile = (await asyncGetJson(
+      const _profile = (await asyncGetObject(
         "profile",
         MeProfileIoTs
       )) as MeProfile;
       setProfile(_profile ? _profile : null);
-      const _talkTicketCollectionJson = (await asyncGetJson(
+      const _talkTicketCollectionJson = (await asyncGetObject(
         "talkTicketCollection",
         TalkTicketCollectionAsyncIoTs
       )) as TalkTicketCollectionAsync;
@@ -106,6 +107,7 @@ const RootNavigator: React.FC<Props> = (props) => {
                       <StatusBar barStyle="dark-content" />
                     )}
                     <Screens />
+                    <Toast ref={(ref) => Toast.setRef(ref)} />
                   </StartUpManager>
                 </GalioProvider>
               </DomProvider>

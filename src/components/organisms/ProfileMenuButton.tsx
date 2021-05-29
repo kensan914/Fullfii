@@ -5,11 +5,12 @@ import Spinner from "react-native-loading-spinner-overlay";
 
 import Icon from "src/components/atoms/Icon";
 import { useAuthState } from "src/contexts/AuthContext";
-import { alertModal, showToast, URLJoin } from "src/utils";
+import { alertModal, URLJoin } from "src/utils";
 import { MenuModal } from "src/components/molecules/Menu";
 import { BASE_URL, REPORT_URL } from "src/constants/env";
 import requestAxios from "src/hooks/useAxios";
 import { Profile } from "src/types/Types.context";
+import { showToast } from "src/utils/customModules";
 
 type Props = {
   user: Profile;
