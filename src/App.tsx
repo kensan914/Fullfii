@@ -12,11 +12,7 @@ import Toast from "react-native-toast-message";
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
-import {
-  asyncGetItem,
-  asyncGetObject,
-  asyncRemoveItem,
-} from "src/utils/asyncStorage";
+import { asyncGetItem, asyncGetObject } from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
 import { StartUpManager } from "src/screens/StartUpManager";
@@ -29,7 +25,6 @@ import {
   TalkingRoomCollectionAsyncIoTs,
 } from "src/types/Types.context";
 import { Assets } from "src/types/Types";
-import { AttManager } from "src/screens/AttManager";
 import { setVersion } from "src/constants/env";
 import { DomProvider } from "./contexts/DomContext";
 
@@ -68,8 +63,6 @@ const App: React.FC = () => {
       setAssets(downloadedAssets);
       setIsFinishLoadingResources(true);
     });
-
-    // asyncRemoveItem("talkingRoomCollection"); // TODO:
   }, []);
 
   return (
@@ -138,13 +131,11 @@ const RootNavigator: React.FC<Props> = (props) => {
               <DomProvider>
                 <GalioProvider theme={materialTheme}>
                   <StartUpManager>
-                    <AttManager>
-                      {Platform.OS === "ios" && (
-                        <StatusBar barStyle="dark-content" />
-                      )}
-                      <Screens />
-                      <Toast ref={(ref) => Toast.setRef(ref)} />
-                    </AttManager>
+                    {Platform.OS === "ios" && (
+                      <StatusBar barStyle="dark-content" />
+                    )}
+                    <Screens />
+                    <Toast ref={(ref) => Toast.setRef(ref)} />
                   </StartUpManager>
                 </GalioProvider>
               </DomProvider>

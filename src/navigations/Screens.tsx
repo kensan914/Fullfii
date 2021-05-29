@@ -22,6 +22,7 @@ import { COLORS } from "src/constants/theme";
 import { BottomTabNavigator } from "./BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
+import { AttManager } from "src/screens/AttManager";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -97,16 +98,18 @@ const AppStack: React.FC = () => {
   switch (authState.status) {
     case AUTHENTICATED:
       return withSafeAreaView(
-        <Stack.Navigator mode="card" headerMode="none">
-          <Stack.Screen name="Authenticated">
-            {() => (
-              <>
-                <HomeStack />
-                {authState.isShowSpinner && <Spinner />}
-              </>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
+        <AttManager>
+          <Stack.Navigator mode="card" headerMode="none">
+            <Stack.Screen name="Authenticated">
+              {() => (
+                <>
+                  <HomeStack />
+                  {authState.isShowSpinner && <Spinner />}
+                </>
+              )}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </AttManager>
       );
 
     case UNAUTHENTICATED:
