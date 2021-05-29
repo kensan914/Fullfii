@@ -2,36 +2,24 @@ import { useEffect, useRef, useState } from "react";
 
 import { isExpo } from "src/constants/env";
 import { useAuthState } from "src/contexts/AuthContext";
-import { useDomDispatch, useDomState } from "src/contexts/DomContext";
+import { useDomDispatch } from "src/contexts/DomContext";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useRequestPatchMe } from "src/hooks/requests/useRequestMe";
-import configurePushNotification, {
-  hasPermissionOfIOSPushNotification,
-} from "src/utils/firebase/pushNotification";
+import configurePushNotification from "src/utils/firebase/pushNotification";
 
 type UseConfigPushNotification = () => {
   configPushNotification: () => void;
+  isRequiredConfigPN: boolean;
 };
 export const useConfigPushNotification: UseConfigPushNotification = () => {
   const profileState = useProfileState();
   const authState = useAuthState();
   const domDispatch = useDomDispatch();
-  const domState = useDomState();
 
   const isConfiguredPushNotification = useRef(false);
   const { requestPatchMe } = useRequestPatchMe(() => {
     isConfiguredPushNotification.current = true;
   });
-
-  // const [isPermission, setIsPermission] = useState(false);
-  useEffect(() => {
-    (async () => {
-      const _isPermission = await hasPermissionOfIOSPushNotification();
-      // alert(_isPermission);
-      // setIsPermission(_isPermission);
-      domDispatch({ type: "SET_IS_PERMISSION", isPermission: _isPermission });
-    })();
-  }, []);
 
   const [isRequiredConfigPN, seIsRequiredConfigPN] = useState(false);
   useEffect(() => {
@@ -72,14 +60,8 @@ export const useConfigPushNotification: UseConfigPushNotification = () => {
     }
   };
 
-  // アプリ起動時, 通知許可していた場合に通知設定のみを行う.
-  useEffect(() => {
-    if (isRequiredConfigPN && domState.pushNotificationParams.isPermission) {
-      configurePushNotification(true);
-    }
-  }, [isRequiredConfigPN, domState.pushNotificationParams.isPermission]);
-
   return {
     configPushNotification,
+    isRequiredConfigPN,
   };
 };

@@ -7,6 +7,7 @@ import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
 import { width } from "src/constants";
 import { useDomState } from "src/contexts/DomContext";
+import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
 
 type Props = {
   isOpenNotificationReminderModal: boolean;
@@ -18,7 +19,7 @@ export const NotificationReminderModal: React.FC<Props> = (props) => {
     setIsOpenNotificationReminderModal,
   } = props;
 
-  const domState = useDomState();
+  const { configPushNotification } = useConfigPushNotification();
 
   const close = () => {
     setIsOpenNotificationReminderModal(false);
@@ -30,7 +31,7 @@ export const NotificationReminderModal: React.FC<Props> = (props) => {
       deviceWidth={width}
       style={styles.modal}
       onModalHide={() => {
-        domState.pushNotificationParams.configPushNotification();
+        configPushNotification();
       }}
     >
       <Block column style={styles.modalContent}>
