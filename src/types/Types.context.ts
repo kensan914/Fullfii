@@ -450,11 +450,16 @@ export const TalkInfoJsonIoTs = t.type({
 export type TaskSchedulesKey = "refreshRooms";
 export type DomState = {
   taskSchedules: { [key in TaskSchedulesKey]: boolean };
+  pushNotificationParams: {
+    isPermission: boolean;
+    configPushNotification: () => void;
+  };
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
 export type DomActionType =
   | { type: "SCHEDULE_TASK"; taskKey: TaskSchedulesKey }
-  | { type: "DONE_TASK"; taskKey: TaskSchedulesKey };
+  | { type: "DONE_TASK"; taskKey: TaskSchedulesKey }
+  | { type: "SET_IS_PERMISSION"; isPermission: boolean };
 //========== Dom ==========//
 
 //========== ContextUtils ==========//

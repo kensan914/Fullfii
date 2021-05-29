@@ -6,7 +6,7 @@ import Modal from "react-native-modal";
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
 import { width } from "src/constants";
-import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
+import { useDomState } from "src/contexts/DomContext";
 
 type Props = {
   isOpenNotificationReminderModal: boolean;
@@ -18,7 +18,7 @@ export const NotificationReminderModal: React.FC<Props> = (props) => {
     setIsOpenNotificationReminderModal,
   } = props;
 
-  const { configPushNotification } = useConfigPushNotification();
+  const domState = useDomState();
 
   const close = () => {
     setIsOpenNotificationReminderModal(false);
@@ -30,7 +30,7 @@ export const NotificationReminderModal: React.FC<Props> = (props) => {
       deviceWidth={width}
       style={styles.modal}
       onModalHide={() => {
-        configPushNotification();
+        domState.pushNotificationParams.configPushNotification();
       }}
     >
       <Block column style={styles.modalContent}>

@@ -1,12 +1,12 @@
 import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
 import { width } from "src/constants";
+import { useDomState } from "src/contexts/DomContext";
 
 type Props = {
   isOpenRoomCreatedModal: boolean;
@@ -20,7 +20,7 @@ export const RoomCreatedModal: React.FC<Props> = (props) => {
     setIsOpenNotificationReminderModal,
   } = props;
 
-  const { isPermission } = useConfigPushNotification();
+  const domState = useDomState();
 
   const close = () => {
     setIsOpenRoomCreatedModal(false);
@@ -34,7 +34,7 @@ export const RoomCreatedModal: React.FC<Props> = (props) => {
       onBackdropPress={close}
       style={styles.modal}
       onModalHide={() => {
-        if (!isPermission) {
+        if (!domState.pushNotificationParams.isPermission) {
           setIsOpenNotificationReminderModal(true);
         }
       }}

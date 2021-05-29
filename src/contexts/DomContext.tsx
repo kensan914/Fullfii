@@ -1,9 +1,11 @@
 import React, { createContext, useReducer, useContext } from "react";
+import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
 
 import { DomActionType, DomState, DomDispatch } from "src/types/Types.context";
 
 const domReducer = (prevState: DomState, action: DomActionType): DomState => {
   const _taskSchedules = { ...prevState.taskSchedules };
+  const _pushNotificationParams = { ...prevState.pushNotificationParams };
   switch (action.type) {
     case "SCHEDULE_TASK":
       /** 指定したtaskKeyのタスクをスケジュール.
@@ -19,6 +21,13 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       _taskSchedules[action.taskKey] = false;
       return { ...prevState, taskSchedules: _taskSchedules };
 
+    case "SET_IS_PERMISSION":
+      /** set pushNotificationParams.isPermission
+       * @param {Object} action [type, isPermission] */
+
+      _pushNotificationParams.isPermission = action.isPermission;
+      return { ...prevState, pushNotificationParams: _pushNotificationParams };
+
     default:
       console.warn(`Not found this action.type.`);
       return { ...prevState };
@@ -28,6 +37,10 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
 const initDomState = Object.freeze({
   taskSchedules: {
     refreshRooms: false,
+  },
+  pushNotificationParams: {
+    isPermission: false,
+    configPushNotification: () => void 0,
   },
 });
 const domStateContext = createContext<DomState>({ ...initDomState });
@@ -45,7 +58,14 @@ export const useDomDispatch = (): DomDispatch => {
 };
 
 export const DomProvider: React.FC = ({ children }) => {
-  const [domState, domDispatch] = useReducer(domReducer, { ...initDomState });
+  const { configPushNotification } = useConfigPushNotification();
+  const [domState, domDispatch] = useReducer(domReducer, {
+    ...initDomState,
+    pushNotificationParams: {
+      isPermission: false,
+      configPushNotification: configPushNotification,
+    },
+  });
 
   return (
     <domStateContext.Provider value={domState}>
