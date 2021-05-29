@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext } from "react";
-import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
 
+import { useInitPushNotification } from "src/hooks/useInitPushNotification";
 import { DomActionType, DomState, DomDispatch } from "src/types/Types.context";
 
 const domReducer = (prevState: DomState, action: DomActionType): DomState => {
@@ -40,7 +40,6 @@ const initDomState = Object.freeze({
   },
   pushNotificationParams: {
     isPermission: false,
-    configPushNotification: () => void 0,
   },
 });
 const domStateContext = createContext<DomState>({ ...initDomState });
@@ -58,12 +57,11 @@ export const useDomDispatch = (): DomDispatch => {
 };
 
 export const DomProvider: React.FC = ({ children }) => {
-  const { configPushNotification } = useConfigPushNotification();
+  useInitPushNotification();
   const [domState, domDispatch] = useReducer(domReducer, {
     ...initDomState,
     pushNotificationParams: {
       isPermission: false,
-      configPushNotification: configPushNotification,
     },
   });
 

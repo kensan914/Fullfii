@@ -452,7 +452,6 @@ export type DomState = {
   taskSchedules: { [key in TaskSchedulesKey]: boolean };
   pushNotificationParams: {
     isPermission: boolean;
-    configPushNotification: () => void;
   };
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
