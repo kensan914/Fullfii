@@ -1,24 +1,28 @@
-import React, {useState} from "react";
+import React from "react";
 import { Block, Button, Text } from "galio-framework";
-import { StyleSheet, Dimensions, FlatList } from "react-native";
+import { StyleSheet } from "react-native";
 import * as WebBrowser from "expo-web-browser";
-import { BASE_URL, USER_POLICY_URL } from "src/constants/env";
-
+import { USER_POLICY_URL } from "src/constants/env";
 
 import { COLORS } from "src/constants/theme";
 
-const { width, height } = Dimensions.get("screen");
+type Props = {
+  onPressConsent: () => void;
+};
+export const TopTemplate: React.FC<Props> = (props) => {
+  const { onPressConsent } = props;
 
-export const TopTemplate: React.FC = () => {
   return (
-    <Block style={styles.container}>
-      <Block center style={styles.tilte}>
-        <Text size={64} bold color={COLORS.BLACK}>Fullfii</Text>
+    <Block flex style={styles.container}>
+      <Block flex={0.4} center style={styles.title}>
+        <Text size={64} bold color={COLORS.BLACK}>
+          Fullfii
+        </Text>
       </Block>
-      <Block center style={styles.textContainer}>
+      <Block flex={0.45} center style={styles.textContainer}>
         <Block style={styles.textTop}>
           <Text size={16} color={COLORS.BLACK}>
-          「承諾」をタップすると、
+            「承諾」をタップすると、
           </Text>
         </Block>
         <Block row>
@@ -31,16 +35,15 @@ export const TopTemplate: React.FC = () => {
           >
             サービス利用規約
           </Text>
-          <Text size={16} >
-          に同意します
-          </Text>
+          <Text size={16}>に同意します</Text>
         </Block>
       </Block>
-      <Block center>
-      <Button style={styles.button}>
-        <Text size={20} bold color={COLORS.WHITE}
-        >承諾</Text>
-      </Button>
+      <Block flex={0.15} center style={{}}>
+        <Button style={styles.button} onPress={onPressConsent}>
+          <Text size={20} bold color={COLORS.WHITE}>
+            承諾
+          </Text>
+        </Button>
       </Block>
     </Block>
   );
@@ -48,20 +51,25 @@ export const TopTemplate: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    backgroundColor: COLORS.BEIGE,
   },
-  tilte: {
-    marginTop: 184
+  title: {
+    // marginTop: 184,
+    // marginTop: 120,
+    justifyContent: "center",
   },
   textContainer: {
-    marginTop: "100%"
+    // marginTop: "100%",
+    justifyContent: "flex-end",
+    paddingBottom: 32,
   },
   textTop: {
-    marginBottom: 8
+    // marginBottom: 8,
   },
   button: {
     backgroundColor: COLORS.BROWN,
-    marginTop: 64,
+    // marginTop: 64,
     width: 335,
     height: 64,
     borderRadius: 30,
@@ -73,5 +81,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 1,
-  }
+  },
 });

@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext } from "react";
 
 import { BASE_URL } from "src/constants/env";
 import { useAxios } from "src/hooks/useAxios";
-import { asyncStoreJson, URLJoin } from "src/utils";
+import { URLJoin } from "src/utils";
 import {
   MeProfile,
   Profile,
@@ -12,6 +12,7 @@ import {
   ProfileParamsIoTs,
   ProfileState,
 } from "src/types/Types.context";
+import { asyncStoreObject } from "src/utils/asyncStorage";
 
 const profileReducer = (
   prevState: ProfileState,
@@ -24,7 +25,7 @@ const profileReducer = (
        * @param {Object} action [type, profile] */
 
       _profile = { ...initMeProfile, ...action.profile };
-      asyncStoreJson("profile", _profile);
+      asyncStoreObject("profile", _profile);
       return {
         ...prevState,
         profile: _profile,

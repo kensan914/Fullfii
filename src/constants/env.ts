@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 
-const DEBUG = true;
-// const DEBUG = false;
+// const DEBUG = true;
+const DEBUG = false;
 const ADMOB_DEBUG = true;
 // const ADMOB_DEBUG = false;
 
@@ -9,8 +9,8 @@ const BASE_HOST = DEBUG ? "192.168.11.46:8080" : "fullfii.com";
 const URL_SCHEME_HTTP = DEBUG ? "http" : "https";
 const WS_SCHEME_HTTP = DEBUG ? "ws" : "wss";
 
-export const BASE_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/api/v3/`;
-export const BASE_URL_WS = `${WS_SCHEME_HTTP}://${BASE_HOST}/ws/v2/`;
+export const BASE_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/api/v4/`;
+export const BASE_URL_WS = `${WS_SCHEME_HTTP}://${BASE_HOST}/ws/v4/`;
 export const USER_POLICY_URL = "https://fullfii.com/terms-of-service/";
 export const PRIVACY_POLICY_URL = "https://fullfii.com/privacy-policy/";
 export const CONTACT_US_URL =
@@ -99,6 +99,3 @@ export const APP_STORE_URI_ITMS_APPS = `itms-apps://itunes.apple.com/jp/app/id${
 // export const APP_STORE_URI_ITMS_APPS = `itms-apps://apps.apple.com/jp/app/id${appId}/?mt=8`;
 export const APP_STORE_URL = `https://itunes.apple.com/jp/app/id${appId}/?mt=8`;
 // export const APP_STORE_URL = `https://apps.apple.com/jp/app/id${appId}/?mt=8`;
-
-// async storage key
-export const AS_KEY_SKIP_UPDATE_VERSION = "skipUpdateVersion";

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Platform, Alert, Dimensions } from "react-native";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { StyleSheet, View, Platform, Alert } from "react-native";
 import {
   Bubble,
   GiftedChat,
@@ -17,63 +17,57 @@ import { getBottomSpace } from "react-native-iphone-x-helper";
 
 import { COLORS } from "src/constants/theme";
 import Icon from "src/components/atoms/Icon";
-import { logEvent } from "src/utils/firebase/logEvent";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { generateUuid4, fmtfromDateToStr, includeUrl } from "src/utils";
-import useTurnOnRead from "src/components/templates/chat/TurnOnRead";
+import { useTurnOnRead } from "src/screens/ChatScreen/useTurnOnRead";
+import { AllMessages, WsNullable } from "src/types/Types.context";
 import {
-  AllMessages,
-  Profile,
-  TalkTicketKey,
-  TokenNullable,
-  WsNullable,
-} from "src/types/Types.context";
-import { AppendOfflineMessage, SendWsMessage } from "src/types/Types";
+  AppendOfflineMessage,
+  RoomMemberCollection,
+  SendWsMessage,
+} from "src/types/Types";
 import { useChatDispatch } from "src/contexts/ChatContext";
-import useGifted from "src/components/templates/chat/Gifted";
-
-const { width } = Dimensions.get("screen");
+import { useGifted } from "src/screens/ChatScreen/useGifted";
+import { useAuthState } from "src/contexts/AuthContext";
+import { width } from "src/constants";
+import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
 
 type Props = {
-  user: Profile;
+  roomMemberCollection: RoomMemberCollection;
+  roomId: string;
   messages: AllMessages;
   ws: WsNullable;
-  token: TokenNullable;
-  talkTicketKey: TalkTicketKey;
   isEnd: boolean;
-  existUser: boolean;
-  setIsOpenProfile: (val: boolean) => void;
+  openProfileModal: (userId: string) => void;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
 };
 const ChatBody: React.FC<Props> = (props) => {
   const {
-    user,
+    roomMemberCollection,
+    roomId,
     messages,
     ws,
-    token,
-    talkTicketKey,
     isEnd,
-    existUser,
-    setIsOpenProfile,
+    openProfileModal,
+    setIsOpenNotificationReminderModal,
   } = props;
+
+  const authState = useAuthState();
+  const profileState = useProfileState();
+  const chatDispatch = useChatDispatch();
 
   const [step, setStep] = useState(0);
   const [giftedMessages, setGiftedMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-
   const _isMounted = useRef(false);
 
-  const profileState = useProfileState();
-  const chatDispatch = useChatDispatch();
-  useTurnOnRead(messages, talkTicketKey);
-  const [giftedMe, convertMessagesToGifted] = useGifted(
-    profileState.profile,
-    user
-  );
+  useTurnOnRead(messages, roomId);
+  const { giftedMe, convertMessagesToGifted } = useGifted(roomMemberCollection);
+  const { isPermission } = useConfigPushNotification();
 
   useEffect(() => {
     _isMounted.current = true;
     setIsTyping(false);
-
     return () => {
       _isMounted.current = false;
     };
@@ -83,13 +77,12 @@ const ChatBody: React.FC<Props> = (props) => {
     setGiftedMessages(convertMessagesToGifted(messages));
   }, [messages]);
 
-  const sendWsMessage: SendWsMessage = (ws, messageId, messageText, token) => {
+  const sendWsMessage: SendWsMessage = (ws, messageId, messageText) => {
     ws.send(
       JSON.stringify({
         type: "chat_message",
         message_id: messageId,
-        message: messageText,
-        token,
+        text: messageText,
       })
     );
   };
@@ -100,10 +93,11 @@ const ChatBody: React.FC<Props> = (props) => {
   ) => {
     chatDispatch({
       type: "APPEND_OFFLINE_MESSAGE",
-      talkTicketKey,
-      messageId,
-      messageText,
+      messageId: messageId,
+      text: messageText,
+      senderId: profileState.profile.id,
       time: new Date(),
+      roomId: roomId,
     });
   };
 
@@ -112,30 +106,21 @@ const ChatBody: React.FC<Props> = (props) => {
       const _giftedMessage = _giftedMessages[0];
 
       if (isEnd) {
-        Alert.alert(`${user.name}さんは退室しています`);
+        Alert.alert(`このルームは終了されています`);
         return;
-      } else if (!existUser) {
-        Alert.alert("話し相手が見つかりません。");
+      } else if (Object.keys(roomMemberCollection).length <= 1) {
+        Alert.alert("まだ相手が参加していません");
         return;
       } else if (includeUrl(_giftedMessage.text)) {
-        Alert.alert("このメッセージは送信することができません。");
+        Alert.alert("このメッセージは送信することができません");
         return;
       }
-
-      logEvent(
-        "send_message_button",
-        {
-          message: _giftedMessage.text,
-          talkTicketKey: talkTicketKey,
-        },
-        profileState
-      );
 
       const messageId = generateUuid4();
       appendOfflineMessage(messageId, _giftedMessage.text);
 
-      if (ws !== null && token !== null) {
-        sendWsMessage(ws, messageId, _giftedMessage.text, token);
+      if (ws !== null && authState.token !== null) {
+        sendWsMessage(ws, messageId, _giftedMessage.text);
       }
 
       const sentMessages = [{ ..._giftedMessage, sent: false }];
@@ -143,6 +128,11 @@ const ChatBody: React.FC<Props> = (props) => {
         GiftedChat.append(giftedMessages, sentMessages, Platform.OS !== "web")
       );
       setStep(step + 1);
+
+      // プッシュ通知催促
+      if (!isPermission) {
+        setIsOpenNotificationReminderModal(true);
+      }
     }
   };
 
@@ -298,7 +288,6 @@ const ChatBody: React.FC<Props> = (props) => {
         }}
         textStyle={{
           fontSize: 14,
-          fontWeight: "bold",
           color: COLORS.GRAY,
         }}
       />
@@ -310,12 +299,11 @@ const ChatBody: React.FC<Props> = (props) => {
       {...props}
       containerStyle={{
         justifyContent: "center",
-        // backgroundColor: "red",
         paddingHorizontal: 14,
         paddingRight: 27,
       }}
     >
-      <Icon size={23} name="send-o" family="font-awesome" color={COLORS.GRAY} />
+      <Icon size={23} name="send" family="font-awesome" color={COLORS.BROWN} />
     </Send>
   );
 
@@ -342,8 +330,8 @@ const ChatBody: React.FC<Props> = (props) => {
         onSend={onSend}
         user={giftedMe}
         scrollToBottom
-        onPressAvatar={() => {
-          setIsOpenProfile(true);
+        onPressAvatar={(user) => {
+          openProfileModal(user._id.toString());
         }}
         keyboardShouldPersistTaps="never"
         renderBubble={renderBubble}

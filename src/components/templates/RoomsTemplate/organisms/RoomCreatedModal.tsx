@@ -1,49 +1,51 @@
-import React, { useState } from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import {
-  StyleSheet,
-  Dimensions,
-  Keyboard,
-  KeyboardAvoidingView,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { DISCLOSURE_RANGE_IMAGE } from "src/constants/imagePath";
-import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
+import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
+import { width } from "src/constants";
 
-const { width } = Dimensions.get("screen");
+type Props = {
+  isOpenRoomCreatedModal: boolean;
+  setIsOpenRoomCreatedModal: Dispatch<boolean>;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
+};
+export const RoomCreatedModal: React.FC<Props> = (props) => {
+  const {
+    isOpenRoomCreatedModal,
+    setIsOpenRoomCreatedModal,
+    setIsOpenNotificationReminderModal,
+  } = props;
 
-const RoomCreateConfirmationModal = (props) => {
-  const { isOpenConfirmationModal, setIsOpenConfirmationModal } = props;
+  const { isPermission } = useConfigPushNotification();
+
+  const close = () => {
+    setIsOpenRoomCreatedModal(false);
+  };
 
   return (
-    //RoomEditorModal.jsのModalコンポーネントのModalHideでsetIsOpenConfirmationModal(true)を呼び出す
+    //RoomEditorModal.jsのModalコンポーネントのModalHideでsetIsOpenRoomCreatedModal(true)を呼び出す
     <Modal
-      isVisible={isOpenConfirmationModal}
+      isVisible={isOpenRoomCreatedModal}
       deviceWidth={width}
-      onBackdropPress={() => {
-        setIsOpenConfirmationModal(false);
+      onBackdropPress={close}
+      style={styles.modal}
+      onModalHide={() => {
+        if (!isPermission) {
+          setIsOpenNotificationReminderModal(true);
+        }
       }}
-      style={styles.Modal}
     >
       <Block column style={styles.modalContent}>
-        <TouchableOpacity
-          style={styles.closeIcon}
-          onPress={() => {
-            setIsOpenConfirmationModal(false);
-          }}
-        >
+        <TouchableOpacity style={styles.closeIcon} onPress={close}>
           <IconExtra
             name="close"
             family="Ionicons"
             size={32}
-            color={COLORS.HILIGHT_GRAY}
+            color={COLORS.HIGHLIGHT_GRAY}
           />
         </TouchableOpacity>
         <Block center style={styles.checkIcon}>
@@ -69,9 +71,7 @@ const RoomCreateConfirmationModal = (props) => {
             style={styles.okButton}
             color={COLORS.BROWN}
             shadowless
-            onPress={() => {
-              setIsOpenConfirmationModal(false);
-            }}
+            onPress={close}
           >
             <Text size={20} color={COLORS.WHITE} bold>
               OK
@@ -82,8 +82,6 @@ const RoomCreateConfirmationModal = (props) => {
     </Modal>
   );
 };
-
-export default RoomCreateConfirmationModal;
 
 const styles = StyleSheet.create({
   modal: {},

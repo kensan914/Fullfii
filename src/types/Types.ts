@@ -12,7 +12,9 @@ import {
   MeProfile,
   MeProfileIoTs,
   MessageJsonIoTs,
+  Profile,
   ProfileDispatch,
+  RoomJsonIoTs,
   TalkTicketJsonIoTs,
   TalkTicketKey,
 } from "src/types/Types.context";
@@ -31,11 +33,12 @@ export type RootStackParamList = {
     prevValue: unknown;
     user: MeProfile;
   };
-  Chat: { talkTicketKey: TalkTicketKey };
+  Chat: { roomId: string };
   Settings: undefined;
   AccountDelete: undefined;
   Authenticated: undefined;
-  SignUp: undefined;
+  Top: undefined;
+  Onboarding: undefined;
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
 export type ProfileInputRouteProp = RouteProp<
@@ -63,6 +66,18 @@ export type ProfileInputScreen =
   | "InputName"
   | "InputGender"
   | "InputIntroduction";
+
+export type HeaderName =
+  | (
+      | "Rooms"
+      | "MyRooms"
+      | "Profile"
+      | "ProfileEditor"
+      | "Chat"
+      | "Settings"
+      | "AccountDelete"
+    )
+  | ProfileInputScreen;
 //--------- Screens.tsx ---------//
 
 //--------- Home.tsx ---------//
@@ -128,8 +143,7 @@ export type AppendOfflineMessage = (
 export type SendWsMessage = (
   ws: WebSocket,
   messageId: string,
-  messageText: string,
-  token: string
+  messageText: string
 ) => void;
 export type AnimationObject = {
   v: string;
@@ -146,6 +160,10 @@ export type AnimationObject = {
   layers: any[];
 };
 export type LottieSource = string | AnimationObject | { uri: string };
+
+export type RoomMemberCollection = {
+  [memberId: string]: Profile;
+};
 //--------- Chat.tsx ---------//
 
 //--------- ChatTemplate.tsx ---------//
@@ -225,6 +243,7 @@ export type UseAxiosActionType = RequestAxiosActionType & {
 export type AxiosReActionType = {
   url?: string;
   data?: unknown;
+  thenCallback?: (resData: unknown, res: AxiosResponse) => void;
 };
 export type Request = (reAction?: AxiosReActionType | null) => void;
 export type UseAxiosReturn = {
@@ -269,6 +288,11 @@ export type PutGenderResData = t.TypeOf<typeof PutGenderResDataIoTs>;
 export const PutGenderResDataIoTs = t.type({
   me: MeProfileIoTs,
 });
+export type GetRoomsResData = t.TypeOf<typeof GetRoomsResDataIoTs>;
+export const GetRoomsResDataIoTs = t.type({
+  rooms: t.array(RoomJsonIoTs),
+  hasMore: t.boolean,
+});
 //--------- axios res.data ---------//
 
 //--------- ws ---------//
@@ -283,7 +307,6 @@ export type WsSettings = {
   ) => void;
   onclose: (e: WebSocketCloseEvent, ws: WebSocket) => void;
   typeIoTsOfResData: TypeIoTsOfResData;
-  registerWs?: (ws: WebSocket) => void;
 };
 export type WsResNotification = t.TypeOf<typeof WsResNotificationIoTs>;
 export type WsResChat = t.TypeOf<typeof WsResChatIoTs>;
@@ -294,12 +317,21 @@ export const WsResNotificationAuthIoTs = t.type({
   type: t.literal("auth"),
   // profile: MeProfileIoTs,
 });
-export const WsResNoticeTalkIoTs = t.type({
+export const WsResNoticeTalkSomeoneParticipatedIoTs = t.type({
   type: t.literal("notice_talk"),
-  roomId: t.string,
-  status: t.union([t.literal("start"), t.literal("end")]),
-  talkTicket: TalkTicketJsonIoTs,
+  status: t.literal("SOMEONE_PARTICIPATED"),
+  room: RoomJsonIoTs,
+  participantId: t.string,
+  shouldStart: t.boolean,
 });
+const WsResNoticeTalkEmptyIoTs = t.type({
+  type: t.literal("notice_talk"),
+  status: t.literal(""),
+});
+export const WsResNoticeTalkIoTs = t.union([
+  WsResNoticeTalkSomeoneParticipatedIoTs,
+  WsResNoticeTalkEmptyIoTs, // notice_talkが増えるたびここに追加 (t.unionは2つからし受け付けないのでWsResNoticeTalkEmptyIoTsを入れているだけ)
+]);
 export const WsResNotificationIoTs = t.union([
   WsResNotificationAuthIoTs,
   WsResNoticeTalkIoTs,
@@ -308,6 +340,7 @@ export const WsResNotificationIoTs = t.union([
 export const WsResChatAuthIoTs = t.type({
   type: t.literal("auth"),
   roomId: t.string,
+  room: t.union([RoomJsonIoTs, t.null]),
   notStoredMessages: t.array(MessageJsonIoTs),
   isAlreadyEnded: t.boolean,
 });
@@ -316,25 +349,9 @@ export const WsResChatMessageIoTs = t.type({
   roomId: t.string,
   message: MessageJsonIoTs,
 });
-export const WsResMultiChatMessagesIoTs = t.type({
-  type: t.literal("multi_chat_messages"),
-  roomId: t.string,
-  messages: t.array(MessageJsonIoTs),
-});
-export const WsResEndTalkAlertIoTs = t.type({
-  type: t.literal("end_talk_alert"),
-  profile: MeProfileIoTs,
-  talkTicket: TalkTicketJsonIoTs,
-});
-export const WsResEndTalkTimeOutIoTs = t.type({
-  type: t.literal("end_talk_time_out"),
-  profile: MeProfileIoTs,
-  talkTicket: TalkTicketJsonIoTs,
-});
 export const WsResEndTalkIoTs = t.type({
   type: t.literal("end_talk"),
-  profile: MeProfileIoTs,
-  talkTicket: TalkTicketJsonIoTs,
+  room: RoomJsonIoTs,
 });
 export const WsResErrorIoTs = t.intersection([
   t.type({
@@ -348,9 +365,6 @@ export const WsResErrorIoTs = t.intersection([
 export const WsResChatIoTs = t.union([
   WsResChatAuthIoTs,
   WsResChatMessageIoTs,
-  WsResMultiChatMessagesIoTs,
-  WsResEndTalkAlertIoTs,
-  WsResEndTalkTimeOutIoTs,
   WsResEndTalkIoTs,
   WsResErrorIoTs,
 ]);
@@ -362,3 +376,10 @@ export const WsResChatIoTs = t.union([
 //--------- Utils ---------//
 export type OnPress = (event: GestureResponderEvent) => void;
 //--------- Utils ---------//
+
+//--------- RoomsScreen ---------//
+export type HideRoom = (roomId: string) => void;
+export type BlockRoom = (roomId: string) => void;
+//--------- RoomsScreen ---------//
+
+//

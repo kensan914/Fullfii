@@ -4,7 +4,7 @@ import { COLORS } from "src/constants/theme";
 import { HOME_IMG } from "src/constants/imagePath";
 
 export const RoomsScreenDev: React.FC = () => {
-  const [hiddenRooms, setHiddenRooms] = React.useState([]);
+  const [hiddenRoomIds, setHiddenRoomIds] = React.useState([]);
   const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false);
 
   const items = [
@@ -79,8 +79,8 @@ export const RoomsScreenDev: React.FC = () => {
   return (
     <RoomsTemplate
       items={items}
-      hiddenRooms={hiddenRooms}
-      setHiddenRooms={setHiddenRooms}
+      hiddenRoomIds={hiddenRoomIds}
+      setHiddenRoomIds={setHiddenRoomIds}
       isOpenRoomEditorModal={isOpenRoomEditorModal}
       setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
     />

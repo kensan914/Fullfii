@@ -3,39 +3,36 @@ import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 
-import { CAN_APP_TRACKING_TRANSPARENCY, isExpo } from "src/constants/env";
-import { useAuthState } from "src/contexts/AuthContext";
 import { COLORS } from "src/constants/theme";
+import {
+  checkPermissionATT,
+  requestPermissionATT,
+} from "src/utils/appTrackingTransparency";
 
-const AttManager: React.FC = (props) => {
+export const AttManager: React.FC = (props) => {
   const { children } = props;
   const [isOpenAttModal, setIsOpenAttModal] = useState(false);
 
-  const [attModule, setAttModule] = useState(); // 未設定: undefined, expo等環境不適合: null, import成功: module本体
+  // const [attModule, setAttModule] = useState(); // 未設定: undefined, expo等環境不適合: null, import成功: module本体
   const requested = useRef(false);
 
-  useEffect(() => {
-    (async () => {
-      // XCode12じゃない開発者への対処
-      if (CAN_APP_TRACKING_TRANSPARENCY && !isExpo) {
-        const appTrackingTransparencyModule = await import(
-          "src/utils/appTrackingTransparency"
-        );
-        setAttModule(appTrackingTransparencyModule);
-      } else {
-        setAttModule(null);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     // XCode12じゃない開発者への対処
+  //     if (CAN_APP_TRACKING_TRANSPARENCY && !isExpo) {
+  //       const appTrackingTransparencyModule = await import(
+  //         "src/utils/appTrackingTransparency"
+  //       );
+  //       setAttModule(appTrackingTransparencyModule);
+  //     } else {
+  //       setAttModule(null);
+  //     }
+  //   })();
+  // }, []);
 
-  const authState = useAuthState();
   useEffect(() => {
-    if (
-      attModule &&
-      !requested.current &&
-      authState.signupBuffer.worries.length > 0
-    ) {
-      attModule.checkPermissionATT(
+    if (!requested.current) {
+      checkPermissionATT(
         () => {
           setIsOpenAttModal(true);
           requested.current = true;
@@ -44,16 +41,12 @@ const AttManager: React.FC = (props) => {
           requested.current = true;
         }
       );
-    } else if (attModule === null) {
-      requested.current = true;
     }
-  }, [attModule, authState.signupBuffer.worries.length]);
+  }, []);
 
   const onOpenRequestPermissionDialog = () => {
-    if (attModule) {
-      attModule.requestPermissionATT();
-      setIsOpenAttModal(false);
-    }
+    requestPermissionATT();
+    setIsOpenAttModal(false);
   };
 
   return (
@@ -67,8 +60,6 @@ const AttManager: React.FC = (props) => {
     </>
   );
 };
-
-export default AttManager;
 
 type Props = {
   isOpenAttModal: boolean;

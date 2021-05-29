@@ -6,7 +6,6 @@ import { either } from "fp-ts/lib/Either";
 export type AuthState = {
   status: AuthStatus;
   token: TokenNullable;
-  signupBuffer: SignupBuffer;
   isShowSpinner: boolean;
 };
 export type AuthDispatch = React.Dispatch<AuthActionType>;
@@ -19,8 +18,6 @@ export type AuthStatusNullable = AuthStatus | null;
 export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
 export type TokenNullable = string | null;
 export type AuthActionType =
-  | { type: "TO_PROGRESS_SIGNUP"; didProgressNum: number; isFinished: boolean }
-  | { type: "SET_WORRIES_BUFFER"; worries: GenreOfWorries }
   | { type: "COMPLETE_SIGNUP"; token: string; password: string }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
@@ -100,7 +97,6 @@ export const JobIoTs = t.type({
 export const JobsIoTs = t.record(t.string, JobIoTs);
 export const ProfileParamsIoTs = t.type({
   gender: GendersIoTs,
-  genreOfWorries: GenreOfWorriesCollectionIoTs,
   job: JobsIoTs,
 });
 
@@ -115,18 +111,14 @@ export const ProfileIoTs = t.type({
   isSecretGender: t.boolean,
   job: JobIoTs,
   introduction: t.string,
-  numOfThunks: t.number,
-  genreOfWorries: GenreOfWorriesIoTs,
   image: t.union([t.string, t.null]),
-  me: t.boolean,
 });
 export const MeProfileIoTs = t.intersection([
   t.type({
     dateJoined: t.string,
-    plan: PlanIoTs,
-    canTalkHeterosexual: t.boolean,
     deviceToken: t.union([t.string, t.null]),
     isActive: t.boolean,
+    me: t.boolean,
   }),
   ProfileIoTs,
 ]);
@@ -136,66 +128,78 @@ export const MeProfileIoTs = t.intersection([
 //========== Chat ==========//
 export type ChatState = {
   totalUnreadNum: TotalUnreadNum;
-  talkTicketCollection: TalkTicketCollection;
   chatDispatchTask: ChatDispatchTask;
-  lengthParticipants: { [worryKey: string]: number };
+  talkingRoomCollection: { [talkingRoomId: string]: TalkingRoom };
 };
 export type ChatDispatch = React.Dispatch<ChatActionType>;
 export type ChatActionType =
+  // | {
+  //     type: "UPDATE_TALK_TICKETS";
+  //     talkTickets: (TalkTicket | TalkTicketJson)[];
+  //   }
+  // | {
+  //     type: "FORCE_UPDATE_TALK_TICKETS";
+  //     talkTickets: (TalkTicket | TalkTicketJson)[];
+  //   }
+  // | { type: "START_APPROVING_TALK"; talkTicketKey: TalkTicketKey }
+  // | { type: "RESTART_TALK_ONLY_MESSAGE"; talkTicketKey: TalkTicketKey }
+  // | {
+  //     type: "APPEND_COMMON_MESSAGE";
+  //     talkTicketKey: TalkTicketKey;
+  //     alert: boolean;
+  //   }
+  // | { type: "OVERWRITE_TALK_TICKET"; talkTicket: TalkTicket | TalkTicketJson }
+  // | { type: "REMOVE_TALK_TICKETS"; talkTicketKeys: TalkTicketKey[] }
+  /////// ↑未使用
+  | { type: "INIT_TALKING_ROOM"; roomJson: Room | RoomJson }
+  | { type: "UPDATE_TALKING_ROOM"; roomJson: RoomJson }
   | {
-      type: "UPDATE_TALK_TICKETS";
-      talkTickets: (TalkTicket | TalkTicketJson)[];
+      type: "APPEND_OFFLINE_MESSAGE";
+      messageId: string;
+      text: string;
+      senderId: string;
+      time: Date;
+      roomId: string;
     }
   | {
-      type: "FORCE_UPDATE_TALK_TICKETS";
-      talkTickets: (TalkTicket | TalkTicketJson)[];
+      type: "APPEND_COMMON_MESSAGE";
+      roomId: string;
+      commonMessageSettings: CommonMessageSettings;
     }
-  | { type: "START_APPROVING_TALK"; talkTicketKey: TalkTicketKey }
-  | { type: "START_TALK"; talkTicketKey: TalkTicketKey; ws: WebSocket }
-  | { type: "RESTART_TALK"; talkTicketKey: TalkTicketKey; ws: WebSocket }
-  | { type: "RESTART_TALK_ONLY_MESSAGE"; talkTicketKey: TalkTicketKey }
-  | { type: "RECONNECT_TALK"; talkTicketKey: TalkTicketKey; ws: WebSocket }
+  | { type: "START_TALK"; roomId: string; ws: WebSocket }
+  | { type: "RESTART_TALK"; roomId: string; ws: WebSocket }
+  | { type: "RECONNECT_TALK"; roomId: string; ws: WebSocket }
+  | {
+      type: "MERGE_MESSAGES";
+      roomId: string;
+      meId: string;
+      messages: MessageJson[];
+      token: string;
+    }
+  | { type: "I_END_TALK"; roomId: string }
+  | { type: "MEMBER_END_TALK"; roomId: string; meId: string }
+  | { type: "CLOSE_TALK"; roomId: string }
   | {
       type: "APPEND_MESSAGE";
-      talkTicketKey: TalkTicketKey;
+      roomId: string;
       messageId: string;
-      message: string;
-      isMe: boolean;
+      text: string;
+      senderId: string;
       time: Date | string;
+      meId: string;
       token: string;
     }
   | {
       type: "DELETE_OFFLINE_MESSAGE";
-      talkTicketKey: TalkTicketKey;
+      roomId: string;
       messageId: string;
-    }
-  | {
-      type: "MERGE_MESSAGES";
-      talkTicketKey: TalkTicketKey;
-      messages: MessageJson[];
-      token: string;
-    }
-  | {
-      type: "APPEND_COMMON_MESSAGE";
-      talkTicketKey: TalkTicketKey;
-      alert: boolean;
-    }
-  | { type: "END_TALK"; talkTicketKey: TalkTicketKey; timeOut?: boolean }
-  | {
-      type: "APPEND_OFFLINE_MESSAGE";
-      talkTicketKey: TalkTicketKey;
-      messageId: string;
-      messageText: string;
-      time: Date;
     }
   | {
       type: "READ_BY_ROOM";
-      talkTicketKey: TalkTicketKey;
+      roomId: string;
       token: string;
       isForceSendReadNotification?: boolean;
     }
-  | { type: "OVERWRITE_TALK_TICKET"; talkTicket: TalkTicket | TalkTicketJson }
-  | { type: "REMOVE_TALK_TICKETS"; talkTicketKeys: TalkTicketKey[] }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
   | { type: "EXECUTED_DELAY_DISPATCH" }
@@ -220,18 +224,37 @@ export type TalkTicketCollectionAsync = t.TypeOf<
   typeof TalkTicketCollectionAsyncIoTs
 >;
 export type TalkInfoJson = t.TypeOf<typeof TalkInfoJsonIoTs>;
+//
+
+// 通常
+export type TalkingRoomCollection = { [roomId: string]: TalkingRoom };
+// response用
+export type TalkingRoomCollectionJson = t.TypeOf<
+  typeof TalkingRoomCollectionJsonIoTs
+>;
+// asyncStorage用. TalkingRoomCollectionと比較してwsが必ずnull. 相違点はそこだけなので, TalkingRoomCollection ∈ TalkingRoomCollectionAsync.
+export type TalkingRoomCollectionAsync = t.TypeOf<
+  typeof TalkingRoomCollectionAsyncIoTs
+>;
+
+export type BaseRoom = t.TypeOf<typeof BaseRoomIoTs>;
+
+/** RoomJsonとの違い: createdAtのtypeがDate */
+export type Room = t.TypeOf<typeof RoomIoTs>;
+/** Roomとの違い: createdAtのtypeがstring|null */
 export type RoomJson = t.TypeOf<typeof RoomJsonIoTs>;
-export type RoomAdd = {
+
+export type TalkingRoomParts = {
   messages: AllMessages;
   offlineMessages: OfflineMessage[];
   unreadNum: number;
   ws: WsNullable;
-  isEnd: boolean;
+  isStart: boolean;
 };
-/** RoomAsyncとの違い: wsのtypeがWsNullable */
-export type Room = RoomAdd & RoomJson;
-/** Roomとの違い: wsのtypeがnull */
-export type RoomAsync = t.TypeOf<typeof RoomAsyncIoTs>;
+/** TalkingRoomJsonとの違い: wsのtypeがWsNullable, createdAtのtypeがDate */
+export type TalkingRoom = TalkingRoomParts & Room;
+/** TalkingRoomとの違い: wsのtypeがnull, createdAtのtypeがstring|null */
+export type TalkingRoomJson = t.TypeOf<typeof TalkingRoomJsonIoTs>;
 export type WsNullable = WebSocket | null;
 
 export type OfflineMessage = t.TypeOf<typeof OfflineMessageIoTs>;
@@ -246,6 +269,23 @@ export type ChatDispatchTask = {
   queue: ChatActionType[];
   excludeType: string[];
 };
+
+export type CommonMessageSettings =
+  | {
+      type: "CREATED_ROOM";
+    }
+  | {
+      type: "SOMEONE_PARTICIPATED";
+      participant: Profile;
+    }
+  | {
+      type: "I_PARTICIPATED";
+      owner: Profile;
+    }
+  | {
+      type: "END";
+      targetUser: Profile;
+    };
 //========== Chat ==========//
 
 //========== Chat io-ts ==========//
@@ -261,14 +301,14 @@ export const DateType = new t.Type<Date, string, unknown>(
   (a) => a.toISOString()
 );
 export const BaseMessageIoTs = t.type({
-  messageId: t.string,
-  message: t.string,
-  isMe: t.boolean,
+  id: t.string,
+  text: t.string,
+  senderId: t.string,
 });
 export const OfflineMessageIoTs = t.type({
-  messageId: t.string,
-  message: t.string,
-  isMe: t.boolean,
+  id: t.string,
+  text: t.string,
+  senderId: t.string,
   time: DateType,
   isOffline: t.boolean,
 });
@@ -285,10 +325,10 @@ export const MessageJsonIoTs = t.intersection([
   }),
 ]);
 export const CommonMessageIoTs = t.type({
-  messageId: t.string,
-  message: t.string,
+  id: t.string,
+  text: t.string,
   time: DateType,
-  common: t.boolean,
+  isCommon: t.boolean,
 });
 export const AllMessageIoTs = t.union([
   OfflineMessageIoTs,
@@ -297,23 +337,65 @@ export const AllMessageIoTs = t.union([
 ]);
 export const AllMessagesIoTs = t.array(AllMessageIoTs);
 
-export const RoomJsonIoTs = t.type({
+export const BaseRoomIoTs = t.type({
   id: t.string,
-  user: ProfileIoTs,
-  startedAt: t.union([t.string, t.null]),
-  endedAt: t.union([t.string, t.null]),
-  isAlert: t.boolean,
-  isTimeOut: t.boolean,
-  userTopic: t.string,
+  name: t.string,
+  image: t.union([t.string, t.null]),
+  owner: ProfileIoTs,
+  participants: t.array(ProfileIoTs),
+  leftMembers: t.array(ProfileIoTs),
+  maxNumParticipants: t.number,
+  isExcludeDifferentGender: t.boolean,
+  isEnd: t.boolean,
+  isActive: t.boolean,
 });
-export const RoomAddJsonIoTs = t.type({
+const RoomCreatedAtIoTs = t.type({
+  createdAt: DateType,
+});
+export const RoomIoTs = t.intersection([BaseRoomIoTs, RoomCreatedAtIoTs]);
+const RoomCreatedAtJsonIoTs = t.type({
+  createdAt: t.union([t.string, t.null]),
+});
+export const RoomJsonIoTs = t.intersection([
+  BaseRoomIoTs,
+  RoomCreatedAtJsonIoTs,
+]);
+
+// -- TalkingRoomCollectionJsonIoTs -- //
+// response用IoTs. TalkingRoomCollectionのwsが常にnullで, 時間はDateを表すstring.
+export const TalkingRoomPartsJsonIoTs = t.type({
   messages: AllMessagesIoTs,
   offlineMessages: t.array(OfflineMessageIoTs),
   unreadNum: t.number,
   ws: t.null,
-  isEnd: t.boolean,
 });
-export const RoomAsyncIoTs = t.intersection([RoomAddJsonIoTs, RoomJsonIoTs]);
+export const TalkingRoomJsonIoTs = t.intersection([
+  TalkingRoomPartsJsonIoTs,
+  RoomJsonIoTs,
+]);
+export const TalkingRoomCollectionJsonIoTs = t.record(
+  t.string,
+  TalkingRoomJsonIoTs
+);
+// ------ //
+
+// -- TalkingRoomCollectionAsyncIoTs -- //
+// asyncStorage用IoTs. TalkingRoomCollectionのwsが常にnull(TalkingRoomとの唯一の違い)で, 時間は全てDateオブジェクト. (+ isStart)
+export const TalkingRoomPartsAsyncIoTs = t.intersection([
+  TalkingRoomPartsJsonIoTs,
+  t.type({
+    isStart: t.boolean, // "START_TALK"実行済みか
+  }),
+]);
+export const TalkingRoomAsyncIoTs = t.intersection([
+  TalkingRoomPartsAsyncIoTs,
+  RoomIoTs,
+]);
+export const TalkingRoomCollectionAsyncIoTs = t.record(
+  t.string,
+  TalkingRoomAsyncIoTs
+);
+// ------ //
 
 export const TalkStatusIoTs = t.type({
   key: t.string,
@@ -343,7 +425,7 @@ export const TalkTicketJsonIoTs = t.intersection([
 export const TalkTicketAsyncIoTs = t.intersection([
   TalkTicketJsonExceptRoomIoTs,
   t.type({
-    room: RoomAsyncIoTs,
+    room: RoomJsonIoTs,
   }),
 ]);
 /** TalkTicketCollectionAsyncIoTsとの違い: roomがnullable & roomJson */
@@ -357,10 +439,23 @@ export const TalkTicketCollectionAsyncIoTs = t.record(
   TalkTicketAsyncIoTs
 );
 export const TalkInfoJsonIoTs = t.type({
-  talkTickets: t.array(TalkTicketJsonIoTs),
-  lengthParticipants: t.record(t.string, t.number),
+  // talkTickets: t.array(TalkTicketJsonIoTs),
+  // lengthParticipants: t.record(t.string, t.number),
+  createdRooms: t.array(RoomJsonIoTs),
+  participatingRooms: t.array(RoomJsonIoTs),
 });
 //========== Chat io-ts ==========//
+
+//========== Dom ==========//
+export type TaskSchedulesKey = "refreshRooms";
+export type DomState = {
+  taskSchedules: { [key in TaskSchedulesKey]: boolean };
+};
+export type DomDispatch = React.Dispatch<DomActionType>;
+export type DomActionType =
+  | { type: "SCHEDULE_TASK"; taskKey: TaskSchedulesKey }
+  | { type: "DONE_TASK"; taskKey: TaskSchedulesKey };
+//========== Dom ==========//
 
 //========== ContextUtils ==========//
 export type States = {

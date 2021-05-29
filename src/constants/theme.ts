@@ -31,6 +31,7 @@ const materialTheme = {
 export default materialTheme;
 
 export const COLORS = {
+  TRANSPARENT: "rgba(255, 255, 255, 0)",
   PINK: "#f5b5a7", //#f5b5a7, #f6bab2
   GREEN: "#71DDA1",
   ALERT: "#F44336",
@@ -44,7 +45,7 @@ export const COLORS = {
   BLACK: "#333333",
   GRAY: "#555555",
   LIGHT_GRAY: "#6a6a6a",
-  HILIGHT_GRAY: "#d0d0d0",
+  HIGHLIGHT_GRAY: "#d0d0d0",
   RED: "#EC6D62",
 };
 

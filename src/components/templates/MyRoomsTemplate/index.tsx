@@ -1,80 +1,157 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import {
-  StyleSheet,
-  Dimensions,
-  FlatList,
-  ScrollView
-} from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 
 import { COLORS } from "src/constants/theme";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal"
-import JoinedRoomCard from "src/components/organisms/JoinedRoomCard"
-const { width } = Dimensions.get("screen");
+import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
+import { width } from "src/constants";
+import { TalkingRoom } from "src/types/Types.context";
+import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
+import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
 
-export const MyRoomsTemplate: React.FC = (props) => {
-  const numColumns = 1;
+type Props = {
+  participatingRooms: TalkingRoom[];
+  createdRooms: TalkingRoom[];
+  isOpenRoomEditorModal: boolean;
+  setIsOpenRoomEditorModal: Dispatch<boolean>;
+  isOpenRoomCreatedModal: boolean;
+  setIsOpenRoomCreatedModal: Dispatch<boolean>;
+  isOpenNotificationReminderModal: boolean;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
+  checkCanCreateRoom: () => boolean;
+};
+export const MyRoomsTemplate: React.FC<Props> = (props) => {
   const {
-    item,
+    participatingRooms,
+    createdRooms,
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
+    isOpenRoomCreatedModal,
+    setIsOpenRoomCreatedModal,
+    isOpenNotificationReminderModal,
+    setIsOpenNotificationReminderModal,
+    checkCanCreateRoom,
   } = props;
 
-  const isHavingRoom = false
-
+  const maxParticipatingRoomsLength = 1; // 参加ルームの最大数 (ver3.0.0現在)
+  const maxCreatedRoomsLength = 1; // 作成ルームの最大数 (ver3.0.0現在)
+  // const isExistTalkingRooms = !(
+  //   createdRooms.length <= 0 && participatingRooms.length <= 0
+  // );
   return (
     <>
       <Block flex center style={styles.container}>
-        <ScrollView>
-          {isHavingRoom ?
-            <>
-            {/* ルームに一つも属していない場合に表示 */}
-              <Block center style={styles.emptyStateTitle}>
-                <Text size={16} bold color={COLORS.BLACK}>まだ参加しているルームがありません</Text>
+        <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+          <>
+            <Block top style={styles.joinRoomContainer}>
+              <Block style={styles.cardSubTitle}>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  参加ルーム{" "}
+                  <Text
+                    bold
+                    color={
+                      participatingRooms.length >= maxParticipatingRoomsLength
+                        ? COLORS.GREEN
+                        : COLORS.LIGHT_GRAY
+                    }
+                  >
+                    {participatingRooms.length}/{maxParticipatingRoomsLength}
+                  </Text>
+                </Text>
               </Block>
-              <Block center style={styles.emptyStateSubTitle}>
-                <Text size={14} color={COLORS.BLACK}>新しいルームを探しにいきませんか？</Text>
+              {participatingRooms.length > 0 ? (
+                participatingRooms.map((participatingRoom) => {
+                  return (
+                    <TalkingRoomCard
+                      key={participatingRoom.id}
+                      talkingRoom={participatingRoom}
+                    />
+                  );
+                })
+              ) : (
+                <Block style={{ width: width }}>
+                  {/* ルームに一つも属していない場合に表示 */}
+                  <Block center style={styles.emptyStateTitle}>
+                    <Text size={16} bold color={COLORS.BLACK}>
+                      まだ参加しているルームがありません
+                    </Text>
+                  </Block>
+                  <Block center style={styles.emptyStateSubTitle}>
+                    <Text size={14} color={COLORS.BLACK}>
+                      新しいルームを探しにいきませんか？
+                    </Text>
+                  </Block>
+                </Block>
+              )}
+            </Block>
+            <Block top style={styles.makeRoomContainer}>
+              <Block style={styles.cardSubTitle}>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  作成ルーム{" "}
+                  <Text
+                    bold
+                    color={
+                      createdRooms.length >= maxCreatedRoomsLength
+                        ? COLORS.GREEN
+                        : COLORS.LIGHT_GRAY
+                    }
+                  >
+                    {createdRooms.length}/{maxCreatedRoomsLength}
+                  </Text>
+                </Text>
               </Block>
-            </>
-          : null}
-          <Block top style={styles.joinRoomContainer}>
-            <Block style={styles.cardSubTitle}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>参加ルーム0/1</Text>
+              {createdRooms.map((createdRoom) => {
+                return (
+                  <TalkingRoomCard
+                    key={createdRoom.id}
+                    talkingRoom={createdRoom}
+                  />
+                );
+              })}
             </Block>
-            <JoinedRoomCard
-              item={item}
-            />
-          </Block>
-          <Block top style={styles.makeRoomContainer}>
-            <Block style={styles.cardSubTitle}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>作成ルーム0/1</Text>
+          </>
+          {createdRooms.length <= 0 && (
+            <Block style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                color={COLORS.BROWN}
+                shadowless
+                onPress={() => {
+                  if (checkCanCreateRoom()) {
+                    setIsOpenRoomEditorModal(true);
+                  }
+                }}
+              >
+                <Text size={20} color={COLORS.WHITE} bold>
+                  悩みを話す
+                </Text>
+              </Button>
             </Block>
-            <JoinedRoomCard
-              item={item}
-            />
-          </Block>
-          <Block style={styles.buttonContainer} >
-            <Button
-              style={styles.button}
-              color={COLORS.BROWN}
-              shadowless
-              onPress={()=>{setIsOpenRoomEditorModal(true)}}
-            >
-              <Text size={20} color={COLORS.WHITE} bold>
-                悩みを話す
-              </Text>
-            </Button>
-          </Block>
+          )}
         </ScrollView>
       </Block>
       <RoomEditorModal
-      isOpenRoomEditorModal={isOpenRoomEditorModal}
-      setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-      isCreateNew
+        isOpenRoomEditorModal={isOpenRoomEditorModal}
+        setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
+        propsDependsOnMode={{
+          mode: "CREATE",
+          setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
+        }}
+      />
+      <RoomCreatedModal
+        isOpenRoomCreatedModal={isOpenRoomCreatedModal}
+        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
+      />
+      <NotificationReminderModal
+        isOpenNotificationReminderModal={isOpenNotificationReminderModal}
+        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       />
     </>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.BEIGE,
@@ -82,19 +159,20 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   emptyStateTitle: {
-    marginTop: 40
+    alignItems: "center",
+    marginTop: 40,
   },
   emptyStateSubTitle: {
-    marginTop: 16
+    marginTop: 16,
   },
   joinRoomContainer: {
-    marginTop: 16
+    marginTop: 16,
   },
   makeRoomContainer: {
-    marginTop: 32
+    marginTop: 32,
   },
   cardSubTitle: {
-    paddingLeft: 20
+    paddingLeft: 20,
   },
   list: {
     width: width,
@@ -117,4 +195,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-})
+});

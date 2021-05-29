@@ -3,12 +3,9 @@ import { AppState, AppStateStatus } from "react-native";
 
 import { useAuthState } from "src/contexts/AuthContext";
 import { useChatDispatch } from "src/contexts/ChatContext";
-import { AllMessages, TalkTicketKey } from "src/types/Types.context";
+import { AllMessages } from "src/types/Types.context";
 
-const useTurnOnRead = (
-  messages: AllMessages,
-  talkTicketKey: TalkTicketKey
-): void => {
+export const useTurnOnRead = (messages: AllMessages, roomId: string): void => {
   const appState = useRef(AppState.currentState);
   const chatDispatch = useChatDispatch();
   const authState = useAuthState();
@@ -17,7 +14,7 @@ const useTurnOnRead = (
     authState.token &&
       chatDispatch({
         type: "READ_BY_ROOM",
-        talkTicketKey,
+        roomId: roomId,
         token: authState.token,
         isForceSendReadNotification: true,
       });
@@ -42,5 +39,3 @@ const useTurnOnRead = (
     }
   }, [messages.length]);
 };
-
-export default useTurnOnRead;

@@ -8,6 +8,7 @@ import { COLORS } from "src/constants/theme";
 import { LottieSource } from "src/types/Types";
 import useAllContext from "src/contexts/ContextUtils";
 import { dangerouslyDelete } from "src/utils/auth/crud";
+import { RoundButton } from "src/components/atoms/RoundButton";
 
 const SuccessAccountDelete: React.FC = () => {
   const [
@@ -77,17 +78,11 @@ const SuccessAccountDelete: React.FC = () => {
       </Block>
 
       <Block flex={0.15} style={styles.buttonContainer}>
-        <Button
-          round
-          color={COLORS.PINK}
-          shadowColor={COLORS.PINK}
-          style={[styles.goNextButton]}
+        <RoundButton
+          label={"トップに戻る"}
           onPress={onPressToTop}
-        >
-          <Text bold color="white" size={16}>
-            トップに戻る
-          </Text>
-        </Button>
+          style={styles.goNextButton}
+        />
       </Block>
     </Block>
   );

@@ -1,8 +1,9 @@
 import * as WebBrowser from "expo-web-browser";
 
 import { Dispatches } from "src/types/Types.context";
-import { alertModal, asyncRemoveItem } from "src/utils";
-import { AS_KEY_SKIP_UPDATE_VERSION, CONTACT_US_URL } from "src/constants/env";
+import { alertModal } from "src/utils";
+import { CONTACT_US_URL } from "src/constants/env";
+import { AsyncStorageKey, asyncRemoveItem } from "src/utils/asyncStorage";
 
 /**
  * async storageからtokenを含む全ての認証情報を削除するため復帰ができません。
@@ -12,13 +13,13 @@ export const dangerouslyDelete = (
   dispatches: Dispatches,
   excludeKeys?: string[]
 ): void => {
-  const willRemoveItemKeys = [
+  const willRemoveItemKeys: AsyncStorageKey[] = [
     "status",
     "token",
-    "signupBuffer",
-    "talkTicketCollection",
+    "talkingRoomCollection",
+    "profile",
     "versionNum",
-    AS_KEY_SKIP_UPDATE_VERSION,
+    "skipUpdateVersion",
   ];
   willRemoveItemKeys.forEach((willRemoveItemKey) => {
     if (!excludeKeys?.includes(willRemoveItemKey)) {

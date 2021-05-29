@@ -7,30 +7,30 @@ import React, {
 } from "react";
 
 import { isExpo } from "src/constants/env";
-import {
-  isString,
-  closeWsSafely,
-  asyncStoreTalkTicketCollection,
-  isObject,
-  isTalkTicket,
-  isRoom,
-} from "src/utils";
+import { isString, closeWsSafely } from "src/utils";
+import { asyncStoreTalkingRoomCollection } from "src/utils/asyncStorage";
 import {
   ChatState,
   ChatDispatch,
-  RoomAdd,
   TalkTicketCollection,
   ChatActionType,
   TalkTicket,
   CommonMessage,
   Message,
   OfflineMessage,
-  RoomJson,
-  AllMessages,
-  TalkTicketJson,
-  TalkTicketKey,
+  TalkingRoom,
+  TalkingRoomCollection,
+  Room,
+  CommonMessageSettings,
+  Profile,
 } from "src/types/Types.context";
-import { initProfile } from "src/contexts/ProfileContext";
+import {
+  canAddCommonMessage,
+  checkAndAddCommonMessage,
+  geneCommonMessage,
+  getTotalUnreadNum,
+} from "src/utils/chat/chatContextUtils";
+import { Alert } from "react-native";
 
 /**
  * dispatchを遅延するべきか判定し、遅延する場合actionをchatDispatchTask.queueにエンキューしreturn
@@ -63,273 +63,264 @@ const checkAndDoDelayDispatch = (
   return null;
 };
 
+const consoleErrorNotFountRoom = (_roomId: string): void => {
+  console.error(`not found the room (id: ${_roomId}).`);
+};
+
 const chatReducer = (
   prevState: ChatState,
   action: ChatActionType
 ): ChatState => {
-  let _messages: AllMessages;
   let _offlineMessages: OfflineMessage[];
   let _talkTicketCollection: TalkTicketCollection;
   let _talkTicket: TalkTicket;
-  // let _chatDispatchTask: ChatDispatchTask;
+  // ↑未使用
+
+  let _talkingRoomCollection: TalkingRoomCollection;
+  let _talkingRoom: TalkingRoom;
 
   // 遅延するべきか判定 ? return chatState : return null;
   const resultDelay = checkAndDoDelayDispatch(prevState, action);
   if (resultDelay) return resultDelay;
 
   switch (action.type) {
-    case "UPDATE_TALK_TICKETS": {
-      /** update talkTickets to talkTicketCollection.(worry.keyをkeyに持つObjectに変換)
-       * action.talkTicketsをtalkTicketCollectionにマージ. すでに存在する同一keyのtalkTicketがtalkingだった時、更新しない.
-       * @param {Object} action [type, talkTickets] */
-      _talkTicketCollection = prevState.talkTicketCollection;
-      action.talkTickets.forEach((talkTicketJson) => {
-        const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
-        if (_talkTicket === null) return { ...prevState };
+    case "INIT_TALKING_ROOM": {
+      /** roomJson(RoomJson)を受け取り、TalkingRoomParts部分を追加してtalkingRoomCollectionに追加. 既に存在する場合は更新(上書き)する.
+       * @param {Object} action [type, roomJson] */
 
-        if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
-          _talkTicket.room.messages = [geneCommonMessage("waiting")];
-        } else if (_talkTicket.status.key === "stopping") {
-          _talkTicket.room.messages = [geneCommonMessage("stopping")];
-        }
-        _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
-      });
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+
+      // RoomJsonの場合、createdAtをインスタンス化し、Roomに
+      const roomJson = action.roomJson;
+      const room: Room = { ...roomJson, ...{ createdAt: new Date() } };
+      if (roomJson.createdAt) {
+        room.createdAt = new Date(roomJson.createdAt);
+      }
+
+      const talkingRoom = {
+        ...room,
+        messages: [],
+        offlineMessages: [],
+        unreadNum: 0,
+        ws: null,
+        isStart: false,
+      };
+
+      _talkingRoomCollection[talkingRoom.id] = talkingRoom;
 
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
-    case "FORCE_UPDATE_TALK_TICKETS": {
-      /** force update talkTickets to talkTicketCollection.(worry.keyをkeyに持つObjectに変換)
-       * 上記のUPDATE_TALK_TICKETSと変更処理は同じだが、こちらはどんなtalkTicketでもupdateをする
-       * @param {Object} action [type, talkTickets] */
-      _talkTicketCollection = prevState.talkTicketCollection;
-      action.talkTickets.forEach((talkTicketJson) => {
-        const _talkTicket = changeTalkTicketFromJsonToObject(talkTicketJson);
-        if (_talkTicket === null) return { ...prevState };
+    case "UPDATE_TALKING_ROOM": {
+      /** 受け取ったroomJsonから既に登録されている該当のtalkingRoomのプロパティを更新.
+       * TalkingRoomParts部分(messages等)は更新しない. 該当のtalkingRoomが存在しなかったらスキップ.
+       * @param {Object} action [type, roomJson] */
 
-        if (_talkTicket.status.key === "waiting" && _talkTicket.room) {
-          _talkTicket.room.messages = [geneCommonMessage("waiting")];
-        } else if (_talkTicket.status.key === "stopping") {
-          _talkTicket.room.messages = [geneCommonMessage("stopping")];
-        }
-        _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
-      });
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+
+      if (!(action.roomJson.id in _talkingRoomCollection)) {
+        return { ...prevState };
+      }
+
+      const roomJson = action.roomJson;
+      const room: Room = { ...roomJson, ...{ createdAt: new Date() } };
+      if (roomJson.createdAt) {
+        room.createdAt = new Date(roomJson.createdAt);
+      }
+
+      _talkingRoomCollection[roomJson.id] = {
+        ..._talkingRoomCollection[roomJson.id],
+        ...room,
+      };
 
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
-    case "START_APPROVING_TALK": {
-      /** マッチング時に実行. 承認の準備. initMessage追加.
-       * @param {Object} action [type, talkTicketKey, ws] */
+    case "APPEND_OFFLINE_MESSAGE": {
+      /** offlineMessageを作成し、追加
+       * @param {Object} action [type, roomId, messageId, text, senderId, time] */
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      const offlineMessage: OfflineMessage = {
+        id: action.messageId,
+        text: action.text,
+        senderId: action.senderId,
+        time: action.time,
+        isOffline: true,
+      };
 
-      // initMessage付与。
-      _talkTicket.room.messages = [geneCommonMessage("approving")];
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        return { ...prevState };
+      }
 
-      _talkTicketCollection[action.talkTicketKey] = _talkTicket;
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      _offlineMessages = [..._talkingRoom.offlineMessages, offlineMessage];
+      _talkingRoomCollection[action.roomId].offlineMessages = _offlineMessages;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
+    }
+
+    case "APPEND_COMMON_MESSAGE": {
+      /** 各システムメッセージ追加.
+       * @param {Object} action [type, roomId, commonMessageSettings] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      _talkingRoom.messages = checkAndAddCommonMessage(
+        _talkingRoom.messages,
+        action.commonMessageSettings
+      );
+
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
     case "START_TALK": {
-      /** トーク開始時(init)に実行. initMessage追加 & set ws.
-       * @param {Object} action [type, talkTicketKey, ws] */
+      /** トーク開始時(作成者にとっては初の参加者が入った時, 参加者にとっては参加した時)に1回だけ実行.
+       * talkingRoom.isStartがfalseの時にのみ処理を行う. 完了後, talkingRoom.isStartをtrueに.
+       * initMessage追加 & set ws.
+       * @param {Object} action [type, roomId, ws] */
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      // すでにスタート済み
+      if (_talkingRoom.isStart) {
+        console.error(`the room (id: ${action.roomId}) has already started.`);
+        return { ...prevState };
+      }
+
       if (
-        /* 空objectはtrueを返すため */
-        _talkTicket.room.ws !== null &&
-        Object.keys(_talkTicket.room.ws).length
+        /* not空object判定(すでにwsが入っている場合). 空objectはtrueを返すため, このような評価 */
+        _talkingRoom.ws !== null &&
+        Object.keys(_talkingRoom.ws).length
       ) {
         // WSの重複を防ぐ
         closeWsSafely(action.ws);
         return { ...prevState };
       } else {
-        _talkTicket.room.ws = action.ws;
+        _talkingRoom.ws = action.ws;
+        _talkingRoom.isStart = true;
 
-        // initMessage付与。
-        _talkTicket.room.messages = [
-          _talkTicket.isSpeaker
-            ? geneCommonMessage("initSpeak", _talkTicket.room.user.name)
-            : geneCommonMessage("initListen", _talkTicket.room.user.name),
-        ];
+        _talkingRoomCollection[action.roomId] = _talkingRoom;
 
-        _talkTicketCollection[action.talkTicketKey] = _talkTicket;
-        asyncStoreTalkTicketCollection(_talkTicketCollection);
+        asyncStoreTalkingRoomCollection(_talkingRoomCollection);
         return {
           ...prevState,
-          talkTicketCollection: _talkTicketCollection,
+          talkingRoomCollection: _talkingRoomCollection,
         };
       }
     }
 
     case "RESTART_TALK": {
-      /** トーク再接続時に実行. messagesのtimeのインスタンス化 & offlineMessages = [] & set ws.
+      /** トーク再接続時に実行.
+       * talkingRoom.isStartがtrueの時にのみ処理を行う. (="START_TALK"実行済み)
+       * messagesのtimeのインスタンス化 & offlineMessages = [] & set ws.
        * @param {Object} action [type, talkTicketKey, ws] */
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      // 未だスタートしていない
+      if (!_talkingRoom.isStart) {
+        console.error(`the room (id: ${action.roomId}) has already started.`);
+        return { ...prevState };
+      }
+
       if (
-        /* 空objectはtrueを返すため */
-        _talkTicket.room.ws !== null &&
-        Object.keys(_talkTicket.room.ws).length
+        /* not空object判定(すでにwsが入っている場合). 空objectはtrueを返すため, このような評価 */
+        _talkingRoom.ws !== null &&
+        Object.keys(_talkingRoom.ws).length
       ) {
         // WSの重複を防ぐ
         closeWsSafely(action.ws);
         return { ...prevState };
       } else {
-        _talkTicket.room.ws = action.ws;
-        _talkTicket.room.messages.forEach((message, index) => {
-          const targetMessage = _talkTicket.room.messages[index];
+        _talkingRoom.ws = action.ws;
+        _talkingRoom.messages.forEach((message, index) => {
+          const targetMessage = _talkingRoom.messages[index];
           if ("time" in targetMessage && "time" in message)
             targetMessage.time = new Date(message.time);
         });
-        _talkTicket.room.offlineMessages = [];
+        _talkingRoom.offlineMessages = [];
 
-        _talkTicketCollection[action.talkTicketKey] = _talkTicket;
-        asyncStoreTalkTicketCollection(_talkTicketCollection);
+        _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+        asyncStoreTalkingRoomCollection(_talkingRoomCollection);
         return {
           ...prevState,
-          talkTicketCollection: _talkTicketCollection,
+          talkingRoomCollection: _talkingRoomCollection,
         };
       }
     }
 
-    case "RESTART_TALK_ONLY_MESSAGE": {
-      /** トーク再接続時に実行(相手が退出済みのみ). messagesのtimeのインスタンス化 & offlineMessages = [].
-       * @param {Object} action [type, talkTicketKey] */
-
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
-      _talkTicket.room.messages.forEach((message, index) => {
-        const targetMessageOnlyMessage = _talkTicket.room.messages[index];
-        if ("time" in targetMessageOnlyMessage && "time" in message)
-          targetMessageOnlyMessage.time = new Date(message.time);
-      });
-      _talkTicket.room.offlineMessages = [];
-
-      _talkTicketCollection[action.talkTicketKey] = _talkTicket;
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
-      return {
-        ...prevState,
-        talkTicketCollection: _talkTicketCollection,
-      };
-    }
-
     case "RECONNECT_TALK": {
       /** wsをset. wsが切断され再接続された際に実行
-       * @param {Object} action [type, ws, talkTicketKey] */
+       * @param {Object} action [type, ws, roomId] */
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
 
-      _talkTicket.room.ws = action.ws;
+      _talkingRoom.ws = action.ws;
 
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
-      };
-    }
-
-    case "APPEND_MESSAGE": {
-      /** messageを作成し, 追加. 未読値をインクリメント ストア通知
-       * @param {Object} action [type, talkTicketKey, messageId, message, isMe, time(str or Date), token] */
-
-      const message: Message = {
-        messageId: action.messageId,
-        message: action.message,
-        isMe: action.isMe,
-        time:
-          typeof action.time === "string" ? new Date(action.time) : action.time,
-      };
-
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
-
-      _messages = _talkTicket.room.messages.concat([message]);
-      const prevUnreadNum_AM = _talkTicket.room.unreadNum;
-      const incrementNum_AM = action.isMe ? 0 : 1;
-
-      _talkTicketCollection[action.talkTicketKey].room.messages = _messages;
-      _talkTicketCollection[action.talkTicketKey].room.unreadNum =
-        prevUnreadNum_AM + incrementNum_AM;
-
-      // store message data. and report that it was stored safely to the server.
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
-      _talkTicket.room.ws &&
-        _talkTicket.room.ws.send(
-          JSON.stringify({
-            type: "store",
-            message_id: action.messageId,
-            token: action.token,
-          })
-        );
-
-      return {
-        ...prevState,
-        talkTicketCollection: _talkTicketCollection,
-        totalUnreadNum: prevState.totalUnreadNum + incrementNum_AM,
-      };
-    }
-
-    case "DELETE_OFFLINE_MESSAGE": {
-      /** 受け取ったmessageIdに該当するofflineMessageを削除
-       * @param {Object} action [type, talkTicketKey, messageId] */
-
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
-
-      const prevOfflineMessages = _talkTicket.room.offlineMessages;
-      _offlineMessages = prevOfflineMessages.filter(
-        (elm) => elm.messageId !== action.messageId
-      );
-      _talkTicketCollection[
-        action.talkTicketKey
-      ].room.offlineMessages = _offlineMessages;
-
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
-      return {
-        ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
     case "MERGE_MESSAGES": {
-      /** 受け取ったmessagesを統合 未読値をインクリメント ストア通知 (messagesの中身は全てスネークケース)
-       * @param {Object} action [type, talkTicketKey, messages, token] */
+      /** 受け取ったmessagesを統合 未読値をインクリメント ストア通知 (messagesの中身は全てキャメルケース)
+       * @param {Object} action [type, roomId, meId, messages, token] */
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
 
       let incrementNum_MM = 0;
-      const messages = action.messages
+      const messages: Message[] = action.messages
         .filter((elm) => {
           if (
-            _talkTicket.room.messages.some((_message) => {
-              return _message.messageId === elm.messageId;
+            _talkingRoom.messages.some((_message) => {
+              return _message.id === elm.id;
             })
           ) {
             // 既に該当のmessageが存在する(保存状況の送信がうまくいっていなかった場合)
@@ -339,142 +330,244 @@ const chatReducer = (
           }
         })
         .map((elm) => {
-          if (!elm.isMe) incrementNum_MM += 1;
+          if (elm.senderId !== action.meId) incrementNum_MM += 1; // 他人のメッセージだったらインクリメント
           return {
-            messageId: elm.messageId,
-            message: elm.message,
-            isMe: elm.isMe,
+            id: elm.id,
+            text: elm.text,
+            senderId: elm.senderId,
             time: isString(elm.time) ? new Date(elm.time) : elm.time,
           };
         });
 
-      _messages = _talkTicket.room.messages.concat(messages);
-      const prevUnreadNum_MM = _talkTicket.room.unreadNum;
-      _talkTicketCollection[action.talkTicketKey].room.messages = _messages;
-      _talkTicketCollection[action.talkTicketKey].room.unreadNum =
-        prevUnreadNum_MM + incrementNum_MM;
+      _talkingRoom.messages = [..._talkingRoom.messages, ...messages];
+      const prevUnreadNum_MM = _talkingRoom.unreadNum;
+      _talkingRoom.unreadNum = prevUnreadNum_MM + incrementNum_MM;
+
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
 
       // store message data. and report that it was stored safely to the server.
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
-      _talkTicket.room.ws &&
-        _talkTicket.room.ws.send(
+      _talkingRoom.ws &&
+        _talkingRoom.ws.send(
           JSON.stringify({ type: "store_by_room", token: action.token })
         );
 
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
         totalUnreadNum: prevState.totalUnreadNum + incrementNum_MM,
       };
     }
 
-    case "APPEND_COMMON_MESSAGE": {
-      /** common message を追加
-       * @param {Object} action [type, talkTicketKey, alert] */
+    case "I_END_TALK": {
+      /** 自身がトークを終了した. messages, offlineMessagesの削除, unreadNum, totalUnreadNumの変更., ws.close(). ルームを終了状態に.
+       * どのメンバーも(被退室メンバーも)必ず自分で退室したタイミングに実行する.
+       * @param {Object} action [type, roomId] */
 
-      if (action.alert) {
-        _talkTicketCollection = prevState.talkTicketCollection;
-        _talkTicket = _talkTicketCollection[action.talkTicketKey];
-        if (!_talkTicket) return { ...prevState };
-
-        _messages = _talkTicket.room.messages.concat([
-          geneCommonMessage("alert"),
-        ]);
-        _talkTicketCollection[action.talkTicketKey].room.messages = _messages;
-
-        asyncStoreTalkTicketCollection(_talkTicketCollection);
-        return {
-          ...prevState,
-          talkTicketCollection: _talkTicketCollection,
-        };
-      } else return { ...prevState };
-    }
-
-    case "END_TALK": {
-      /** end talk. messages, offlineMessagesの削除, unreadNum, totalUnreadNumの変更., ws.close()
-       * @param {Object} action [type, talkTicketKey, (timeOut)] */
-
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
-
-      if (
-        _talkTicket.room.messages.length > 0 &&
-        _talkTicket.room.messages[_talkTicket.room.messages.length - 1]
-          .messageId !== "COMMON_MESSAGE_FINISHING_TALK"
-      ) {
-        _talkTicket.room.messages = [
-          ..._talkTicket.room.messages,
-          ...[
-            geneCommonMessage(
-              "end",
-              _talkTicket.room.user.name,
-              Boolean(action.timeOut)
-            ),
-          ],
-        ];
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
       }
 
-      _talkTicket.room.offlineMessages = [];
-      _talkTicket.room.isEnd = true;
-      _talkTicket.room.ws && closeWsSafely(_talkTicket.room.ws);
+      // _talkingRoom.messages = [];
+      _talkingRoom.offlineMessages = [];
+      _talkingRoom.isEnd = true;
+      _talkingRoom.ws && closeWsSafely(_talkingRoom.ws);
 
-      _talkTicketCollection[action.talkTicketKey] = _talkTicket;
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
-    case "APPEND_OFFLINE_MESSAGE": {
-      /** offlineMessageを作成し、追加
-       * @param {Object} action [type, talkTicketKey, messageId, messageText, time] */
+    case "MEMBER_END_TALK": {
+      /** メンバーがトークを終了した. システムメッセージの追加. ルームを終了状態に.
+       * @param {Object} action [type, roomId, meId] */
 
-      const offlineMessage: OfflineMessage = {
-        messageId: action.messageId,
-        message: action.messageText,
-        isMe: true,
-        time: action.time,
-        isOffline: true,
-      };
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      // すでに終了していた場合, ルーム退室者本人であるため処理をスキップ (参加者が１人までという現時点での仕様により).
+      // if (_talkingRoom.isEnd) {
+      //   return { ...prevState };
+      // }
 
-      _offlineMessages = _talkTicket.room.offlineMessages.concat([
-        offlineMessage,
-      ]);
-      _talkTicketCollection[
-        action.talkTicketKey
-      ].room.offlineMessages = _offlineMessages;
+      if (_talkingRoom.messages.length > 0) {
+        const leftCommonMessages: CommonMessage[] = [];
+        _talkingRoom.leftMembers
+          .filter((_leftMember) => _leftMember.id !== action.meId) // 自身を含めない
+          .forEach((_leftMember) => {
+            const leftCommonMessageSettings: CommonMessageSettings = {
+              type: "END",
+              targetUser: _leftMember,
+            };
+            if (
+              canAddCommonMessage(
+                _talkingRoom.messages,
+                leftCommonMessageSettings
+              )
+            ) {
+              leftCommonMessages.push(
+                geneCommonMessage(leftCommonMessageSettings)
+              );
+            }
+          });
 
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+        _talkingRoom.messages = [
+          ..._talkingRoom.messages,
+          ...leftCommonMessages,
+        ];
+
+        // let targetUser: Profile | undefined;
+        // if (_talkingRoom.owner.id === action.meId) {
+        //   // 自身が作成者の時
+        //   if (_talkingRoom.participants.length > 0) {
+        //     targetUser = _talkingRoom.participants[0]; // 参加者が１人までという現時点での仕様により
+        //   }
+        // } else {
+        //   // 自身が参加者の時
+        //   targetUser = _talkingRoom.owner;
+        // }
+
+        // if (targetUser) {
+        //   _talkingRoom.messages = checkAndAddCommonMessage(_talkingRoom.messages, {
+        //     type: "END",
+        //     targetUser: targetUser,
+        //   });
+        // }
+      }
+
+      _talkingRoom.isEnd = true;
+
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
+    }
+
+    case "CLOSE_TALK": {
+      /** トークのクローズ. stateからのルームの削除.
+       * @param {Object} action [type, roomId] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      delete _talkingRoomCollection[action.roomId];
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
+    }
+
+    case "APPEND_MESSAGE": {
+      /** messageを作成し, 追加. 未読値をインクリメント ストア通知
+       * @param {Object} action [type, roomId, messageId, text, senderId, time(str or Date), meId, token] */
+
+      const message: Message = {
+        id: action.messageId,
+        text: action.text,
+        senderId: action.senderId,
+        time:
+          typeof action.time === "string" ? new Date(action.time) : action.time,
+      };
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      _talkingRoom.messages = [..._talkingRoom.messages, message];
+      const prevUnreadNum_AM = _talkingRoom.unreadNum;
+      const incrementNum_AM = action.senderId === action.meId ? 0 : 1;
+      _talkingRoom.unreadNum = prevUnreadNum_AM + incrementNum_AM;
+
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+
+      // store message data. and report that it was stored safely to the server.
+      _talkingRoom.ws &&
+        _talkingRoom.ws.send(
+          JSON.stringify({
+            type: "store",
+            message_id: action.messageId,
+          })
+        );
+
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
+        totalUnreadNum: prevState.totalUnreadNum + incrementNum_AM,
+      };
+    }
+
+    case "DELETE_OFFLINE_MESSAGE": {
+      /** 受け取ったmessageIdに該当するofflineMessageを削除
+       * @param {Object} action [type, roomId, messageId] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      const prevOfflineMessages = _talkingRoom.offlineMessages;
+      _offlineMessages = prevOfflineMessages.filter(
+        (elm) => elm.id !== action.messageId
+      );
+      _talkingRoomCollection[action.roomId].offlineMessages = _offlineMessages;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
     case "READ_BY_ROOM": {
-      /** チャットルームごとの既読処理 該当のチャットルームの全てのmessageを既読に チャットルームを開いたときに実行
-       * @param {Object} action [type, talkTicketKey] */
+      /** トーキングルームごとの既読処理 該当のチャットルームの全てのmessageを既読に チャットルームを開いたときに実行
+       * @param {Object} action [type, roomId] */
 
-      _talkTicketCollection = prevState.talkTicketCollection;
-      _talkTicket = _talkTicketCollection[action.talkTicketKey];
-      if (!_talkTicket) return { ...prevState };
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
 
-      const unreadNum = _talkTicket.room.unreadNum;
+      const unreadNum = _talkingRoom.unreadNum;
       const totalUnreadNum = prevState.totalUnreadNum - unreadNum;
-      _talkTicketCollection[action.talkTicketKey].room.unreadNum = 0;
+      _talkingRoomCollection[action.roomId].unreadNum = 0;
 
       // send read (既読をサーバに通知)
-      _talkTicket.room.ws &&
+      _talkingRoom.ws &&
         // isForceSendReadNotification(Chat内で呼ばれた時)は強制送信.
         // それ以外(HomeからChatに画面遷移等)は未読が存在する時にのみ送信.
         (action.isForceSendReadNotification || unreadNum > 0) &&
-        _talkTicket.room.ws.send(
+        _talkingRoom.ws.send(
           JSON.stringify({ type: "read", token: action.token })
         );
 
@@ -489,60 +582,11 @@ const chatReducer = (
           updateBudgeCount(totalUnreadNum);
         })();
 
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
       return {
         ...prevState,
-        talkTicketCollection: _talkTicketCollection,
+        talkingRoomCollection: _talkingRoomCollection,
         totalUnreadNum: totalUnreadNum,
-      };
-    }
-
-    case "OVERWRITE_TALK_TICKET": {
-      /** 強制的にtalkTicketを上書き. 既存のtalkTicketが削除されるので、トークが完全に終了している場合のみに使用。
-       * @param {Object} action [type, talkTicket] */
-
-      _talkTicketCollection = prevState.talkTicketCollection;
-      const _talkTicket = changeTalkTicketFromJsonToObject(action.talkTicket);
-      if (_talkTicket === null) return { ...prevState };
-
-      if (_talkTicket.status.key === "waiting") {
-        _talkTicket.room.messages = [geneCommonMessage("waiting")];
-      } else if (_talkTicket.status.key === "stopping") {
-        _talkTicket.room.messages = [geneCommonMessage("stopping")];
-      }
-      _talkTicketCollection[_talkTicket.worry.key] = _talkTicket;
-
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
-
-      return {
-        ...prevState,
-        talkTicketCollection: _talkTicketCollection,
-      };
-    }
-
-    case "REMOVE_TALK_TICKETS": {
-      /** talkTicketsを削除
-       * @param {Object} action [type, talkTicketKeys] */
-
-      _talkTicketCollection = prevState.talkTicketCollection;
-
-      action.talkTicketKeys.forEach((talkTicketKey) => {
-        _talkTicket = _talkTicketCollection[talkTicketKey];
-        if (!_talkTicket) return;
-        if (
-          isObject(_talkTicket.room?.ws) &&
-          Object.keys(_talkTicket.room?.ws).length
-        ) {
-          // null || {} の場合があり得る
-          closeWsSafely(_talkTicket.room.ws);
-        }
-        delete _talkTicketCollection[talkTicketKey];
-      });
-
-      asyncStoreTalkTicketCollection(_talkTicketCollection);
-      return {
-        ...prevState,
-        talkTicketCollection: _talkTicketCollection,
       };
     }
 
@@ -588,16 +632,6 @@ const chatReducer = (
       };
     }
 
-    case "SET_LENGTH_PARTICIPANTS": {
-      /** set lengthParticipants
-       * @param {Object} action [type, lengthParticipants] */
-
-      return {
-        ...prevState,
-        lengthParticipants: action.lengthParticipants,
-      };
-    }
-
     case "DANGEROUSLY_RESET":
       /** chat stateを初期化.
        * @param {Object} action [type] */
@@ -610,141 +644,10 @@ const chatReducer = (
   }
 };
 
-const initRoomBase: RoomJson = Object.freeze({
-  id: "",
-  user: initProfile,
-  startedAt: "",
-  endedAt: "",
-  isAlert: false,
-  isTimeOut: false,
-  userTopic: "",
-});
-
-const initRoomAdd: RoomAdd = Object.freeze({
-  messages: [],
-  offlineMessages: [],
-  unreadNum: 0,
-  ws: null,
-  isEnd: false,
-});
-
-const geneCommonMessage = (type: string, userName = "", timeOut = false) => {
-  const message: CommonMessage = {
-    messageId: "INIT_COMMON_MESSAGE",
-    message: "",
-    time: new Date(Date.now()),
-    common: true,
-  };
-  switch (type) {
-    case "approving": {
-      message["messageId"] = "COMMON_MESSAGE_START_APPROVING_TALK";
-      message["message"] = "条件に合う話し相手がみつかりました";
-      break;
-    }
-    case "initSpeak": {
-      message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_SPEAKER";
-      message[
-        "message"
-      ] = `話し相手が見つかりました！${userName}さんに話を聞いてもらいましょう`;
-      break;
-    }
-    case "initListen": {
-      message["messageId"] = "COMMON_MESSAGE_START_TALK_VER_LISTENER";
-      message[
-        "message"
-      ] = `話し相手が見つかりました！${userName}さんのお話を聞いてあげましょう`;
-      break;
-    }
-    case "alert": {
-      message["messageId"] = "COMMON_MESSAGE_ALERT";
-      message["message"] = "残り5分で自動退室となります";
-      break;
-    }
-    case "end": {
-      message["messageId"] = "COMMON_MESSAGE_FINISHING_TALK";
-      if (timeOut) {
-        message["message"] =
-          "トークが開始されてから2週間が経過したため、自動退室されました。右上のボタンからトークを更新または終了してください。";
-      } else {
-        message[
-          "message"
-        ] = `${userName}さんが退室しました。右上のボタンからトークを更新または終了してください。`;
-      }
-      break;
-    }
-    case "waiting": {
-      // const now = new Date();
-      // const hour = now.getHours();
-      // const min = (now.getMinutes() < 10 ? "0" : "") + now.getMinutes();
-      message["messageId"] = "COMMON_MESSAGE_WAITING_TALK";
-      message[
-        "message"
-        //`あなたに合う話し相手を探しています（最終更新：${hour}:${min}）`
-      ] = "あなたに合う話し相手を探しています";
-      break;
-    }
-    case "stopping": {
-      message["messageId"] = "COMMON_MESSAGE_STOPPING_TALK";
-      message["message"] = "タップしてあなたに合う話し相手を探しましょう";
-      break;
-    }
-  }
-  return message;
-};
-
-/**
- * talkTicketJsonをtalkTicketに変換
- * @param talkTicketJson
- */
-const changeTalkTicketFromJsonToObject = (
-  talkTicketJson: TalkTicketJson
-): TalkTicket | null => {
-  // 既にmessagesが存在する時(messageをAsyncStorageからgetした時)
-  if (
-    talkTicketJson.room &&
-    isRoom(talkTicketJson.room) &&
-    isTalkTicket(talkTicketJson)
-  ) {
-    return talkTicketJson;
-  }
-  // messagesを所持していない時(messageをAPIレスポンスとして受け取った時)
-  if (talkTicketJson.room === null) {
-    talkTicketJson.room = { ...initRoomBase, ...initRoomAdd };
-  } else {
-    talkTicketJson.room = { ...talkTicketJson.room, ...initRoomAdd };
-  }
-
-  if (talkTicketJson.room && !isRoom(talkTicketJson.room)) {
-    return null;
-  }
-  if (!isTalkTicket(talkTicketJson)) {
-    return null;
-  }
-
-  return talkTicketJson;
-};
-
-const cvtDateStringToDateObject = (
-  talkTicketCollection: TalkTicketCollection
-) => {
-  Object.keys(talkTicketCollection).forEach((talkTicketKey: TalkTicketKey) => {
-    const _talkTicket = talkTicketCollection[talkTicketKey];
-    _talkTicket.room.messages.forEach((message, i) => {
-      const _targetMessage = _talkTicket.room.messages[i];
-      if ("time" in _targetMessage && "time" in message) {
-        _targetMessage.time = new Date(message.time);
-      }
-    });
-  });
-
-  return talkTicketCollection;
-};
-
 const initChatState: ChatState = Object.freeze({
-  totalUnreadNum: 0,
-  talkTicketCollection: {},
   chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
-  lengthParticipants: {},
+  totalUnreadNum: 0,
+  talkingRoomCollection: {},
 });
 const ChatStateContext = createContext<ChatState>(initChatState);
 const ChatDispatchContext = createContext<ChatDispatch>(() => {
@@ -761,19 +664,20 @@ export const useChatDispatch = (): ChatDispatch => {
 };
 
 type Props = {
-  talkTicketCollection: TalkTicketCollection | null;
+  talkingRoomCollection: TalkingRoomCollection | null;
 };
 export const ChatProvider: React.FC<Props> = ({
   children,
-  talkTicketCollection: talkTicketCollection,
+  talkingRoomCollection,
 }) => {
   const [chatState, chatDispatch] = useReducer(chatReducer, {
-    totalUnreadNum: 0,
-    talkTicketCollection: talkTicketCollection
-      ? cvtDateStringToDateObject(talkTicketCollection)
-      : {},
     chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
-    lengthParticipants: {},
+    totalUnreadNum: talkingRoomCollection
+      ? getTotalUnreadNum(talkingRoomCollection)
+      : 0,
+    talkingRoomCollection: talkingRoomCollection
+      ? { ...talkingRoomCollection }
+      : {},
   });
 
   // delayモードが終了した時にtaskを全て実行

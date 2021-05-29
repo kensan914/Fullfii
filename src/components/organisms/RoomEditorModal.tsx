@@ -1,39 +1,179 @@
-import React, { useState } from "react";
+import React, { Dispatch, useRef, useState } from "react";
 import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
-  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
-  TouchableHighlight,
   ImageBackground,
+  Image,
 } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { DISCLOSURE_RANGE_IMAGE } from "src/constants/imagePath";
+import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
+import { width } from "src/constants";
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
+import {
+  useRequestPatchRoom,
+  useRequestPostRoom,
+} from "src/hooks/requests/useRequestRooms";
+import { TalkingRoom } from "src/types/Types.context";
+import { showToast } from "src/utils/customModules";
+import { TOAST_SETTINGS } from "src/constants/alertMessages";
 
-const { width } = Dimensions.get("screen");
-
-const RoomEditorModal = (props) => {
+type PropsDependsOnMode =
+  | {
+      mode: "CREATE";
+      setIsOpenRoomCreatedModal: Dispatch<boolean>;
+    }
+  | {
+      mode: "FIX";
+      talkingRoom: TalkingRoom;
+    };
+type Props = {
+  isOpenRoomEditorModal: boolean;
+  setIsOpenRoomEditorModal: Dispatch<boolean>;
+  propsDependsOnMode: PropsDependsOnMode;
+};
+const RoomEditorModal: React.FC<Props> = (props) => {
   const {
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
-    isCreateNew,
+    propsDependsOnMode,
   } = props;
 
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
-  const [topic, setTopic] = useState("");
-  const [roomImage, setRoomImage] = useState(null);
 
-  const [
+  // ====== init post or patch data ======
+  const [initRoomName] = useState(
+    propsDependsOnMode.mode === "CREATE"
+      ? null
+      : propsDependsOnMode.talkingRoom.name
+  );
+  const [initDraftRoomName] = useState(null);
+  const [initRoomImage] = useState(null);
+  const [initDraftRoomImage] = useState(null);
+  const [initIsExcludeDifferentGender] = useState(
+    propsDependsOnMode.mode === "CREATE"
+      ? null
+      : propsDependsOnMode.talkingRoom.isExcludeDifferentGender
+  );
+  // ====== init post or patch data ======
+
+  // ====== post or patch data ======
+  const [roomName, setRoomName] = useState<string | null>(initRoomName);
+  const [draftRoomName, setDraftRoomName] = useState<string | null>(
+    initDraftRoomName
+  );
+  const [roomImage, setRoomImage] = useState<ImageInfo | null>(initRoomImage);
+  const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(
+    initDraftRoomImage
+  );
+  const [isExcludeDifferentGender, setIsExcludeDifferentGender] = useState<
+    boolean | null
+  >(initIsExcludeDifferentGender);
+  // ====== post or patch data ======
+
+  const maxTopicLength = 60;
+
+  /** この値がtrueの状態でモーダルを閉じるとルーム作成モーダルが表示される(作成時のみ) */
+  const willOpenRoomCreatedModalRef = useRef(false);
+
+  // canPostは作成時のみ。修正時は常にpatchできる
+  const canPost =
+    propsDependsOnMode.mode === "CREATE"
+      ? isExcludeDifferentGender !== null
+      : true;
+
+  const resetDraftOption = () => {
+    setDraftRoomName(initDraftRoomName);
+    setDraftRoomImage(initDraftRoomImage);
+  };
+  /** ルーム作成後、全てのstateをリセット */
+  const resetState = () => {
+    resetDraftOption();
+    setRoomName(initRoomName);
+    setRoomImage(initRoomImage);
+    setIsExcludeDifferentGender(initIsExcludeDifferentGender);
+  };
+  const addRoomOption = () => {
+    resetDraftOption();
+    setRoomName(draftRoomName);
+    setRoomImage(draftRoomImage);
+  };
+  const openOptionModal = () => {
+    setDraftRoomName(roomName);
+    setDraftRoomImage(roomImage);
+    setIsOpenOptionModal(true);
+  };
+
+  // ルーム作成用
+  const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
+    roomName,
     isExcludeDifferentGender,
-    setIsExcludeDifferentGender,
-  ] = React.useState(null);
+    roomImage,
+    () => {
+      // then時、実行
+      if (willOpenRoomCreatedModalRef) {
+        willOpenRoomCreatedModalRef.current = true;
+      }
+      resetState();
+      setIsOpenRoomEditorModal(false);
+    }
+  );
+
+  // ルーム修正用
+  const { requestPatchRoom, isLoadingPatchRoom } = useRequestPatchRoom(
+    propsDependsOnMode.mode === "FIX" ? propsDependsOnMode.talkingRoom.id : "",
+    roomName,
+    isExcludeDifferentGender,
+    roomImage,
+    () => {
+      // then時、実行
+      resetState();
+      setIsOpenRoomEditorModal(false);
+      showToast(TOAST_SETTINGS["FIX_ROOM"]);
+    }
+  );
+
+  const renderRoomImage = () => {
+    const emptyRoomImage = (
+      <IconExtra
+        name="image"
+        family="Feather"
+        size={48}
+        color={COLORS.HIGHLIGHT_GRAY}
+      />
+    );
+
+    if (propsDependsOnMode.mode === "FIX") {
+      if (draftRoomImage !== null) {
+        return <Image style={styles.roomImage} source={draftRoomImage} />;
+      } else {
+        if (propsDependsOnMode.talkingRoom.image) {
+          return (
+            <Image
+              style={styles.roomImage}
+              source={{ uri: propsDependsOnMode.talkingRoom.image }}
+            />
+          );
+        } else {
+          return emptyRoomImage;
+        }
+      }
+    } else if (propsDependsOnMode.mode === "CREATE") {
+      if (draftRoomImage !== null) {
+        return <Image style={styles.roomImage} source={draftRoomImage} />;
+      } else {
+        return emptyRoomImage;
+      }
+    }
+    return null;
+  };
 
   return (
     <Modal
@@ -43,6 +183,13 @@ const RoomEditorModal = (props) => {
         setIsOpenRoomEditorModal(false);
       }}
       style={styles.firstModal}
+      onModalHide={() => {
+        if (willOpenRoomCreatedModalRef.current) {
+          propsDependsOnMode.mode === "CREATE" &&
+            propsDependsOnMode.setIsOpenRoomCreatedModal(true);
+          willOpenRoomCreatedModalRef.current = false;
+        }
+      }}
     >
       <Block column style={styles.firstModalContent}>
         <Block row>
@@ -56,14 +203,14 @@ const RoomEditorModal = (props) => {
               name="close"
               family="Ionicons"
               size={32}
-              color={COLORS.HILIGHT_GRAY}
+              color={COLORS.HIGHLIGHT_GRAY}
             />
           </TouchableOpacity>
         </Block>
         <TouchableOpacity
           style={styles.addMore}
           onPress={() => {
-            setIsOpenOptionModal(true);
+            openOptionModal();
           }}
         >
           <Block column>
@@ -82,7 +229,7 @@ const RoomEditorModal = (props) => {
             </Block>
           </Block>
         </TouchableOpacity>
-        {topic ? (
+        {roomName ? (
           <Block row center style={styles.checkRoomTopic}>
             <IconExtra
               name="check-circle"
@@ -97,7 +244,9 @@ const RoomEditorModal = (props) => {
             </Block>
           </Block>
         ) : null}
-        {roomImage ? (
+        {roomImage ||
+        (propsDependsOnMode.mode === "FIX" &&
+          propsDependsOnMode.talkingRoom.image) ? (
           <Block row center style={styles.checkRoomImage}>
             <IconExtra
               name="check-circle"
@@ -130,7 +279,7 @@ const RoomEditorModal = (props) => {
             }}
           >
             <ImageBackground
-              source={DISCLOSURE_RANGE_IMAGE.a}
+              source={MAN_AND_WOMAN_IMG}
               style={styles.disclosureRangeImage}
             >
               <Block style={styles.disclosureRangeText}>
@@ -152,7 +301,7 @@ const RoomEditorModal = (props) => {
             }}
           >
             <ImageBackground
-              source={DISCLOSURE_RANGE_IMAGE.b}
+              source={MEN_IMG}
               style={styles.disclosureRangeImage}
             >
               <Block style={styles.disclosureRangeText}>
@@ -165,16 +314,41 @@ const RoomEditorModal = (props) => {
         </Block>
         <Block center style={styles.submitButtonContainer}>
           <Button
-            style={styles.submitButton}
-            color={COLORS.BROWN}
             shadowless
             onPress={() => {
-              alert(`悩みは${topic}です`);
+              if (propsDependsOnMode.mode === "CREATE") {
+                requestPostRoom();
+              } else if (propsDependsOnMode.mode === "FIX") {
+                requestPatchRoom();
+              }
             }}
+            color={canPost ? COLORS.BROWN : "lightgray"}
+            style={[
+              styles.submitButton,
+              canPost
+                ? {
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowColor: "#000",
+                    shadowOpacity: 0.4,
+                    shadowRadius: 4,
+                  }
+                : {},
+            ]}
+            disabled={!canPost}
+            loading={
+              propsDependsOnMode.mode === "CREATE"
+                ? isLoadingPostRoom
+                : isLoadingPatchRoom
+            }
           >
             <Block row center space="between" style={styles.submitButtonInner}>
               <IconExtra
-                name={isCreateNew ? "pluscircleo" : "save"}
+                name={
+                  propsDependsOnMode.mode === "CREATE" ? "pluscircleo" : "save"
+                }
                 family="AntDesign"
                 size={40}
                 color={COLORS.WHITE}
@@ -182,7 +356,9 @@ const RoomEditorModal = (props) => {
               />
               <Block style={styles.submitButtonText}>
                 <Text size={20} color={COLORS.WHITE} bold>
-                  {isCreateNew ? "ルームを作成する" : "修正を反映する"}
+                  {propsDependsOnMode.mode === "CREATE"
+                    ? "ルームを作成する"
+                    : "修正を反映する"}
                 </Text>
               </Block>
             </Block>
@@ -193,9 +369,9 @@ const RoomEditorModal = (props) => {
       <Modal
         isVisible={isOpenOptionModal}
         deviceWidth={width}
-        onBackdropPress={() => {
-          setIsOpenOptionModal(false);
-        }}
+        // onBackdropPress={() => {
+        //   // setIsOpenOptionModal(false);
+        // }}
       >
         <Block style={styles.secondModal}>
           <Block column style={styles.secondModalContent}>
@@ -203,6 +379,7 @@ const RoomEditorModal = (props) => {
               <TouchableOpacity
                 style={styles.closeIcon}
                 onPress={() => {
+                  resetDraftOption();
                   setIsOpenOptionModal(false);
                 }}
               >
@@ -210,7 +387,7 @@ const RoomEditorModal = (props) => {
                   name="close"
                   family="Ionicons"
                   size={32}
-                  color={COLORS.HILIGHT_GRAY}
+                  color={COLORS.HIGHLIGHT_GRAY}
                 />
               </TouchableOpacity>
               <Block row space="between" style={styles.subTitleTextInput}>
@@ -221,7 +398,8 @@ const RoomEditorModal = (props) => {
                 </Block>
                 <Block>
                   <Text size={12} color={COLORS.GRAY}>
-                    0/60
+                    {draftRoomName === null ? 0 : draftRoomName.length}/
+                    {maxTopicLength}
                   </Text>
                 </Block>
               </Block>
@@ -230,9 +408,9 @@ const RoomEditorModal = (props) => {
                 numberOfLines={4}
                 editable
                 placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-                maxLength={60}
-                value={topic}
-                onChangeText={setTopic}
+                maxLength={maxTopicLength}
+                value={draftRoomName === null ? "" : draftRoomName}
+                onChangeText={setDraftRoomName}
                 returnKeyType="done"
                 blurOnSubmit
                 style={styles.textArea}
@@ -248,23 +426,30 @@ const RoomEditorModal = (props) => {
               <Block center>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  underlayColor="#DDDDDD"
-                  style={styles.roomImage}
+                  // underlayColor="#DDDDDD"
+                  style={styles.roomImageContainer}
+                  onPress={async () => {
+                    const result = await getPermissionAsync();
+                    if (result) {
+                      pickImage().then((image) => {
+                        if (image) {
+                          setDraftRoomImage(image);
+                        }
+                      });
+                    }
+                  }}
                 >
-                  <IconExtra
-                    name="image"
-                    family="Feather"
-                    size={48}
-                    color={COLORS.HILIGHT_GRAY}
-                  />
+                  {renderRoomImage()}
                 </TouchableOpacity>
               </Block>
+
               <Block center>
                 <Button
                   style={styles.addTopicButton}
                   color={COLORS.BROWN}
                   shadowless
                   onPress={() => {
+                    addRoomOption();
                     setIsOpenOptionModal(false);
                   }}
                 >
@@ -356,13 +541,6 @@ const styles = StyleSheet.create({
     width: 335,
     height: 48,
     borderRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
     elevation: 1,
   },
   submitButtonIcon: {
@@ -396,8 +574,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     marginBottom: 24,
   },
-  roomImageContainer: {},
-  roomImage: {
+  roomImageContainer: {
     marginBottom: 32,
     height: 80,
     width: 80,
@@ -413,6 +590,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 1,
+  },
+  roomImage: {
+    height: 72,
+    width: 72,
+    borderRadius: 8,
   },
   addTopicButton: {
     marginBottom: 16,

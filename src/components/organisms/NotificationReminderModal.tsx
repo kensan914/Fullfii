@@ -1,32 +1,37 @@
-import React, { useState } from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
-import {
-  StyleSheet,
-  Dimensions,
-  Keyboard,
-  KeyboardAvoidingView,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
-import { DISCLOSURE_RANGE_IMAGE } from "src/constants/imagePath";
-import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
+import { width } from "src/constants";
+import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
 
-const { width } = Dimensions.get("screen");
+type Props = {
+  isOpenNotificationReminderModal: boolean;
+  setIsOpenNotificationReminderModal: Dispatch<boolean>;
+};
+export const NotificationReminderModal: React.FC<Props> = (props) => {
+  const {
+    isOpenNotificationReminderModal,
+    setIsOpenNotificationReminderModal,
+  } = props;
 
-const NotificationModal = (props) => {
-  const { isOpenNotificationModal, setIsOpenNotificationModal } = props;
+  const { configPushNotification } = useConfigPushNotification();
+
+  const close = () => {
+    setIsOpenNotificationReminderModal(false);
+  };
 
   return (
     <Modal
-      isVisible={isOpenNotificationModal}
+      isVisible={isOpenNotificationReminderModal}
       deviceWidth={width}
-      style={styles.Modal}
+      style={styles.modal}
+      onModalHide={() => {
+        configPushNotification();
+      }}
     >
       <Block column style={styles.modalContent}>
         <Block center style={styles.checkIcon}>
@@ -39,7 +44,7 @@ const NotificationModal = (props) => {
         </Block>
         <Block center style={styles.notification}>
           <Text bold size={15} color={COLORS.WHITE}>
-            1{/* 100以上は99表示 */}
+            1
           </Text>
         </Block>
         <Block center style={styles.title}>
@@ -57,9 +62,7 @@ const NotificationModal = (props) => {
             style={styles.okButton}
             color={COLORS.BROWN}
             shadowless
-            onPress={() => {
-              setIsOpenNotificationModal(false);
-            }}
+            onPress={close}
           >
             <Text size={20} color={COLORS.WHITE} bold>
               OK
@@ -70,8 +73,6 @@ const NotificationModal = (props) => {
     </Modal>
   );
 };
-
-export default NotificationModal;
 
 const styles = StyleSheet.create({
   modal: {},

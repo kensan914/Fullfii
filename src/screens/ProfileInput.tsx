@@ -1,6 +1,6 @@
 import React from "react";
 
-import ProfileInputTemplate from "src/components/templates/ProfileInputTemplate";
+import { ProfileInputTemplate } from "src/components/templates/ProfileInputTemplate";
 import requestAxios from "src/hooks/useAxios";
 import { URLJoin } from "src/utils";
 import { BASE_URL } from "src/constants/env";

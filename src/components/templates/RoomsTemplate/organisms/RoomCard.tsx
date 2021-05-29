@@ -1,25 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
 import {
   StyleSheet,
-  Dimensions,
   TouchableHighlight,
   TouchableOpacity,
   Image,
 } from "react-native";
-import IconExtra from "src/components/atoms/Icon";
 
+import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import Avatar from "src/components/atoms/Avatar";
-import ShowRoomModal from "src/components/molecules/ShowRoomModal";
+import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
+import { width } from "src/constants";
+import { Room } from "src/types/Types.context";
+import { BlockRoom, HideRoom } from "src/types/Types";
+import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 
-const { width } = Dimensions.get("screen");
+type Props = {
+  room: Room;
+  hiddenRoomIds: string[];
+  hideRoom: HideRoom;
+  blockRoom: BlockRoom;
+};
+export const RoomCard: React.FC<Props> = (props) => {
+  const { room, hiddenRoomIds, hideRoom, blockRoom } = props;
 
-const RoomCard = (props) => {
-  const { item, hiddenRooms, setHiddenRooms } = props;
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  const {
+    isMaxed,
+    participantIconName,
+    participantIconColor,
+  } = useRoomParticipantsNum(room);
   return (
     <>
       <Block style={styles.container}>
@@ -29,7 +41,7 @@ const RoomCard = (props) => {
           onPress={() => {
             setIsOpen(true);
           }}
-          style={styles.touchableHightlight}
+          style={styles.touchableHighlight}
         >
           <Block style={styles.card}>
             <Block style={styles.title}>
@@ -40,22 +52,23 @@ const RoomCard = (props) => {
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                {item.title}
+                {room.name}
               </Text>
             </Block>
             <Block flex row>
               <Block />
-              <Image
-                source={item.image}
-                style={{
-                  width: 88,
-                  height: 88,
-                  borderRadius: 20,
-                }}
-              />
+              {room.image ? (
+                <Image source={{ uri: room.image }} style={styles.image} />
+              ) : (
+                <Block style={styles.image}></Block>
+              )}
               <Block flex column>
                 <Block row>
-                  <Avatar size={32} image={item.avatar} style={styles.avater} />
+                  <Avatar
+                    size={32}
+                    image={room.owner.image}
+                    style={styles.avatar}
+                  />
                   <Block column style={styles.userInfo}>
                     <Block style={styles.userName}>
                       <Text
@@ -64,7 +77,7 @@ const RoomCard = (props) => {
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {item.userName}
+                        {room.owner.name}
                       </Text>
                     </Block>
                     <Block row>
@@ -75,17 +88,17 @@ const RoomCard = (props) => {
                           numberOfLines={1}
                           ellipsizeMode="tail"
                         >
-                          {item.userGender}
+                          {room.owner.gender.label}
                         </Text>
                       </Block>
-                      <Block style={styles.userJob}>
+                      <Block>
                         <Text
                           size={14}
                           color={COLORS.LIGHT_GRAY}
                           numberOfLines={1}
                           ellipsizeMode="tail"
                         >
-                          {item.userJob}
+                          {room.owner.job.label}
                         </Text>
                       </Block>
                     </Block>
@@ -95,25 +108,26 @@ const RoomCard = (props) => {
                   <Block flex row style={styles.member}>
                     <Block>
                       <IconExtra
-                        name={item.memberIconName}
+                        name={participantIconName}
                         family="Ionicons"
                         size={32}
-                        color={item.memberColor}
+                        color={participantIconColor}
                       />
                     </Block>
                     <Block style={styles.memberText}>
                       <Text size={14} color={COLORS.LIGHT_GRAY}>
-                        {item.joinNum}/{item.maxNum}
+                        {room.participants.length}/{room.maxNumParticipants}
                       </Text>
                     </Block>
                   </Block>
                 </Block>
               </Block>
             </Block>
-            <TouchableOpacity
+            {/* 非表示見送り */}
+            {/* <TouchableOpacity
               style={styles.eyeIcon}
               onPress={() => {
-                setHiddenRooms([...hiddenRooms, item.key]);
+                hideRoom(room.id);
               }}
             >
               <IconExtra
@@ -122,22 +136,24 @@ const RoomCard = (props) => {
                 size={32}
                 color={COLORS.BROWN}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </Block>
         </TouchableHighlight>
       </Block>
-      <ShowRoomModal
-        item={item}
+      <RoomDetailModal
+        room={room}
+        isMaxed={isMaxed}
+        participantIconName={participantIconName}
+        participantIconColor={participantIconColor}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        hiddenRooms={hiddenRooms}
-        setHiddenRooms={setHiddenRooms}
+        hiddenRoomIds={hiddenRoomIds}
+        hideRoom={hideRoom}
+        blockRoom={blockRoom}
       />
     </>
   );
 };
-
-export default RoomCard;
 
 const styles = StyleSheet.create({
   container: {
@@ -162,13 +178,13 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 1,
   },
-  touchableHightlight: {
+  touchableHighlight: {
     borderRadius: 20,
   },
   title: {
     marginBottom: 16,
   },
-  avater: {
+  avatar: {
     marginLeft: 16,
   },
   userInfo: {
@@ -200,5 +216,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 16,
     right: 16,
+  },
+  image: {
+    width: 88,
+    height: 88,
+    borderRadius: 20,
   },
 });

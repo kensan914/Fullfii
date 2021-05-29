@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 import { Block, theme } from "galio-framework";
 import { useNavigation } from "@react-navigation/native";
 
-import SubmitButton from "src/components/atoms/SubmitButton";
+import { SubmitButton } from "src/components/atoms/SubmitButton";
 import {
   ErrorSubmitProfile,
   ProfileInputData,
