@@ -1,4 +1,4 @@
-import React, { Dispatch, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
 
@@ -23,7 +24,9 @@ import {
 } from "src/hooks/requests/useRequestRooms";
 import { TalkingRoom } from "src/types/Types.context";
 import { showToast } from "src/utils/customModules";
-import { TOAST_SETTINGS } from "src/constants/alertMessages";
+import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
+import { useProfileState } from "src/contexts/ProfileContext";
+import { formatGender } from "src/utils";
 
 type PropsDependsOnMode =
   | {
@@ -47,6 +50,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   } = props;
 
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
+  const profileState = useProfileState();
 
   // ====== init post or patch data ======
   const [initRoomName] = useState(
@@ -175,6 +179,14 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     return null;
   };
 
+  const formattedGender = formatGender(
+    profileState.profile.gender,
+    profileState.profile.isSecretGender
+  );
+  const canSetIsExcludeDifferentGender = !(
+    formattedGender.isNotSet || formattedGender.key === "secret"
+  );
+
   return (
     <Modal
       isVisible={isOpenRoomEditorModal}
@@ -188,6 +200,12 @@ const RoomEditorModal: React.FC<Props> = (props) => {
           propsDependsOnMode.mode === "CREATE" &&
             propsDependsOnMode.setIsOpenRoomCreatedModal(true);
           willOpenRoomCreatedModalRef.current = false;
+        }
+      }}
+      onModalWillShow={() => {
+        // 男性でisExcludeDifferentGender設定 => 内緒にして再度開くとisExcludeDifferentGenderがtrueでPOST可能になってしまうため対処
+        if (!canSetIsExcludeDifferentGender && isExcludeDifferentGender) {
+          setIsExcludeDifferentGender(null);
         }
       }}
     >
@@ -297,7 +315,13 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 : { borderColor: "#f4f8f7" },
             ]}
             onPress={() => {
-              setIsExcludeDifferentGender(true);
+              if (!canSetIsExcludeDifferentGender) {
+                Alert.alert(
+                  ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
+                );
+              } else {
+                setIsExcludeDifferentGender(true);
+              }
             }}
           >
             <ImageBackground

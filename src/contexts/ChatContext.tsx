@@ -647,7 +647,7 @@ const chatReducer = (
 const initChatState: ChatState = Object.freeze({
   chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
   totalUnreadNum: 0,
-  talkingRoomCollection: {},
+  talkingRoomCollection: Object.freeze({}),
 });
 const ChatStateContext = createContext<ChatState>(initChatState);
 const ChatDispatchContext = createContext<ChatDispatch>(() => {
