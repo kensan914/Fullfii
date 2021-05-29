@@ -30,7 +30,7 @@ import { useChatDispatch } from "src/contexts/ChatContext";
 import { useGifted } from "src/screens/ChatScreen/useGifted";
 import { useAuthState } from "src/contexts/AuthContext";
 import { width } from "src/constants";
-import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
+import { useDomState } from "src/contexts/DomContext";
 
 type Props = {
   roomMemberCollection: RoomMemberCollection;
@@ -63,7 +63,7 @@ const ChatBody: React.FC<Props> = (props) => {
 
   useTurnOnRead(messages, roomId);
   const { giftedMe, convertMessagesToGifted } = useGifted(roomMemberCollection);
-  const { isPermission } = useConfigPushNotification();
+  const domState = useDomState();
 
   useEffect(() => {
     _isMounted.current = true;
@@ -130,7 +130,7 @@ const ChatBody: React.FC<Props> = (props) => {
       setStep(step + 1);
 
       // プッシュ通知催促
-      if (!isPermission) {
+      if (!domState.pushNotificationParams.isPermission) {
         setIsOpenNotificationReminderModal(true);
       }
     }
