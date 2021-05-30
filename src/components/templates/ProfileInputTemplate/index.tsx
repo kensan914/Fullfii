@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 
 import { useAuthState } from "src/contexts/AuthContext";
-import { InputBlock } from "src/components/organisms/ProfileInputBlock";
+import { InputBlock } from "src/components/templates/ProfileInputTemplate/organisms/ProfileInputBlock";
 import { useProfileDispatch } from "src/contexts/ProfileContext";
 import {
   ProfileInputRouteProp,

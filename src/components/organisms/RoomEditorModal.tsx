@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useRef, useState } from "react";
 import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
@@ -52,6 +52,15 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
   const profileState = useProfileState();
 
+  const formattedGender = formatGender(
+    profileState.profile.gender,
+    profileState.profile.isSecretGender
+  );
+  // 性別内緒or未設定は「同性のみ表示」禁止
+  const canSetIsExcludeDifferentGender = !(
+    formattedGender.isNotSet || formattedGender.key === "secret"
+  );
+
   // ====== init post or patch data ======
   const [initRoomName] = useState(
     propsDependsOnMode.mode === "CREATE"
@@ -61,10 +70,22 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   const [initDraftRoomName] = useState(null);
   const [initRoomImage] = useState(null);
   const [initDraftRoomImage] = useState(null);
+
+  // initIsExcludeDifferentGender初期値のコード量が長いので関数に抽出
+  const geneInitIsExcludeDifferentGender = () => {
+    let _initIsExcludeDifferentGender = null;
+    if (propsDependsOnMode.mode !== "CREATE") {
+      if (canSetIsExcludeDifferentGender) {
+        _initIsExcludeDifferentGender =
+          propsDependsOnMode.talkingRoom.isExcludeDifferentGender;
+      } else {
+        _initIsExcludeDifferentGender = false; // HACK:(気味) 性別内緒or未設定は強制的に「異性にも表示」
+      }
+    }
+    return _initIsExcludeDifferentGender;
+  };
   const [initIsExcludeDifferentGender] = useState(
-    propsDependsOnMode.mode === "CREATE"
-      ? null
-      : propsDependsOnMode.talkingRoom.isExcludeDifferentGender
+    geneInitIsExcludeDifferentGender()
   );
   // ====== init post or patch data ======
 
@@ -178,14 +199,6 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     }
     return null;
   };
-
-  const formattedGender = formatGender(
-    profileState.profile.gender,
-    profileState.profile.isSecretGender
-  );
-  const canSetIsExcludeDifferentGender = !(
-    formattedGender.isNotSet || formattedGender.key === "secret"
-  );
 
   return (
     <Modal
