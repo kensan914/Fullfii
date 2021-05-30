@@ -254,7 +254,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               />
               <Block>
                 <Text size={14} color={COLORS.BROWN} bold>
-                  悩みを追加する
+                  悩みを記入する
                 </Text>
               </Block>
             </Block>
