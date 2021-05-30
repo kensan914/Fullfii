@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-navigation";
 
 import { Header } from "src/components/organisms/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
-import ProfileEditorScreen from "src/screens/ProfileEditor";
 import ProfileInputScreen from "src/screens/ProfileInput";
 import SettingsScreen from "src/screens/Settings";
 import AccountDeleteScreen from "src/screens/AccountDelete";
