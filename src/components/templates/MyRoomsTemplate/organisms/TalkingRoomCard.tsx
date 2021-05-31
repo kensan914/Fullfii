@@ -19,7 +19,7 @@ import { useProfileState } from "src/contexts/ProfileContext";
 import { showActionSheet, showToast } from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useNavigation } from "@react-navigation/core";
-import { alertModal, cvtBadgeCount } from "src/utils";
+import { alertModal, cvtBadgeCount, formatGender } from "src/utils";
 import { useRequestDeleteRoom } from "src/hooks/requests/useRequestRooms";
 
 type Props = {
@@ -93,6 +93,10 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
     participantIconName,
     participantIconColor,
   } = useRoomParticipantsNum(talkingRoom);
+  const formattedGender = formatGender(
+    talkingRoom.owner.gender,
+    talkingRoom.owner.isSecretGender
+  );
   const TalkingRoomCardContent: React.FC = () => {
     return (
       <>
@@ -152,7 +156,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {talkingRoom.owner.gender.label}
+                      {formattedGender.label}
                     </Text>
                   </Block>
                   <Block>
