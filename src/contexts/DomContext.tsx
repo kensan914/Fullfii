@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext } from "react";
 
-import { useInitPushNotification } from "src/hooks/useInitPushNotification";
+import { usePushNotificationParams } from "src/hooks/pushNotifications/usePushNotificationParams";
 import { DomActionType, DomState, DomDispatch } from "src/types/Types.context";
 
 const domReducer = (prevState: DomState, action: DomActionType): DomState => {
@@ -21,11 +21,31 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       _taskSchedules[action.taskKey] = false;
       return { ...prevState, taskSchedules: _taskSchedules };
 
-    case "SET_IS_PERMISSION":
-      /** set pushNotificationParams.isPermission
-       * @param {Object} action [type, isPermission] */
+    case "SET_PUSH_NOTIFICATION_PARAMS":
+      /** set pushNotificationParams.isPermission or pushNotificationParams.isChosenPermission
+       * @param {Object} action [type, isPermission, isChosenPermission] */
 
-      _pushNotificationParams.isPermission = action.isPermission;
+      if (typeof action.isPermission !== "undefined") {
+        _pushNotificationParams.isPermission = action.isPermission;
+      }
+      if (typeof action.isChosenPermission !== "undefined") {
+        _pushNotificationParams.isChosenPermission = action.isChosenPermission;
+      }
+
+      return { ...prevState, pushNotificationParams: _pushNotificationParams };
+
+    case "CONFIGURED_PUSH_NOTIFICATION":
+      /** push通知設定をした際に実行. pushNotificationParamsを最新状態に更新.
+       * @param {Object} action [type] */
+
+      _pushNotificationParams.isChanged = true;
+      return { ...prevState, pushNotificationParams: _pushNotificationParams };
+
+    case "FINISH_SET_PUSH_NOTIFICATION_PARAMS":
+      /** pushNotificationParamsを設定をした際に実行.
+       * @param {Object} action [type] */
+
+      _pushNotificationParams.isChanged = false;
       return { ...prevState, pushNotificationParams: _pushNotificationParams };
 
     default:
@@ -39,7 +59,9 @@ const initDomState = Object.freeze({
     refreshRooms: false,
   },
   pushNotificationParams: {
-    isPermission: false,
+    isPermission: false, // 既に設定され, かつ許可されている
+    isChosenPermission: false, // 未だ通知設定がされていない
+    isChanged: false, // depフラグ
   },
 });
 const domStateContext = createContext<DomState>({ ...initDomState });
@@ -57,11 +79,13 @@ export const useDomDispatch = (): DomDispatch => {
 };
 
 export const DomProvider: React.FC = ({ children }) => {
-  useInitPushNotification();
+  usePushNotificationParams();
   const [domState, domDispatch] = useReducer(domReducer, {
     ...initDomState,
     pushNotificationParams: {
       isPermission: false,
+      isChosenPermission: false,
+      isChanged: false,
     },
   });
 

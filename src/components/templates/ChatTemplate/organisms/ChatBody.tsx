@@ -130,7 +130,7 @@ const ChatBody: React.FC<Props> = (props) => {
       setStep(step + 1);
 
       // プッシュ通知催促
-      if (!domState.pushNotificationParams.isPermission) {
+      if (!domState.pushNotificationParams.isChosenPermission) {
         setIsOpenNotificationReminderModal(true);
       }
     }

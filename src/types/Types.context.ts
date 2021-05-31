@@ -452,13 +452,22 @@ export type DomState = {
   taskSchedules: { [key in TaskSchedulesKey]: boolean };
   pushNotificationParams: {
     isPermission: boolean;
+    isChosenPermission: boolean;
+    isChanged: boolean;
   };
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
 export type DomActionType =
   | { type: "SCHEDULE_TASK"; taskKey: TaskSchedulesKey }
   | { type: "DONE_TASK"; taskKey: TaskSchedulesKey }
-  | { type: "SET_IS_PERMISSION"; isPermission: boolean };
+  | {
+      type: "SET_PUSH_NOTIFICATION_PARAMS";
+      isPermission?: boolean;
+      isChosenPermission?: boolean;
+    }
+  | { type: "CONFIGURED_PUSH_NOTIFICATION" }
+  | { type: "FINISH_SET_PUSH_NOTIFICATION_PARAMS" };
+
 //========== Dom ==========//
 
 //========== ContextUtils ==========//

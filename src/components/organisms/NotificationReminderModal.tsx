@@ -7,7 +7,7 @@ import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
 import { width } from "src/constants";
 import { useDomState } from "src/contexts/DomContext";
-import { useConfigPushNotification } from "src/hooks/useConfigPushNotification";
+import { useConfigPushNotification } from "src/hooks/pushNotifications/useConfigPushNotification";
 
 type Props = {
   isOpenNotificationReminderModal: boolean;
