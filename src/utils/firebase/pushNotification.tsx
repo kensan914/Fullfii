@@ -4,6 +4,26 @@ import messaging, {
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 
+/**
+ * リクエストは行わず, 「既に設定され, かつ許可されている」かを判定.
+ * @returns
+ */
+export const hasPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+  const authStatus = await messaging().hasPermission();
+  return (
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL
+  );
+};
+/**
+ * リクエストは行わず, 「未だ通知設定がされていない」かを判定.
+ * @returns
+ */
+export const hasChosenPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+  const authStatus = await messaging().hasPermission();
+  return authStatus !== messaging.AuthorizationStatus.NOT_DETERMINED;
+};
+
 export const requestPermissionOfIOSPushNotification = async (): Promise<boolean> => {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -11,12 +31,6 @@ export const requestPermissionOfIOSPushNotification = async (): Promise<boolean>
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   return enabled;
-};
-
-export const hasPermissionOfIOSPushNotification = async (): Promise<boolean> => {
-  const authStatus = await messaging().hasPermission();
-  // alert(authStatus);
-  return authStatus === messaging.AuthorizationStatus.AUTHORIZED;
 };
 
 const configurePushNotification = (

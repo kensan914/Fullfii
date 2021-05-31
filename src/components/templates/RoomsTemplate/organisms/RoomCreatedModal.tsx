@@ -34,7 +34,7 @@ export const RoomCreatedModal: React.FC<Props> = (props) => {
       onBackdropPress={close}
       style={styles.modal}
       onModalHide={() => {
-        if (!domState.pushNotificationParams.isPermission) {
+        if (!domState.pushNotificationParams.isChosenPermission) {
           setIsOpenNotificationReminderModal(true);
         }
       }}
