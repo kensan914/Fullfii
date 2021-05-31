@@ -15,6 +15,7 @@ export const requestPermissionOfIOSPushNotification = async (): Promise<boolean>
 
 export const hasPermissionOfIOSPushNotification = async (): Promise<boolean> => {
   const authStatus = await messaging().hasPermission();
+  // alert(authStatus);
   return authStatus === messaging.AuthorizationStatus.AUTHORIZED;
 };
 

@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
-import {
-  StyleSheet,
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { StyleSheet, TouchableHighlight, Image } from "react-native";
 
 import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
@@ -15,6 +10,7 @@ import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
+import { formatGender } from "src/utils";
 
 type Props = {
   room: Room;
@@ -32,6 +28,10 @@ export const RoomCard: React.FC<Props> = (props) => {
     participantIconName,
     participantIconColor,
   } = useRoomParticipantsNum(room);
+  const formattedGender = formatGender(
+    room.owner.gender,
+    room.owner.isSecretGender
+  );
   return (
     <>
       <Block style={styles.container}>
@@ -88,7 +88,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                           numberOfLines={1}
                           ellipsizeMode="tail"
                         >
-                          {room.owner.gender.label}
+                          {formattedGender.label}
                         </Text>
                       </Block>
                       <Block>
