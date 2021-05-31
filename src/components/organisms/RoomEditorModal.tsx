@@ -91,9 +91,6 @@ const RoomEditorModal: React.FC<Props> = (props) => {
 
   // ====== post or patch data ======
   const [roomName, setRoomName] = useState<string | null>(initRoomName);
-  const [draftRoomName, setDraftRoomName] = useState<string | null>(
-    initDraftRoomName
-  );
   const [roomImage, setRoomImage] = useState<ImageInfo | null>(initRoomImage);
   const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(
     initDraftRoomImage
@@ -108,14 +105,15 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   /** この値がtrueの状態でモーダルを閉じるとルーム作成モーダルが表示される(作成時のみ) */
   const willOpenRoomCreatedModalRef = useRef(false);
 
-  // canPostは作成時のみ。修正時は常にpatchできる
+  // canPostは作成時 & 修正時
   const canPost =
-    propsDependsOnMode.mode === "CREATE"
+    (propsDependsOnMode.mode === "CREATE"
       ? isExcludeDifferentGender !== null
-      : true;
+      : true) &&
+    roomName &&
+    roomName.length > 0;
 
   const resetDraftOption = () => {
-    setDraftRoomName(initDraftRoomName);
     setDraftRoomImage(initDraftRoomImage);
   };
   /** ルーム作成後、全てのstateをリセット */
@@ -127,11 +125,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   };
   const addRoomOption = () => {
     resetDraftOption();
-    setRoomName(draftRoomName);
     setRoomImage(draftRoomImage);
   };
   const openOptionModal = () => {
-    setDraftRoomName(roomName);
     setDraftRoomImage(roomImage);
     setIsOpenOptionModal(true);
   };
@@ -300,26 +296,25 @@ const RoomEditorModal: React.FC<Props> = (props) => {
           </Block>
           <Block>
             <Text size={12} color={COLORS.GRAY}>
-              {draftRoomName === null ? 0 : draftRoomName.length}/
-              {maxTopicLength}
+              {roomName === null ? 0 : roomName.length}/{maxTopicLength}
             </Text>
           </Block>
-          </Block>
-          <TextInput
-            multiline
-            numberOfLines={4}
-            editable
-            placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-            maxLength={maxTopicLength}
-            value={draftRoomName === null ? "" : draftRoomName}
-            onChangeText={setDraftRoomName}
-            returnKeyType="done"
-            blurOnSubmit
-            style={styles.textArea}
-            onSubmitEditing={() => {
-              Keyboard.dismiss();
-            }}
-          />
+        </Block>
+        <TextInput
+          multiline
+          numberOfLines={4}
+          editable
+          placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
+          maxLength={maxTopicLength}
+          value={roomName === null ? "" : roomName}
+          onChangeText={setRoomName}
+          returnKeyType="done"
+          blurOnSubmit
+          style={styles.textArea}
+          onSubmitEditing={() => {
+            Keyboard.dismiss();
+          }}
+        />
         <Block style={styles.choiceRangeTitle}>
           <Text size={12} color={COLORS.GRAY}>
             異性への表示
@@ -455,34 +450,6 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   color={COLORS.HIGHLIGHT_GRAY}
                 />
               </TouchableOpacity>
-              {/* <Block row space="between" style={styles.subTitleTextInput}>
-                <Block>
-                  <Text size={12} color={COLORS.GRAY}>
-                    ルーム名
-                  </Text>
-                </Block>
-                <Block>
-                  <Text size={12} color={COLORS.GRAY}>
-                    {draftRoomName === null ? 0 : draftRoomName.length}/
-                    {maxTopicLength}
-                  </Text>
-                </Block>
-              </Block>
-              <TextInput
-                multiline
-                numberOfLines={4}
-                editable
-                placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-                maxLength={maxTopicLength}
-                value={draftRoomName === null ? "" : draftRoomName}
-                onChangeText={setDraftRoomName}
-                returnKeyType="done"
-                blurOnSubmit
-                style={styles.textArea}
-                onSubmitEditing={() => {
-                  Keyboard.dismiss();
-                }}
-              /> */}
               <Block style={styles.subTitleTextInput}>
                 <Text size={12} color={COLORS.GRAY}>
                   ルーム画像
@@ -491,7 +458,6 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               <Block center>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  // underlayColor="#DDDDDD"
                   style={styles.roomImageContainer}
                   onPress={async () => {
                     const result = await getPermissionAsync();
