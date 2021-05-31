@@ -254,13 +254,13 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               />
               <Block>
                 <Text size={14} color={COLORS.BROWN} bold>
-                  悩みを記入する
+                  ルーム画像を追加
                 </Text>
               </Block>
             </Block>
           </Block>
         </TouchableOpacity>
-        {roomName ? (
+        {/* {roomName ? (
           <Block row center style={styles.checkRoomTopic}>
             <IconExtra
               name="check-circle"
@@ -274,7 +274,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               </Text>
             </Block>
           </Block>
-        ) : null}
+        ) : null} */}
         {roomImage ||
         (propsDependsOnMode.mode === "FIX" &&
           propsDependsOnMode.talkingRoom.image) ? (
@@ -292,6 +292,34 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             </Block>
           </Block>
         ) : null}
+        <Block row space="between" style={styles.subTitleTextInput}>
+          <Block>
+            <Text size={12} color={COLORS.GRAY}>
+              ルーム名
+            </Text>
+          </Block>
+          <Block>
+            <Text size={12} color={COLORS.GRAY}>
+              {draftRoomName === null ? 0 : draftRoomName.length}/
+              {maxTopicLength}
+            </Text>
+          </Block>
+          </Block>
+          <TextInput
+            multiline
+            numberOfLines={4}
+            editable
+            placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
+            maxLength={maxTopicLength}
+            value={draftRoomName === null ? "" : draftRoomName}
+            onChangeText={setDraftRoomName}
+            returnKeyType="done"
+            blurOnSubmit
+            style={styles.textArea}
+            onSubmitEditing={() => {
+              Keyboard.dismiss();
+            }}
+          />
         <Block style={styles.choiceRangeTitle}>
           <Text size={12} color={COLORS.GRAY}>
             異性への表示
@@ -427,7 +455,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   color={COLORS.HIGHLIGHT_GRAY}
                 />
               </TouchableOpacity>
-              <Block row space="between" style={styles.subTitleTextInput}>
+              {/* <Block row space="between" style={styles.subTitleTextInput}>
                 <Block>
                   <Text size={12} color={COLORS.GRAY}>
                     ルーム名
@@ -454,7 +482,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 onSubmitEditing={() => {
                   Keyboard.dismiss();
                 }}
-              />
+              /> */}
               <Block style={styles.subTitleTextInput}>
                 <Text size={12} color={COLORS.GRAY}>
                   ルーム画像
@@ -609,7 +637,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     backgroundColor: COLORS.WHITE,
-    marginBottom: 24,
+    marginBottom: 40,
   },
   roomImageContainer: {
     marginBottom: 32,

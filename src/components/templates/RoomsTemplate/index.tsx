@@ -125,6 +125,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
           style={styles.buttonContainer}
         >
           <RoundButton
+            buttonColor="#F69896"
             label="悩みを話す"
             onPress={() => {
               if (checkCanCreateRoom()) {

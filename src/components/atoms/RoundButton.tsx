@@ -5,6 +5,7 @@ import { Button, Text } from "galio-framework";
 import { COLORS } from "src/constants/theme";
 
 type Props = {
+  buttonColor: string;
   label: string;
   onPress?: () => void;
   isLoading?: boolean;
@@ -12,11 +13,11 @@ type Props = {
   disabled?: boolean;
 };
 export const RoundButton: React.FC<Props> = (props) => {
-  const { label, onPress, isLoading, style, disabled } = props;
+  const { buttonColor, label, onPress, isLoading, style, disabled } = props;
   return (
     <Button
       style={[styles.button, disabled ? {} : styles.shadow, style]}
-      color={disabled ? "lightgray" : COLORS.BROWN}
+      color={disabled ? "lightgray" : buttonColor ? buttonColor : COLORS.BROWN}
       shadowless
       onPress={onPress}
       loading={isLoading}
