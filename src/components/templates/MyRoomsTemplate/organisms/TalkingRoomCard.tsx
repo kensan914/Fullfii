@@ -228,7 +228,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 talkingRoom.messages[talkingRoom.messages.length - 1].text}
             </Text>
           </Block>
-          <Block>
+          <Block center>
             <TouchableOpacity
               style={styles.toggleIcon}
               onPress={() => {
@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
   toggleIcon: {
     marginTop: 16,
     alignItems: "center",
+    width: 40,
   },
   notification: {
     position: "absolute",

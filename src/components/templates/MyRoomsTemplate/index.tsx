@@ -115,7 +115,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
             <Block style={styles.buttonContainer}>
               <Button
                 style={styles.button}
-                color={COLORS.BROWN}
+                color="#F69896"
                 shadowless
                 onPress={() => {
                   if (checkCanCreateRoom()) {

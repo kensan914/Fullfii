@@ -207,7 +207,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             }}
           >
             <Text size={20} color={COLORS.WHITE} bold>
-              聞いてみる！
+              聞いてみる
             </Text>
           </Button>
         </Block>
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   closeIcon: {
-    marginBottom: 32,
+    marginBottom: 24,
     width: 32,
   },
   modalTitle: {
