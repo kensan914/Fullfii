@@ -5,7 +5,7 @@ import { Button, Text } from "galio-framework";
 import { COLORS } from "src/constants/theme";
 
 type Props = {
-  buttonColor: string;
+  buttonColor?: string;
   label: string;
   onPress?: () => void;
   isLoading?: boolean;
