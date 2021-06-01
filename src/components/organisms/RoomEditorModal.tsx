@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Image,
   Alert,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Modal from "react-native-modal";
 
@@ -218,229 +219,18 @@ const RoomEditorModal: React.FC<Props> = (props) => {
         }
       }}
     >
-      <Block column style={styles.firstModalContent}>
-        <Block row>
-          <TouchableOpacity
-            style={styles.closeIcon}
-            onPress={() => {
-              setIsOpenRoomEditorModal(false);
-            }}
-          >
-            <IconExtra
-              name="close"
-              family="Ionicons"
-              size={32}
-              color={COLORS.HIGHLIGHT_GRAY}
-            />
-          </TouchableOpacity>
-        </Block>
-        <TouchableOpacity
-          style={styles.addMore}
-          onPress={() => {
-            openOptionModal();
-          }}
-        >
-          <Block column>
-            <Block row center>
-              <IconExtra
-                name="plus"
-                family="AntDesign"
-                size={16}
-                color={COLORS.BROWN}
-              />
-              <Block>
-                <Text size={14} color={COLORS.BROWN} bold>
-                  ルーム画像を追加
-                </Text>
-              </Block>
-            </Block>
-          </Block>
-        </TouchableOpacity>
-        {/* {roomName ? (
-          <Block row center style={styles.checkRoomTopic}>
-            <IconExtra
-              name="check-circle"
-              family="Feather"
-              size={14}
-              color={COLORS.GREEN}
-            />
-            <Block>
-              <Text size={12} color={COLORS.LIGHT_GRAY} bold>
-                ルーム名
-              </Text>
-            </Block>
-          </Block>
-        ) : null} */}
-        {roomImage ||
-        (propsDependsOnMode.mode === "FIX" &&
-          propsDependsOnMode.talkingRoom.image) ? (
-          <Block row center style={styles.checkRoomImage}>
-            <IconExtra
-              name="check-circle"
-              family="Feather"
-              size={14}
-              color={COLORS.GREEN}
-            />
-            <Block>
-              <Text size={12} color={COLORS.LIGHT_GRAY} bold>
-                ルーム画像
-              </Text>
-            </Block>
-          </Block>
-        ) : null}
-        <Block row space="between" style={styles.subTitleTextInput}>
-          <Block>
-            <Text size={12} color={COLORS.GRAY}>
-              ルーム名
-            </Text>
-          </Block>
-          <Block>
-            <Text size={12} color={COLORS.GRAY}>
-              {roomName === null ? 0 : roomName.length}/{maxTopicLength}
-            </Text>
-          </Block>
-        </Block>
-        <TextInput
-          multiline
-          numberOfLines={4}
-          editable
-          placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-          maxLength={maxTopicLength}
-          value={roomName === null ? "" : roomName}
-          onChangeText={setRoomName}
-          returnKeyType="done"
-          blurOnSubmit
-          style={styles.textArea}
-          onSubmitEditing={() => {
-            Keyboard.dismiss();
-          }}
-        />
-        <Block style={styles.choiceRangeTitle}>
-          <Text size={12} color={COLORS.GRAY}>
-            異性への表示
-          </Text>
-        </Block>
-        <Block row space="between" style={styles.circleButtons}>
-          <TouchableOpacity
-            style={[
-              styles.circleButton,
-              isExcludeDifferentGender !== null && !isExcludeDifferentGender
-                ? { borderColor: COLORS.GREEN }
-                : { borderColor: "#f4f8f7" },
-            ]}
-            onPress={() => {
-              setIsExcludeDifferentGender(false);
-            }}
-          >
-            <ImageBackground
-              source={MAN_AND_WOMAN_IMG}
-              style={styles.disclosureRangeImage}
-            >
-              <Block style={styles.disclosureRangeText}>
-                <Text size={10} bold>
-                  異性にも表示
-                </Text>
-              </Block>
-            </ImageBackground>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.circleButton,
-              isExcludeDifferentGender !== null && isExcludeDifferentGender
-                ? { borderColor: COLORS.GREEN }
-                : { borderColor: "#f4f8f7" },
-            ]}
-            onPress={() => {
-              if (!canSetIsExcludeDifferentGender) {
-                Alert.alert(
-                  ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
-                );
-              } else {
-                setIsExcludeDifferentGender(true);
-              }
-            }}
-          >
-            <ImageBackground
-              source={MEN_IMG}
-              style={styles.disclosureRangeImage}
-            >
-              <Block style={styles.disclosureRangeText}>
-                <Text size={10} bold>
-                  同性のみ表示
-                </Text>
-              </Block>
-            </ImageBackground>
-          </TouchableOpacity>
-        </Block>
-        <Block center style={styles.submitButtonContainer}>
-          <Button
-            shadowless
-            onPress={() => {
-              if (propsDependsOnMode.mode === "CREATE") {
-                requestPostRoom();
-              } else if (propsDependsOnMode.mode === "FIX") {
-                requestPatchRoom();
-              }
-            }}
-            color={canPost ? COLORS.BROWN : "lightgray"}
-            style={[
-              styles.submitButton,
-              canPost
-                ? {
-                    shadowOffset: {
-                      width: 0,
-                      height: 2,
-                    },
-                    shadowColor: "#000",
-                    shadowOpacity: 0.4,
-                    shadowRadius: 4,
-                  }
-                : {},
-            ]}
-            disabled={!canPost}
-            loading={
-              propsDependsOnMode.mode === "CREATE"
-                ? isLoadingPostRoom
-                : isLoadingPatchRoom
-            }
-          >
-            <Block row center space="between" style={styles.submitButtonInner}>
-              <IconExtra
-                name={
-                  propsDependsOnMode.mode === "CREATE" ? "pluscircleo" : "save"
-                }
-                family="AntDesign"
-                size={40}
-                color={COLORS.WHITE}
-                style={styles.submitButtonIcon}
-              />
-              <Block style={styles.submitButtonText}>
-                <Text size={20} color={COLORS.WHITE} bold>
-                  {propsDependsOnMode.mode === "CREATE"
-                    ? "ルームを作成する"
-                    : "修正を反映する"}
-                </Text>
-              </Block>
-            </Block>
-          </Button>
-        </Block>
-      </Block>
-
-      <Modal
-        isVisible={isOpenOptionModal}
-        deviceWidth={width}
-        // onBackdropPress={() => {
-        //   // setIsOpenOptionModal(false);
-        // }}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
       >
-        <Block style={styles.secondModal}>
-          <Block column style={styles.secondModalContent}>
-            <KeyboardAvoidingView behavior="padding" style={{}}>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={0}>
+          <Block column style={styles.firstModalContent}>
+            <Block row>
               <TouchableOpacity
                 style={styles.closeIcon}
                 onPress={() => {
-                  resetDraftOption();
-                  setIsOpenOptionModal(false);
+                  setIsOpenRoomEditorModal(false);
                 }}
               >
                 <IconExtra
@@ -450,49 +240,258 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   color={COLORS.HIGHLIGHT_GRAY}
                 />
               </TouchableOpacity>
-              <Block style={styles.subTitleTextInput}>
+            </Block>
+            <TouchableOpacity
+              style={styles.addMore}
+              onPress={() => {
+                openOptionModal();
+              }}
+            >
+              <Block column>
+                <Block row center>
+                  <IconExtra
+                    name="plus"
+                    family="AntDesign"
+                    size={16}
+                    color={COLORS.BROWN}
+                  />
+                  <Block>
+                    <Text size={14} color={COLORS.BROWN} bold>
+                      ルーム画像を追加
+                    </Text>
+                  </Block>
+                </Block>
+              </Block>
+            </TouchableOpacity>
+            {roomImage ||
+            (propsDependsOnMode.mode === "FIX" &&
+              propsDependsOnMode.talkingRoom.image) ? (
+              <Block row center style={styles.checkRoomImage}>
+                <IconExtra
+                  name="check-circle"
+                  family="Feather"
+                  size={14}
+                  color={COLORS.GREEN}
+                />
+                <Block>
+                  <Text size={12} color={COLORS.LIGHT_GRAY} bold>
+                    ルーム画像
+                  </Text>
+                </Block>
+              </Block>
+            ) : null}
+            <Block row space="between" style={styles.subTitleTextInput}>
+              <Block>
                 <Text size={12} color={COLORS.GRAY}>
-                  ルーム画像
+                  ルーム名
                 </Text>
               </Block>
-              <Block center>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.roomImageContainer}
-                  onPress={async () => {
-                    const result = await getPermissionAsync();
-                    if (result) {
-                      pickImage().then((image) => {
-                        if (image) {
-                          setDraftRoomImage(image);
-                        }
-                      });
-                    }
-                  }}
-                >
-                  {renderRoomImage()}
-                </TouchableOpacity>
+              <Block>
+                <Text size={12} color={COLORS.GRAY}>
+                  {roomName === null ? 0 : roomName.length}/{maxTopicLength}
+                </Text>
               </Block>
+            </Block>
+            <TextInput
+              multiline
+              numberOfLines={4}
+              editable
+              placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
+              maxLength={maxTopicLength}
+              value={roomName === null ? "" : roomName}
+              onChangeText={setRoomName}
+              returnKeyType="done"
+              blurOnSubmit
+              style={styles.textArea}
+              onSubmitEditing={() => {
+                Keyboard.dismiss();
+              }}
+            />
+            <Block style={styles.choiceRangeTitle}>
+              <Text size={12} color={COLORS.GRAY}>
+                異性への表示
+              </Text>
+            </Block>
+            <Block row space="between" style={styles.circleButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.circleButton,
+                  isExcludeDifferentGender !== null && !isExcludeDifferentGender
+                    ? { borderColor: COLORS.GREEN }
+                    : { borderColor: "#f4f8f7" },
+                ]}
+                onPress={() => {
+                  setIsExcludeDifferentGender(false);
+                }}
+              >
+                <ImageBackground
+                  source={MAN_AND_WOMAN_IMG}
+                  style={styles.disclosureRangeImage}
+                >
+                  <Block style={styles.disclosureRangeText}>
+                    <Text size={10} bold>
+                      異性にも表示
+                    </Text>
+                  </Block>
+                </ImageBackground>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.circleButton,
+                  isExcludeDifferentGender !== null && isExcludeDifferentGender
+                    ? { borderColor: COLORS.GREEN }
+                    : { borderColor: "#f4f8f7" },
+                ]}
+                onPress={() => {
+                  if (!canSetIsExcludeDifferentGender) {
+                    Alert.alert(
+                      ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
+                    );
+                  } else {
+                    setIsExcludeDifferentGender(true);
+                  }
+                }}
+              >
+                <ImageBackground
+                  source={MEN_IMG}
+                  style={styles.disclosureRangeImage}
+                >
+                  <Block style={styles.disclosureRangeText}>
+                    <Text size={10} bold>
+                      同性のみ表示
+                    </Text>
+                  </Block>
+                </ImageBackground>
+              </TouchableOpacity>
+            </Block>
+            <Block center style={styles.submitButtonContainer}>
+              <Button
+                shadowless
+                onPress={() => {
+                  if (propsDependsOnMode.mode === "CREATE") {
+                    requestPostRoom();
+                  } else if (propsDependsOnMode.mode === "FIX") {
+                    requestPatchRoom();
+                  }
+                }}
+                color={canPost ? COLORS.BROWN : "lightgray"}
+                style={[
+                  styles.submitButton,
+                  canPost
+                    ? {
+                        shadowOffset: {
+                          width: 0,
+                          height: 2,
+                        },
+                        shadowColor: "#000",
+                        shadowOpacity: 0.4,
+                        shadowRadius: 4,
+                      }
+                    : {},
+                ]}
+                disabled={!canPost}
+                loading={
+                  propsDependsOnMode.mode === "CREATE"
+                    ? isLoadingPostRoom
+                    : isLoadingPatchRoom
+                }
+              >
+                <Block
+                  row
+                  center
+                  space="between"
+                  style={styles.submitButtonInner}
+                >
+                  <IconExtra
+                    name={
+                      propsDependsOnMode.mode === "CREATE"
+                        ? "pluscircleo"
+                        : "save"
+                    }
+                    family="AntDesign"
+                    size={40}
+                    color={COLORS.WHITE}
+                    style={styles.submitButtonIcon}
+                  />
+                  <Block style={styles.submitButtonText}>
+                    <Text size={20} color={COLORS.WHITE} bold>
+                      {propsDependsOnMode.mode === "CREATE"
+                        ? "ルームを作成する"
+                        : "修正を反映する"}
+                    </Text>
+                  </Block>
+                </Block>
+              </Button>
+            </Block>
+          </Block>
 
-              <Block center>
-                <Button
-                  style={styles.addTopicButton}
-                  color={COLORS.BROWN}
-                  shadowless
+          <Modal
+            isVisible={isOpenOptionModal}
+            deviceWidth={width}
+            // onBackdropPress={() => {
+            //   // setIsOpenOptionModal(false);
+            // }}
+          >
+            <Block style={styles.secondModal}>
+              <Block column style={styles.secondModalContent}>
+                <TouchableOpacity
+                  style={styles.closeIcon}
                   onPress={() => {
-                    addRoomOption();
+                    resetDraftOption();
                     setIsOpenOptionModal(false);
                   }}
                 >
-                  <Text size={20} color={COLORS.WHITE} bold>
-                    追加する
+                  <IconExtra
+                    name="close"
+                    family="Ionicons"
+                    size={32}
+                    color={COLORS.HIGHLIGHT_GRAY}
+                  />
+                </TouchableOpacity>
+                <Block style={styles.subTitleTextInput}>
+                  <Text size={12} color={COLORS.GRAY}>
+                    ルーム画像
                   </Text>
-                </Button>
+                </Block>
+                <Block center>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.roomImageContainer}
+                    onPress={async () => {
+                      const result = await getPermissionAsync();
+                      if (result) {
+                        pickImage().then((image) => {
+                          if (image) {
+                            setDraftRoomImage(image);
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    {renderRoomImage()}
+                  </TouchableOpacity>
+                </Block>
+
+                <Block center>
+                  <Button
+                    style={styles.addTopicButton}
+                    color={COLORS.BROWN}
+                    shadowless
+                    onPress={() => {
+                      addRoomOption();
+                      setIsOpenOptionModal(false);
+                    }}
+                  >
+                    <Text size={20} color={COLORS.WHITE} bold>
+                      追加する
+                    </Text>
+                  </Button>
+                </Block>
               </Block>
-            </KeyboardAvoidingView>
-          </Block>
-        </Block>
-      </Modal>
+            </Block>
+          </Modal>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };
