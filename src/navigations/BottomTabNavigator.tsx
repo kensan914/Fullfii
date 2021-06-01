@@ -96,6 +96,7 @@ export const BottomTabNavigator: React.FC = () => {
         showLabel: false,
         style: {
           backgroundColor: COLORS.BEIGE,
+          borderTopWidth: 0,
         },
       }}
     >
