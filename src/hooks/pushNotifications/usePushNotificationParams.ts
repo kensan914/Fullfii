@@ -15,15 +15,15 @@ export const usePushNotificationParams = (): void => {
 
   const setPushNotificationParams = async () => {
     const _isPermission = await hasPermissionOfIOSPushNotification();
-    const _isChosenPermission = await hasChosenPermissionOfIOSPushNotification();
 
+    const _isChosenPermission =
+      await hasChosenPermissionOfIOSPushNotification();
     domDispatch({
       type: "SET_PUSH_NOTIFICATION_PARAMS",
       isPermission: _isPermission,
       isChosenPermission: _isChosenPermission,
     });
   };
-
   // mount時, 初期設定
   useEffect(() => {
     setPushNotificationParams();

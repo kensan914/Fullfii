@@ -79,7 +79,6 @@ export const useDomDispatch = (): DomDispatch => {
 };
 
 export const DomProvider: React.FC = ({ children }) => {
-  usePushNotificationParams();
   const [domState, domDispatch] = useReducer(domReducer, {
     ...initDomState,
     pushNotificationParams: {
