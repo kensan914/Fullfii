@@ -201,6 +201,7 @@ export const AdView = (props) => {
             <TaglineView
               numberOfLines={3}
               style={{
+                color: COLORS.BLACK,
                 fontWeight: "bold",
                 fontSize: 16,
                 marginRight: "auto",
