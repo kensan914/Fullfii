@@ -1,11 +1,14 @@
 import React from "react";
 import { StyleSheet, ViewStyle } from "react-native";
-import { Button, Text } from "galio-framework";
+import { Button, Text, Block } from "galio-framework";
 
 import { COLORS } from "src/constants/theme";
+import IconExtra from "src/components/atoms/Icon";
 
 type Props = {
   buttonColor?: string;
+  iconName?: string;
+  iconFamily?: string;
   label: string;
   onPress?: () => void;
   isLoading?: boolean;
@@ -13,7 +16,7 @@ type Props = {
   disabled?: boolean;
 };
 export const RoundButton: React.FC<Props> = (props) => {
-  const { buttonColor, label, onPress, isLoading, style, disabled } = props;
+  const { buttonColor, iconName, iconFamily, label, onPress, isLoading, style, disabled } = props;
   return (
     <Button
       style={[styles.button, disabled ? {} : styles.shadow, style]}
@@ -23,9 +26,26 @@ export const RoundButton: React.FC<Props> = (props) => {
       loading={isLoading}
       disabled={disabled}
     >
-      <Text size={20} color={COLORS.WHITE} bold>
-        {label}
-      </Text>
+      <Block
+        row
+        center
+        style={styles.buttonInner}
+      >
+        <IconExtra
+          name={iconName}
+          family={iconFamily}
+          size={32}
+          color={COLORS.WHITE}
+          style={styles.buttonIcon}
+        />
+          <Block
+          style={styles.buttonText}
+          >
+            <Text size={20} color={COLORS.WHITE} bold>
+              {label}
+            </Text>
+          </Block>
+      </Block>
     </Button>
   );
 };
@@ -33,10 +53,22 @@ export const RoundButton: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
   button: {
     marginTop: 16,
-    width: 335,
     height: 48,
+    width: "auto",
     borderRadius: 30,
     elevation: 1,
+    paddingHorizontal: 32
+  },
+  buttonInner: {
+    height: 48,
+    borderRadius: 30,
+    justifyContent: "center"
+  },
+  buttonIcon: {
+    paddingRight: 4
+  },
+  buttonText: {
+    paddingLeft: 4,
   },
   shadow: {
     shadowColor: "#000",

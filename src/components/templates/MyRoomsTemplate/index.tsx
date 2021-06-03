@@ -9,6 +9,7 @@ import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
 import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
+import IconExtra from "src/components/atoms/Icon";
 
 type Props = {
   participatingRooms: TalkingRoom[];
@@ -123,9 +124,21 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
                   }
                 }}
               >
-                <Text size={20} color={COLORS.WHITE} bold>
-                  悩みを話す
-                </Text>
+                <Block row center>
+                  <IconExtra
+                    name="pluscircleo"
+                    family="AntDesign"
+                    size={32}
+                    color={COLORS.WHITE}
+                    style={styles.buttonIcon}
+                  />
+                  <Block
+                    style={styles.buttonText}>
+                    <Text size={20} color={COLORS.WHITE} bold>
+                      悩みを話す
+                    </Text>
+                  </Block>
+                </Block>
               </Button>
             </Block>
           )}
@@ -194,5 +207,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     elevation: 1,
+  },
+  buttonIcon: {
+    paddingRight: 4
+  },
+  buttonText: {
+    paddingLeft: 4,
   },
 });

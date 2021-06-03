@@ -126,6 +126,8 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
         >
           <RoundButton
             buttonColor="#F69896"
+            iconName="pluscircleo"
+            iconFamily="AntDesign"
             label="悩みを話す"
             onPress={() => {
               if (checkCanCreateRoom()) {
