@@ -7,6 +7,7 @@ import { useAuthState } from "src/contexts/AuthContext";
 import { useWsNotification } from "./useWsNotification";
 import { useRequestGetTalkInfo } from "src/hooks/requests/useRequestTalkInfo";
 import { useUpdateTalk } from "./useUpdateTalk";
+import { usePushNotificationParams } from "src/hooks/pushNotifications/usePushNotificationParams";
 
 export const StartUpManager: React.FC = (props) => {
   const { children } = props;
@@ -20,7 +21,7 @@ export const StartUpManager: React.FC = (props) => {
     updateTalk(talkInfoJson);
   });
   const { connectWsNotification } = useWsNotification();
-
+  usePushNotificationParams();
   useEffect(() => {
     // ログイン済みでアプリを起動した時、またはsignup成功時に実行
     if (authState.token) {

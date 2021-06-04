@@ -23,6 +23,8 @@ export const SubmitButton: React.FC<Props> = (props) => {
   return (
     <RoundButton
       label={label ? label : "決定"}
+      iconName="check"
+      iconFamily="AntDesign"
       isLoading={isLoading}
       onPress={pressedFunc}
       disabled={!canSubmit}

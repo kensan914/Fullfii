@@ -100,7 +100,7 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
             account_id: profileState.profile.id,
           };
           const wrapLeaveMessage = (_text: string) => {
-            return `【退室メッセージを贈ります】\n${_text}`;
+            return `【退室メッセージを贈ります👋】\n${_text}`;
           };
           if (text) {
             return {

@@ -54,7 +54,7 @@ export const useConfigPushNotification: UseConfigPushNotification = () => {
             authState.token &&
               requestPatchMe({ data: { device_token: deviceToken } });
           }
-          domDispatch({ type: "SET_IS_PERMISSION", isPermission: true });
+          domDispatch({ type: "CONFIGURED_PUSH_NOTIFICATION" });
         }
       })();
     }

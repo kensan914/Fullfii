@@ -8,6 +8,8 @@ import {
   Alert,
 } from "react-native";
 import Modal from "react-native-modal";
+import SvgUri from "react-native-svg-uri";
+
 import IconExtra from "src/components/atoms/Icon";
 
 import { COLORS } from "src/constants/theme";
@@ -206,9 +208,23 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
               }
             }}
           >
-            <Text size={20} color={COLORS.WHITE} bold>
-              聞いてみる
-            </Text>
+            <Block center row>
+              <Block style={[styles.svgContainer]}>
+                <SvgUri
+                    width={40}
+                    height={40}
+                    source={require("src/assets/icons/enterRoom.svg")}
+                    fill={"#fff"}
+                  />
+              </Block>
+              <Block
+              style={styles.buttonText}
+              >
+                <Text size={20} color={COLORS.WHITE} bold>
+                  聞いてみる！
+                </Text>
+              </Block>
+            </Block>
           </Button>
         </Block>
       </Block>
@@ -258,6 +274,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
+  buttonIcon: {
+    paddingRight: 4
+  },
+  buttonText: {
+    paddingLeft: 4,
+  },
   touchableHighlight: {
     borderRadius: 20,
   },
@@ -285,5 +307,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 16,
     right: 16,
+  },
+  svgContainer: {
+    zIndex: 100,
   },
 });

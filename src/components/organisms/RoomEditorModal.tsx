@@ -400,24 +400,23 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 <Block
                   row
                   center
-                  space="between"
                   style={styles.submitButtonInner}
                 >
                   <IconExtra
                     name={
                       propsDependsOnMode.mode === "CREATE"
-                        ? "pluscircleo"
+                        ? ""
                         : "save"
                     }
                     family="AntDesign"
-                    size={40}
+                    size={32}
                     color={COLORS.WHITE}
                     style={styles.submitButtonIcon}
                   />
                   <Block style={styles.submitButtonText}>
                     <Text size={20} color={COLORS.WHITE} bold>
                       {propsDependsOnMode.mode === "CREATE"
-                        ? "ルームを作成する"
+                        ? "悩み相談のルームを作成する"
                         : "修正を反映する"}
                     </Text>
                   </Block>
@@ -567,6 +566,7 @@ const styles = StyleSheet.create({
     width: 335,
     height: 48,
     borderRadius: 30,
+    justifyContent: "center"
   },
   submitButton: {
     width: 335,
@@ -575,10 +575,10 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   submitButtonIcon: {
-    paddingLeft: 64,
+    paddingRight: 4,
   },
   submitButtonText: {
-    paddingRight: 64,
+    paddingLeft: 4,
   },
   secondModal: {
     width: width - 40,
