@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 
 import { BASE_URL_WS } from "src/constants/env";
-import { URLJoin, closeWsSafely } from "src/utils";
+import { URLJoin, closeWsSafely, generateUuid4 } from "src/utils";
 import { MessageJson } from "src/types/Types.context";
 import { WsResChat, WsResChatIoTs } from "src/types/Types";
 import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
@@ -22,6 +22,7 @@ export const useWsChat: UseWsChat = () => {
 
   // useWebsocketのwsSettingsがroomIdに依存していて, かつroomIdがconnectWsChat()を呼び出さない限り確定しないため, もう一つwsSettings用のroomId・onSuccessAuthを用意 (詳しくはuseWebsocket.ts参照).
   const [roomId, setRoomId] = useState<string>();
+
   // 関数を直接stateで管理することはできない (https://zenn.dev/terrierscript/articles/2019-02-06-react-hooks-use-state-function-tips).
   const [onSuccessAuth, setOnSuccessAuth] = useState<{
     fn: (ws: WebSocket) => void;
@@ -41,7 +42,9 @@ export const useWsChat: UseWsChat = () => {
       onmessage: (eData, e, ws, isReconnect) => {
         const data = eData as WsResChat;
 
-        console.log(data);
+        console.log("onmessage!!");
+        console.log(`isReconnect: ${isReconnect}`);
+        console.log(`roomId: ${roomId}`);
 
         switch (data.type) {
           case "auth":
@@ -120,6 +123,7 @@ export const useWsChat: UseWsChat = () => {
         return void 0;
       },
     },
+    roomId ? chatState.talkingRoomCollection[roomId]?.ws : void 0,
     [chatState.talkingRoomCollection, authState.token],
     [roomId, onSuccessAuth]
   );

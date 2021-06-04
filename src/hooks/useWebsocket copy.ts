@@ -43,12 +43,23 @@ export const useWebsocket: UseWebsocket = (
     }, 0)
   );
   const ws = useRef<WebSocket>();
-  const [isDelayConnect, setIsDelayConnect] = useState<boolean>(false);
-  const isReconnect = useRef<boolean>(false);
+  type DelayConnectSettings = {
+    isDelay: boolean;
+    isReconnect: boolean;
+  };
+  const [
+    delayConnectSettings,
+    setDelayConnectSettings,
+  ] = useState<DelayConnectSettings>({
+    isDelay: false,
+    isReconnect: false,
+  });
 
   // 各wsHandlersのrerender
   useEffect(() => {
     if (wsHandlersDeps.length > 0) {
+      console.log("理レンダー");
+
       setWebsocketHandlers();
     }
   }, wsHandlersDeps);
@@ -57,14 +68,14 @@ export const useWebsocket: UseWebsocket = (
   useEffect(() => {
     // wsSettingsDepsが全てセット済みだったら, connectWebsocket()実行
     if (
-      isDelayConnect &&
+      delayConnectSettings.isDelay &&
       (wsSettingsDeps.length <= 0 || wsSettingsDeps.every((elm) => !!elm))
     ) {
-      _connectWebsocket();
+      _connectWebsocket(delayConnectSettings.isReconnect);
     }
-  }, [isDelayConnect, ...wsSettingsDeps]);
+  }, [delayConnectSettings, ...wsSettingsDeps]);
 
-  const setWebsocketHandlers = (): void => {
+  const setWebsocketHandlers = (isReconnect = false): void => {
     const _ws = ws.current;
     // ws.currentがセットされていない限り, つまりconnectWebsocket()が実行されていない限り, useWebsocketの引数wsSettingsが未完成であっても各handlerはセットされない.
     if (_ws) {
@@ -86,7 +97,7 @@ export const useWebsocket: UseWebsocket = (
           console.error({ ...eData });
           console.groupEnd();
         }
-        wsSettings.onmessage(eData, e, _ws, isReconnect.current);
+        wsSettings.onmessage(eData, e, _ws, isReconnect);
       };
     }
   };
@@ -108,8 +119,7 @@ export const useWebsocket: UseWebsocket = (
           // ws再接続
           connectInterval.current = setTimeout(() => {
             if (!_ws || _ws.readyState == WebSocket.CLOSED) {
-              isReconnect.current = true;
-              _connect(); // isReconnect = true
+              _connect(true); // isReconnect = true
             }
           }, connectIntervalTime);
         }
@@ -118,36 +128,43 @@ export const useWebsocket: UseWebsocket = (
     }
   };
 
-  const _connect = (): void => {
+  const _connect = (isReconnect = false): void => {
     ws.current = new WebSocket(wsSettings.url);
-    setWebsocketHandlers();
+    setWebsocketHandlers(isReconnect);
     setWebsocketOnclose();
   };
 
-  const _connectWebsocket = () => {
+  const _connectWebsocket = (isReconnect = false) => {
     connectInterval.current = setTimeout(() => {
       return void 0;
     }, 0);
     console.log(
       `接続(${wsSettings.url}). (再接続ですか?: ${
-        isReconnect.current ? "はい" : "いいえ"
+        isReconnect ? "はい" : "いいえ"
       })`
     );
-    _connect();
-    setIsDelayConnect(false);
+    _connect(isReconnect);
+    setDelayConnectSettings({
+      isDelay: false,
+      isReconnect: false,
+    });
   };
 
-  const connectWebsocket = () => {
+  const connectWebsocket = (isReconnect = false) => {
     // wsSettingsの準備が完了するまで遅延
-    setIsDelayConnect(true);
+    // setIsDelayConnect(true);
+    setDelayConnectSettings({
+      isDelay: true,
+      isReconnect: isReconnect,
+    });
   };
 
   // ws再接続 (background => active)
   useReconnectWebsocket(
     ws,
     () => {
-      isReconnect.current = true;
-      connectWebsocket();
+      // _connectWebsocket(true);
+      connectWebsocket(true);
     },
     wsState
   );
@@ -172,11 +189,10 @@ const useReconnectWebsocket = (
   const wsStateRef = useRef(wsState); // イベントハンドラー内で最新のstateを参照するため
   wsStateRef.current = wsState;
 
-  // TODO: 消す
   useEffect(() => {
+    wsStateRef.current !== null && console.log(`wsStateがセットされた!?`);
     wsStateRef.current !== null && console.log(wsState);
   }, [wsState]);
-
   /**
    * 単純な再接続ではなく, 一度切断してから再度1から接続を行う
    */
@@ -187,8 +203,11 @@ const useReconnectWebsocket = (
     // wsState(ex. chatState.talkingRoomCollection)でwebsocketがセットされていない時, 再接続をしない.
     // 例えば, 終了した直後のルームはuseWebsocket内では生きているため, 再接続が行われてしまう.
     if (wsStateRef.current !== null && !wsStateRef.current) {
+      wsStateRef.current !== null && console.log("再接続できませんでした");
       return;
     }
+
+    wsStateRef.current !== null && console.log("再接続しようとします");
 
     closeWsSafely(ws);
     _connectWebsocket();

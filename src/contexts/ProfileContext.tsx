@@ -50,7 +50,7 @@ const profileReducer = (
       };
 
     default:
-      console.warn(`Not found this action.type.`);
+      console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
   }
 };

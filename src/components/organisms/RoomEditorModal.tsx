@@ -28,6 +28,7 @@ import { showToast } from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { formatGender } from "src/utils";
+import { useNavigation } from "@react-navigation/core";
 
 type PropsDependsOnMode =
   | {
@@ -52,6 +53,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
 
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
   const profileState = useProfileState();
+  const navigation = useNavigation();
 
   const formattedGender = formatGender(
     profileState.profile.gender,
@@ -68,7 +70,6 @@ const RoomEditorModal: React.FC<Props> = (props) => {
       ? null
       : propsDependsOnMode.talkingRoom.name
   );
-  const [initDraftRoomName] = useState(null);
   const [initRoomImage] = useState(null);
   const [initDraftRoomImage] = useState(null);
 
