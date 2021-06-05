@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import Modal from "react-native-modal";
+import { useNavigation } from "@react-navigation/core";
 
 import { COLORS } from "src/constants/theme";
 import IconExtra from "src/components/atoms/Icon";
@@ -27,13 +28,15 @@ import { TalkingRoom } from "src/types/Types.context";
 import { showToast } from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useProfileState } from "src/contexts/ProfileContext";
-import { formatGender } from "src/utils";
-import { useNavigation } from "@react-navigation/core";
+import { formatGender, generateUuid4 } from "src/utils";
 
 type PropsDependsOnMode =
   | {
-      mode: "CREATE";
+      mode: "CREATE_FROM_MY_ROOMS";
       setIsOpenRoomCreatedModal: Dispatch<boolean>;
+    }
+  | {
+      mode: "CREATE_FROM_ROOMS";
     }
   | {
       mode: "FIX";
@@ -66,9 +69,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
 
   // ====== init post or patch data ======
   const [initRoomName] = useState(
-    propsDependsOnMode.mode === "CREATE"
-      ? null
-      : propsDependsOnMode.talkingRoom.name
+    propsDependsOnMode.mode === "FIX"
+      ? propsDependsOnMode.talkingRoom.name
+      : null
   );
   const [initRoomImage] = useState(null);
   const [initDraftRoomImage] = useState(null);
@@ -76,7 +79,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   // initIsExcludeDifferentGender初期値のコード量が長いので関数に抽出
   const geneInitIsExcludeDifferentGender = () => {
     let _initIsExcludeDifferentGender = null;
-    if (propsDependsOnMode.mode !== "CREATE") {
+    if (propsDependsOnMode.mode === "FIX") {
       if (canSetIsExcludeDifferentGender) {
         _initIsExcludeDifferentGender =
           propsDependsOnMode.talkingRoom.isExcludeDifferentGender;
@@ -104,14 +107,11 @@ const RoomEditorModal: React.FC<Props> = (props) => {
 
   const maxTopicLength = 60;
 
-  /** この値がtrueの状態でモーダルを閉じるとルーム作成モーダルが表示される(作成時のみ) */
-  const willOpenRoomCreatedModalRef = useRef(false);
-
   // canPostは作成時 & 修正時
   const canPost =
-    (propsDependsOnMode.mode === "CREATE"
-      ? isExcludeDifferentGender !== null
-      : true) &&
+    (propsDependsOnMode.mode === "FIX"
+      ? true
+      : isExcludeDifferentGender !== null) &&
     roomName &&
     roomName.length > 0;
 
@@ -134,6 +134,13 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     setIsOpenOptionModal(true);
   };
 
+  /** この値がtrueの状態でモーダルを閉じるとMyRoomsへ遷移し, ルーム作成モーダルが表示される(作成時のみ) */
+  const isCreatedRef = useRef(false);
+  const closeModalAfterCreate = () => {
+    isCreatedRef.current = true;
+    setIsOpenRoomEditorModal(false);
+  };
+
   // ルーム作成用
   const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
     roomName,
@@ -141,11 +148,8 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     roomImage,
     () => {
       // then時、実行
-      if (willOpenRoomCreatedModalRef) {
-        willOpenRoomCreatedModalRef.current = true;
-      }
       resetState();
-      setIsOpenRoomEditorModal(false);
+      closeModalAfterCreate();
     }
   );
 
@@ -188,7 +192,10 @@ const RoomEditorModal: React.FC<Props> = (props) => {
           return emptyRoomImage;
         }
       }
-    } else if (propsDependsOnMode.mode === "CREATE") {
+    } else if (
+      propsDependsOnMode.mode === "CREATE_FROM_MY_ROOMS" ||
+      propsDependsOnMode.mode === "CREATE_FROM_ROOMS"
+    ) {
       if (draftRoomImage !== null) {
         return <Image style={styles.roomImage} source={draftRoomImage} />;
       } else {
@@ -207,10 +214,22 @@ const RoomEditorModal: React.FC<Props> = (props) => {
       }}
       style={styles.firstModal}
       onModalHide={() => {
-        if (willOpenRoomCreatedModalRef.current) {
-          propsDependsOnMode.mode === "CREATE" &&
+        if (isCreatedRef.current) {
+          if (propsDependsOnMode.mode === "CREATE_FROM_ROOMS") {
+            // MyRoomsに遷移してcreatedModalを表示
+            navigation.navigate("MyRooms", {
+              navigateState: {
+                willOpenRoomCreatedModal: true,
+                id: generateUuid4(),
+              },
+            });
+          }
+          // createdModalの表示のみ
+          else if (propsDependsOnMode.mode === "CREATE_FROM_MY_ROOMS") {
             propsDependsOnMode.setIsOpenRoomCreatedModal(true);
-          willOpenRoomCreatedModalRef.current = false;
+          }
+
+          isCreatedRef.current = false;
         }
       }}
       onModalWillShow={() => {
@@ -369,7 +388,10 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               <Button
                 shadowless
                 onPress={() => {
-                  if (propsDependsOnMode.mode === "CREATE") {
+                  if (
+                    propsDependsOnMode.mode === "CREATE_FROM_ROOMS" ||
+                    propsDependsOnMode.mode === "CREATE_FROM_MY_ROOMS"
+                  ) {
                     requestPostRoom();
                   } else if (propsDependsOnMode.mode === "FIX") {
                     requestPatchRoom();
@@ -392,22 +414,14 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 ]}
                 disabled={!canPost}
                 loading={
-                  propsDependsOnMode.mode === "CREATE"
-                    ? isLoadingPostRoom
-                    : isLoadingPatchRoom
+                  propsDependsOnMode.mode === "FIX"
+                    ? isLoadingPatchRoom
+                    : isLoadingPostRoom
                 }
               >
-                <Block
-                  row
-                  center
-                  style={styles.submitButtonInner}
-                >
+                <Block row center style={styles.submitButtonInner}>
                   <IconExtra
-                    name={
-                      propsDependsOnMode.mode === "CREATE"
-                        ? ""
-                        : "save"
-                    }
+                    name={propsDependsOnMode.mode === "FIX" ? "save" : ""}
                     family="AntDesign"
                     size={32}
                     color={COLORS.WHITE}
@@ -415,9 +429,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   />
                   <Block style={styles.submitButtonText}>
                     <Text size={20} color={COLORS.WHITE} bold>
-                      {propsDependsOnMode.mode === "CREATE"
-                        ? "悩み相談のルームを作成する"
-                        : "修正を反映する"}
+                      {propsDependsOnMode.mode === "FIX"
+                        ? "修正を反映する"
+                        : "悩み相談のルームを作成する"}
                     </Text>
                   </Block>
                 </Block>
@@ -566,7 +580,7 @@ const styles = StyleSheet.create({
     width: 335,
     height: 48,
     borderRadius: 30,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   submitButton: {
     width: 335,

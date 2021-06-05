@@ -58,8 +58,6 @@ export const useWebsocket: UseWebsocket = (
   // 各wsHandlersのrerender
   useEffect(() => {
     if (wsHandlersDeps.length > 0) {
-      console.log("理レンダー");
-
       setWebsocketHandlers();
     }
   }, wsHandlersDeps);
@@ -138,11 +136,6 @@ export const useWebsocket: UseWebsocket = (
     connectInterval.current = setTimeout(() => {
       return void 0;
     }, 0);
-    console.log(
-      `接続(${wsSettings.url}). (再接続ですか?: ${
-        isReconnect ? "はい" : "いいえ"
-      })`
-    );
     _connect(isReconnect);
     setDelayConnectSettings({
       isDelay: false,
@@ -189,10 +182,6 @@ const useReconnectWebsocket = (
   const wsStateRef = useRef(wsState); // イベントハンドラー内で最新のstateを参照するため
   wsStateRef.current = wsState;
 
-  useEffect(() => {
-    wsStateRef.current !== null && console.log(`wsStateがセットされた!?`);
-    wsStateRef.current !== null && console.log(wsState);
-  }, [wsState]);
   /**
    * 単純な再接続ではなく, 一度切断してから再度1から接続を行う
    */
@@ -203,11 +192,8 @@ const useReconnectWebsocket = (
     // wsState(ex. chatState.talkingRoomCollection)でwebsocketがセットされていない時, 再接続をしない.
     // 例えば, 終了した直後のルームはuseWebsocket内では生きているため, 再接続が行われてしまう.
     if (wsStateRef.current !== null && !wsStateRef.current) {
-      wsStateRef.current !== null && console.log("再接続できませんでした");
       return;
     }
-
-    wsStateRef.current !== null && console.log("再接続しようとします");
 
     closeWsSafely(ws);
     _connectWebsocket();

@@ -132,8 +132,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
                     color={COLORS.WHITE}
                     style={styles.buttonIcon}
                   />
-                  <Block
-                    style={styles.buttonText}>
+                  <Block style={styles.buttonText}>
                     <Text size={20} color={COLORS.WHITE} bold>
                       悩みを話す
                     </Text>
@@ -148,7 +147,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
         isOpenRoomEditorModal={isOpenRoomEditorModal}
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
         propsDependsOnMode={{
-          mode: "CREATE",
+          mode: "CREATE_FROM_MY_ROOMS",
           setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
         }}
       />
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   buttonIcon: {
-    paddingRight: 4
+    paddingRight: 4,
   },
   buttonText: {
     paddingLeft: 4,

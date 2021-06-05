@@ -5,8 +5,15 @@ import { useChatState } from "src/contexts/ChatContext";
 import { TalkingRoom } from "src/types/Types.context";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
+import { RouteProp, useFocusEffect } from "@react-navigation/core";
+import { MyRoomsRouteProp } from "src/types/Types";
 
-export const MyRoomsScreen: React.FC = () => {
+type Props = {
+  route: MyRoomsRouteProp;
+};
+export const MyRoomsScreen: React.FC<Props> = (props) => {
+  const { route } = props;
+
   const chatState = useChatState();
   const profileState = useProfileState();
 
@@ -36,6 +43,16 @@ export const MyRoomsScreen: React.FC = () => {
     isOpenNotificationReminderModal,
     setIsOpenNotificationReminderModal,
   ] = useState<boolean>(false);
+
+  const navigateState = route.params?.navigateState;
+  useEffect(() => {
+    if (
+      typeof navigateState?.willOpenRoomCreatedModal !== "undefined" &&
+      !!navigateState?.willOpenRoomCreatedModal
+    ) {
+      setIsOpenRoomCreatedModal(true);
+    }
+  }, [navigateState?.id]);
 
   const { checkCanCreateRoom } = useCanCreateRoom();
 

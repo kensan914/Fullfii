@@ -128,11 +128,7 @@ export const useWebsocket: UseWebsocket = (
     connectInterval.current = setTimeout(() => {
       return void 0;
     }, 0);
-    console.log(
-      `接続(${wsSettings.url}). (再接続ですか?: ${
-        isReconnect.current ? "はい" : "いいえ"
-      })`
-    );
+
     _connect();
     setIsDelayConnect(false);
   };
@@ -171,11 +167,6 @@ const useReconnectWebsocket = (
   const appState = useRef(AppState.currentState);
   const wsStateRef = useRef(wsState); // イベントハンドラー内で最新のstateを参照するため
   wsStateRef.current = wsState;
-
-  // TODO: 消す
-  useEffect(() => {
-    wsStateRef.current !== null && console.log(wsState);
-  }, [wsState]);
 
   /**
    * 単純な再接続ではなく, 一度切断してから再度1から接続を行う

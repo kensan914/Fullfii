@@ -42,10 +42,6 @@ export const useWsChat: UseWsChat = () => {
       onmessage: (eData, e, ws, isReconnect) => {
         const data = eData as WsResChat;
 
-        console.log("onmessage!!");
-        console.log(`isReconnect: ${isReconnect}`);
-        console.log(`roomId: ${roomId}`);
-
         switch (data.type) {
           case "auth":
             if (data.room) {
