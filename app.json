@@ -11,9 +11,9 @@
     ],
     "version": "1.6.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon_2/ios/Icon-512.png",
+    "icon": "./assets/images/icon/icon.jpg",
     "splash": {
-      "image": "./assets/images/splash/1668_2224.png",
+      "image": "./src/assets/images/splash/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#6C24AA"
     },

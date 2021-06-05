@@ -23,6 +23,10 @@
 #import <RNCPushNotificationIOS.h>
 /* push notification */
 
+/* https://developers.google.com/admob/ios/ios14?hl=ja#objective-c */
+// #import <AppTrackingTransparency/AppTrackingTransparency.h>
+// #import <AdSupport/AdSupport.h>
+
 @interface AppDelegate ()
 
 @property (nonatomic, strong) NSDictionary *launchOptions;
@@ -43,13 +47,15 @@
     // iOS 10 or later
     // For iOS 10 display notification (sent via APNS)
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-    UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert |
-      UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
-    [[UNUserNotificationCenter currentNotificationCenter]
-      requestAuthorizationWithOptions:authOptions
-      completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        // ...
-      }];
+
+    /*-- react native側でrequestPermissionを行うため --*/
+    // UNAuthorizationOptions authOptions = UNAuthorizationOptionAlert |
+    //   UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+    // [[UNUserNotificationCenter currentNotificationCenter]
+    //   requestAuthorizationWithOptions:authOptions
+    //   completionHandler:^(BOOL granted, NSError * _Nullable error) {
+    //     // ...
+    //   }];
     } else {
       // iOS 10 notifications aren't available; fall back to iOS 8-9 notifications.
       UIUserNotificationType allNotificationTypes =
@@ -65,25 +71,35 @@
   self.launchOptions = launchOptions;
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-#ifdef DEBUG
-  [self initializeReactNativeApp];
-#else
-  EXUpdatesAppController *controller = [EXUpdatesAppController sharedInstance];
-  controller.delegate = self;
-  [controller startAndShowLaunchScreen:self.window];
-#endif
+
+  #ifdef DEBUG
+    [self initializeReactNativeApp];
+  #else
+    EXUpdatesAppController *controller = [EXUpdatesAppController sharedInstance];
+    controller.delegate = self;
+    [controller startAndShowLaunchScreen:self.window];
+  #endif
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
-
-  [RNSplashScreen show]; // 20/10/25
 
   /* push notification https://qiita.com/iwashi1t/items/517cda73dba715025b6c */
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
   /* push notification */
 
+  [RNSplashScreen show];  // react-native-splash-screen
+
   return YES;
 }
+
+// https://developers.google.com/admob/ios/ios14?hl=ja#objective-c
+// (iOS14対応準備)react nativeで実装している日本語の情報が少なすぎて延期
+// - (void)requestIDFA {
+//   [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+//     // Tracking authorization completed. Start loading ads here.
+//     // [self loadAd];
+//   }];
+// }
 
 /* push notification https://qiita.com/iwashi1t/items/517cda73dba715025b6c */
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center

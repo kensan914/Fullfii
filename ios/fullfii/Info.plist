@@ -61,6 +61,15 @@
 	<string>アカウント画像をアップロードするために写真を使用します</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow fullfii to access your reminders</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>トラッキングを許可するとAppは引き続き無料で利用でき、カスタマイズ広告が表示されます。</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
