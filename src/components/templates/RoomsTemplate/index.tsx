@@ -1,5 +1,5 @@
 import React, { Dispatch } from "react";
-import { Block, Button, Text } from "galio-framework";
+import { Block, Text } from "galio-framework";
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import { COLORS } from "src/constants/theme";
@@ -9,8 +9,6 @@ import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlockRoom, HideRoom } from "src/types/Types";
-import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
-import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
 import { AdView } from "src/components/molecules/AdView";
 import { ADMOB_UNIT_ID_NATIVE } from "src/constants/env";
 import { RoundButton } from "src/components/atoms/RoundButton";
@@ -21,10 +19,6 @@ type Props = {
   hideRoom: HideRoom;
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
-  isOpenRoomCreatedModal: boolean;
-  setIsOpenRoomCreatedModal: Dispatch<boolean>;
-  isOpenNotificationReminderModal: boolean;
-  setIsOpenNotificationReminderModal: Dispatch<boolean>;
   onEndReached: () => void;
   handleRefresh: () => void;
   isRefreshing: boolean;
@@ -42,10 +36,6 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
     hideRoom,
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
-    isOpenRoomCreatedModal,
-    setIsOpenRoomCreatedModal,
-    isOpenNotificationReminderModal,
-    setIsOpenNotificationReminderModal,
     onEndReached,
     handleRefresh,
     isRefreshing,
@@ -142,18 +132,8 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
         isOpenRoomEditorModal={isOpenRoomEditorModal}
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
         propsDependsOnMode={{
-          mode: "CREATE",
-          setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
+          mode: "CREATE_FROM_ROOMS",
         }}
-      />
-      <RoomCreatedModal
-        isOpenRoomCreatedModal={isOpenRoomCreatedModal}
-        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
-        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
-      />
-      <NotificationReminderModal
-        isOpenNotificationReminderModal={isOpenNotificationReminderModal}
-        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       />
     </>
   );

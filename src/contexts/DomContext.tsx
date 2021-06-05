@@ -49,7 +49,7 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       return { ...prevState, pushNotificationParams: _pushNotificationParams };
     }
     default:
-      console.warn(`Not found this action.type.`);
+      console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
   }
 };

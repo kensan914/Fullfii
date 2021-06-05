@@ -12,9 +12,7 @@ import { asyncStoreTalkingRoomCollection } from "src/utils/asyncStorage";
 import {
   ChatState,
   ChatDispatch,
-  TalkTicketCollection,
   ChatActionType,
-  TalkTicket,
   CommonMessage,
   Message,
   OfflineMessage,
@@ -22,7 +20,6 @@ import {
   TalkingRoomCollection,
   Room,
   CommonMessageSettings,
-  Profile,
 } from "src/types/Types.context";
 import {
   canAddCommonMessage,
@@ -30,7 +27,6 @@ import {
   geneCommonMessage,
   getTotalUnreadNum,
 } from "src/utils/chat/chatContextUtils";
-import { Alert } from "react-native";
 
 /**
  * dispatchを遅延するべきか判定し、遅延する場合actionをchatDispatchTask.queueにエンキューしreturn
@@ -72,10 +68,6 @@ const chatReducer = (
   action: ChatActionType
 ): ChatState => {
   let _offlineMessages: OfflineMessage[];
-  let _talkTicketCollection: TalkTicketCollection;
-  let _talkTicket: TalkTicket;
-  // ↑未使用
-
   let _talkingRoomCollection: TalkingRoomCollection;
   let _talkingRoom: TalkingRoom;
 
@@ -251,7 +243,7 @@ const chatReducer = (
 
       // 未だスタートしていない
       if (!_talkingRoom.isStart) {
-        console.error(`the room (id: ${action.roomId}) has already started.`);
+        console.error(`the room (id: ${action.roomId}) has not started.`);
         return { ...prevState };
       }
 
@@ -639,7 +631,7 @@ const chatReducer = (
       return { ...initChatState };
 
     default:
-      console.warn(`Not found thi action.type.`);
+      console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
   }
 };

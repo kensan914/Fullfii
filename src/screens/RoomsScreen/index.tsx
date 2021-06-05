@@ -25,13 +25,6 @@ export const RoomsScreen: React.FC = () => {
   const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState<boolean>(
     false
   );
-  const [isOpenRoomCreatedModal, setIsOpenRoomCreatedModal] = useState<boolean>(
-    false
-  );
-  const [
-    isOpenNotificationReminderModal,
-    setIsOpenNotificationReminderModal,
-  ] = useState<boolean>(false);
 
   const { checkCanCreateRoom } = useCanCreateRoom();
 
@@ -42,10 +35,6 @@ export const RoomsScreen: React.FC = () => {
       hideRoom={hideRoom}
       isOpenRoomEditorModal={isOpenRoomEditorModal}
       setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-      isOpenRoomCreatedModal={isOpenRoomCreatedModal}
-      setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
-      isOpenNotificationReminderModal={isOpenNotificationReminderModal}
-      setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       onEndReached={onEndReached}
       handleRefresh={handleRefresh}
       isRefreshing={isRefreshing}

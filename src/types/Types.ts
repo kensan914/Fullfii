@@ -15,7 +15,6 @@ import {
   Profile,
   ProfileDispatch,
   RoomJsonIoTs,
-  TalkTicketJsonIoTs,
   TalkTicketKey,
 } from "src/types/Types.context";
 
@@ -39,12 +38,14 @@ export type RootStackParamList = {
   Authenticated: undefined;
   Top: undefined;
   Onboarding: undefined;
+  MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
 export type ProfileInputRouteProp = RouteProp<
   RootStackParamList,
   "ProfileInput"
 >;
+export type MyRoomsRouteProp = RouteProp<RootStackParamList, "MyRooms">;
 export type HomeNavigationProp = StackNavigationProp<
   RootStackParamList,
   "Home"

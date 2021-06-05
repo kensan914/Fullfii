@@ -73,7 +73,7 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
       return { ...initAuthState };
     }
     default: {
-      console.warn(`Not found this action.type`);
+      console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
     }
   }

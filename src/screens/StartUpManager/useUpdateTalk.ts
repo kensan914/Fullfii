@@ -84,8 +84,6 @@ export const useUpdateTalk: UseUpdateTalk = () => {
 
     // async storageに古いtalkingRoomCollectionが存在する場合のみ処理
     if (prevTalkingRoomCollection) {
-      console.log({ ...prevTalkingRoomCollection });
-
       // chat websocket再接続. 終了していたとしてもメッセージ更新のため, 全てのスタート済みのトークは再接続する.
       // そもそもトーク終了は, chat_authのレスポンスで検知するため, 始まっているトークは必ず再接続.
       Object.values(prevTalkingRoomCollection).forEach((_prevTalkingRoom) => {

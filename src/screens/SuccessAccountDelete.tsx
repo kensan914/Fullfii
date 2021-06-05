@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Block, Text, Button } from "galio-framework";
+import { Block, Text } from "galio-framework";
 import { StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
 
 import { width } from "src/constants";
-import { COLORS } from "src/constants/theme";
 import { LottieSource } from "src/types/Types";
 import useAllContext from "src/contexts/ContextUtils";
 import { dangerouslyDelete } from "src/utils/auth/crud";
