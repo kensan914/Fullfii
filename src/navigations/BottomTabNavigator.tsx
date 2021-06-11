@@ -11,7 +11,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { COLORS } from "src/constants/theme";
 import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
-import { useRoute } from "@react-navigation/core";
 import { MyRoomsRouteProp } from "src/types/Types";
 
 export const BottomTabNavigator: React.FC = () => {

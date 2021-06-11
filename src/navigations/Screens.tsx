@@ -35,13 +35,6 @@ const HomeStack = () => {
           header: () => null,
         })}
       />
-      {/* <Stack.Screen
-        name="ProfileEditor"
-        component={ProfileEditorScreen}
-        options={() => ({
-          header: () => <Header back name={"ProfileEditor"} />,
-        })}
-      /> */}
       <Stack.Screen
         name="ProfileInput"
         component={ProfileInputScreen}
