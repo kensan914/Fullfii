@@ -38,6 +38,7 @@ export type RootStackParamList = {
   Authenticated: undefined;
   Top: undefined;
   Onboarding: undefined;
+  IntroCreateRoom: undefined;
   MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
@@ -68,7 +69,7 @@ export type ProfileInputScreen =
   | "InputGender"
   | "InputIntroduction";
 
-export type HeaderName =
+export type RouteName =
   | (
       | "Rooms"
       | "MyRooms"

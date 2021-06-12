@@ -37,6 +37,7 @@ export const ALERT_MESSAGES: AlertMessages = {
 };
 
 type ToastMessages = {
+  CREATE_ROOM: ShowToastSettings;
   FIX_ROOM: ShowToastSettings;
   DELETE_ROOM: ShowToastSettings;
   LEAVE_ROOM_WITH_RECREATE_OWNER: ShowToastSettings;
@@ -46,6 +47,9 @@ type ToastMessages = {
   BLOCK_ROOM: ShowToastSettings;
 };
 export const TOAST_SETTINGS: ToastMessages = {
+  CREATE_ROOM: {
+    text1: "ルームを作成しました", // イントロ時のルーム作成時用
+  },
   FIX_ROOM: {
     text1: "ルームを修正しました",
   },

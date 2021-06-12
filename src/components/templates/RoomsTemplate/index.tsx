@@ -4,7 +4,7 @@ import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import { COLORS } from "src/constants/theme";
 import { RoomCard } from "src/components/templates/RoomsTemplate/organisms/RoomCard";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -78,14 +78,14 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       hideRoom={hideRoom}
                       blockRoom={blockRoom}
                     />
-                    {/* {index > 0 && (index + 1) % 3 === 0 && (
+                    {index > 0 && (index + 1) % 3 === 0 && (
                       <AdView
                         media={false}
                         type="video"
                         index={2}
                         adUnitId={ADMOB_UNIT_ID_NATIVE.image}
                       />
-                    )} */}
+                    )}
                   </>
                 );
               }
