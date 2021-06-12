@@ -9,7 +9,7 @@ import { ByeByeMenu } from "src/components/organisms/ByeByeMenu";
 import { COLORS } from "src/constants/theme";
 import { useDomDispatch } from "src/contexts/DomContext";
 import { width } from "src/constants";
-import { HeaderName } from "src/types/Types";
+import { RouteName } from "src/types/Types";
 
 const SettingsButton: React.FC<{ style?: ViewStyle }> = (props) => {
   const { style } = props;
@@ -27,7 +27,7 @@ const SettingsButton: React.FC<{ style?: ViewStyle }> = (props) => {
 };
 
 type Props = {
-  name: HeaderName;
+  name: RouteName;
   back?: boolean;
   title?: string;
   white?: boolean;
@@ -107,7 +107,7 @@ export const Header: React.FC<Props> = (props) => {
     }
   }, [currentScreenName]);
 
-  const convertNameToTitle = (name: HeaderName): string => {
+  const convertNameToTitle = (name: RouteName): string => {
     switch (name) {
       case "Rooms":
         return "ホーム";

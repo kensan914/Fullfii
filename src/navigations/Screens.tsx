@@ -22,6 +22,7 @@ import { BottomTabNavigator } from "./BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
+import { IntroCreateRoomScreen } from "src/screens/IntroCreateRoomScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,13 +36,6 @@ const HomeStack = () => {
           header: () => null,
         })}
       />
-      {/* <Stack.Screen
-        name="ProfileEditor"
-        component={ProfileEditorScreen}
-        options={() => ({
-          header: () => <Header back name={"ProfileEditor"} />,
-        })}
-      /> */}
       <Stack.Screen
         name="ProfileInput"
         component={ProfileInputScreen}
@@ -111,8 +105,23 @@ const AppStack: React.FC = () => {
         </AttManager>
       );
 
-    case UNAUTHENTICATED:
     case AUTHENTICATING:
+      return withSafeAreaView(
+        <Stack.Navigator
+          mode="card"
+          headerMode="none"
+          screenOptions={{
+            gestureEnabled: false, // backを可能に。
+          }}
+        >
+          <Stack.Screen
+            name="IntroCreateRoom"
+            component={IntroCreateRoomScreen}
+          />
+        </Stack.Navigator>
+      );
+
+    case UNAUTHENTICATED:
       return (
         <Stack.Navigator
           mode="card"

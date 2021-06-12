@@ -80,7 +80,6 @@ export const useFetchRooms = (
   };
   const handleRefresh = () => {
     if (!isLoadingGetRooms && !isLoadingGetRoomsRef.current) {
-      setRooms([]);
       page.current = 1;
       setHasMore(true);
       isRefreshingRef.current = true;

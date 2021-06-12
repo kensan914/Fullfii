@@ -16,20 +16,35 @@ import {
 const authReducer = (prevState: AuthState, action: AuthActionType) => {
   switch (action.type) {
     case "COMPLETE_SIGNUP": {
-      /** signup時に実行. tokenが設定されていた場合、stateは変更しない
+      /** signup時に実行. tokenが設定されていた場合、stateは変更しない. statusを"AUTHENTICATING"に.
        * @param {Object} action [type, token, password] */
 
       if (prevState.token) return { ...prevState };
       asyncStoreItem("token", action.token);
       asyncStoreItem("password", action.password);
 
+      const authenticatingStatus = AUTHENTICATING;
+      asyncStoreItem("status", authenticatingStatus);
+
+      return {
+        ...prevState,
+        token: action.token,
+        status: authenticatingStatus,
+      };
+    }
+
+    case "COMPLETE_INTRO": {
+      /** イントロを終了した. statusを"AUTHENTICATED"に.
+       * initBottomTabRouteNameに指定したbottomタブに遷移.
+       * @param {Object} action [type, initBottomTabRouteName] */
+
       const authenticatedStatus = AUTHENTICATED;
       asyncStoreItem("status", authenticatedStatus);
 
       return {
         ...prevState,
-        token: action.token,
         status: authenticatedStatus,
+        initBottomTabRouteName: action.initBottomTabRouteName,
       };
     }
 
@@ -80,7 +95,7 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
 };
 
 export const UNAUTHENTICATED: UnauthenticatedType = "Unauthenticated"; // signup処理前. AppIntro描画
-export const AUTHENTICATING: AuthenticatingType = "Authenticating"; // signup処理中. SignUp描画
+export const AUTHENTICATING: AuthenticatingType = "Authenticating"; // signup処理中. イントロ時ルーム作成描画 (ver.3.0.3現在)
 export const AUTHENTICATED: AuthenticatedType = "Authenticated"; // signup処理後. Home描画
 export const DELETED: DeletedType = "Deleted"; // アカウント削除されている状態. 「無事削除されました」描画
 
@@ -88,6 +103,7 @@ const initAuthState = Object.freeze({
   status: UNAUTHENTICATED,
   token: null,
   isShowSpinner: false,
+  initBottomTabRouteName: null, // イントロ完了時にどのタブへ遷移するか
 });
 const authStateContext = createContext<AuthState>({ ...initAuthState });
 const authDispatchContext = createContext<AuthDispatch>(() => {
@@ -112,6 +128,7 @@ export const AuthProvider: React.FC<Props> = ({ children, status, token }) => {
     status: status ? status : UNAUTHENTICATED,
     token: token ? token : null,
     isShowSpinner: false,
+    initBottomTabRouteName: null, // イントロ完了時にどのタブへ遷移するか
   };
   const [authState, authDispatch] = useReducer(authReducer, {
     ...initAuthState,

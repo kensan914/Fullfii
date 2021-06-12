@@ -3,7 +3,7 @@ import { Block, Button, Text } from "galio-framework";
 import { StyleSheet, ScrollView } from "react-native";
 
 import { COLORS } from "src/constants/theme";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";

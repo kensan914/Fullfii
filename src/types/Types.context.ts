@@ -1,12 +1,14 @@
 import React from "react";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
+import { RouteName } from "./Types";
 
 //========== Auth ==========//
 export type AuthState = {
   status: AuthStatus;
   token: TokenNullable;
   isShowSpinner: boolean;
+  initBottomTabRouteName: null | RouteName;
 };
 export type AuthDispatch = React.Dispatch<AuthActionType>;
 export type UnauthenticatedType = t.TypeOf<typeof UnauthenticatedTypeIoTs>;
@@ -19,6 +21,7 @@ export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
 export type TokenNullable = string | null;
 export type AuthActionType =
   | { type: "COMPLETE_SIGNUP"; token: string; password: string }
+  | { type: "COMPLETE_INTRO"; initBottomTabRouteName: RouteName }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
   | { type: "DELETE_ACCOUNT" }

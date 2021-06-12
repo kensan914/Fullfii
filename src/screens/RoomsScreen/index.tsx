@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
 import { Room } from "src/types/Types.context";
 import { useFetchRooms } from "./useFetchRooms";
 import { useHideRoom } from "./useHideRoom";
 import { useCanCreateRoom } from "./useCanAction";
+import { useScrollToTop } from "@react-navigation/native";
 
 export const RoomsScreen: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
+
+  // アクティブなホームタブをプレスした時, topにスクロール
+  // https://reactnavigation.org/docs/use-scroll-to-top
+  const roomsFlatListRef = useRef(null);
+  useScrollToTop(roomsFlatListRef);
 
   const {
     onEndReached,
@@ -43,6 +49,7 @@ export const RoomsScreen: React.FC = () => {
       resetHiddenRooms={resetHiddenRooms}
       blockRoom={blockRoom}
       checkCanCreateRoom={checkCanCreateRoom}
+      roomsFlatListRef={roomsFlatListRef}
     />
   );
 };

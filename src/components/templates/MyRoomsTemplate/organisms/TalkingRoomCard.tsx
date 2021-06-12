@@ -11,7 +11,7 @@ import {
 import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import Avatar from "src/components/atoms/Avatar";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
