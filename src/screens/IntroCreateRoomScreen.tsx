@@ -6,7 +6,7 @@ import { useAuthDispatch } from "src/contexts/AuthContext";
 import { useRequestPostRoom } from "src/hooks/requests/useRequestRooms";
 import { showToast } from "src/utils/customModules";
 
-export const IntroCreateRoomScreen: React.FC = () => {
+export const _IntroCreateRoomScreen: React.FC = () => {
   const authDispatch = useAuthDispatch();
 
   const [roomName, setRoomName] = useState<string>("");
