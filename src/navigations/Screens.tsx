@@ -22,7 +22,9 @@ import { BottomTabNavigator } from "./BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
-import { IntroCreateRoomScreen } from "src/screens/IntroCreateRoomScreen";
+import { _IntroCreateRoomScreen } from "src/screens/IntroCreateRoomScreen";
+import { SignupScreen } from "src/screens/signup/SignupScreen";
+import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -97,6 +99,13 @@ const AppStack: React.FC = () => {
               {() => (
                 <>
                   <HomeStack />
+
+                  {/* ユーザ登録スクリーン */}
+                  {/* <SignupScreen /> */}
+
+                  {/* 悩み相談ルーム作成スクリーン */}
+                  {/* <IntroCreateRoomScreen /> */}
+
                   {authState.isShowSpinner && <Spinner />}
                 </>
               )}
@@ -116,7 +125,7 @@ const AppStack: React.FC = () => {
         >
           <Stack.Screen
             name="IntroCreateRoom"
-            component={IntroCreateRoomScreen}
+            component={_IntroCreateRoomScreen}
           />
         </Stack.Navigator>
       );
