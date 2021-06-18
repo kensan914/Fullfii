@@ -4,6 +4,8 @@ import { Asset } from "expo-asset";
 import { GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "react-native-splash-screen";
+import * as t from "io-ts";
+
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
@@ -85,6 +87,7 @@ const RootNavigator: React.FC<Props> = (props) => {
   const [talkingRoomCollection, setTalkingRoomCollection] = useState<
     InitState<TalkingRoomCollectionAsync>
   >();
+  const [isBanned, setIsBanned] = useState<InitState<boolean>>();
 
   useEffect(() => {
     (async () => {
@@ -93,13 +96,16 @@ const RootNavigator: React.FC<Props> = (props) => {
         AuthStatusIoTs
       )) as AuthStatus;
       setStatus(_status ? _status : null);
-      const _token = await asyncGetItem("token");
-      setToken(_token ? _token : null);
+
+      const _token = await asyncGetItem("token", t.string);
+      setToken(typeof _token === "string" ? _token : null);
+
       const _profile = (await asyncGetObject(
         "profile",
         MeProfileIoTs
       )) as MeProfile;
       setProfile(_profile ? _profile : null);
+
       const _talkingRoomCollection = (await asyncGetObject(
         "talkingRoomCollection",
         TalkingRoomCollectionAsyncIoTs
@@ -107,6 +113,11 @@ const RootNavigator: React.FC<Props> = (props) => {
       setTalkingRoomCollection(
         _talkingRoomCollection ? _talkingRoomCollection : null
       );
+
+      const _isBannedNullable = await asyncGetItem("isBanned", t.boolean);
+      const _isBanned =
+        typeof _isBannedNullable === "boolean" ? _isBannedNullable : null;
+      setIsBanned(_isBanned !== null ? _isBanned : null);
     })();
   }, []);
 
@@ -115,6 +126,7 @@ const RootNavigator: React.FC<Props> = (props) => {
     typeof token === "undefined" ||
     typeof profile === "undefined" ||
     typeof talkingRoomCollection === "undefined" ||
+    typeof isBanned === "undefined" ||
     !props.isFinishLoadingResources
   ) {
     return <></>; // AppLording
@@ -126,7 +138,7 @@ const RootNavigator: React.FC<Props> = (props) => {
     return (
       <NavigationContainer>
         <AuthProvider status={status} token={token}>
-          <ProfileProvider profile={profile}>
+          <ProfileProvider profile={profile} isBanned={isBanned}>
             <ChatProvider talkingRoomCollection={talkingRoomCollection}>
               <DomProvider>
                 <GalioProvider theme={materialTheme}>

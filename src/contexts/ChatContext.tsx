@@ -489,6 +489,15 @@ const chatReducer = (
         return { ...prevState };
       }
 
+      // 重複を防ぐ
+      if (
+        _talkingRoom.messages.some((_message) => {
+          return _message.id === message.id;
+        })
+      ) {
+        return { ...prevState };
+      }
+
       _talkingRoom.messages = [..._talkingRoom.messages, message];
       const prevUnreadNum_AM = _talkingRoom.unreadNum;
       const incrementNum_AM = action.senderId === action.meId ? 0 : 1;

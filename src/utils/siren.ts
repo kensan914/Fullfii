@@ -145,7 +145,10 @@ const exeSiren = async (): Promise<void> => {
     const DeviceInfoModule = await import("react-native-device-info");
     const DeviceInfo = DeviceInfoModule.default;
     const currentVersion = DeviceInfo.getVersion();
-    const skipUpdateVersion = await asyncGetItem("skipUpdateVersion");
+    // ↓boolean値の可能性があるため
+    const skipUpdateVersionAny = await asyncGetItem("skipUpdateVersion");
+    const skipUpdateVersion =
+      typeof skipUpdateVersionAny !== "boolean" ? skipUpdateVersionAny : null;
 
     const compareVersionResult = compareLatestVerWithCurrentVer(
       latestVersion,
