@@ -8,6 +8,7 @@ import want_to_talk_img from "src/assets/images/homeTransparent/want_to_talk.png
 import man_and_woman_img from "src/assets/images/createRoomModal/manAndWoman.png";
 import men_img from "src/assets/images/createRoomModal/men.png";
 import women_img from "src/assets/images/createRoomModal/women.png";
+import home_info from "src/assets/images/signup/homeInfo.png";
 
 export const HOME_IMG: { [key: string]: string } = {
   a: broken_heart_img, //失恋
@@ -22,3 +23,4 @@ export const HOME_IMG: { [key: string]: string } = {
 
 export const MAN_AND_WOMAN_IMG = man_and_woman_img;
 export const MEN_IMG = men_img;
+export const HOME_INFO = home_info;

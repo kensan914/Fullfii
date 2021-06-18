@@ -98,10 +98,10 @@ const AppStack: React.FC = () => {
             <Stack.Screen name="Authenticated">
               {() => (
                 <>
-                  <HomeStack />
+                  {/* <HomeStack /> */}
 
                   {/* ユーザ登録スクリーン */}
-                  {/* <SignupScreen /> */}
+                  <SignupScreen />
 
                   {/* 悩み相談ルーム作成スクリーン */}
                   {/* <IntroCreateRoomScreen /> */}

@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 16,
     height: 48,
-    width: "auto",
     borderRadius: 30,
     elevation: 1,
     paddingHorizontal: 32
