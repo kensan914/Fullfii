@@ -20,7 +20,11 @@ import Icon from "src/components/atoms/Icon";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { generateUuid4, fmtfromDateToStr, includeUrl } from "src/utils";
 import { useTurnOnRead } from "src/screens/ChatScreen/useTurnOnRead";
-import { AllMessages, WsNullable } from "src/types/Types.context";
+import {
+  AllMessages,
+  OfflineMessage,
+  WsNullable,
+} from "src/types/Types.context";
 import {
   AppendOfflineMessage,
   RoomMemberCollection,
@@ -36,6 +40,7 @@ type Props = {
   roomMemberCollection: RoomMemberCollection;
   roomId: string;
   messages: AllMessages;
+  offlineMessages: OfflineMessage[];
   ws: WsNullable;
   isEnd: boolean;
   openProfileModal: (userId: string) => void;
@@ -46,6 +51,7 @@ const ChatBody: React.FC<Props> = (props) => {
     roomMemberCollection,
     roomId,
     messages,
+    offlineMessages,
     ws,
     isEnd,
     openProfileModal,
@@ -73,9 +79,16 @@ const ChatBody: React.FC<Props> = (props) => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   setGiftedMessages(convertMessagesToGifted(messages));
+  // }, [messages]);
+
+  // オフラインメッセージの反映
   useEffect(() => {
-    setGiftedMessages(convertMessagesToGifted(messages));
-  }, [messages]);
+    setGiftedMessages(
+      convertMessagesToGifted([...messages, ...offlineMessages])
+    );
+  }, [messages.length, offlineMessages.length]);
 
   const sendWsMessage: SendWsMessage = (ws, messageId, messageText) => {
     ws.send(
@@ -123,10 +136,10 @@ const ChatBody: React.FC<Props> = (props) => {
         sendWsMessage(ws, messageId, _giftedMessage.text);
       }
 
-      const sentMessages = [{ ..._giftedMessage, sent: false }];
-      setGiftedMessages(
-        GiftedChat.append(giftedMessages, sentMessages, Platform.OS !== "web")
-      );
+      // const sentMessages = [{ ..._giftedMessage, sent: false }];
+      // setGiftedMessages(
+      //   GiftedChat.append(giftedMessages, sentMessages, Platform.OS !== "web")
+      // );
       setStep(step + 1);
 
       // プッシュ通知催促

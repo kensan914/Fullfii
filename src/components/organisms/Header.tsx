@@ -6,6 +6,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "src/components/atoms/Icon";
 import materialTheme from "src/constants/theme";
 import { ByeByeMenu } from "src/components/organisms/ByeByeMenu";
+import { LeaveParticipantMenu } from "src/components/organisms/LeaveParticipantMenu";
 import { COLORS } from "src/constants/theme";
 import { useDomDispatch } from "src/contexts/DomContext";
 import { width } from "src/constants";
@@ -21,7 +22,6 @@ const SettingsButton: React.FC<{ style?: ViewStyle }> = (props) => {
       onPress={() => navigation.navigate("Settings")}
     >
       <Icon family="AntDesign" size={32} name="setting" color={COLORS.BROWN} />
-      {/* <Block middle style={styles.notify} /> */}
     </TouchableOpacity>
   );
 };
@@ -45,7 +45,19 @@ export const Header: React.FC<Props> = (props) => {
     const routeName = route.name;
 
     if (routeName === "Chat" && roomId)
-      return <ByeByeMenu key="TalkMenuButton" roomId={roomId} />;
+      return (
+        <Block
+          key="TalkMenuButton"
+          style={{ flexDirection: "row", justifyContent: "center" }}
+        >
+          <LeaveParticipantMenu
+            key="TalkMenuButton"
+            roomId={roomId}
+            style={{ marginRight: 8 }}
+          />
+          <ByeByeMenu roomId={roomId} style={{ marginRight: 20 }} />
+        </Block>
+      );
     switch (name) {
       case "Profile":
       case "Rooms":

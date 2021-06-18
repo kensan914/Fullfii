@@ -255,7 +255,12 @@ export type UseAxiosReturn = {
 };
 export type TypeIoTsOfResData =
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  t.TypeC<any> | t.RecordC<any, any> | t.UnionC<any> | t.IntersectionC<any>;
+  | t.TypeC<any>
+  | t.RecordC<any, any>
+  | t.UnionC<any>
+  | t.IntersectionC<any>
+  | t.BooleanC
+  | t.StringC;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export type UseAxios = (
   url: string,
@@ -355,6 +360,11 @@ export const WsResEndTalkIoTs = t.type({
   type: t.literal("end_talk"),
   room: RoomJsonIoTs,
 });
+export const WsResChatTabooMessageIoTs = t.type({
+  type: t.literal("chat_taboo_message"),
+  roomId: t.string,
+  messageId: t.string,
+});
 export const WsResErrorIoTs = t.intersection([
   t.type({
     type: t.literal("error"),
@@ -367,6 +377,7 @@ export const WsResErrorIoTs = t.intersection([
 export const WsResChatIoTs = t.union([
   WsResChatAuthIoTs,
   WsResChatMessageIoTs,
+  WsResChatTabooMessageIoTs,
   WsResEndTalkIoTs,
   WsResErrorIoTs,
 ]);

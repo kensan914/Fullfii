@@ -12,14 +12,15 @@ export type AsyncStorageKey =
   | "profile"
   | "talkingRoomCollection"
   | "versionNum"
-  | "skipUpdateVersion";
+  | "skipUpdateVersion"
+  | "isBanned";
 
 export const asyncStoreItem = async (
   key: AsyncStorageKey,
-  value: string
+  value: string | boolean
 ): Promise<void> => {
   try {
-    await AsyncStorage.setItem(key, value);
+    await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     console.error(error);
   }
@@ -44,23 +45,26 @@ export const asyncStoreObject = async (
 export const asyncGetItem = async (
   key: AsyncStorageKey,
   typeIoTsOfResData?: TypeIoTsOfResData
-): Promise<string | null> => {
+): Promise<string | boolean | null> => {
   try {
     const str = await AsyncStorage.getItem(key);
     if (str === null) return null;
+
+    const item = JSON.parse(str);
+
     if (typeof typeIoTsOfResData !== "undefined") {
-      const typeIoTsResult = typeIoTsOfResData.decode(str);
+      const typeIoTsResult = typeIoTsOfResData.decode(item);
       if (!isRight(typeIoTsResult)) {
         console.group();
         console.error(
           `Type does not match(asyncGetItem). key is "${key}". value can be found below.`
         );
-        console.error(str);
+        console.error(item);
         console.groupEnd();
-        return str;
+        return item;
       }
     }
-    return str;
+    return item;
   } catch (error) {
     console.error(error);
     return null;
