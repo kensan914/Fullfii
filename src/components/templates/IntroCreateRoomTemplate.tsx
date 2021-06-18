@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginBottom: 24,
+    height: 64,
   },
   annotation: {
     textAlign: "center",
