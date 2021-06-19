@@ -175,14 +175,14 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
           />
           <Block space="between" style={styles.textInputSubLabel}>
             <Text size={12} color={COLORS.LIGHT_GRAY}>
-              誰かを傷つけるような表現は避けましょう
+              見た人が不快になるような表現は避けましょう
             </Text>
           </Block>
         </Block>
         <Block style={styles.disclosureRangeContainer}>
           <Block row space="between" style={styles.textInputLabels}>
             <Text size={16} color={COLORS.BLACK}>
-              作成した悩みの公開範囲
+              表示範囲
             </Text>
           </Block>
           <Block row space="between" style={styles.circleButtons}>

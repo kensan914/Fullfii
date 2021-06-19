@@ -303,8 +303,8 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             ) : null}
             <Block row space="between" style={styles.subTitleTextInput}>
               <Block>
-                <Text size={12} color={COLORS.GRAY}>
-                  ルーム名
+                <Text size={14} color={COLORS.BLACK}>
+                  話したい悩みについて
                 </Text>
               </Block>
               <Block>
@@ -328,9 +328,14 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 Keyboard.dismiss();
               }}
             />
+            <Block style={styles.subText}>
+              <Text size={12} color={COLORS.LIGHT_GRAY}>
+                見た人が不快になるような表現は避けましょう
+              </Text>
+            </Block>
             <Block style={styles.choiceRangeTitle}>
-              <Text size={12} color={COLORS.GRAY}>
-                異性への表示
+              <Text size={14} color={COLORS.BLACK}>
+                表示範囲
               </Text>
             </Block>
             <Block row space="between" style={styles.circleButtons}>
@@ -515,7 +520,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    padding: 16,
+    padding: 20,
     position: "relative",
   },
   closeIcon: {
@@ -604,7 +609,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   textArea: {
-    width: width * 0.8,
+    width: width - 40,
     alignSelf: "center",
     height: "auto",
     borderColor: "silver",
@@ -613,6 +618,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     backgroundColor: COLORS.WHITE,
+    marginBottom: 8,
+  },
+  subText: {
     marginBottom: 40,
   },
   roomImageContainer: {
