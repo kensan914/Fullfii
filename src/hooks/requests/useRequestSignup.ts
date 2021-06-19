@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 
 import { BASE_URL } from "src/constants/env";
-import { useAuthDispatch, useAuthState } from "src/contexts/AuthContext";
+import { useAuthDispatch } from "src/contexts/AuthContext";
 import {
   useProfileDispatch,
   useProfileState,
