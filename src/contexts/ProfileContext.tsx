@@ -12,7 +12,11 @@ import {
   ProfileParamsIoTs,
   ProfileState,
 } from "src/types/Types.context";
-import { asyncStoreItem, asyncStoreObject } from "src/utils/asyncStorage";
+import {
+  asyncStoreBool,
+  asyncStoreItem,
+  asyncStoreObject,
+} from "src/utils/asyncStorage";
 
 const profileReducer = (
   prevState: ProfileState,
@@ -44,7 +48,7 @@ const profileReducer = (
       /** 凍結経験（isBanned）をセット. Async storageへのストアも行う.
        * @param {Object} action [type, isBan] */
 
-      asyncStoreItem("isBanned", action.isBan);
+      asyncStoreBool("isBanned", action.isBan);
       return {
         ...prevState,
         isBanned: action.isBan,

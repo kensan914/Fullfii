@@ -32,7 +32,7 @@ export const ALERT_MESSAGES: AlertMessages = {
     "既に参加しているルームを退室してください",
     "ルームにはひとつまでしか参加できません。",
   ],
-  LEAVE_ROOM_OWNER: ["退室しますか？", "相手に一言贈りましょう"],
+  LEAVE_ROOM_OWNER: ["終了しますか？", "相手に一言贈りましょう"],
   LEAVE_ROOM_PARTICIPANT: ["退室しますか？", "相手に一言贈りましょう"],
   LEAVE_ROOM_WITHOUT_MESSAGE: ["ルームを退室します", ""],
   CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER: ["性別を登録してください", ""],

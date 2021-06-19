@@ -49,8 +49,8 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
     if (roomId in chatState.talkingRoomCollection) {
       const talkingRoom = chatState.talkingRoomCollection[roomId];
       const isOwner = talkingRoom.owner.id === profileState.profile.id;
-      const LEAVE_ROOM_OWNER_BUTTON_TITLE = "退室してルームを削除";
-      const LEAVE_ROOM_OWNER_WITH_RECREATE_BUTTON_TITLE = "退室して再募集";
+      const LEAVE_ROOM_OWNER_BUTTON_TITLE = "終了してルームを削除";
+      const LEAVE_ROOM_OWNER_WITH_RECREATE_BUTTON_TITLE = "終了して再募集";
       const LEAVE_ROOM_PARTICIPANT_BUTTON_TITLE = "退室する";
 
       // 先行退室のみ退室メッセージ送信
@@ -235,6 +235,19 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
     }
   }, [chatState.talkingRoomCollection]);
 
+  const [isOwner, setIsOwner] = useState(false);
+  useEffect(() => {
+    if (
+      roomId in chatState.talkingRoomCollection &&
+      chatState.talkingRoomCollection[roomId].owner.id ===
+        profileState.profile.id
+    ) {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
+    }
+  }, [chatState.talkingRoomCollection, profileState.profile.id]);
+
   return (
     <>
       {!disable && (
@@ -247,7 +260,7 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
           }}
         >
           <Text size={16} color={"white"} bold style={styles.byeByeButtonLabel}>
-            {"終了👋"}
+            {isOwner ? "終了👋" : "退室🤫"}
           </Text>
         </TouchableOpacity>
       )}

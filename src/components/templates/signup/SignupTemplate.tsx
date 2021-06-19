@@ -98,9 +98,9 @@ export const SignupTemplate: React.FC<Props> = (props) => {
             2
           </Text>
           <Text
-          size={14}
-          color={COLORS.LIGHT_GRAY}
-          style={styles.progressLabelRoom}
+            size={14}
+            color={COLORS.LIGHT_GRAY}
+            style={styles.progressLabelRoom}
           >
             悩みを投稿する
           </Text>
@@ -272,13 +272,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 8,
     top: 48,
-    width: 105
+    width: 105,
   },
   progressLabelRoom: {
     position: "absolute",
     marginTop: 8,
     top: 48,
-    width: 92
+    width: 92,
   },
   userNameContainer: {
     marginTop: 72,

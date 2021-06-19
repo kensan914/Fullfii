@@ -14,7 +14,11 @@ import Toast from "react-native-toast-message";
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
-import { asyncGetItem, asyncGetObject } from "src/utils/asyncStorage";
+import {
+  asyncGetBool,
+  asyncGetItem,
+  asyncGetObject,
+} from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
 import { StartUpManager } from "src/screens/StartUpManager";
@@ -114,7 +118,7 @@ const RootNavigator: React.FC<Props> = (props) => {
         _talkingRoomCollection ? _talkingRoomCollection : null
       );
 
-      const _isBannedNullable = await asyncGetItem("isBanned", t.boolean);
+      const _isBannedNullable = await asyncGetBool("isBanned", t.boolean);
       const _isBanned =
         typeof _isBannedNullable === "boolean" ? _isBannedNullable : null;
       setIsBanned(_isBanned !== null ? _isBanned : null);
