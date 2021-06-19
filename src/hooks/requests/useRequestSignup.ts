@@ -67,6 +67,7 @@ export const useRequestPostSignup: UseRequestPostSignup = (
       profileDispatch({ type: "SET_ALL", profile: _me });
       authDispatch({ type: "SET_TOKEN", token: _token });
       authDispatch({ type: "SET_PASSWORD", password: password });
+
       additionalThenCallback && additionalThenCallback(_resData);
     },
     catchCallback: () => {
