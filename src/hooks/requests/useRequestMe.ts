@@ -1,6 +1,6 @@
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import { BASE_URL } from "src/constants/env";
 import { useAuthState } from "src/contexts/AuthContext";
 import useAllContext from "src/contexts/ContextUtils";
