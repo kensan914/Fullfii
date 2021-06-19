@@ -153,6 +153,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             multiline
             numberOfLines={4}
             editable
+            placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
             maxLength={maxRoomNameLength}
             value={roomName}
             onChangeText={setRoomName}
