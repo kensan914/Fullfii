@@ -73,6 +73,13 @@ export const SignupTemplate: React.FC<Props> = (props) => {
           <Text size={28} color={COLORS.WHITE}>
             1
           </Text>
+          <Text
+            size={14}
+            color={COLORS.LIGHT_GRAY}
+            style={styles.progressLabelProfile}
+          >
+            プロフィール入力
+          </Text>
         </Block>
         <Block
           style={[
@@ -90,23 +97,30 @@ export const SignupTemplate: React.FC<Props> = (props) => {
           <Text size={28} color={COLORS.LIGHT_GRAY}>
             2
           </Text>
+          <Text
+          size={14}
+          color={COLORS.LIGHT_GRAY}
+          style={styles.progressLabelRoom}
+          >
+            悩みを投稿する
+          </Text>
         </Block>
       </Block>
       <Block center style={styles.progressLabelContainer}>
-        <Text
+        {/* <Text
           size={14}
           color={COLORS.LIGHT_GRAY}
           style={styles.progressLabelProfile}
         >
           プロフィール入力
-        </Text>
-        <Text
+        </Text> */}
+        {/* <Text
           size={14}
           color={COLORS.LIGHT_GRAY}
           style={styles.progressLabelRoom}
         >
           悩みを投稿する
-        </Text>
+        </Text> */}
       </Block>
       <Block style={styles.userNameContainer}>
         <Block row space="between" style={styles.userNameLabels}>
@@ -243,6 +257,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 50,
+    position: "relative",
     justifyContent: "center",
   },
   progressBar: {
@@ -256,12 +271,14 @@ const styles = StyleSheet.create({
   progressLabelProfile: {
     position: "absolute",
     marginTop: 8,
-    left: 72,
+    top: 48,
+    width: 105
   },
   progressLabelRoom: {
     position: "absolute",
     marginTop: 8,
-    right: 72,
+    top: 48,
+    width: 92
   },
   userNameContainer: {
     marginTop: 72,

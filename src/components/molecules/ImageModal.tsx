@@ -32,7 +32,7 @@ export const ImageModal: React.FC<Props> = (props) => {
   return (
     <Modal isVisible={isOpen} onBackdropPress={close} deviceWidth={width}>
       <Block center style={styles.modalContent}>
-        <ImageBackground source={imageSource} style={styles.informationImage} />
+        <ImageBackground source={imageSource} style={styles.informationImage} imageStyle={{ borderRadius: 20}}/>
         <TouchableOpacity style={styles.closeIcon} onPress={close}>
           <IconExtra
             name="close"

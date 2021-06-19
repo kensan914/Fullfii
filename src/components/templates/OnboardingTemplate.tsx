@@ -94,7 +94,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
       data={slideItems}
       onDone={onDone}
       bottomButton={true}
-      doneLabel="はじめる"
+      doneLabel="ユーザー登録に進む"
       nextLabel="次へ"
     />
   );

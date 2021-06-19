@@ -17,6 +17,7 @@ import IconExtra from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { ALERT_MESSAGES } from "src/constants/alertMessages";
+import { ScrollView } from "react-native-gesture-handler";
 
 type Props = {
   roomName: string;
@@ -63,6 +64,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
           Keyboard.dismiss();
         }}
       >
+      <ScrollView>
         <TouchableOpacity style={styles.goBack} onPress={onPressBack}>
           <Block row center>
             <IconExtra
@@ -100,6 +102,13 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             <Text size={28} color={COLORS.WHITE}>
               1
             </Text>
+            <Text
+            size={14}
+            color={COLORS.LIGHT_GRAY}
+            style={styles.progressLabelProfile}
+            >
+              プロフィール入力
+            </Text>
           </Block>
           <Block
             style={[styles.progressBar, { backgroundColor: COLORS.PINK }]}
@@ -111,23 +120,14 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             <Text size={28} color={COLORS.WHITE}>
               2
             </Text>
-          </Block>
-        </Block>
-        <Block center style={styles.progressLabelContainer}>
-          <Text
-            size={14}
-            color={COLORS.LIGHT_GRAY}
-            style={styles.progressLabelProfile}
-          >
-            プロフィール入力
-          </Text>
-          <Text
+            <Text
             size={14}
             color={COLORS.LIGHT_GRAY}
             style={styles.progressLabelRoom}
-          >
-            悩みを投稿する
-          </Text>
+            >
+              悩みを投稿する
+            </Text>
+          </Block>
         </Block>
         <Block style={styles.informationContainer}>
           <TouchableOpacity
@@ -254,6 +254,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             </Text>
           </Block>
         </Block>
+        </ScrollView>
       </TouchableOpacity>
       <RoomCardDemoModal
         isOpen={isOpenRoomCardDemoModal}
@@ -305,12 +306,14 @@ const styles = StyleSheet.create({
   progressLabelProfile: {
     position: "absolute",
     marginTop: 8,
-    left: 72,
+    top: 48,
+    width: 105
   },
   progressLabelRoom: {
     position: "absolute",
     marginTop: 8,
-    right: 72,
+    top: 48,
+    width: 92
   },
   userNameContainer: {
     marginTop: 56,
@@ -376,8 +379,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: width - 40,
-    position: "absolute",
-    bottom: 48,
+    paddingBottom: 32,
   },
   button: {
     paddingTop: 24,
