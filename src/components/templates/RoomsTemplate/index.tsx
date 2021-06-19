@@ -122,6 +122,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             iconName="pluscircleo"
             iconFamily="AntDesign"
             label="悩みを話す"
+            style={{ width: "auto" }}
             onPress={() => {
               if (checkCanCreateRoom()) {
                 setIsOpenRoomEditorModal(true);

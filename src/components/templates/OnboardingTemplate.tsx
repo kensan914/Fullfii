@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, Image, ImageSourcePropType } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
-import { Request } from "src/types/Types";
 
 type Props = {
-  requestPostSignup: Request;
-  isLoadingPostSignup: boolean;
+  onPressCompleteInto: () => void;
 };
 export const OnboardingTemplate: React.FC<Props> = (props) => {
-  const { requestPostSignup, isLoadingPostSignup } = props;
+  const { onPressCompleteInto } = props;
 
   type slideItem = {
     key: string;
@@ -88,7 +86,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
   const onDone = () => {
     // User finished the introduction. Show real app through
     // navigation or simply by controlling state
-    requestPostSignup();
+    onPressCompleteInto();
   };
   return (
     <AppIntroSlider

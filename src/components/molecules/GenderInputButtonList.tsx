@@ -1,23 +1,26 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Button, Icon, Text, Block } from "galio-framework";
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 
 import { COLORS } from "src/constants/theme";
 import { GenderKey } from "src/types/Types.context";
 import { FormattedGenderKey } from "src/types/Types";
-
-const { width } = Dimensions.get("window");
+import { width } from "src/constants";
 
 type GenderInputButtonListProps = {
   genderKeys: (GenderKey | FormattedGenderKey)[];
   genderKey: GenderKey | FormattedGenderKey | undefined;
   setGenderKey: React.Dispatch<GenderKey | FormattedGenderKey | undefined>;
+  renderItem?: (label: string, isSelected: boolean) => ReactNode;
+  style?: ViewStyle;
 };
-const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (props) => {
-  const { genderKeys, genderKey, setGenderKey } = props;
+export const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (
+  props
+) => {
+  const { genderKeys, genderKey, setGenderKey, renderItem, style } = props;
 
   return (
-    <Block flex justifyContent="center">
+    <Block flex justifyContent="center" style={style}>
       <Block flex style={styles.genderInputContainer}>
         {genderKeys.map((_genderKey, i) => {
           const isActive = genderKey === _genderKey;
@@ -33,34 +36,52 @@ const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (props) => {
           };
           return (
             <Block key={i} flex style={styles.genderInput}>
-              <Button
-                color={COLORS.WHITE}
-                shadowColor={shadowColor}
-                style={styles.genderInputButton}
-                onPress={() => setGenderKey(_genderKey)}
+              <TouchableOpacity
+                onPress={() => {
+                  setGenderKey(_genderKey);
+                }}
+                activeOpacity={0.7}
               >
-                <Icon
-                  family="font-awesome"
-                  size={50}
-                  name={
+                {renderItem ? (
+                  renderItem(
                     _genderKey in genderAddInfo
-                      ? genderAddInfo[_genderKey].iconName
-                      : ""
-                  }
-                  color={contentsColor}
-                />
-                <Text
-                  bold
-                  size={12}
-                  color={contentsColor}
-                  style={{ marginTop: 4 }}
-                >
-                  {_genderKey in genderAddInfo
-                    ? genderAddInfo[_genderKey].title
-                    : ""}
-                </Text>
-              </Button>
-              {/* </Block> */}
+                      ? genderAddInfo[_genderKey].title
+                      : "",
+                    isActive
+                  )
+                ) : (
+                  <Block
+                    style={[
+                      styles.genderInputButton,
+                      {
+                        shadowColor: shadowColor,
+                        shadowOpacity: isActive ? 1.0 : 0,
+                      },
+                    ]}
+                  >
+                    <Icon
+                      family="font-awesome"
+                      size={50}
+                      name={
+                        _genderKey in genderAddInfo
+                          ? genderAddInfo[_genderKey].iconName
+                          : ""
+                      }
+                      color={contentsColor}
+                    />
+                    <Text
+                      bold
+                      size={12}
+                      color={contentsColor}
+                      style={{ marginTop: 4 }}
+                    >
+                      {_genderKey in genderAddInfo
+                        ? genderAddInfo[_genderKey].title
+                        : ""}
+                    </Text>
+                  </Block>
+                )}
+              </TouchableOpacity>
             </Block>
           );
         })}
@@ -68,8 +89,6 @@ const GenderInputButtonList: React.FC<GenderInputButtonListProps> = (props) => {
     </Block>
   );
 };
-
-export default GenderInputButtonList;
 
 const styles = StyleSheet.create({
   genderInputContainer: {
@@ -83,5 +102,13 @@ const styles = StyleSheet.create({
     width: width / 4,
     height: width / 4,
     borderRadius: width / 8,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 1.0,
   },
 });

@@ -9,7 +9,7 @@ import {
 } from "src/types/Types";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { formatGender } from "src/utils";
-import GenderInputButtonList from "src/components/molecules/GenderInputButtonList";
+import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
 import { GenderKey } from "src/types/Types.context";
 import { COLORS } from "src/constants/theme";
 

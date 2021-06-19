@@ -1,7 +1,7 @@
 import React from "react";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
-import { RouteName } from "./Types";
+import { FormattedGenderKey, RouteName } from "./Types";
 
 //========== Auth ==========//
 export type AuthState = {
@@ -20,9 +20,10 @@ export type AuthStatusNullable = AuthStatus | null;
 export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
 export type TokenNullable = string | null;
 export type AuthActionType =
-  | { type: "COMPLETE_SIGNUP"; token: string; password: string }
-  | { type: "COMPLETE_INTRO"; initBottomTabRouteName: RouteName }
+  | { type: "COMPLETE_SIGNUP"; initBottomTabRouteName: RouteName }
+  | { type: "COMPLETE_INTRO" }
   | { type: "SET_TOKEN"; token: string }
+  | { type: "SET_PASSWORD"; password: string }
   | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
   | { type: "DELETE_ACCOUNT" }
   | { type: "DANGEROUSLY_RESET" };
@@ -46,12 +47,23 @@ export type ProfileState = {
   profile: MeProfile;
   profileParams: ProfileParams | null;
   isBanned: boolean;
+  profileBuffer: {
+    username: string;
+    genderKey: string;
+    jobKey: string;
+  };
 };
 export type ProfileDispatch = React.Dispatch<ProfileActionType>;
 export type ProfileActionType =
   | { type: "SET_ALL"; profile: MeProfile }
   | { type: "SET_PARAMS"; profileParams: ProfileParams }
   | { type: "SET_IS_BANNED"; isBan: boolean }
+  | {
+      type: "SET_PROFILE_BUFFER";
+      username: string;
+      genderKey: string;
+      jobKey: string;
+    }
   | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" };
 
 export type Plan = t.TypeOf<typeof PlanIoTs>;

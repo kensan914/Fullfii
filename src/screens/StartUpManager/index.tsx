@@ -34,13 +34,3 @@ export const StartUpManager: React.FC = (props) => {
 
   return <Block flex>{children}</Block>;
 };
-
-// const startApprovingTalk = (
-//   chatDispatch: ChatDispatch,
-//   _talkTicketKey: TalkTicketKey
-// ): void => {
-//   chatDispatch({
-//     type: "START_APPROVING_TALK",
-//     talkTicketKey: _talkTicketKey,
-//   });
-// };

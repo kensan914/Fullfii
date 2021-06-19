@@ -38,6 +38,7 @@ export type RootStackParamList = {
   Authenticated: undefined;
   Top: undefined;
   Onboarding: undefined;
+  Signup: undefined;
   IntroCreateRoom: undefined;
   MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
 };
@@ -129,6 +130,7 @@ export type RequestPutGender = (
   errorSubmit?: ErrorSubmitProfile
 ) => void;
 export type FormattedGenderKey = "female" | "male" | "secret";
+export type NotSetGenderKey = "notset";
 export type FormattedGender = {
   key: FormattedGenderKey;
   label: string;
