@@ -1,88 +1,195 @@
-import React from "react";
-
+import React, { Dispatch } from "react";
 import { Text, Block } from "galio-framework";
-import { StyleSheet, Keyboard, TextInput,TouchableOpacity,} from "react-native";
+import {
+  StyleSheet,
+  Keyboard,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
 import IconExtra from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
+import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
+import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
+import { MenuModal } from "src/components/molecules/Menu";
+import { Job } from "src/types/Types.context";
 
-export const SignupTemplate: React.FC = (props) => {
-  const {userName,
-          setUserName,
-          pressed,
-          setPressed,
-          genderButtonColors,
-          setGenderButtonColors} = props
+type Props = {
+  username: string;
+  setUsername: Dispatch<string>;
+  maxUsernameLength: number;
+  isFocusInputUsername: boolean;
+  setIsFocusInputUsername: Dispatch<boolean>;
+  genderKeys: FormattedGenderKey[];
+  genderKey: FormattedGenderKey | NotSetGenderKey | undefined;
+  setGenderKey: Dispatch<FormattedGenderKey | NotSetGenderKey | undefined>;
+  isOpenJobModal: boolean;
+  setIsOpenJobModal: Dispatch<boolean>;
+  job: Job | undefined;
+  jobModalItems: {
+    title: string;
+    onPress: () => void;
+  }[];
+  canSignup: boolean;
+  onPressNext: () => void;
+};
+export const SignupTemplate: React.FC<Props> = (props) => {
+  const {
+    username,
+    setUsername,
+    maxUsernameLength,
+    isFocusInputUsername,
+    setIsFocusInputUsername,
+    genderKeys,
+    genderKey,
+    setGenderKey,
+    isOpenJobModal,
+    setIsOpenJobModal,
+    job,
+    jobModalItems,
+    canSignup,
+    onPressNext,
+  } = props;
 
   return (
-    <Block style={styles.container}>
-      <Text center size={24} bold color={COLORS.BLACK} style={styles.title}>ユーザー登録</Text>
+    <TouchableOpacity
+      activeOpacity={1.0}
+      onPress={() => {
+        setIsFocusInputUsername(false);
+        Keyboard.dismiss();
+      }}
+      style={styles.container}
+    >
+      <Text center size={24} bold color={COLORS.BLACK} style={styles.title}>
+        ユーザー登録
+      </Text>
       <Block row center style={styles.progressContainer}>
-        <Block style={[styles.progressCircle, {backgroundColor: COLORS.PINK}]} center>
-          <Text size={28} color={COLORS.WHITE}>1</Text>
+        <Block
+          style={[styles.progressCircle, { backgroundColor: COLORS.PINK }]}
+          center
+        >
+          <Text size={28} color={COLORS.WHITE}>
+            1
+          </Text>
         </Block>
-        <Block style={[styles.progressBar, {backgroundColor: COLORS.HIGHLIGHT_GRAY}]}/>
-        <Block style={[styles.progressCircle, {backgroundColor: COLORS.HIGHLIGHT_GRAY}]} center>
-          <Text size={28} color={COLORS.LIGHT_GRAY}>2</Text>
+        <Block
+          style={[
+            styles.progressBar,
+            { backgroundColor: COLORS.HIGHLIGHT_GRAY },
+          ]}
+        />
+        <Block
+          style={[
+            styles.progressCircle,
+            { backgroundColor: COLORS.HIGHLIGHT_GRAY },
+          ]}
+          center
+        >
+          <Text size={28} color={COLORS.LIGHT_GRAY}>
+            2
+          </Text>
         </Block>
       </Block>
       <Block center style={styles.progressLabelContainer}>
-        <Text size={14} color={COLORS.LIGHT_GRAY} style={styles.progressLabelProfile}>プロフィール入力</Text>
-        <Text size={14} color={COLORS.LIGHT_GRAY} style={styles.progressLabelRoom}>悩みを投稿する</Text>
+        <Text
+          size={14}
+          color={COLORS.LIGHT_GRAY}
+          style={styles.progressLabelProfile}
+        >
+          プロフィール入力
+        </Text>
+        <Text
+          size={14}
+          color={COLORS.LIGHT_GRAY}
+          style={styles.progressLabelRoom}
+        >
+          悩みを投稿する
+        </Text>
       </Block>
       <Block style={styles.userNameContainer}>
         <Block row space="between" style={styles.userNameLabels}>
-          <Text size={16} color={COLORS.BLACK}>ユーザーネーム</Text>
-          <Text size={12} color={COLORS.LIGHT_GRAY}>2/15</Text>
+          <Text size={16} color={COLORS.BLACK}>
+            ユーザーネーム
+          </Text>
+          <Text size={12} color={COLORS.LIGHT_GRAY}>
+            {username.length}/{maxUsernameLength}
+          </Text>
         </Block>
         <TextInput
           multiline
           numberOfLines={4}
           editable
-          maxLength={15}
-          value={userName}
-          onChangeText={setUserName}
+          maxLength={maxUsernameLength}
+          value={username}
+          onChangeText={setUsername}
           returnKeyType="done"
           blurOnSubmit
           textContentType="username"
-          style={[styles.textArea, {borderColor: pressed ? COLORS.BROWN : COLORS.WHITE}]}
+          style={[
+            styles.textArea,
+            { borderColor: isFocusInputUsername ? COLORS.BROWN : COLORS.WHITE },
+          ]}
           onSubmitEditing={() => {
             Keyboard.dismiss();
+          }}
+          onFocus={() => {
+            setIsFocusInputUsername(true);
           }}
         />
       </Block>
       <Block style={styles.genderContainer}>
         <Block space="between" style={styles.userNameLabels}>
-          <Text size={16} color={COLORS.BLACK}>性別</Text>
+          <Text size={16} color={COLORS.BLACK}>
+            性別
+          </Text>
         </Block>
-        <Block row space="between" style={styles.genderButtons}>
-          {["女性", "男性", "内緒"].map((gender) => {
-              return(
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={[styles.genderSelectButton, {backgroundColor: genderButtonColors[0]}]}
-                  onPress={() => {
-                    setGenderButtonColors([COLORS.BROWN, COLORS.WHITE])
-                  }}
+        <Block row space="between" style={[styles.genderButtons]}>
+          <GenderInputButtonList
+            genderKeys={genderKeys}
+            genderKey={genderKey}
+            setGenderKey={setGenderKey}
+            style={{ height: 48 }}
+            renderItem={(label, isSelected) => {
+              return (
+                <Block
+                  style={[
+                    styles.genderSelectButton,
+                    {
+                      backgroundColor: isSelected ? COLORS.BROWN : COLORS.WHITE,
+                    },
+                  ]}
+                >
+                  <Text
+                    size={16}
+                    bold
+                    color={isSelected ? COLORS.WHITE : COLORS.BLACK}
                   >
-                    <Text size={16} bold color={genderButtonColors[1]}>{gender}</Text>
-                </TouchableOpacity>
-              )
-            })
-          }
+                    {label}
+                  </Text>
+                </Block>
+              );
+            }}
+          />
         </Block>
       </Block>
+
       <Block style={styles.jobContainer}>
         <Block space="between" style={styles.userNameLabels}>
-          <Text size={16} color={COLORS.BLACK}>職業</Text>
+          <Text size={16} color={COLORS.BLACK}>
+            職業
+          </Text>
         </Block>
         <TouchableOpacity
           activeOpacity={0.5}
+          onPress={() => {
+            setIsOpenJobModal(true);
+          }}
         >
           <Block row center space="between" style={styles.selectJob}>
             <Text size={16} color={COLORS.BLACK}>
-              選択してください
+              {job ? job.label : "選択してください"}
             </Text>
             <IconExtra
               name="chevron-right"
@@ -92,22 +199,30 @@ export const SignupTemplate: React.FC = (props) => {
             />
           </Block>
         </TouchableOpacity>
+
+        <MenuModal
+          isOpen={isOpenJobModal}
+          setIsOpen={setIsOpenJobModal}
+          items={jobModalItems}
+        />
       </Block>
+
       <Block center style={styles.buttonContainer}>
         <RoundButton
-        buttonColor={COLORS.BROWN}
-        iconName={""}
-        iconFamily={""}
-        label="次へ"
-        onPress={()=>{console.log("k")}}
-        isLoading={false}
-        disabled/>
+          buttonColor={COLORS.BROWN}
+          iconName={""}
+          iconFamily={""}
+          label="次へ"
+          onPress={onPressNext}
+          disabled={!canSignup}
+        />
         <Block style={styles.button}>
-          <Text size={14} color={COLORS.GRAY}>後でプロフィールは修正できます</Text>
+          <Text size={14} color={COLORS.GRAY}>
+            後でプロフィールは修正できます
+          </Text>
         </Block>
       </Block>
-    </Block>
-
+    </TouchableOpacity>
   );
 };
 
@@ -115,20 +230,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BEIGE,
-    position: "relative"
+    position: "relative",
   },
   title: {
-    paddingTop: 72
+    paddingTop: 72,
   },
   progressContainer: {
     position: "relative",
-    marginTop: 32
+    marginTop: 32,
   },
   progressCircle: {
     width: 48,
     height: 48,
     borderRadius: 50,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   progressBar: {
     width: 96,
@@ -141,19 +256,19 @@ const styles = StyleSheet.create({
   progressLabelProfile: {
     position: "absolute",
     marginTop: 8,
-    left: 72
+    left: 72,
   },
   progressLabelRoom: {
     position: "absolute",
     marginTop: 8,
-    right: 72
+    right: 72,
   },
   userNameContainer: {
-    marginTop: 72
+    marginTop: 72,
   },
   userNameLabels: {
     paddingHorizontal: 20,
-    paddingBottom: 8
+    paddingBottom: 8,
   },
   textArea: {
     alignSelf: "center",
@@ -163,10 +278,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderWidth: 2,
     paddingHorizontal: 8,
-    paddingTop: 9
+    paddingTop: 9,
   },
   genderContainer: {
-    marginTop: 32
+    marginTop: 32,
   },
   genderButtons: {
     paddingHorizontal: 20,
@@ -176,21 +291,21 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 8
+    borderRadius: 8,
   },
   jobContainer: {
-    marginTop: 32
+    marginTop: 32,
   },
   selectJob: {
     width: width - 64,
     height: 40,
   },
   buttonContainer: {
-    width: width-40,
+    width: width - 40,
     position: "absolute",
-    bottom:48
+    bottom: 48,
   },
   button: {
-    paddingTop: 24
-  }
+    paddingTop: 24,
+  },
 });

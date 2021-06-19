@@ -22,7 +22,6 @@ import { BottomTabNavigator } from "./BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
-import { _IntroCreateRoomScreen } from "src/screens/IntroCreateRoomScreen";
 import { SignupScreen } from "src/screens/signup/SignupScreen";
 import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 
@@ -98,14 +97,7 @@ const AppStack: React.FC = () => {
             <Stack.Screen name="Authenticated">
               {() => (
                 <>
-                  {/* <HomeStack /> */}
-
-                  {/* ユーザ登録スクリーン */}
-                  <SignupScreen />
-
-                  {/* 悩み相談ルーム作成スクリーン */}
-                  {/* <IntroCreateRoomScreen /> */}
-
+                  <HomeStack />
                   {authState.isShowSpinner && <Spinner />}
                 </>
               )}
@@ -123,9 +115,10 @@ const AppStack: React.FC = () => {
             gestureEnabled: false, // backを可能に。
           }}
         >
+          <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen
             name="IntroCreateRoom"
-            component={_IntroCreateRoomScreen}
+            component={IntroCreateRoomScreen}
           />
         </Stack.Navigator>
       );

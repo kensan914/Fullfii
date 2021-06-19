@@ -50,6 +50,19 @@ const profileReducer = (
         isBanned: action.isBan,
       };
 
+    case "SET_PROFILE_BUFFER":
+      /** set profileBuffer
+       * @param {Object} action [type, username, genderKey, jobKey] */
+
+      return {
+        ...prevState,
+        profileBuffer: {
+          username: action.username,
+          genderKey: action.genderKey,
+          jobKey: action.jobKey,
+        },
+      };
+
     case "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS":
       /** profile stateを初期化. 再サインアップ時のためにprofileParamsは対象外とする.
        * @param {Object} action [type] */
@@ -97,10 +110,17 @@ export const initMeProfile: MeProfile = Object.freeze({
   isBan: false,
 });
 
+const initProfileBuffer = {
+  username: "",
+  genderKey: "",
+  jobKey: "",
+};
+
 const profileStateContext = createContext<ProfileState>({
   profile: { ...initMeProfile },
   profileParams: null,
   isBanned: false,
+  profileBuffer: initProfileBuffer,
 });
 const profileDispatchContext = createContext<ProfileDispatch>(() => {
   return void 0;
@@ -128,6 +148,7 @@ export const ProfileProvider: React.FC<Props> = ({
     profile: profile ? profile : { ...initMeProfile },
     profileParams: null,
     isBanned: isBanned !== null ? isBanned : false,
+    profileBuffer: initProfileBuffer,
   });
 
   // fetch profile params

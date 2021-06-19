@@ -78,14 +78,14 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       hideRoom={hideRoom}
                       blockRoom={blockRoom}
                     />
-                    {/* {index > 0 && (index + 1) % 3 === 0 && (
+                    {index > 0 && (index + 1) % 3 === 0 && (
                       <AdView
                         media={false}
                         type="video"
                         index={2}
                         adUnitId={ADMOB_UNIT_ID_NATIVE.image}
                       />
-                    )} */}
+                    )}
                   </>
                 );
               }
@@ -122,7 +122,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             iconName="pluscircleo"
             iconFamily="AntDesign"
             label="悩みを話す"
-            style={{width: "auto"}}
+            style={{ width: "auto" }}
             onPress={() => {
               if (checkCanCreateRoom()) {
                 setIsOpenRoomEditorModal(true);

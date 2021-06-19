@@ -14,6 +14,8 @@ import { Request } from "src/types/Types";
 type UseRequestPostSignup = (
   username: string,
   password: string,
+  gender?: string,
+  job?: string,
   additionalThenCallback?: (meProfile: SignupResData) => void
 ) => {
   isLoadingPostSignup: boolean;
@@ -22,6 +24,8 @@ type UseRequestPostSignup = (
 export const useRequestPostSignup: UseRequestPostSignup = (
   username,
   password,
+  gender,
+  job,
   additionalThenCallback
 ) => {
   const authDispatch = useAuthDispatch();
@@ -37,6 +41,18 @@ export const useRequestPostSignup: UseRequestPostSignup = (
         username: username,
         password: password,
       },
+      ...(gender === "male" || gender === "female" || gender === "notset"
+        ? {
+            gender: gender,
+          }
+        : {
+            is_secret_gender: true,
+          }),
+      ...(job
+        ? {
+            job: job,
+          }
+        : {}),
       ...(profileState.isBanned /* 凍結経験有り */
         ? {
             is_ban: true,
@@ -49,12 +65,8 @@ export const useRequestPostSignup: UseRequestPostSignup = (
       const _token = _resData.token;
 
       profileDispatch({ type: "SET_ALL", profile: _me });
-      authDispatch({
-        type: "COMPLETE_SIGNUP",
-        token: _token,
-        password: password,
-      });
-
+      authDispatch({ type: "SET_TOKEN", token: _token });
+      authDispatch({ type: "SET_PASSWORD", password: password });
       additionalThenCallback && additionalThenCallback(_resData);
     },
     catchCallback: () => {

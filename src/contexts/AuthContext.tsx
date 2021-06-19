@@ -16,35 +16,30 @@ import {
 const authReducer = (prevState: AuthState, action: AuthActionType) => {
   switch (action.type) {
     case "COMPLETE_SIGNUP": {
-      /** signup時に実行. tokenが設定されていた場合、stateは変更しない. statusを"AUTHENTICATING"に.
-       * @param {Object} action [type, token, password] */
+      /** HOMEに遷移. statusを"AUTHENTICATING"に.
+       ** initBottomTabRouteNameに指定したbottomタブに遷移.
+       * @param {Object} action [type, initBottomTabRouteName] */
 
-      if (prevState.token) return { ...prevState };
-      asyncStoreItem("token", action.token);
-      asyncStoreItem("password", action.password);
-
-      const authenticatingStatus = AUTHENTICATING;
+      const authenticatingStatus = AUTHENTICATED;
       asyncStoreItem("status", authenticatingStatus);
 
       return {
         ...prevState,
-        token: action.token,
         status: authenticatingStatus,
+        initBottomTabRouteName: action.initBottomTabRouteName,
       };
     }
 
     case "COMPLETE_INTRO": {
       /** イントロを終了した. statusを"AUTHENTICATED"に.
-       * initBottomTabRouteNameに指定したbottomタブに遷移.
-       * @param {Object} action [type, initBottomTabRouteName] */
+       * @param {Object} action [type] */
 
-      const authenticatedStatus = AUTHENTICATED;
+      const authenticatedStatus = AUTHENTICATING;
       asyncStoreItem("status", authenticatedStatus);
 
       return {
         ...prevState,
         status: authenticatedStatus,
-        initBottomTabRouteName: action.initBottomTabRouteName,
       };
     }
 
@@ -60,6 +55,17 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
         token: action.token,
       };
     }
+
+    case "SET_PASSWORD": {
+      /** set password.
+       * @param {Object} action [type, password] */
+
+      asyncStoreItem("password", action.password);
+      return {
+        ...prevState,
+      };
+    }
+
     case "SET_IS_SHOW_SPINNER": {
       /** set isShowSpinner.
        * @param {Object} action [type, value] */
