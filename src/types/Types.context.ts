@@ -45,11 +45,13 @@ export const AuthStatusIoTs = t.union([
 export type ProfileState = {
   profile: MeProfile;
   profileParams: ProfileParams | null;
+  isBanned: boolean;
 };
 export type ProfileDispatch = React.Dispatch<ProfileActionType>;
 export type ProfileActionType =
   | { type: "SET_ALL"; profile: MeProfile }
   | { type: "SET_PARAMS"; profileParams: ProfileParams }
+  | { type: "SET_IS_BANNED"; isBan: boolean }
   | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" };
 
 export type Plan = t.TypeOf<typeof PlanIoTs>;
@@ -121,6 +123,7 @@ export const MeProfileIoTs = t.intersection([
     dateJoined: t.string,
     deviceToken: t.union([t.string, t.null]),
     isActive: t.boolean,
+    isBan: t.boolean,
     me: t.boolean,
   }),
   ProfileIoTs,
@@ -136,24 +139,6 @@ export type ChatState = {
 };
 export type ChatDispatch = React.Dispatch<ChatActionType>;
 export type ChatActionType =
-  // | {
-  //     type: "UPDATE_TALK_TICKETS";
-  //     talkTickets: (TalkTicket | TalkTicketJson)[];
-  //   }
-  // | {
-  //     type: "FORCE_UPDATE_TALK_TICKETS";
-  //     talkTickets: (TalkTicket | TalkTicketJson)[];
-  //   }
-  // | { type: "START_APPROVING_TALK"; talkTicketKey: TalkTicketKey }
-  // | { type: "RESTART_TALK_ONLY_MESSAGE"; talkTicketKey: TalkTicketKey }
-  // | {
-  //     type: "APPEND_COMMON_MESSAGE";
-  //     talkTicketKey: TalkTicketKey;
-  //     alert: boolean;
-  //   }
-  // | { type: "OVERWRITE_TALK_TICKET"; talkTicket: TalkTicket | TalkTicketJson }
-  // | { type: "REMOVE_TALK_TICKETS"; talkTicketKeys: TalkTicketKey[] }
-  /////// ↑未使用
   | { type: "INIT_TALKING_ROOM"; roomJson: Room | RoomJson }
   | { type: "UPDATE_TALKING_ROOM"; roomJson: RoomJson }
   | {

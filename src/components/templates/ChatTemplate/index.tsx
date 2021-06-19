@@ -44,6 +44,7 @@ export const ChatTemplate: React.FC<Props> = (props) => {
         roomMemberCollection={roomMemberCollection}
         roomId={talkingRoom.id}
         messages={talkingRoom.messages}
+        offlineMessages={talkingRoom.offlineMessages}
         ws={talkingRoom.ws}
         isEnd={talkingRoom.isEnd}
         openProfileModal={openProfileModal}

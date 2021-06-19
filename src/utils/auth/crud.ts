@@ -13,6 +13,7 @@ export const dangerouslyDelete = (
   dispatches: Dispatches,
   excludeKeys?: string[]
 ): void => {
+  // 永久データ: ("isBanned",) は除外
   const willRemoveItemKeys: AsyncStorageKey[] = [
     "status",
     "token",

@@ -4,13 +4,11 @@ import { useRoute } from "@react-navigation/native";
 import { ChatTemplate } from "src/components/templates/ChatTemplate";
 import { useChatState } from "src/contexts/ChatContext";
 import { ChatRouteProp, RoomMemberCollection } from "src/types/Types";
-import { useProfileState } from "src/contexts/ProfileContext";
 import { Profile } from "src/types/Types.context";
 
 export const ChatScreen: React.FC = () => {
   const route = useRoute<ChatRouteProp>();
   const chatState = useChatState();
-  const profileState = useProfileState();
 
   const roomId = route.params.roomId;
   const talkingRoom = chatState.talkingRoomCollection[roomId];
