@@ -1,5 +1,4 @@
 import React, { Dispatch } from "react";
-
 import { Text, Block } from "galio-framework";
 import {
   StyleSheet,
@@ -8,7 +7,10 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { RoomCardDemoModal } from "src/components/templates/signup/organisms/RoomCardDemoModal";
 import { COLORS } from "src/constants/theme";
@@ -17,7 +19,6 @@ import IconExtra from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { ALERT_MESSAGES } from "src/constants/alertMessages";
-import { ScrollView } from "react-native-gesture-handler";
 
 type Props = {
   roomName: string;
@@ -56,15 +57,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
   } = props;
   return (
     <>
-      <TouchableOpacity
-        style={styles.container}
-        activeOpacity={1.0}
-        onPress={() => {
-          setIsFocusInputRoomName(false);
-          Keyboard.dismiss();
-        }}
-      >
-      <ScrollView>
+      <Block style={styles.header}>
         <TouchableOpacity style={styles.goBack} onPress={onPressBack}>
           <Block row center>
             <IconExtra
@@ -91,154 +84,204 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             />
           </Block>
         </TouchableOpacity>
-        <Text center size={24} bold color={COLORS.BLACK} style={styles.title}>
-          悩み相談ルーム作成
-        </Text>
-        <Block row center style={styles.progressContainer}>
-          <Block
-            style={[styles.progressCircle, { backgroundColor: COLORS.PINK }]}
-            center
+      </Block>
+
+      <Block style={styles.container}>
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={() => {
+            setIsFocusInputRoomName(false);
+            Keyboard.dismiss();
+          }}
+        >
+          {/* <Block style={styles.container}> */}
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: bottomButtonHeight }}
           >
-            <Text size={28} color={COLORS.WHITE}>
-              1
-            </Text>
             <Text
-            size={14}
-            color={COLORS.LIGHT_GRAY}
-            style={styles.progressLabelProfile}
+              center
+              size={24}
+              bold
+              color={COLORS.BLACK}
+              style={styles.title}
             >
-              プロフィール入力
+              悩み相談ルーム作成
             </Text>
-          </Block>
-          <Block
-            style={[styles.progressBar, { backgroundColor: COLORS.PINK }]}
-          />
-          <Block
-            style={[styles.progressCircle, { backgroundColor: COLORS.PINK }]}
-            center
-          >
-            <Text size={28} color={COLORS.WHITE}>
-              2
-            </Text>
-            <Text
-            size={14}
-            color={COLORS.LIGHT_GRAY}
-            style={styles.progressLabelRoom}
-            >
-              悩みを投稿する
-            </Text>
-          </Block>
-        </Block>
-        <Block style={styles.informationContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsOpenRoomCardDemoModal(true);
-            }}
-          >
-            <Text size={14} bold color={COLORS.BROWN}>
-              悩み相談ルームって何？
-            </Text>
-          </TouchableOpacity>
-        </Block>
-        <Block style={styles.textInputContainer}>
-          <Block row space="between" style={styles.textInputLabels}>
-            <Text size={16} color={COLORS.BLACK}>
-              話したい悩みについて
-            </Text>
-            <Text size={12} color={COLORS.LIGHT_GRAY}>
-              {roomName.length}/{maxRoomNameLength}
-            </Text>
-          </Block>
-          <TextInput
-            multiline
-            numberOfLines={4}
-            editable
-            placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-            maxLength={maxRoomNameLength}
-            value={roomName}
-            onChangeText={setRoomName}
-            returnKeyType="done"
-            blurOnSubmit
-            textContentType="username"
-            style={[
-              styles.textArea,
-              {
-                borderColor: isFocusInputRoomName ? COLORS.BROWN : COLORS.WHITE,
-              },
-            ]}
-            onSubmitEditing={() => {
-              Keyboard.dismiss();
-            }}
-            onFocus={() => {
-              setIsFocusInputRoomName(true);
-            }}
-          />
-          <Block space="between" style={styles.textInputSubLabel}>
-            <Text size={12} color={COLORS.LIGHT_GRAY}>
-              見た人が不快になるような表現は避けましょう
-            </Text>
-          </Block>
-        </Block>
-        <Block style={styles.disclosureRangeContainer}>
-          <Block row space="between" style={styles.textInputLabels}>
-            <Text size={16} color={COLORS.BLACK}>
-              表示範囲
-            </Text>
-          </Block>
-          <Block row space="between" style={styles.circleButtons}>
-            <TouchableOpacity
-              style={[
-                styles.circleButton,
-                isExcludeDifferentGender !== null && !isExcludeDifferentGender
-                  ? { borderColor: COLORS.GREEN }
-                  : { borderColor: "#f4f8f7" },
-              ]}
-              onPress={() => {
-                setIsExcludeDifferentGender(false);
-              }}
-            >
-              <ImageBackground
-                source={MAN_AND_WOMAN_IMG}
-                style={styles.disclosureRangeImage}
+            <Block row center style={styles.progressContainer}>
+              <Block
+                style={[
+                  styles.progressCircle,
+                  { backgroundColor: COLORS.PINK },
+                ]}
+                center
               >
-                <Block style={styles.disclosureRangeText}>
-                  <Text size={10} bold>
-                    異性にも表示
-                  </Text>
-                </Block>
-              </ImageBackground>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.circleButton,
-                isExcludeDifferentGender !== null && isExcludeDifferentGender
-                  ? { borderColor: COLORS.GREEN }
-                  : { borderColor: "#f4f8f7" },
-              ]}
-              onPress={() => {
-                if (!canSetIsExcludeDifferentGender) {
-                  Alert.alert(
-                    ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
-                  );
-                } else {
-                  setIsExcludeDifferentGender(true);
-                }
-              }}
-            >
-              <ImageBackground
-                source={MEN_IMG}
-                style={styles.disclosureRangeImage}
+                <Text size={28} color={COLORS.WHITE}>
+                  1
+                </Text>
+                <Text
+                  size={14}
+                  color={COLORS.LIGHT_GRAY}
+                  style={styles.progressLabelProfile}
+                >
+                  プロフィール入力
+                </Text>
+              </Block>
+              <Block
+                style={[styles.progressBar, { backgroundColor: COLORS.PINK }]}
+              />
+              <Block
+                style={[
+                  styles.progressCircle,
+                  { backgroundColor: COLORS.PINK },
+                ]}
+                center
               >
-                <Block style={styles.disclosureRangeText}>
-                  <Text size={10} bold>
-                    同性のみ表示
-                  </Text>
-                </Block>
-              </ImageBackground>
-            </TouchableOpacity>
-          </Block>
-        </Block>
-        <Block center style={styles.buttonContainer}>
+                <Text size={28} color={COLORS.WHITE}>
+                  2
+                </Text>
+                <Text
+                  size={14}
+                  color={COLORS.LIGHT_GRAY}
+                  style={styles.progressLabelRoom}
+                >
+                  悩みを投稿する
+                </Text>
+              </Block>
+            </Block>
+            <Block style={styles.informationContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsOpenRoomCardDemoModal(true);
+                }}
+              >
+                <Text size={14} bold color={COLORS.BROWN}>
+                  悩み相談ルームって何？
+                </Text>
+              </TouchableOpacity>
+            </Block>
+            <Block style={styles.textInputContainer}>
+              <Block row space="between" style={styles.textInputLabels}>
+                <Text size={16} color={COLORS.BLACK}>
+                  話したい悩みについて
+                </Text>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  {roomName.length}/{maxRoomNameLength}
+                </Text>
+              </Block>
+              <TextInput
+                multiline
+                numberOfLines={4}
+                editable
+                placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
+                maxLength={maxRoomNameLength}
+                value={roomName}
+                onChangeText={setRoomName}
+                returnKeyType="done"
+                blurOnSubmit
+                textContentType="username"
+                style={[
+                  styles.textArea,
+                  {
+                    borderColor: isFocusInputRoomName
+                      ? COLORS.BROWN
+                      : COLORS.WHITE,
+                  },
+                ]}
+                onSubmitEditing={() => {
+                  Keyboard.dismiss();
+                }}
+                onFocus={() => {
+                  setIsFocusInputRoomName(true);
+                }}
+              />
+              <Block space="between" style={styles.textInputSubLabel}>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  見た人が不快になるような表現は避けましょう
+                </Text>
+              </Block>
+            </Block>
+            <Block style={styles.disclosureRangeContainer}>
+              <Block row space="between" style={styles.textInputLabels}>
+                <Text size={16} color={COLORS.BLACK}>
+                  表示範囲
+                </Text>
+              </Block>
+              <Block row space="between" style={styles.circleButtons}>
+                <TouchableOpacity
+                  style={[
+                    styles.circleButton,
+                    isExcludeDifferentGender !== null &&
+                    !isExcludeDifferentGender
+                      ? { borderColor: COLORS.GREEN }
+                      : { borderColor: "#f4f8f7" },
+                  ]}
+                  onPress={() => {
+                    setIsExcludeDifferentGender(false);
+                  }}
+                >
+                  <ImageBackground
+                    source={MAN_AND_WOMAN_IMG}
+                    style={styles.disclosureRangeImage}
+                  >
+                    <Block style={styles.disclosureRangeText}>
+                      <Text size={10} bold>
+                        異性にも表示
+                      </Text>
+                    </Block>
+                  </ImageBackground>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.circleButton,
+                    isExcludeDifferentGender !== null &&
+                    isExcludeDifferentGender
+                      ? { borderColor: COLORS.GREEN }
+                      : { borderColor: "#f4f8f7" },
+                  ]}
+                  onPress={() => {
+                    if (!canSetIsExcludeDifferentGender) {
+                      Alert.alert(
+                        ...ALERT_MESSAGES[
+                          "CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"
+                        ]
+                      );
+                    } else {
+                      setIsExcludeDifferentGender(true);
+                    }
+                  }}
+                >
+                  <ImageBackground
+                    source={MEN_IMG}
+                    style={styles.disclosureRangeImage}
+                  >
+                    <Block style={styles.disclosureRangeText}>
+                      <Text size={10} bold>
+                        同性のみ表示
+                      </Text>
+                    </Block>
+                  </ImageBackground>
+                </TouchableOpacity>
+              </Block>
+            </Block>
+          </ScrollView>
+          {/* </Block> */}
+        </TouchableWithoutFeedback>
+      </Block>
+
+      <Block center style={styles.footer}>
+        <LinearGradient
+          colors={[COLORS.BEIGE_TRANSPARENT, COLORS.BEIGE]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        >
+          <Block
+            style={{
+              height: 32,
+              width: width - 14, // スクロールバー分のスペース
+            }}
+          />
+        </LinearGradient>
+        <Block style={styles.buttonContainer}>
           <RoundButton
             buttonColor={COLORS.BROWN}
             iconName={""}
@@ -247,15 +290,16 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             onPress={onPressSubmit}
             isLoading={isLoadingSubmit}
             disabled={!canCreateRoom}
+            style={{ marginTop: 0 }}
           />
-          <Block style={styles.button}>
+          <Block style={styles.buttonAnnotation}>
             <Text size={14} color={COLORS.GRAY}>
               後で作成したルームは修正できます
             </Text>
           </Block>
         </Block>
-        </ScrollView>
-      </TouchableOpacity>
+      </Block>
+
       <RoomCardDemoModal
         isOpen={isOpenRoomCardDemoModal}
         setIsOpen={setIsOpenRoomCardDemoModal}
@@ -264,23 +308,27 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
   );
 };
 
+const bottomButtonHeight = 128;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.BEIGE,
     position: "relative",
   },
-  goBack: {
-    position: "absolute",
-    left: 20,
-    top: 24,
+  header: {
+    backgroundColor: COLORS.BEIGE,
     zIndex: 2,
+    position: "absolute",
+    width: width,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 24,
+  },
+  goBack: {
+    left: 20,
   },
   goNext: {
-    position: "absolute",
     right: 20,
-    top: 24,
-    zIndex: 2,
   },
   title: {
     paddingTop: 72,
@@ -307,13 +355,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 8,
     top: 48,
-    width: 105
+    width: 105,
   },
   progressLabelRoom: {
     position: "absolute",
     marginTop: 8,
     top: 48,
-    width: 92
+    width: 92,
   },
   userNameContainer: {
     marginTop: 56,
@@ -377,11 +425,18 @@ const styles = StyleSheet.create({
   disclosureRangeText: {
     paddingTop: 12,
   },
-  buttonContainer: {
-    width: width - 40,
-    paddingBottom: 32,
+  footer: {
+    bottom: 0,
+    width: width,
+    alignItems: "center",
+    position: "absolute",
   },
-  button: {
+  buttonContainer: {
+    paddingBottom: 48,
+    backgroundColor: COLORS.BEIGE,
+    alignItems: "center",
+  },
+  buttonAnnotation: {
     paddingTop: 24,
   },
 });

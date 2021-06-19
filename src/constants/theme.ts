@@ -37,6 +37,7 @@ export const COLORS = {
   ALERT: "#F44336",
   BEIGE: "#eee2d3",
   BEIGE_RGBA: "rgba(238, 226, 211, 0.8)",
+  BEIGE_TRANSPARENT: "rgba(238, 226, 211, 0)",
   BROWN: "#c39c89",
   BROWN_RGBA: "rgba(195, 156, 137, 0.4)",
   BROWN_RGBA_1: "rgba(195, 156, 137, 0.2)",

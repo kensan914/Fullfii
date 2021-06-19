@@ -20,12 +20,12 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
        ** initBottomTabRouteNameに指定したbottomタブに遷移.
        * @param {Object} action [type, initBottomTabRouteName] */
 
-      const authenticatingStatus = AUTHENTICATED;
-      asyncStoreItem("status", authenticatingStatus);
+      const authenticatedStatus = AUTHENTICATED;
+      asyncStoreItem("status", authenticatedStatus);
 
       return {
         ...prevState,
-        status: authenticatingStatus,
+        status: authenticatedStatus,
         initBottomTabRouteName: action.initBottomTabRouteName,
       };
     }
@@ -34,12 +34,12 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
       /** イントロを終了した. statusを"AUTHENTICATED"に.
        * @param {Object} action [type] */
 
-      const authenticatedStatus = AUTHENTICATING;
-      asyncStoreItem("status", authenticatedStatus);
+      const authenticatingStatus = AUTHENTICATING;
+      asyncStoreItem("status", authenticatingStatus);
 
       return {
         ...prevState,
-        status: authenticatedStatus,
+        status: authenticatingStatus,
       };
     }
 

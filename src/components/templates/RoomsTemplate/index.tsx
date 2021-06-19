@@ -112,7 +112,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
         )}
         {/* <Block style={styles.buttonContainer}> */}
         <LinearGradient
-          colors={[COLORS.TRANSPARENT, COLORS.BEIGE]}
+          colors={[COLORS.BEIGE_TRANSPARENT, COLORS.BEIGE]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={styles.buttonContainer}
