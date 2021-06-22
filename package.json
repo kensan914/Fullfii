@@ -65,6 +65,7 @@
     "react-native-push-notification": "^7.2.1",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
+    "react-native-safe-area-view": "2.0.0",
     "react-native-screens": "~2.10.1",
     "react-native-siren": "0.0.3",
     "react-native-splash-screen": "^3.2.0",
