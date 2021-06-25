@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SafeAreaView } from "react-navigation";
+import SafeAreaView from 'react-native-safe-area-view';
 
 import { Header } from "src/components/organisms/Header";
 import { ChatScreen } from "src/screens/ChatScreen";

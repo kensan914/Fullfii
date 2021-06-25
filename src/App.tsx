@@ -10,6 +10,7 @@ import * as t from "io-ts";
 import { enableScreens } from "react-native-screens";
 enableScreens();
 import Toast from "react-native-toast-message";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
@@ -140,25 +141,27 @@ const RootNavigator: React.FC<Props> = (props) => {
     }, 150);
 
     return (
-      <NavigationContainer>
-        <AuthProvider status={status} token={token}>
-          <ProfileProvider profile={profile} isBanned={isBanned}>
-            <ChatProvider talkingRoomCollection={talkingRoomCollection}>
-              <DomProvider>
-                <GalioProvider theme={materialTheme}>
-                  <StartUpManager>
-                    {Platform.OS === "ios" && (
-                      <StatusBar barStyle="dark-content" />
-                    )}
-                    <Screens />
-                    <Toast ref={(ref) => Toast.setRef(ref)} />
-                  </StartUpManager>
-                </GalioProvider>
-              </DomProvider>
-            </ChatProvider>
-          </ProfileProvider>
-        </AuthProvider>
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <AuthProvider status={status} token={token}>
+            <ProfileProvider profile={profile} isBanned={isBanned}>
+              <ChatProvider talkingRoomCollection={talkingRoomCollection}>
+                <DomProvider>
+                  <GalioProvider theme={materialTheme}>
+                    <StartUpManager>
+                      {Platform.OS === "ios" && (
+                        <StatusBar barStyle="dark-content" />
+                      )}
+                      <Screens />
+                      <Toast ref={(ref) => Toast.setRef(ref)} />
+                    </StartUpManager>
+                  </GalioProvider>
+                </DomProvider>
+              </ChatProvider>
+            </ProfileProvider>
+          </AuthProvider>
+        </NavigationContainer>
+      </SafeAreaProvider>
     );
   }
 };
