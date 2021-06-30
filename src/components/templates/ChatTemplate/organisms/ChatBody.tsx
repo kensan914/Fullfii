@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Platform, Alert } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import {
   Bubble,
   GiftedChat,
@@ -79,10 +79,6 @@ const ChatBody: React.FC<Props> = (props) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   setGiftedMessages(convertMessagesToGifted(messages));
-  // }, [messages]);
-
   // オフラインメッセージの反映
   useEffect(() => {
     setGiftedMessages(
@@ -136,10 +132,6 @@ const ChatBody: React.FC<Props> = (props) => {
         sendWsMessage(ws, messageId, _giftedMessage.text);
       }
 
-      // const sentMessages = [{ ..._giftedMessage, sent: false }];
-      // setGiftedMessages(
-      //   GiftedChat.append(giftedMessages, sentMessages, Platform.OS !== "web")
-      // );
       setStep(step + 1);
 
       // プッシュ通知催促

@@ -178,7 +178,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
                 onChangeText={setRoomName}
                 returnKeyType="done"
                 blurOnSubmit
-                textContentType="username"
+                // textContentType="username"
                 style={[
                   styles.textArea,
                   {
