@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
-import { StyleSheet, TouchableHighlight, Image } from "react-native";
+import { StyleSheet, TouchableHighlight, Image, TouchableOpacity } from "react-native";
+import SvgUri from "react-native-svg-uri";
 
 import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
@@ -124,19 +125,25 @@ export const RoomCard: React.FC<Props> = (props) => {
               </Block>
             </Block>
             {/* 非表示見送り */}
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.eyeIcon}
               onPress={() => {
-                hideRoom(room.id);
+                setIsOpen(true);
               }}
             >
-              <IconExtra
+              {/* <IconExtra
                 name="eye-off"
                 family="Feather"
                 size={32}
                 color={COLORS.BROWN}
+              /> */}
+              <SvgUri
+                width={32}
+                height={32}
+                source={require("src/assets/icons/detail.svg")}
+                fill={COLORS.BROWN}
               />
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </Block>
         </TouchableHighlight>
       </Block>

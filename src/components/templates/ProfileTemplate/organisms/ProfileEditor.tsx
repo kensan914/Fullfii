@@ -37,10 +37,8 @@ export const ProfileEditor: React.FC = () => {
   const authDispatch = useAuthDispatch();
 
   const user = profileState.profile;
-  const {
-    requestPostProfileImage,
-    isLoadingRequestPostProfileImage,
-  } = useRequestPostProfileImage();
+  const { requestPostProfileImage, isLoadingRequestPostProfileImage } =
+    useRequestPostProfileImage();
 
   const [isOpenJobModal, setIsOpenJobModal] = useState(false);
 
@@ -211,7 +209,6 @@ export const ProfileEditor: React.FC = () => {
             isLoadingImage={isLoadingRequestPostProfileImage}
           />
         </Block>
-        {/* <ProfileHr /> */}
       </Block>
     </ScrollView>
   );
@@ -226,8 +223,14 @@ type PropsEditorBlock = {
 const EditorBlock: React.FC<PropsEditorBlock> = (props) => {
   const { onPress, content, isImage, isLoadingImage } = props;
   return isImage ? (
-    <TouchableOpacity onPress={onPress} style={{ flex: 1, width: "100%" }}>
-      {content}
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={onPress}
+      style={{ flex: 1, width: "100%" }}
+    >
+      <Block style={{ zIndex: -1 /* Androidで下記のiconが下に行くため */ }}>
+        {content}
+      </Block>
       <Block
         style={{
           position: "absolute",

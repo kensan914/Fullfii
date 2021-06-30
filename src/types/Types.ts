@@ -38,6 +38,8 @@ export type RootStackParamList = {
   Authenticated: undefined;
   Top: undefined;
   Onboarding: undefined;
+  Signup: undefined;
+  IntroCreateRoom: undefined;
   MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
@@ -68,7 +70,7 @@ export type ProfileInputScreen =
   | "InputGender"
   | "InputIntroduction";
 
-export type HeaderName =
+export type RouteName =
   | (
       | "Rooms"
       | "MyRooms"
@@ -128,6 +130,7 @@ export type RequestPutGender = (
   errorSubmit?: ErrorSubmitProfile
 ) => void;
 export type FormattedGenderKey = "female" | "male" | "secret";
+export type NotSetGenderKey = "notset";
 export type FormattedGender = {
   key: FormattedGenderKey;
   label: string;
@@ -254,7 +257,12 @@ export type UseAxiosReturn = {
 };
 export type TypeIoTsOfResData =
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  t.TypeC<any> | t.RecordC<any, any> | t.UnionC<any> | t.IntersectionC<any>;
+  | t.TypeC<any>
+  | t.RecordC<any, any>
+  | t.UnionC<any>
+  | t.IntersectionC<any>
+  | t.BooleanC
+  | t.StringC;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export type UseAxios = (
   url: string,
@@ -354,6 +362,11 @@ export const WsResEndTalkIoTs = t.type({
   type: t.literal("end_talk"),
   room: RoomJsonIoTs,
 });
+export const WsResChatTabooMessageIoTs = t.type({
+  type: t.literal("chat_taboo_message"),
+  roomId: t.string,
+  messageId: t.string,
+});
 export const WsResErrorIoTs = t.intersection([
   t.type({
     type: t.literal("error"),
@@ -366,6 +379,7 @@ export const WsResErrorIoTs = t.intersection([
 export const WsResChatIoTs = t.union([
   WsResChatAuthIoTs,
   WsResChatMessageIoTs,
+  WsResChatTabooMessageIoTs,
   WsResEndTalkIoTs,
   WsResErrorIoTs,
 ]);

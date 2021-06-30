@@ -11,14 +11,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { COLORS } from "src/constants/theme";
 import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
-import { useRoute } from "@react-navigation/core";
 import { MyRoomsRouteProp } from "src/types/Types";
+import { useAuthState } from "src/contexts/AuthContext";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
 
   const chatState = useChatState();
+  const authState = useAuthState();
 
   return (
     <Tab.Navigator
@@ -46,7 +47,6 @@ export const BottomTabNavigator: React.FC = () => {
               ? require("../assets/icons/mypageIcon.svg")
               : require("../assets/icons/mypageIcon.svg");
             label = "マイページ";
-            // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           }
           return (
             <Block
@@ -99,8 +99,14 @@ export const BottomTabNavigator: React.FC = () => {
         style: {
           backgroundColor: COLORS.BEIGE,
           borderTopWidth: 0,
+          elevation: 0, // for Android
         },
       }}
+      initialRouteName={
+        authState.initBottomTabRouteName
+          ? authState.initBottomTabRouteName
+          : void 0
+      }
     >
       <Tab.Screen name="Rooms">
         {() => (

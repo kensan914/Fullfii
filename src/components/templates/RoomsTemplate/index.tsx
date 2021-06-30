@@ -4,7 +4,7 @@ import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 
 import { COLORS } from "src/constants/theme";
 import { RoomCard } from "src/components/templates/RoomsTemplate/organisms/RoomCard";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,6 +27,7 @@ type Props = {
   resetHiddenRooms: () => void;
   blockRoom: BlockRoom;
   checkCanCreateRoom: () => boolean;
+  roomsFlatListRef: React.MutableRefObject<null>;
 };
 export const RoomsTemplate: React.FC<Props> = (props) => {
   const numColumns = 1;
@@ -44,6 +45,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
     resetHiddenRooms,
     blockRoom,
     checkCanCreateRoom,
+    roomsFlatListRef,
   } = props;
 
   const isHiddenAll =
@@ -62,6 +64,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
           </Block>
         ) : (
           <FlatList
+            ref={roomsFlatListRef}
             data={rooms}
             renderItem={({ item, index }) => {
               if (hiddenRoomIds.includes(item.id)) {
@@ -96,7 +99,10 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
               hasMore && !isRefreshing ? (
                 <ActivityIndicator
                   size="large"
-                  style={{ marginVertical: 16 }}
+                  color={COLORS.LIGHT_GRAY}
+                  style={{
+                    marginVertical: 16,
+                  }}
                 />
               ) : (
                 <></>
@@ -107,9 +113,8 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             contentContainerStyle={{ paddingBottom: bottomButtonHeight }}
           />
         )}
-        {/* <Block style={styles.buttonContainer}> */}
         <LinearGradient
-          colors={[COLORS.TRANSPARENT, COLORS.BEIGE]}
+          colors={[COLORS.BEIGE_TRANSPARENT, COLORS.BEIGE]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={styles.buttonContainer}
@@ -119,6 +124,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             iconName="pluscircleo"
             iconFamily="AntDesign"
             label="悩みを話す"
+            style={{ width: "auto" }}
             onPress={() => {
               if (checkCanCreateRoom()) {
                 setIsOpenRoomEditorModal(true);
@@ -126,7 +132,6 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             }}
           />
         </LinearGradient>
-        {/* </Block> */}
       </Block>
       <RoomEditorModal
         isOpenRoomEditorModal={isOpenRoomEditorModal}

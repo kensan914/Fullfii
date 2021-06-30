@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Alert, AlertButton, StyleSheet, TouchableOpacity } from "react-native";
-import SvgUri from "react-native-svg-uri";
+import {
+  Alert,
+  AlertButton,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Text } from "galio-framework";
+import prompt from "react-native-prompt-android";
 
 import { useChatState } from "src/contexts/ChatContext";
 import { useRequestPostRoomLeftMembers } from "src/hooks/requests/useRequestRoomMembers";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
-import { AxiosReActionType } from "src/types/Types";
-import { useRequestPostRoom } from "src/hooks/requests/useRequestRooms";
-import { TalkingRoom } from "src/types/Types.context";
 import { showToast } from "src/utils/customModules";
+import { COLORS } from "src/constants/theme";
+import { useLeaveAndRecreateRoom } from "src/components/organisms/ByeByeMenu/useLeaveAndRecreateRoom";
 
 type Props = {
   roomId: string;
+  style?: ViewStyle;
 };
 export const ByeByeMenu: React.FC<Props> = (props) => {
-  const { roomId } = props;
+  const { roomId, style } = props;
 
   const chatState = useChatState();
   const profileState = useProfileState();
@@ -32,61 +40,19 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
     }
   );
 
-  // === 終了 & 再募集 ===
-  const { requestPostRoom } = useRequestPostRoom(null, null, null);
-  const [additionalThenClose, setAdditionalThenClose] = useState<{
-    fn: () => void;
-  }>();
-  const [
-    postDataRecreate,
-    setPostDataRecreate,
-  ] = useState<AxiosReActionType | null>();
-  const leaveAndRecreateRoom = (
-    _talkingRoom: TalkingRoom,
-    postDataIncludeLeaveMessage?: AxiosReActionType
-  ) => {
-    setAdditionalThenClose({
-      fn: () => {
-        // 再募集処理
-        requestPostRoom({
-          data: {
-            name: _talkingRoom.name,
-            is_exclude_different_gender: _talkingRoom.isExcludeDifferentGender,
-          },
-          thenCallback: () => {
-            showToast(TOAST_SETTINGS["LEAVE_ROOM_WITH_RECREATE_OWNER"]);
-          },
-        });
-      },
-    });
-    setPostDataRecreate(
-      postDataIncludeLeaveMessage ? postDataIncludeLeaveMessage : null
-    );
-  };
-  useEffect(() => {
-    // additionalThenCloseのrerenderが終了したら, 遅延したrequestTask実行.
-    if (
-      typeof additionalThenClose !== "undefined" &&
-      typeof postDataRecreate !== "undefined"
-    ) {
-      if (postDataRecreate !== null) {
-        requestPostRoomLeftMembers(postDataRecreate);
-      } else {
-        requestPostRoomLeftMembers();
-      }
-      // 初期化
-      setPostDataRecreate(void 0);
-      setAdditionalThenClose(void 0);
+  const { leaveAndRecreateRoom, additionalThenClose } = useLeaveAndRecreateRoom(
+    requestPostRoomLeftMembers,
+    () => {
+      showToast(TOAST_SETTINGS["LEAVE_ROOM_WITH_RECREATE_OWNER"]);
     }
-  }, [additionalThenClose, postDataRecreate]);
-  // === 終了 & 再募集 ===
+  );
 
   const onPressByeBye = () => {
     if (roomId in chatState.talkingRoomCollection) {
       const talkingRoom = chatState.talkingRoomCollection[roomId];
       const isOwner = talkingRoom.owner.id === profileState.profile.id;
-      const LEAVE_ROOM_OWNER_BUTTON_TITLE = "退室してルームを削除";
-      const LEAVE_ROOM_OWNER_WITH_RECREATE_BUTTON_TITLE = "退室して再募集";
+      const LEAVE_ROOM_OWNER_BUTTON_TITLE = "終了してルームを削除";
+      const LEAVE_ROOM_OWNER_WITH_RECREATE_BUTTON_TITLE = "終了して再募集";
       const LEAVE_ROOM_PARTICIPANT_BUTTON_TITLE = "退室する";
 
       // 先行退室のみ退室メッセージ送信
@@ -191,18 +157,26 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
             },
           ];
         }
-        Alert.prompt(
-          mainText,
-          subText,
-          [
-            {
-              text: "キャンセル",
-              style: "cancel",
-            },
-            ...buttons,
-          ],
-          "plain-text"
-        );
+        Platform.OS === "ios"
+          ? Alert.prompt(
+              mainText,
+              subText,
+              [
+                {
+                  text: "キャンセル",
+                  style: "cancel",
+                },
+                ...buttons,
+              ],
+              "plain-text"
+            )
+          : prompt(mainText, subText, [
+              {
+                text: "キャンセル",
+                style: "cancel",
+              },
+              ...buttons,
+            ]);
       }
 
       // 後攻
@@ -271,31 +245,49 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
     }
   }, [chatState.talkingRoomCollection]);
 
+  const [isOwner, setIsOwner] = useState(false);
+  useEffect(() => {
+    if (
+      roomId in chatState.talkingRoomCollection &&
+      chatState.talkingRoomCollection[roomId].owner.id ===
+        profileState.profile.id
+    ) {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
+    }
+  }, [chatState.talkingRoomCollection, profileState.profile.id]);
+
   return (
     <>
-      <TouchableOpacity
-        style={[styles.ByeByeButton]}
-        onPress={() => {
-          if (!disable) {
-            onPressByeBye();
-          }
-        }}
-      >
-        {!disable && (
-          <SvgUri
-            width={30}
-            height={30}
-            source={require("src/assets/icons/bye.svg")}
-          />
-        )}
-      </TouchableOpacity>
+      {!disable && (
+        <TouchableOpacity
+          style={[styles.byeByeButton, style]}
+          onPress={() => {
+            if (!disable) {
+              onPressByeBye();
+            }
+          }}
+        >
+          <Text size={16} color={"white"} bold style={styles.byeByeButtonLabel}>
+            {isOwner ? "終了👋" : "退室🤫"}
+          </Text>
+        </TouchableOpacity>
+      )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  ByeByeButton: {
-    padding: 12,
-    position: "relative",
+  byeByeButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    width: 72,
+    height: 32,
+    backgroundColor: COLORS.BROWN,
+    borderRadius: 8,
+  },
+  byeByeButtonLabel: {
+    textAlign: "center",
   },
 });

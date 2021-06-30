@@ -281,3 +281,9 @@ web-build/
 ios/Podfile
 ios/Podfile.lock
 .env
+
+# Android memory profiler files
+*.hprof
+
+# Watchman
+.watchmanconfig

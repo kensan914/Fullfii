@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SafeAreaView } from "react-navigation";
+import SafeAreaView from "react-native-safe-area-view";
 
 import { Header } from "src/components/organisms/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
@@ -14,7 +14,7 @@ import {
   DELETED,
   AUTHENTICATING,
 } from "src/contexts/AuthContext";
-import Spinner from "src/components/atoms/Spinner";
+import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";
@@ -22,6 +22,8 @@ import { BottomTabNavigator } from "./BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
+import { SignupScreen } from "src/screens/signup/SignupScreen";
+import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,13 +37,6 @@ const HomeStack = () => {
           header: () => null,
         })}
       />
-      {/* <Stack.Screen
-        name="ProfileEditor"
-        component={ProfileEditorScreen}
-        options={() => ({
-          header: () => <Header back name={"ProfileEditor"} />,
-        })}
-      /> */}
       <Stack.Screen
         name="ProfileInput"
         component={ProfileInputScreen}
@@ -111,8 +106,24 @@ const AppStack: React.FC = () => {
         </AttManager>
       );
 
-    case UNAUTHENTICATED:
     case AUTHENTICATING:
+      return withSafeAreaView(
+        <Stack.Navigator
+          mode="card"
+          headerMode="none"
+          screenOptions={{
+            gestureEnabled: false, // backを可能に。
+          }}
+        >
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen
+            name="IntroCreateRoom"
+            component={IntroCreateRoomScreen}
+          />
+        </Stack.Navigator>
+      );
+
+    case UNAUTHENTICATED:
       return (
         <Stack.Navigator
           mode="card"

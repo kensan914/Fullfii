@@ -96,6 +96,4 @@ export const USER_EMPTY_ICON_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/static/ima
 export const appId = "1533306689";
 export const ITUNES_LOOKUP_URL = `https://itunes.apple.com/lookup/?id=${appId}&country=JP`;
 export const APP_STORE_URI_ITMS_APPS = `itms-apps://itunes.apple.com/jp/app/id${appId}/?mt=8`;
-// export const APP_STORE_URI_ITMS_APPS = `itms-apps://apps.apple.com/jp/app/id${appId}/?mt=8`;
 export const APP_STORE_URL = `https://itunes.apple.com/jp/app/id${appId}/?mt=8`;
-// export const APP_STORE_URL = `https://apps.apple.com/jp/app/id${appId}/?mt=8`;

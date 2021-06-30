@@ -42,12 +42,13 @@ type PropsDependsOnMode =
       mode: "FIX";
       talkingRoom: TalkingRoom;
     };
+
 type Props = {
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
   propsDependsOnMode: PropsDependsOnMode;
 };
-const RoomEditorModal: React.FC<Props> = (props) => {
+export const RoomEditorModal: React.FC<Props> = (props) => {
   const {
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
@@ -105,7 +106,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   >(initIsExcludeDifferentGender);
   // ====== post or patch data ======
 
-  const maxTopicLength = 60;
+  const maxRoomNameLength = 60;
 
   // canPostは作成時 & 修正時
   const canPost =
@@ -302,13 +303,13 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             ) : null}
             <Block row space="between" style={styles.subTitleTextInput}>
               <Block>
-                <Text size={12} color={COLORS.GRAY}>
-                  ルーム名
+                <Text size={14} color={COLORS.BLACK}>
+                  話したい悩みについて
                 </Text>
               </Block>
               <Block>
                 <Text size={12} color={COLORS.GRAY}>
-                  {roomName === null ? 0 : roomName.length}/{maxTopicLength}
+                  {roomName === null ? 0 : roomName.length}/{maxRoomNameLength}
                 </Text>
               </Block>
             </Block>
@@ -317,7 +318,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               numberOfLines={4}
               editable
               placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-              maxLength={maxTopicLength}
+              maxLength={maxRoomNameLength}
               value={roomName === null ? "" : roomName}
               onChangeText={setRoomName}
               returnKeyType="done"
@@ -327,9 +328,14 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 Keyboard.dismiss();
               }}
             />
+            <Block style={styles.subText}>
+              <Text size={12} color={COLORS.LIGHT_GRAY}>
+                見た人が不快になるような表現は避けましょう
+              </Text>
+            </Block>
             <Block style={styles.choiceRangeTitle}>
-              <Text size={12} color={COLORS.GRAY}>
-                異性への表示
+              <Text size={14} color={COLORS.BLACK}>
+                表示範囲
               </Text>
             </Block>
             <Block row space="between" style={styles.circleButtons}>
@@ -439,13 +445,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             </Block>
           </Block>
 
-          <Modal
-            isVisible={isOpenOptionModal}
-            deviceWidth={width}
-            // onBackdropPress={() => {
-            //   // setIsOpenOptionModal(false);
-            // }}
-          >
+          <Modal isVisible={isOpenOptionModal} deviceWidth={width}>
             <Block style={styles.secondModal}>
               <Block column style={styles.secondModalContent}>
                 <TouchableOpacity
@@ -509,6 +509,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   firstModal: {
     justifyContent: "flex-end",
@@ -519,7 +520,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    padding: 16,
+    padding: 20,
     position: "relative",
   },
   closeIcon: {
@@ -608,8 +609,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   textArea: {
-    width: width * 0.8,
+    width: width - 40,
     alignSelf: "center",
+    textAlignVertical: "top",
     height: "auto",
     borderColor: "silver",
     borderWidth: 1,
@@ -617,6 +619,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     backgroundColor: COLORS.WHITE,
+    marginBottom: 8,
+  },
+  subText: {
     marginBottom: 40,
   },
   roomImageContainer: {
@@ -656,5 +661,3 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
 });
-
-export default RoomEditorModal;
