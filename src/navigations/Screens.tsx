@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SafeAreaView from 'react-native-safe-area-view';
+import SafeAreaView from "react-native-safe-area-view";
 
 import { Header } from "src/components/organisms/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
@@ -14,7 +14,7 @@ import {
   DELETED,
   AUTHENTICATING,
 } from "src/contexts/AuthContext";
-import Spinner from "src/components/atoms/Spinner";
+import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";

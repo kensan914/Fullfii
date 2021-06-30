@@ -47,7 +47,6 @@ export const BottomTabNavigator: React.FC = () => {
               ? require("../assets/icons/mypageIcon.svg")
               : require("../assets/icons/mypageIcon.svg");
             label = "マイページ";
-            // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           }
           return (
             <Block
@@ -100,6 +99,7 @@ export const BottomTabNavigator: React.FC = () => {
         style: {
           backgroundColor: COLORS.BEIGE,
           borderTopWidth: 0,
+          elevation: 0, // for Android
         },
       }}
       initialRouteName={

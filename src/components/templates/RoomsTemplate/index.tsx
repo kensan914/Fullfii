@@ -99,7 +99,10 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
               hasMore && !isRefreshing ? (
                 <ActivityIndicator
                   size="large"
-                  style={{ marginVertical: 16 }}
+                  color={COLORS.LIGHT_GRAY}
+                  style={{
+                    marginVertical: 16,
+                  }}
                 />
               ) : (
                 <></>
@@ -110,7 +113,6 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             contentContainerStyle={{ paddingBottom: bottomButtonHeight }}
           />
         )}
-        {/* <Block style={styles.buttonContainer}> */}
         <LinearGradient
           colors={[COLORS.BEIGE_TRANSPARENT, COLORS.BEIGE]}
           start={{ x: 0, y: 0 }}
@@ -130,7 +132,6 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             }}
           />
         </LinearGradient>
-        {/* </Block> */}
       </Block>
       <RoomEditorModal
         isOpenRoomEditorModal={isOpenRoomEditorModal}

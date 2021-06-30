@@ -10,7 +10,7 @@ import * as t from "io-ts";
 import { enableScreens } from "react-native-screens";
 enableScreens();
 import Toast from "react-native-toast-message";
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";

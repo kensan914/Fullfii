@@ -611,6 +611,7 @@ const styles = StyleSheet.create({
   textArea: {
     width: width - 40,
     alignSelf: "center",
+    textAlignVertical: "top",
     height: "auto",
     borderColor: "silver",
     borderWidth: 1,

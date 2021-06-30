@@ -1,14 +1,9 @@
 import React, { Dispatch } from "react";
 import { Block, Text, Button } from "galio-framework";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ActionSheetIOS,
-  Alert,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import Modal from "react-native-modal";
 import SvgUri from "react-native-svg-uri";
+import ActionSheet from "react-native-action-sheet";
 
 import IconExtra from "src/components/atoms/Icon";
 
@@ -48,7 +43,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
   const navigation = useNavigation();
 
   const openRoomDetailActionSheet = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
+    ActionSheet.showActionSheetWithOptions(
       {
         options: ["キャンセル", "非表示", "ブロック"],
         destructiveButtonIndex: 2,
@@ -70,15 +65,13 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
     );
   };
 
-  const {
-    requestPostRoomParticipants,
-    isLoadingPostRoomParticipants,
-  } = useRequestPostRoomParticipant(room.id, (_roomJson) => {
-    setIsOpen(false);
-    navigation.navigate("Chat", {
-      roomId: _roomJson.id,
+  const { requestPostRoomParticipants, isLoadingPostRoomParticipants } =
+    useRequestPostRoomParticipant(room.id, (_roomJson) => {
+      setIsOpen(false);
+      navigation.navigate("Chat", {
+        roomId: _roomJson.id,
+      });
     });
-  });
 
   const { checkCanParticipateRoom } = useCanParticipateRoom();
 
@@ -211,15 +204,13 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             <Block center row>
               <Block style={[styles.svgContainer]}>
                 <SvgUri
-                    width={40}
-                    height={40}
-                    source={require("src/assets/icons/enterRoom.svg")}
-                    fill={"#fff"}
-                  />
+                  width={40}
+                  height={40}
+                  source={require("src/assets/icons/enterRoom.svg")}
+                  fill={"#fff"}
+                />
               </Block>
-              <Block
-              style={styles.buttonText}
-              >
+              <Block style={styles.buttonText}>
                 <Text size={20} color={COLORS.WHITE} bold>
                   聞いてみる！
                 </Text>
@@ -275,7 +266,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   buttonIcon: {
-    paddingRight: 4
+    paddingRight: 4,
   },
   buttonText: {
     paddingLeft: 4,

@@ -178,7 +178,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
                 onChangeText={setRoomName}
                 returnKeyType="done"
                 blurOnSubmit
-                // textContentType="username"
+                textContentType="username"
                 style={[
                   styles.textArea,
                   {
@@ -380,6 +380,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     alignSelf: "center",
+    textAlignVertical: "top",
     height: 80,
     width: width - 40,
     borderRadius: 10,
