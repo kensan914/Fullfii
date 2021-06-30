@@ -134,35 +134,39 @@ export const ProfileEditor: React.FC = () => {
           isOpen={isOpenJobModal}
           setIsOpen={setIsOpenJobModal}
           items={
-            profileState.profileParams?.job &&
-            Object.values(profileState.profileParams.job).map((jobObj) => {
-              return {
-                title: jobObj.label,
-                onPress: () => {
-                  if (authState.token) {
-                    authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
-                    requestPatchProfile(
-                      authState.token,
-                      { job: jobObj.key },
-                      profileDispatch,
-                      () => {
-                        return void 0;
-                      },
-                      () => {
-                        return void 0;
-                      },
-                      () => {
+            profileState.profileParams?.job
+              ? Object.values(profileState.profileParams.job).map((jobObj) => {
+                  return {
+                    label: jobObj.label,
+                    onPress: () => {
+                      if (authState.token) {
                         authDispatch({
                           type: "SET_IS_SHOW_SPINNER",
-                          value: false,
+                          value: true,
                         });
+                        requestPatchProfile(
+                          authState.token,
+                          { job: jobObj.key },
+                          profileDispatch,
+                          () => {
+                            return void 0;
+                          },
+                          () => {
+                            return void 0;
+                          },
+                          () => {
+                            authDispatch({
+                              type: "SET_IS_SHOW_SPINNER",
+                              value: false,
+                            });
+                          }
+                        );
                       }
-                    );
-                  }
-                  setIsOpenJobModal(false);
-                },
-              };
-            })
+                      setIsOpenJobModal(false);
+                    },
+                  };
+                })
+              : []
           }
         />
         <ProfileHr />

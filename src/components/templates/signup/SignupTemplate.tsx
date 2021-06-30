@@ -29,7 +29,7 @@ type Props = {
   setIsOpenJobModal: Dispatch<boolean>;
   job: Job | undefined;
   jobModalItems: {
-    title: string;
+    label: string;
     onPress: () => void;
   }[];
   canSignup: boolean;
