@@ -289,10 +289,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     alignSelf: "center",
-<<<<<<< HEAD
-=======
     textAlignVertical: "top",
->>>>>>> 58d59e3c3c2bed62b53d4a4176e8015fe832e9cb
     height: 40,
     width: width - 40,
     borderRadius: 10,
