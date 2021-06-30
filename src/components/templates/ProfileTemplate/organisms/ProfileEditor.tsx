@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
-import Hr from "src/components/atoms/Hr";
+import { Hr } from "src/components/atoms/Hr";
 import Icon from "src/components/atoms/Icon";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import Avatar from "src/components/atoms/Avatar";
