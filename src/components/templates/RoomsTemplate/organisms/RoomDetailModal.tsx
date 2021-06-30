@@ -8,7 +8,7 @@ import ActionSheet from "react-native-action-sheet";
 import IconExtra from "src/components/atoms/Icon";
 
 import { COLORS } from "src/constants/theme";
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
@@ -132,7 +132,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             <Block row>
               <Avatar
                 size={32}
-                image={room.owner.image}
+                imageUri={room.owner.image}
                 style={styles.avatar}
               />
               <Block column style={styles.userInfo}>

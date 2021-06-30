@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
-import { StyleSheet, TouchableHighlight, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  TouchableHighlight,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import SvgUri from "react-native-svg-uri";
 
 import IconExtra from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
@@ -24,11 +29,8 @@ export const RoomCard: React.FC<Props> = (props) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    isMaxed,
-    participantIconName,
-    participantIconColor,
-  } = useRoomParticipantsNum(room);
+  const { isMaxed, participantIconName, participantIconColor } =
+    useRoomParticipantsNum(room);
   const formattedGender = formatGender(
     room.owner.gender,
     room.owner.isSecretGender
@@ -67,7 +69,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                 <Block row>
                   <Avatar
                     size={32}
-                    image={room.owner.image}
+                    imageUri={room.owner.image}
                     style={styles.avatar}
                   />
                   <Block column style={styles.userInfo}>

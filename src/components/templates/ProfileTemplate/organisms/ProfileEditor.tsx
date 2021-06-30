@@ -10,7 +10,7 @@ import { Block, Text, theme } from "galio-framework";
 import { Hr } from "src/components/atoms/Hr";
 import Icon from "src/components/atoms/Icon";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import {
   useProfileState,
   useProfileDispatch,
@@ -198,9 +198,9 @@ export const ProfileEditor: React.FC = () => {
                 }}
               >
                 <Avatar
-                  border
+                  hasBorder
                   size={150}
-                  image={user.image}
+                  imageUri={user.image}
                   style={styles.avatar}
                 />
               </Block>
