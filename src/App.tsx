@@ -48,8 +48,9 @@ function cacheImages(images: (string | number)[]): Promise<Asset>[] {
 }
 
 const App: React.FC = () => {
-  const [isFinishLoadingResources, setIsFinishLoadingResources] =
-    useState(false);
+  const [isFinishLoadingResources, setIsFinishLoadingResources] = useState(
+    false
+  );
   const [assets, setAssets] = useState<Assets>({});
 
   const loadResourcesAsync = async (): Promise<Asset[]> => {
