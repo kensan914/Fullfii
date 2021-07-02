@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Platform, Alert } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import {
   Bubble,
   GiftedChat,
@@ -397,7 +397,10 @@ const ChatBody: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.BEIGE },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.BEIGE,
+  },
 });
 
 export default ChatBody;

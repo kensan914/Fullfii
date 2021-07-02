@@ -88,8 +88,9 @@ const RootNavigator: React.FC<Props> = (props) => {
   const [status, setStatus] = useState<InitState<AuthStatus>>();
   const [token, setToken] = useState<InitState<string>>();
   const [profile, setProfile] = useState<InitState<MeProfile>>();
-  const [talkingRoomCollection, setTalkingRoomCollection] =
-    useState<InitState<TalkingRoomCollectionAsync>>();
+  const [talkingRoomCollection, setTalkingRoomCollection] = useState<
+    InitState<TalkingRoomCollectionAsync>
+  >();
   const [isBanned, setIsBanned] = useState<InitState<boolean>>();
 
   useEffect(() => {
