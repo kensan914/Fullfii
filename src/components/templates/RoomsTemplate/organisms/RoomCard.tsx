@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import SvgUri from "react-native-svg-uri";
 
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import { Avatar } from "src/components/atoms/Avatar";
 import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
@@ -110,7 +110,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                 <Block row>
                   <Block flex row style={styles.member}>
                     <Block>
-                      <IconExtra
+                      <Icon
                         name={participantIconName}
                         family="Ionicons"
                         size={32}

@@ -2,7 +2,7 @@ import React from "react";
 import { Block } from "galio-framework";
 import { Image, ImageStyle, StyleSheet } from "react-native";
 
-import Icon from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 
 type Props = {

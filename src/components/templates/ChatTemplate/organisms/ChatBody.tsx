@@ -16,7 +16,7 @@ import { Text } from "galio-framework";
 import { getBottomSpace } from "react-native-iphone-x-helper";
 
 import { COLORS } from "src/constants/theme";
-import Icon from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { generateUuid4, fmtfromDateToStr, includeUrl } from "src/utils";
 import { useTurnOnRead } from "src/screens/ChatScreen/useTurnOnRead";

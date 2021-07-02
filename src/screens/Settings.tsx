@@ -9,7 +9,7 @@ import { Block, theme, Text } from "galio-framework";
 import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from "@react-navigation/core";
 
-import Icon from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { Hr } from "src/components/atoms/Hr";
 import {
   USER_POLICY_URL,

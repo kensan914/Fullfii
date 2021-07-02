@@ -5,8 +5,7 @@ import Modal from "react-native-modal";
 import SvgUri from "react-native-svg-uri";
 import ActionSheet from "react-native-action-sheet";
 
-import IconExtra from "src/components/atoms/Icon";
-
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import { Avatar } from "src/components/atoms/Avatar";
 import { width } from "src/constants";
@@ -91,7 +90,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             setIsOpen(false);
           }}
         >
-          <IconExtra
+          <Icon
             name="close"
             family="Ionicons"
             size={32}
@@ -115,7 +114,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             openRoomDetailActionSheet();
           }}
         >
-          <IconExtra
+          <Icon
             name="dots-three-horizontal"
             family="Entypo"
             size={32}
@@ -173,7 +172,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             <Block row>
               <Block flex row style={styles.member}>
                 <Block>
-                  <IconExtra
+                  <Icon
                     name={participantIconName}
                     family="Ionicons"
                     size={32}

@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { Block, NavBar, theme } from "galio-framework";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import Icon from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import materialTheme from "src/constants/theme";
 import { ByeByeMenu } from "src/components/organisms/ByeByeMenu";
 import { LeaveParticipantMenu } from "src/components/organisms/LeaveParticipantMenu";

@@ -1,10 +1,9 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
 import { StyleSheet } from "react-native";
 
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
-import { ProfileEditReminder } from "./molecules/ProfileEditReminder";
+import { Icon } from "src/components/atoms/Icon";
 import { ProfileEditor } from "./organisms/ProfileEditor";
 
 type Props = {
@@ -39,7 +38,7 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
             <></>
           )} */}
           <Block center style={styles.iconContainer}>
-            <IconExtra
+            <Icon
               name="user"
               family="AntDesign"
               size={80}

@@ -9,7 +9,7 @@ import {
 
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
 import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
@@ -205,7 +205,7 @@ export const SignupTemplate: React.FC<Props> = (props) => {
             <Text size={16} color={COLORS.BLACK}>
               {job ? job.label : "選択してください"}
             </Text>
-            <IconExtra
+            <Icon
               name="chevron-right"
               family="Feather"
               size={32}

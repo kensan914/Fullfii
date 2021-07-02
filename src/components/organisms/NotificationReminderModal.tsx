@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { width } from "src/constants";
 import { useConfigPushNotification } from "src/hooks/pushNotifications/useConfigPushNotification";
 
@@ -35,7 +35,7 @@ export const NotificationReminderModal: React.FC<Props> = (props) => {
     >
       <Block column style={styles.modalContent}>
         <Block center style={styles.checkIcon}>
-          <IconExtra
+          <Icon
             name="bell"
             family="Feather"
             size={80}
