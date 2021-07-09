@@ -23,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import com.fullfii.fullfii.Debug;
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList()
@@ -32,8 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     public boolean getUseDeveloperSupport() {
       // return BuildConfig.DEBUG;
-      // HACK:
-      return true;
+      return Debug.debug;
     }
 
     @Override
@@ -51,24 +52,22 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected @Nullable String getJSBundleFile() {
-//      if (BuildConfig.DEBUG) {
-//        return super.getJSBundleFile();
-//      } else {
-//        return UpdatesController.getInstance().getLaunchAssetFile();
-//      }
-      // HACK:
-      return super.getJSBundleFile();
+    //  if (BuildConfig.DEBUG) {
+      if (Debug.debug) {
+        return super.getJSBundleFile();
+      } else {
+        return UpdatesController.getInstance().getLaunchAssetFile();
+      }
     }
 
     @Override
     protected @Nullable String getBundleAssetName() {
 //      if (BuildConfig.DEBUG) {
-//        return super.getBundleAssetName();
-//      } else {
-//        return UpdatesController.getInstance().getBundleAssetName();
-//      }
-      // HACK:
-      return super.getBundleAssetName();
+      if (Debug.debug) {
+        return super.getBundleAssetName();
+      } else {
+        return UpdatesController.getInstance().getBundleAssetName();
+      }
     }
   };
 
@@ -82,10 +81,10 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
-      // HACK:
 //    if (!BuildConfig.DEBUG) {
-//      UpdatesController.initialize(this);
-//    }
+    if (!Debug.debug) {
+      UpdatesController.initialize(this);
+    }
   }
 
   /**
@@ -95,7 +94,7 @@ public class MainApplication extends Application implements ReactApplication {
    */
   private static void initializeFlipper(Context context) {
     // if (BuildConfig.DEBUG) {
-      // HACK:
+    if (Debug.debug) {
       try {
         /*
          We use reflection here to pick up the class that initializes Flipper,
@@ -112,6 +111,6 @@ public class MainApplication extends Application implements ReactApplication {
       } catch (InvocationTargetException e) {
         e.printStackTrace();
       }
-    // }
+    }
   }
 }

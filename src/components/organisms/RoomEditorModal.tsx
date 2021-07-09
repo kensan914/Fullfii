@@ -3,7 +3,6 @@ import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
   Keyboard,
-  KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
   ImageBackground,
@@ -245,7 +244,8 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
           Keyboard.dismiss();
         }}
       >
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={0}>
+        <>
+          {/* <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={0}> */}
           <Block column style={styles.firstModalContent}>
             <Block row>
               <TouchableOpacity
@@ -504,7 +504,8 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Modal>
-        </KeyboardAvoidingView>
+        </>
+        {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </Modal>
   );

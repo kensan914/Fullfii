@@ -21,3 +21,7 @@ include ':app'
 // https://github.com/lottie-react-native/lottie-react-native#installing-react-native--0600
 include ':lottie-react-native'
 project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
+
+// https://github.com/crazycodeboy/react-native-splash-screen
+include ':react-native-splash-screen'   
+project(':react-native-splash-screen').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-splash-screen/android')

@@ -10,7 +10,7 @@ type Props = {
   style?: ViewStyle;
 };
 export const Icon: React.FC<Props> = (props) => {
-  const { name, family, ...rest } = props;
+  const { name, family = "font-awesome", ...rest } = props;
 
   return <_Icon name={name} family={family} {...rest} />;
 };

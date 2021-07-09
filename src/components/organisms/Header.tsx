@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+  Platform,
+} from "react-native";
 import { Block, NavBar, theme } from "galio-framework";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -75,12 +80,21 @@ export const Header: React.FC<Props> = (props) => {
           onPress={handleLeftPress}
           style={styles.backIconContainer}
         >
-          <Icon
-            family="font-awesome"
-            size={30}
-            name="angle-left"
-            color={COLORS.GRAY}
-          />
+          {Platform.OS === "ios" ? (
+            <Icon
+              family="font-awesome"
+              size={30}
+              name="angle-left"
+              color={COLORS.GRAY}
+            />
+          ) : (
+            <Icon
+              family="material"
+              size={30}
+              name="arrow-back"
+              color={COLORS.GRAY}
+            />
+          )}
         </TouchableOpacity>
       );
     } else {

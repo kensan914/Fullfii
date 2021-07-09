@@ -6,8 +6,8 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import SvgUri from "react-native-svg-uri";
 
+import { SvgUri } from "src/components/atoms/SvgUri";
 import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import { Avatar } from "src/components/atoms/Avatar";
@@ -17,6 +17,7 @@ import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
+import { detailSvg } from "src/constants/svgSources";
 
 type Props = {
   room: Room;
@@ -133,16 +134,10 @@ export const RoomCard: React.FC<Props> = (props) => {
                 setIsOpen(true);
               }}
             >
-              {/* <IconExtra
-                name="eye-off"
-                family="Feather"
-                size={32}
-                color={COLORS.BROWN}
-              /> */}
               <SvgUri
                 width={32}
                 height={32}
-                source={require("src/assets/icons/detail.svg")}
+                source={detailSvg}
                 fill={COLORS.BROWN}
               />
             </TouchableOpacity>

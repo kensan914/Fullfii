@@ -134,7 +134,7 @@ android {
         applicationId 'com.fullfii.fullfii'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 11
         versionName "1.0.0"
     }
     splits {
@@ -201,6 +201,7 @@ dependencies {
     }
 
     implementation project(':lottie-react-native') // https://github.com/lottie-react-native/lottie-react-native#installing-react-native--0600
+    implementation project(':react-native-splash-screen') // https://github.com/crazycodeboy/react-native-splash-screen
 }
 
 // Run this once to be able to run the application with BUCK

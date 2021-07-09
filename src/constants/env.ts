@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 
-const DEBUG = true;
-// const DEBUG = false;
+// const DEBUG = true;
+const DEBUG = false;
 // const ADMOB_DEBUG = true;
 const ADMOB_DEBUG = false;
 
@@ -97,3 +97,8 @@ export const appId = "1533306689";
 export const ITUNES_LOOKUP_URL = `https://itunes.apple.com/lookup/?id=${appId}&country=JP`;
 export const APP_STORE_URI_ITMS_APPS = `itms-apps://itunes.apple.com/jp/app/id${appId}/?mt=8`;
 export const APP_STORE_URL = `https://itunes.apple.com/jp/app/id${appId}/?mt=8`;
+
+export const LATEST_VERSION_JSON_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/static/app/latest-version.json`;
+export const APP_ID_ANDROID = "com.fullfii.fullfii";
+export const PLAY_STORE_URL_SCHEME = `market://details?id=${APP_ID_ANDROID}`;
+export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${APP_ID_ANDROID}`;

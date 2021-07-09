@@ -1,8 +1,8 @@
 import React from "react";
 import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SvgUri from "react-native-svg-uri";
 
+import { SvgUri } from "src/components/atoms/SvgUri";
 import { Header } from "src/components/organisms/Header";
 import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
@@ -13,6 +13,11 @@ import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
 import { MyRoomsRouteProp } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
+import {
+  chatIconSvg,
+  homeIconSvg,
+  mypageIconSvg,
+} from "src/constants/svgSources";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -32,20 +37,14 @@ export const BottomTabNavigator: React.FC = () => {
           const routeName = route.name;
 
           if (routeName === "Rooms") {
-            iconName = focused
-              ? require("../assets/icons/homeIcon.svg")
-              : require("../assets/icons/homeIcon.svg");
+            iconName = focused ? homeIconSvg : homeIconSvg;
             label = "ホーム";
           } else if (routeName === "MyRooms") {
-            iconName = focused
-              ? require("../assets/icons/chatIcon.svg")
-              : require("../assets/icons/chatIcon.svg");
+            iconName = focused ? chatIconSvg : chatIconSvg;
             label = "トーク";
             badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Profile") {
-            iconName = focused
-              ? require("../assets/icons/mypageIcon.svg")
-              : require("../assets/icons/mypageIcon.svg");
+            iconName = focused ? mypageIconSvg : mypageIconSvg;
             label = "マイページ";
           }
           return (
