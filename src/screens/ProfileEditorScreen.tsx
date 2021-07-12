@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ProfileEditorNavigationPros } from "src/types/Types";
 import { formatGender } from "src/utils";
 import { MenuModal } from "src/components/molecules/Menu";
-import { requestPatchProfile } from "src/screens/ProfileInput";
+import { requestPatchProfile } from "src/screens/ProfileInputScreen";
 import { COLORS } from "src/constants/theme";
 import { useRequestPostProfileImage } from "src/hooks/requests/useRequestMe";
 import { width } from "src/constants";
@@ -29,7 +29,7 @@ const ProfileHr = () => <Hr h={1} mb={5} color={COLORS.BROWN_RGBA} />;
 const profileImageHeight = 500;
 const editButtonRate = { content: 9, button: 1 };
 
-export const ProfileEditor: React.FC = () => {
+export const ProfileEditorScreen: React.FC = () => {
   const navigation = useNavigation<ProfileEditorNavigationPros>();
   const profileState = useProfileState();
   const profileDispatch = useProfileDispatch();
@@ -37,8 +37,10 @@ export const ProfileEditor: React.FC = () => {
   const authDispatch = useAuthDispatch();
 
   const user = profileState.profile;
-  const { requestPostProfileImage, isLoadingRequestPostProfileImage } =
-    useRequestPostProfileImage();
+  const {
+    requestPostProfileImage,
+    isLoadingRequestPostProfileImage,
+  } = useRequestPostProfileImage();
 
   const [isOpenJobModal, setIsOpenJobModal] = useState(false);
 

@@ -12,7 +12,7 @@ import {
   RequestPutGender,
 } from "src/types/Types";
 
-const ProfileInput: React.FC = () => {
+export const ProfileInputScreen: React.FC = () => {
   return (
     <ProfileInputTemplate
       requestPatchProfile={requestPatchProfile}
@@ -20,8 +20,6 @@ const ProfileInput: React.FC = () => {
     />
   );
 };
-
-export default ProfileInput;
 
 export const requestPatchProfile: RequestPatchProfile = (
   token,
