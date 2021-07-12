@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import {
   Alert,
   AlertButton,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Text } from "galio-framework";
+import prompt from "react-native-prompt-android";
 
 import { useChatState } from "src/contexts/ChatContext";
 import { useRequestPostRoomLeftMembers } from "src/hooks/requests/useRequestRoomMembers";
@@ -155,18 +157,26 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
             },
           ];
         }
-        Alert.prompt(
-          mainText,
-          subText,
-          [
-            {
-              text: "キャンセル",
-              style: "cancel",
-            },
-            ...buttons,
-          ],
-          "plain-text"
-        );
+        Platform.OS === "ios"
+          ? Alert.prompt(
+              mainText,
+              subText,
+              [
+                {
+                  text: "キャンセル",
+                  style: "cancel",
+                },
+                ...buttons,
+              ],
+              "plain-text"
+            )
+          : prompt(mainText, subText, [
+              {
+                text: "キャンセル",
+                style: "cancel",
+              },
+              ...buttons,
+            ]);
       }
 
       // 後攻

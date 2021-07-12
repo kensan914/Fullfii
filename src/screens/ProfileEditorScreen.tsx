@@ -20,7 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ProfileEditorNavigationPros } from "src/types/Types";
 import { formatGender } from "src/utils";
 import { MenuModal } from "src/components/molecules/Menu";
-import { requestPatchProfile } from "src/screens/ProfileInput";
+import { requestPatchProfile } from "src/screens/ProfileInputScreen";
 import { COLORS } from "src/constants/theme";
 import { useRequestPostProfileImage } from "src/hooks/requests/useRequestMe";
 import { width } from "src/constants";
@@ -29,7 +29,7 @@ const ProfileHr = () => <Hr h={1} mb={5} color={COLORS.BROWN_RGBA} />;
 const profileImageHeight = 500;
 const editButtonRate = { content: 9, button: 1 };
 
-export const ProfileEditor: React.FC = () => {
+export const ProfileEditorScreen: React.FC = () => {
   const navigation = useNavigation<ProfileEditorNavigationPros>();
   const profileState = useProfileState();
   const profileDispatch = useProfileDispatch();
@@ -211,7 +211,6 @@ export const ProfileEditor: React.FC = () => {
             isLoadingImage={isLoadingRequestPostProfileImage}
           />
         </Block>
-        {/* <ProfileHr /> */}
       </Block>
     </ScrollView>
   );
@@ -226,8 +225,14 @@ type PropsEditorBlock = {
 const EditorBlock: React.FC<PropsEditorBlock> = (props) => {
   const { onPress, content, isImage, isLoadingImage } = props;
   return isImage ? (
-    <TouchableOpacity onPress={onPress} style={{ flex: 1, width: "100%" }}>
-      {content}
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={onPress}
+      style={{ flex: 1, width: "100%" }}
+    >
+      <Block style={{ zIndex: -1 /* Androidで下記のiconが下に行くため */ }}>
+        {content}
+      </Block>
       <Block
         style={{
           position: "absolute",

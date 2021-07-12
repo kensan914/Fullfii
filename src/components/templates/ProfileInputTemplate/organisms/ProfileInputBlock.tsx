@@ -115,14 +115,8 @@ type TextInputBlockProps = {
   setValue: React.Dispatch<string>;
 };
 const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
-  const {
-    maxLength,
-    isTextarea,
-    prevValue,
-    setCanSubmit,
-    value,
-    setValue,
-  } = props;
+  const { maxLength, isTextarea, prevValue, setCanSubmit, value, setValue } =
+    props;
 
   const [length, setLength] = useState(prevValue.length);
   useEffect(() => {
@@ -145,6 +139,7 @@ const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
           marginVertical: 10,
           borderRadius: 10,
           backgroundColor: COLORS.WHITE,
+          textAlignVertical: "top",
         }}
         maxLength={maxLength}
         value={value}

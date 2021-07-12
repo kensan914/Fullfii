@@ -140,7 +140,7 @@ export const SignupTemplate: React.FC<Props> = (props) => {
           onChangeText={setUsername}
           returnKeyType="done"
           blurOnSubmit
-          textContentType="username"
+          // textContentType="username"
           style={[
             styles.textArea,
             { borderColor: isFocusInputUsername ? COLORS.BROWN : COLORS.WHITE },
@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     alignSelf: "center",
+    textAlignVertical: "top",
     height: 40,
     width: width - 40,
     borderRadius: 10,

@@ -1,15 +1,13 @@
 import React from "react";
 import { Block } from "galio-framework";
-import { ActivityIndicator, Dimensions } from "react-native";
+import { ActivityIndicator } from "react-native";
 
-const { width, height } = Dimensions.get("screen");
+import { height, width } from "src/constants";
 
 /**
  * custom spinner
- * @param {*} props
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const Spinner = () => {
+export const Spinner: React.FC = () => {
   return (
     <Block
       style={{
@@ -19,11 +17,10 @@ const Spinner = () => {
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         justifyContent: "center",
         alignItems: "center",
+        // zIndex: 1, // for Android
       }}
     >
       <ActivityIndicator color="white" size="large" />
     </Block>
   );
 };
-
-export default Spinner;

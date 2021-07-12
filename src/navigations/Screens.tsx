@@ -1,10 +1,10 @@
 import React, { ReactNode } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SafeAreaView from 'react-native-safe-area-view';
+import SafeAreaView from "react-native-safe-area-view";
 
 import { Header } from "src/components/organisms/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
-import ProfileInputScreen from "src/screens/ProfileInput";
+import { ProfileInputScreen } from "src/screens/ProfileInputScreen";
 import SettingsScreen from "src/screens/Settings";
 import AccountDeleteScreen from "src/screens/AccountDelete";
 import {
@@ -14,7 +14,7 @@ import {
   DELETED,
   AUTHENTICATING,
 } from "src/contexts/AuthContext";
-import Spinner from "src/components/atoms/Spinner";
+import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";
@@ -24,6 +24,7 @@ import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
 import { SignupScreen } from "src/screens/signup/SignupScreen";
 import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
+import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,6 +36,15 @@ const HomeStack = () => {
         component={BottomTabNavigator}
         options={() => ({
           header: () => null,
+        })}
+      />
+      <Stack.Screen
+        name="ProfileEditor"
+        component={ProfileEditorScreen}
+        options={() => ({
+          header: () => {
+            return <Header back name={"ProfileEditor"} />;
+          },
         })}
       />
       <Stack.Screen
@@ -53,7 +63,7 @@ const HomeStack = () => {
         options={({ route }) => ({
           header: () => {
             const roomId = route.params.roomId;
-            return <Header back name={"Chat"} roomId={roomId} />;
+            return <Header isLeftTitle back name={"Chat"} roomId={roomId} />;
           },
         })}
       />

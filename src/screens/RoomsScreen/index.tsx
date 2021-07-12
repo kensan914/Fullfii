@@ -28,9 +28,8 @@ export const RoomsScreen: React.FC = () => {
     rooms
   );
 
-  const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState<boolean>(
-    false
-  );
+  const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] =
+    useState<boolean>(false);
 
   const { checkCanCreateRoom } = useCanCreateRoom();
 

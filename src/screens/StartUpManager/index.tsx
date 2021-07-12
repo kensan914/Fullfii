@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Block } from "galio-framework";
 
-import exeSiren from "src/utils/siren";
+// import exeSiren from "src/utils/siren";
 import { useRequestGetMe } from "src/hooks/requests/useRequestMe";
 import { useAuthState } from "src/contexts/AuthContext";
 import { useWsNotification } from "./useWsNotification";
@@ -25,7 +25,7 @@ export const StartUpManager: React.FC = (props) => {
   useEffect(() => {
     // ログイン済みでアプリを起動した時、またはsignup成功時に実行
     if (authState.token) {
-      exeSiren();
+      // exeSiren(); // TODO: Android
       requestGetMe();
       requestGetTalkInfo();
       connectWsNotification();

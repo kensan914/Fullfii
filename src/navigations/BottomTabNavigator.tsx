@@ -1,6 +1,7 @@
 import React from "react";
 import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SvgUri from "react-native-svg-uri";
 
 import { Header } from "src/components/organisms/Header";
@@ -13,9 +14,11 @@ import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
 import { MyRoomsRouteProp } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
+import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
+  const TopTab = createMaterialTopTabNavigator();
   const Stack = createStackNavigator();
 
   const chatState = useChatState();
@@ -47,7 +50,6 @@ export const BottomTabNavigator: React.FC = () => {
               ? require("../assets/icons/mypageIcon.svg")
               : require("../assets/icons/mypageIcon.svg");
             label = "マイページ";
-            // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           }
           return (
             <Block
@@ -100,6 +102,7 @@ export const BottomTabNavigator: React.FC = () => {
         style: {
           backgroundColor: COLORS.BEIGE,
           borderTopWidth: 0,
+          elevation: 0, // for Android
         },
       }}
       initialRouteName={
@@ -114,11 +117,29 @@ export const BottomTabNavigator: React.FC = () => {
             <Stack.Navigator>
               <Stack.Screen
                 name="Rooms"
-                component={RoomsScreen}
+                // component={RoomsScreen}
                 options={() => ({
                   header: () => <Header name={"Rooms"} />,
                 })}
-              />
+              >
+                {() => (
+                  <TopTab.Navigator
+                    tabBarOptions={{
+                      style: { backgroundColor: COLORS.BEIGE },
+                      indicatorStyle: {
+                        backgroundColor: COLORS.PINK,
+                        height: 3,
+                      },
+                    }}
+                  >
+                    <Tab.Screen name="ルーム一覧" component={RoomsScreen} />
+                    <Tab.Screen
+                      name="プライベート"
+                      component={PrivateRoomsScreen}
+                    />
+                  </TopTab.Navigator>
+                )}
+              </Stack.Screen>
             </Stack.Navigator>
           </Block>
         )}

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1071864782554",
+    "firebase_url": "https://fullfii.firebaseio.com",
+    "project_id": "fullfii",
+    "storage_bucket": "fullfii.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071864782554:android:8ad0f0c7a5202680d64fe3",
+        "android_client_info": {
+          "package_name": "com.fullfii.fullfii"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071864782554-5r3u8i75e39f4vvif4b3m0q0s92305bq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXAEJNU_dVPYL4MRmUm-D4lHlKgCqPiGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071864782554-5r3u8i75e39f4vvif4b3m0q0s92305bq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1071864782554-55oc7qbepif54nqii0qktas4qqogn4p1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fullfii.fullfii",
+                "app_store_id": "1533306689"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

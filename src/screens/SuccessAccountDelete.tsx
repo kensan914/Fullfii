@@ -10,10 +10,8 @@ import { dangerouslyDelete } from "src/utils/auth/crud";
 import { RoundButton } from "src/components/atoms/RoundButton";
 
 const SuccessAccountDelete: React.FC = () => {
-  const [
-    lottieSuccessSource,
-    setLottieSuccessSource,
-  ] = useState<LottieSource>();
+  const [lottieSuccessSource, setLottieSuccessSource] =
+    useState<LottieSource>();
 
   useEffect(() => {
     (async () => {
@@ -72,6 +70,7 @@ const SuccessAccountDelete: React.FC = () => {
             }}
             loop={false}
             source={lottieSuccessSource}
+            resizeMode="cover"
           />
         )}
       </Block>
