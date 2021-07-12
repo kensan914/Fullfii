@@ -75,7 +75,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                       <Text
                         size={14}
                         color={COLORS.LIGHT_GRAY}
-                        numberOfLines={1}
+                        numberOfLines={2}
                         ellipsizeMode="tail"
                       >
                         {room.owner.name}
@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
   },
   userName: {
     marginBottom: 4,
+    width: width - 40 - 88 - 32 - 16 - 8 - 32,
   },
   userGender: {
     marginRight: 4,
