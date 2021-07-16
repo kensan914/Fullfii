@@ -49,14 +49,6 @@ export const ProfileEditorScreen: React.FC = () => {
     <ScrollView style={{ width: width, backgroundColor: COLORS.BEIGE }}>
       <Block style={[styles.profileContentBottom]}>
         <Block style={styles.profileTextBlock}>
-          <Text
-            size={16}
-            bold
-            color={COLORS.BLACK}
-            style={{ marginBottom: 10 }}
-          >
-            ユーザネーム
-          </Text>
           <EditorBlock
             onPress={() =>
               navigation.navigate("ProfileInput", {
@@ -65,28 +57,26 @@ export const ProfileEditorScreen: React.FC = () => {
                 screen: "InputName",
               })
             }
+            title={
+              <Text
+              size={16}
+              color={COLORS.BLACK}
+              >
+                ユーザネーム
+              </Text>
+            }
             content={
               <Text
-                size={14}
-                color={COLORS.GRAY}
-                style={{ lineHeight: 18, flex: editButtonRate.content }}
+              size={14} color={COLORS.LIGHT_GRAY} style={styles.textHeight}
               >
-                {user.name}
+                {/* {user.name} */}
+                匿名子
               </Text>
             }
           />
         </Block>
-        <ProfileHr />
 
         <Block style={styles.profileTextBlock}>
-          <Text
-            size={16}
-            bold
-            color={COLORS.BLACK}
-            style={{ marginBottom: 10 }}
-          >
-            性別
-          </Text>
           <EditorBlock
             onPress={() =>
               navigation.navigate("ProfileInput", {
@@ -95,37 +85,40 @@ export const ProfileEditorScreen: React.FC = () => {
                 screen: "InputGender",
               })
             }
+            title={
+              <Text
+                size={16}
+                color={COLORS.BLACK}
+              >
+                性別
+              </Text>
+            }
             content={
               <Text
-                size={14}
-                color={COLORS.GRAY}
-                style={{ lineHeight: 18, flex: editButtonRate.content }}
+              size={14} color={COLORS.LIGHT_GRAY} style={styles.textHeight}
               >
                 {formattedGender.label}
               </Text>
             }
           />
         </Block>
-        <ProfileHr />
 
         <Block style={styles.profileTextBlock}>
-          <Text
-            size={16}
-            bold
-            color={COLORS.BLACK}
-            style={{ marginBottom: 10 }}
-          >
-            職業
-          </Text>
           <EditorBlock
             onPress={() => {
               setIsOpenJobModal(true);
             }}
+            title={
+              <Text
+                size={16}
+                color={COLORS.BLACK}
+              >
+                職業
+              </Text>
+            }
             content={
               <Text
-                size={14}
-                color={COLORS.GRAY}
-                style={{ lineHeight: 18, flex: editButtonRate.content }}
+              size={14} color={COLORS.LIGHT_GRAY} style={styles.textHeight}
               >
                 {user.job.label}
               </Text>
@@ -167,14 +160,11 @@ export const ProfileEditorScreen: React.FC = () => {
             })
           }
         />
-        <ProfileHr />
 
         <Block style={styles.profileTextBlock}>
           <Text
             size={16}
-            bold
             color={COLORS.BLACK}
-            style={{ marginBottom: 10 }}
           >
             プロフィール画像
           </Text>
@@ -211,6 +201,46 @@ export const ProfileEditorScreen: React.FC = () => {
             isLoadingImage={isLoadingRequestPostProfileImage}
           />
         </Block>
+
+        <Block style={styles.categoryContainer} >
+          <Text size={16} bold color={COLORS.BLACK}>
+            プロフィール公開設定
+          </Text>
+        </Block>
+
+        <Block style={styles.profileTextBlock}>
+          <EditorBlock
+            onPress={() =>
+              navigation.navigate("ProfileInput", {
+                user: user,
+                prevValue: formattedGender.key,
+                screen: "InputGender",
+              })
+            }
+            title={
+              <Text
+                size={16}
+                color={COLORS.BLACK}
+              >
+                公開設定
+              </Text>
+            }
+            content={
+              <Text
+              size={14} color={COLORS.LIGHT_GRAY} style={styles.textHeight}
+              >
+                公開しない
+              </Text>
+            }
+          />
+        </Block>
+
+        {/* <Block>
+          <Text size={12} color={COLORS.BLACK}>
+          「公開しない」に設定する場合、他ユーザーはあなたの名前、性別、職業、写真のみ閲覧することができます{"\n"}「公開する」に設定する場合、他ユーザーはあなたのプロフィール情報全てを閲覧することができます
+          </Text>
+        </Block> */}
+
       </Block>
     </ScrollView>
   );
@@ -218,12 +248,13 @@ export const ProfileEditorScreen: React.FC = () => {
 
 type PropsEditorBlock = {
   onPress: () => void;
+  title?: ReactElement;
   content: ReactElement;
   isImage?: boolean;
   isLoadingImage?: boolean;
 };
 const EditorBlock: React.FC<PropsEditorBlock> = (props) => {
-  const { onPress, content, isImage, isLoadingImage } = props;
+  const { onPress, title, content, isImage, isLoadingImage } = props;
   return isImage ? (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -252,14 +283,21 @@ const EditorBlock: React.FC<PropsEditorBlock> = (props) => {
   ) : (
     <TouchableOpacity
       onPress={onPress}
-      style={{ flex: 1, flexDirection: "row" }}
+      style={{ flex: 1, width: width-32}}
     >
-      {content}
-      <Block
-        flex={editButtonRate.button}
-        style={{ alignItems: "center", justifyContent: "center" }}
-      >
-        <Icon name="angle-right" family="font-awesome" color="gray" size={22} />
+      <Block row space="between" style={styles.editContainer}>
+        <Block>
+          {title}
+        </Block>
+        <Block
+          row
+          center
+        >
+          {content}
+          <Block style={styles.angleIcon} center>
+          <Icon name="angle-right" family="font-awesome" color="gray" size={24} />
+          </Block>
+        </Block>
       </Block>
     </TouchableOpacity>
   );
@@ -287,7 +325,22 @@ const styles = StyleSheet.create({
   },
   profileTextBlock: {
     paddingVertical: 16,
-    alignItems: "baseline",
   },
   avatar: {},
+  editContainer: {
+    alignItems: "center"
+  },
+  textHeight: {
+    lineHeight: 20
+  },
+  angleIcon: {
+    height: 24,
+    width: 24,
+    marginLeft: 8
+  },
+  categoryContainer: {
+    width: width-32,
+    height: 48,
+    justifyContent: "center"
+  }
 });
