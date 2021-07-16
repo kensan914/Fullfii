@@ -1,9 +1,3 @@
-// module.exports = {
-//   transformer: {
-//     assetPlugins: ["expo-asset/tools/hashAssetFiles"],
-//   },
-// };
-
 const { getDefaultConfig } = require("metro-config");
 module.exports = (async () => {
   const {

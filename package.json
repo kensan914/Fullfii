@@ -109,7 +109,7 @@
     "/.eslintrc.js",
     "/.prettierrc.js",
     "/babel.config.js",
-    "/metro.config.js"
+    "/metro.config.ios.js"
   ],
   "husky": {
     "hooks": {

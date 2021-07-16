@@ -1,18 +1,50 @@
+import { Platform } from "react-native";
+
 // TODO: https://github.com/kristerkari/react-native-svg-transformer#using-typescript
 import _detailSvg from "src/assets/icons/detail.svg";
-import _enterRoomSvg from "src/assets/icons/enterRoom.svg";
-import _homeIconSvg from "src/assets/icons/homeIcon.svg";
-import _chatIconSvg from "src/assets/icons/chatIcon.svg";
-import _mypageIconSvg from "src/assets/icons/mypageIcon.svg";
-import _homeIconFocusSvg from "src/assets/icons/homeIconFocus.svg";
-import _chatIconFocusSvg from "src/assets/icons/chatIconFocus.svg";
-import _mypageIconFocusSvg from "src/assets/icons/mypageIconFocus.svg";
+export const detailSvg = Platform.select({
+  ios: require("src/assets/icons/detail.svg"),
+  android: _detailSvg,
+});
 
-export const detailSvg = _detailSvg;
-export const enterRoomSvg = _enterRoomSvg;
-export const homeIconSvg = _homeIconSvg;
-export const chatIconSvg = _chatIconSvg;
-export const mypageIconSvg = _mypageIconSvg;
-export const homeIconFocusSvg = _homeIconFocusSvg;
-export const chatIconFocusSvg = _chatIconFocusSvg;
-export const mypageIconFocusSvg = _mypageIconFocusSvg;
+import _enterRoomSvg from "src/assets/icons/enterRoom.svg";
+export const enterRoomSvg = Platform.select({
+  ios: require("src/assets/icons/enterRoom.svg"),
+  android: _enterRoomSvg,
+});
+
+import _homeIconSvg from "src/assets/icons/homeIcon.svg";
+export const homeIconSvg = Platform.select({
+  ios: require("../assets/icons/homeIcon.svg"),
+  android: _homeIconSvg,
+});
+
+import _chatIconSvg from "src/assets/icons/chatIcon.svg";
+export const chatIconSvg = Platform.select({
+  ios: require("src/assets/icons/chatIcon.svg"),
+  android: _chatIconSvg,
+});
+
+import _mypageIconSvg from "src/assets/icons/mypageIcon.svg";
+export const mypageIconSvg = Platform.select({
+  ios: require("src/assets/icons/mypageIcon.svg"),
+  android: _mypageIconSvg,
+});
+
+import _homeIconFocusSvg from "src/assets/icons/homeIconFocus.svg";
+export const homeIconFocusSvg = Platform.select({
+  ios: require("src/assets/icons/homeIconFocus.svg"),
+  android: _homeIconFocusSvg,
+});
+
+import _chatIconFocusSvg from "src/assets/icons/chatIconFocus.svg";
+export const chatIconFocusSvg = Platform.select({
+  ios: require("src/assets/icons/chatIconFocus.svg"),
+  android: _chatIconFocusSvg,
+});
+
+import _mypageIconFocusSvg from "src/assets/icons/mypageIconFocus.svg";
+export const mypageIconFocusSvg = Platform.select({
+  ios: require("src/assets/icons/mypageIconFocus.svg"),
+  android: _mypageIconFocusSvg,
+});
