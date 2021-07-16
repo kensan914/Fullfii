@@ -14,8 +14,11 @@ import { useChatState } from "src/contexts/ChatContext";
 import { MyRoomsRouteProp } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
 import {
+  chatIconFocusSvg,
   chatIconSvg,
+  homeIconFocusSvg,
   homeIconSvg,
+  mypageIconFocusSvg,
   mypageIconSvg,
 } from "src/constants/svgSources";
 
@@ -37,14 +40,14 @@ export const BottomTabNavigator: React.FC = () => {
           const routeName = route.name;
 
           if (routeName === "Rooms") {
-            iconName = focused ? homeIconSvg : homeIconSvg;
+            iconName = focused ? homeIconFocusSvg : homeIconSvg;
             label = "ホーム";
           } else if (routeName === "MyRooms") {
-            iconName = focused ? chatIconSvg : chatIconSvg;
+            iconName = focused ? chatIconFocusSvg : chatIconSvg;
             label = "トーク";
             badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Profile") {
-            iconName = focused ? mypageIconSvg : mypageIconSvg;
+            iconName = focused ? mypageIconFocusSvg : mypageIconSvg;
             label = "マイページ";
           }
           return (
@@ -55,7 +58,7 @@ export const BottomTabNavigator: React.FC = () => {
                 alignItems: "center",
               }}
             >
-              <SvgUri width={32} height={32} source={iconName} fill={color} />
+              <SvgUri width={32} height={32} source={iconName} />
               <Text bold size={12} style={{ color: color }}>
                 {label}
               </Text>

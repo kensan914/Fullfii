@@ -4,9 +4,15 @@ import _enterRoomSvg from "src/assets/icons/enterRoom.svg";
 import _homeIconSvg from "src/assets/icons/homeIcon.svg";
 import _chatIconSvg from "src/assets/icons/chatIcon.svg";
 import _mypageIconSvg from "src/assets/icons/mypageIcon.svg";
+import _homeIconFocusSvg from "src/assets/icons/homeIconFocus.svg";
+import _chatIconFocusSvg from "src/assets/icons/chatIconFocus.svg";
+import _mypageIconFocusSvg from "src/assets/icons/mypageIconFocus.svg";
 
 export const detailSvg = _detailSvg;
 export const enterRoomSvg = _enterRoomSvg;
 export const homeIconSvg = _homeIconSvg;
 export const chatIconSvg = _chatIconSvg;
 export const mypageIconSvg = _mypageIconSvg;
+export const homeIconFocusSvg = _homeIconFocusSvg;
+export const chatIconFocusSvg = _chatIconFocusSvg;
+export const mypageIconFocusSvg = _mypageIconFocusSvg;
