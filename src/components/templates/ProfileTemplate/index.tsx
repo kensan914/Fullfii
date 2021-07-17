@@ -49,12 +49,12 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
           <Block row flex style={styles.postContents}>
             <Block column center style={styles.postSpoke}>
               {/* 他者のマイページ且つ公開しない状態の場合はアイコン表示 */}
-              {/* <IconExtra name="lock" family="Feather" size={20}/> */}
+              {/* <IconExtra name="lock" family="Feather" size={20} color={COLORS.GRAY}/> */}
               <Text bold color={COLORS.BLACK} size={16} style={styles.textHeight}>{userInfo.sumOfTalkedRoom}</Text>
               <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>話した</Text>
             </Block>
             <Block column center style={styles.postListened}>
-              {/* <IconExtra name="lock" family="Feather" size={20}/> */}
+              {/* <IconExtra name="lock" family="Feather" size={20} color={COLORS.GRAY}/> */}
               <Text bold size={16} color={COLORS.BLACK} style={styles.textHeight}>{userInfo.sumOfListenedRoom}</Text>
               <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>聞いた</Text>
             </Block>
