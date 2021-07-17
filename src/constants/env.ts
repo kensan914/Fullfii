@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 
-const DEBUG = true;
-// const DEBUG = false;
+// const DEBUG = true;
+const DEBUG = false;
 // const ADMOB_DEBUG = true;
 const ADMOB_DEBUG = false;
 
@@ -70,7 +70,9 @@ export const ADMOB_UNIT_ID_NATIVE = {
       ? ADMOB_DEBUG
         ? ADMOB_UNIT_ID_DEBUG_NATIVE_HOME //ios&&debug
         : "ca-app-pub-1754293395940427/8231741791" //ios&&prod
-      : "ca-app-pub-3940256099942544/2247696110",
+      : ADMOB_DEBUG
+      ? "ca-app-pub-3940256099942544/2247696110" // android&&debug
+      : "ca-app-pub-1754293395940427/8573353653", // android&&prod
   video:
     Platform.OS === "ios"
       ? ADMOB_DEBUG

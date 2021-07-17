@@ -78,14 +78,14 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       hideRoom={hideRoom}
                       blockRoom={blockRoom}
                     />
-                    {/* {index > 0 && (index + 1) % 3 === 0 && (
+                    {index > 0 && (index + 1) % 3 === 0 && (
                       <AdView
                         media={false}
-                        type="video"
+                        type="images"
                         index={2}
                         adUnitId={ADMOB_UNIT_ID_NATIVE.image}
                       />
-                    )} */}
+                    )}
                   </>
                 );
               }
