@@ -9,6 +9,8 @@ import {
   Image,
   Alert,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
@@ -245,7 +247,6 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
         }}
       >
         <>
-          {/* <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={0}> */}
           <Block column style={styles.firstModalContent}>
             <Block row>
               <TouchableOpacity
@@ -504,8 +505,13 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Modal>
+          {Platform.OS === "ios" && (
+            <KeyboardAvoidingView
+              behavior="padding"
+              keyboardVerticalOffset={0}
+            />
+          )}
         </>
-        {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </Modal>
   );
