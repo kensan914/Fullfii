@@ -3,19 +3,20 @@ import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
   Keyboard,
-  KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
   ImageBackground,
   Image,
   Alert,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
 
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import { width } from "src/constants";
@@ -170,7 +171,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
 
   const renderRoomImage = () => {
     const emptyRoomImage = (
-      <IconExtra
+      <Icon
         name="image"
         family="Feather"
         size={48}
@@ -245,7 +246,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
           Keyboard.dismiss();
         }}
       >
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={0}>
+        <>
           <Block column style={styles.firstModalContent}>
             <Block row>
               <TouchableOpacity
@@ -254,7 +255,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                   setIsOpenRoomEditorModal(false);
                 }}
               >
-                <IconExtra
+                <Icon
                   name="close"
                   family="Ionicons"
                   size={32}
@@ -270,7 +271,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             >
               <Block column>
                 <Block row center>
-                  <IconExtra
+                  <Icon
                     name="plus"
                     family="AntDesign"
                     size={16}
@@ -288,7 +289,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             (propsDependsOnMode.mode === "FIX" &&
               propsDependsOnMode.talkingRoom.image) ? (
               <Block row center style={styles.checkRoomImage}>
-                <IconExtra
+                <Icon
                   name="check-circle"
                   family="Feather"
                   size={14}
@@ -426,7 +427,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 }
               >
                 <Block row center style={styles.submitButtonInner}>
-                  <IconExtra
+                  <Icon
                     name={propsDependsOnMode.mode === "FIX" ? "save" : ""}
                     family="AntDesign"
                     size={32}
@@ -455,7 +456,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                     setIsOpenOptionModal(false);
                   }}
                 >
-                  <IconExtra
+                  <Icon
                     name="close"
                     family="Ionicons"
                     size={32}
@@ -504,7 +505,13 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Modal>
-        </KeyboardAvoidingView>
+          {Platform.OS === "ios" && (
+            <KeyboardAvoidingView
+              behavior="padding"
+              keyboardVerticalOffset={0}
+            />
+          )}
+        </>
       </TouchableWithoutFeedback>
     </Modal>
   );

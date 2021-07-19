@@ -8,9 +8,9 @@ import {
   TouchableHighlight,
 } from "react-native";
 
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
@@ -113,7 +113,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 openTalkingRoomCardActionSheet();
               }}
             >
-              <IconExtra
+              <Icon
                 name="dots-three-horizontal"
                 family="Entypo"
                 size={32}
@@ -134,7 +134,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             <Block row>
               <Avatar
                 size={32}
-                image={talkingRoom.owner.image}
+                imageUri={talkingRoom.owner.image}
                 style={styles.avatar}
               />
               <Block column style={styles.userInfo}>
@@ -175,7 +175,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             <Block row>
               <Block flex row style={styles.member}>
                 <Block>
-                  <IconExtra
+                  <Icon
                     name={participantIconName}
                     family="Ionicons"
                     size={32}
@@ -235,7 +235,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 setIsToggleUp(!isToggleUp);
               }}
             >
-              <IconExtra
+              <Icon
                 name={isToggleUp ? "upcircleo" : "circledowno"}
                 family="AntDesign"
                 size={32}

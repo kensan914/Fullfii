@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { width } from "src/constants";
 import { useDomState } from "src/contexts/DomContext";
 
@@ -41,7 +41,7 @@ export const RoomCreatedModal: React.FC<Props> = (props) => {
     >
       <Block column style={styles.modalContent}>
         <TouchableOpacity style={styles.closeIcon} onPress={close}>
-          <IconExtra
+          <Icon
             name="close"
             family="Ionicons"
             size={32}
@@ -49,7 +49,7 @@ export const RoomCreatedModal: React.FC<Props> = (props) => {
           />
         </TouchableOpacity>
         <Block center style={styles.checkIcon}>
-          <IconExtra
+          <Icon
             name="check-circle"
             family="Feather"
             size={80}

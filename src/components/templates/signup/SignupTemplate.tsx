@@ -5,11 +5,14 @@ import {
   Keyboard,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
 import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
@@ -29,7 +32,7 @@ type Props = {
   setIsOpenJobModal: Dispatch<boolean>;
   job: Job | undefined;
   jobModalItems: {
-    title: string;
+    label: string;
     onPress: () => void;
   }[];
   canSignup: boolean;
@@ -54,192 +57,229 @@ export const SignupTemplate: React.FC<Props> = (props) => {
   } = props;
 
   return (
-    <TouchableOpacity
-      activeOpacity={1.0}
-      onPress={() => {
-        setIsFocusInputUsername(false);
-        Keyboard.dismiss();
-      }}
-      style={styles.container}
-    >
-      <Text center size={24} bold color={COLORS.BLACK} style={styles.title}>
-        ユーザー登録
-      </Text>
-      <Block row center style={styles.progressContainer}>
-        <Block
-          style={[styles.progressCircle, { backgroundColor: COLORS.PINK }]}
-          center
+    <>
+      <Block style={styles.container}>
+        <TouchableWithoutFeedback
+          style={styles.container}
+          onPress={() => {
+            setIsFocusInputUsername(false);
+            Keyboard.dismiss();
+          }}
         >
-          <Text size={28} color={COLORS.WHITE}>
-            1
-          </Text>
-          <Text
-            size={14}
-            color={COLORS.LIGHT_GRAY}
-            style={styles.progressLabelProfile}
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: bottomButtonHeight + 48 }}
           >
-            プロフィール入力
-          </Text>
-        </Block>
-        <Block
-          style={[
-            styles.progressBar,
-            { backgroundColor: COLORS.HIGHLIGHT_GRAY },
-          ]}
-        />
-        <Block
-          style={[
-            styles.progressCircle,
-            { backgroundColor: COLORS.HIGHLIGHT_GRAY },
-          ]}
-          center
-        >
-          <Text size={28} color={COLORS.LIGHT_GRAY}>
-            2
-          </Text>
-          <Text
-            size={14}
-            color={COLORS.LIGHT_GRAY}
-            style={styles.progressLabelRoom}
-          >
-            悩みを投稿する
-          </Text>
-        </Block>
-      </Block>
-      <Block center style={styles.progressLabelContainer}>
-        {/* <Text
+            <Text
+              center
+              size={24}
+              bold
+              color={COLORS.BLACK}
+              style={styles.title}
+            >
+              ユーザー登録
+            </Text>
+            <Block row center style={styles.progressContainer}>
+              <Block
+                style={[
+                  styles.progressCircle,
+                  { backgroundColor: COLORS.PINK },
+                ]}
+                center
+              >
+                <Text size={28} color={COLORS.WHITE}>
+                  1
+                </Text>
+                <Text
+                  size={14}
+                  color={COLORS.LIGHT_GRAY}
+                  style={styles.progressLabelProfile}
+                >
+                  プロフィール入力
+                </Text>
+              </Block>
+              <Block
+                style={[
+                  styles.progressBar,
+                  { backgroundColor: COLORS.HIGHLIGHT_GRAY },
+                ]}
+              />
+              <Block
+                style={[
+                  styles.progressCircle,
+                  { backgroundColor: COLORS.HIGHLIGHT_GRAY },
+                ]}
+                center
+              >
+                <Text size={28} color={COLORS.LIGHT_GRAY}>
+                  2
+                </Text>
+                <Text
+                  size={14}
+                  color={COLORS.LIGHT_GRAY}
+                  style={styles.progressLabelRoom}
+                >
+                  悩みを投稿する
+                </Text>
+              </Block>
+            </Block>
+            <Block center style={styles.progressLabelContainer}>
+              {/* <Text
           size={14}
           color={COLORS.LIGHT_GRAY}
           style={styles.progressLabelProfile}
         >
           プロフィール入力
         </Text> */}
-        {/* <Text
+              {/* <Text
           size={14}
           color={COLORS.LIGHT_GRAY}
           style={styles.progressLabelRoom}
         >
           悩みを投稿する
         </Text> */}
-      </Block>
-      <Block style={styles.userNameContainer}>
-        <Block row space="between" style={styles.userNameLabels}>
-          <Text size={16} color={COLORS.BLACK}>
-            ユーザーネーム
-          </Text>
-          <Text size={12} color={COLORS.LIGHT_GRAY}>
-            {username.length}/{maxUsernameLength}
-          </Text>
-        </Block>
-        <TextInput
-          multiline
-          numberOfLines={4}
-          editable
-          maxLength={maxUsernameLength}
-          value={username}
-          onChangeText={setUsername}
-          returnKeyType="done"
-          blurOnSubmit
-          // textContentType="username"
-          style={[
-            styles.textArea,
-            { borderColor: isFocusInputUsername ? COLORS.BROWN : COLORS.WHITE },
-          ]}
-          onSubmitEditing={() => {
-            Keyboard.dismiss();
-          }}
-          onFocus={() => {
-            setIsFocusInputUsername(true);
-          }}
-        />
-      </Block>
-      <Block style={styles.genderContainer}>
-        <Block space="between" style={styles.userNameLabels}>
-          <Text size={16} color={COLORS.BLACK}>
-            性別
-          </Text>
-        </Block>
-        <Block row space="between" style={[styles.genderButtons]}>
-          <GenderInputButtonList
-            genderKeys={genderKeys}
-            genderKey={genderKey}
-            setGenderKey={setGenderKey}
-            style={{ height: 48 }}
-            renderItem={(label, isSelected) => {
-              return (
-                <Block
-                  style={[
-                    styles.genderSelectButton,
-                    {
-                      backgroundColor: isSelected ? COLORS.BROWN : COLORS.WHITE,
-                    },
-                  ]}
-                >
-                  <Text
-                    size={16}
-                    bold
-                    color={isSelected ? COLORS.WHITE : COLORS.BLACK}
-                  >
-                    {label}
+            </Block>
+            <Block style={styles.userNameContainer}>
+              <Block row space="between" style={styles.userNameLabels}>
+                <Text size={16} color={COLORS.BLACK}>
+                  ユーザーネーム
+                </Text>
+                <Text size={12} color={COLORS.LIGHT_GRAY}>
+                  {username.length}/{maxUsernameLength}
+                </Text>
+              </Block>
+              <TextInput
+                multiline
+                numberOfLines={4}
+                editable
+                maxLength={maxUsernameLength}
+                value={username}
+                onChangeText={setUsername}
+                returnKeyType="done"
+                blurOnSubmit
+                // textContentType="username"
+                style={[
+                  styles.textArea,
+                  {
+                    borderColor: isFocusInputUsername
+                      ? COLORS.BROWN
+                      : COLORS.WHITE,
+                  },
+                ]}
+                onSubmitEditing={() => {
+                  Keyboard.dismiss();
+                }}
+                onFocus={() => {
+                  setIsFocusInputUsername(true);
+                }}
+              />
+            </Block>
+            <Block style={styles.genderContainer}>
+              <Block space="between" style={styles.userNameLabels}>
+                <Text size={16} color={COLORS.BLACK}>
+                  性別
+                </Text>
+              </Block>
+              <Block row space="between" style={[styles.genderButtons]}>
+                <GenderInputButtonList
+                  genderKeys={genderKeys}
+                  genderKey={genderKey}
+                  setGenderKey={setGenderKey}
+                  style={{ height: 48 }}
+                  renderItem={(label, isSelected) => {
+                    return (
+                      <Block
+                        style={[
+                          styles.genderSelectButton,
+                          {
+                            backgroundColor: isSelected
+                              ? COLORS.BROWN
+                              : COLORS.WHITE,
+                          },
+                        ]}
+                      >
+                        <Text
+                          size={16}
+                          bold
+                          color={isSelected ? COLORS.WHITE : COLORS.BLACK}
+                        >
+                          {label}
+                        </Text>
+                      </Block>
+                    );
+                  }}
+                />
+              </Block>
+            </Block>
+
+            <Block style={styles.jobContainer}>
+              <Block space="between" style={styles.userNameLabels}>
+                <Text size={16} color={COLORS.BLACK}>
+                  職業
+                </Text>
+              </Block>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  setIsOpenJobModal(true);
+                }}
+              >
+                <Block row center space="between" style={styles.selectJob}>
+                  <Text size={16} color={COLORS.BLACK}>
+                    {job ? job.label : "選択してください"}
                   </Text>
+                  <Icon
+                    name="chevron-right"
+                    family="Feather"
+                    size={32}
+                    color={COLORS.LIGHT_GRAY}
+                  />
                 </Block>
-              );
+              </TouchableOpacity>
+
+              <MenuModal
+                isOpen={isOpenJobModal}
+                setIsOpen={setIsOpenJobModal}
+                items={jobModalItems}
+              />
+            </Block>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </Block>
+
+      <Block center style={styles.footer}>
+        <LinearGradient
+          colors={[COLORS.BEIGE_TRANSPARENT, COLORS.BEIGE]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        >
+          <Block
+            style={{
+              height: 32,
+              width: width - 14, // スクロールバー分のスペース
             }}
           />
-        </Block>
-      </Block>
-
-      <Block style={styles.jobContainer}>
-        <Block space="between" style={styles.userNameLabels}>
-          <Text size={16} color={COLORS.BLACK}>
-            職業
-          </Text>
-        </Block>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => {
-            setIsOpenJobModal(true);
-          }}
-        >
-          <Block row center space="between" style={styles.selectJob}>
-            <Text size={16} color={COLORS.BLACK}>
-              {job ? job.label : "選択してください"}
+        </LinearGradient>
+        <Block style={styles.buttonContainer}>
+          <RoundButton
+            buttonColor={COLORS.BROWN}
+            iconName={""}
+            iconFamily={""}
+            label="次へ"
+            onPress={onPressNext}
+            disabled={!canSignup}
+          />
+          <Block style={styles.buttonAnnotation}>
+            <Text size={14} color={COLORS.GRAY}>
+              後でプロフィールは修正できます
             </Text>
-            <IconExtra
-              name="chevron-right"
-              family="Feather"
-              size={32}
-              color={COLORS.LIGHT_GRAY}
-            />
           </Block>
-        </TouchableOpacity>
-
-        <MenuModal
-          isOpen={isOpenJobModal}
-          setIsOpen={setIsOpenJobModal}
-          items={jobModalItems}
-        />
-      </Block>
-
-      <Block center style={styles.buttonContainer}>
-        <RoundButton
-          buttonColor={COLORS.BROWN}
-          iconName={""}
-          iconFamily={""}
-          label="次へ"
-          onPress={onPressNext}
-          disabled={!canSignup}
-        />
-        <Block style={styles.button}>
-          <Text size={14} color={COLORS.GRAY}>
-            後でプロフィールは修正できます
-          </Text>
         </Block>
       </Block>
-    </TouchableOpacity>
+    </>
   );
 };
 
+const bottomButtonHeight = 128;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -318,12 +358,26 @@ const styles = StyleSheet.create({
     width: width - 64,
     height: 40,
   },
-  buttonContainer: {
-    width: width - 40,
-    position: "absolute",
-    bottom: 48,
-  },
+  // buttonContainer: {
+  //   width: width - 40,
+  //   position: "absolute",
+  //   bottom: 48,
+  // },
   button: {
+    paddingTop: 24,
+  },
+  footer: {
+    bottom: 0,
+    width: width,
+    alignItems: "center",
+    position: "absolute",
+  },
+  buttonContainer: {
+    paddingBottom: 48,
+    backgroundColor: COLORS.BEIGE,
+    alignItems: "center",
+  },
+  buttonAnnotation: {
     paddingTop: 24,
   },
 });

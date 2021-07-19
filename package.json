@@ -73,7 +73,8 @@
     "react-native-screens": "~2.10.1",
     "react-native-siren": "0.0.3",
     "react-native-splash-screen": "^3.2.0",
-    "react-native-svg": "^12.1.0",
+    "react-native-svg": "^12.1.1",
+    "react-native-svg-transformer": "^0.14.3",
     "react-native-svg-uri": "^1.2.3",
     "react-native-tab-view": "^2.15.1",
     "react-native-tiny-toast": "^1.0.7",
@@ -83,6 +84,7 @@
     "react-native-web": "^0.15.0",
     "react-navigation-tabs": "^2.9.0",
     "reconnecting-websocket": "^4.4.0",
+    "svg-parser": "^2.0.4",
     "typescript": "^4.1.4"
   },
   "devDependencies": {

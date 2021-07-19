@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import { COLORS } from "src/constants/theme";
 
 type Props = {
@@ -38,7 +38,7 @@ export const ProfileModal: React.FC<Props> = (props) => {
             </Text>
           </Block>
           <Block flex={0.4} center>
-            <Avatar size={75} image={userImage} border={false} />
+            <Avatar size={75} imageUri={userImage} hasBorder={false} />
           </Block>
           <Block flex={0.4} center>
             <Text bold size={15} color={COLORS.GRAY}>

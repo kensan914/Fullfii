@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import { Block, Text } from "galio-framework";
-import { StyleSheet, TouchableHighlight, Image, TouchableOpacity } from "react-native";
-import SvgUri from "react-native-svg-uri";
+import {
+  StyleSheet,
+  TouchableHighlight,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 
-import IconExtra from "src/components/atoms/Icon";
+import { SvgUri } from "src/components/atoms/SvgUri";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
+import { detailSvg } from "src/constants/svgSources";
 
 type Props = {
   room: Room;
@@ -24,11 +30,8 @@ export const RoomCard: React.FC<Props> = (props) => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const {
-    isMaxed,
-    participantIconName,
-    participantIconColor,
-  } = useRoomParticipantsNum(room);
+  const { isMaxed, participantIconName, participantIconColor } =
+    useRoomParticipantsNum(room);
   const formattedGender = formatGender(
     room.owner.gender,
     room.owner.isSecretGender
@@ -67,7 +70,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                 <Block row>
                   <Avatar
                     size={32}
-                    image={room.owner.image}
+                    imageUri={room.owner.image}
                     style={styles.avatar}
                   />
                   <Block column style={styles.userInfo}>
@@ -108,7 +111,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                 <Block row>
                   <Block flex row style={styles.member}>
                     <Block>
-                      <IconExtra
+                      <Icon
                         name={participantIconName}
                         family="Ionicons"
                         size={32}
@@ -131,16 +134,10 @@ export const RoomCard: React.FC<Props> = (props) => {
                 setIsOpen(true);
               }}
             >
-              {/* <IconExtra
-                name="eye-off"
-                family="Feather"
-                size={32}
-                color={COLORS.BROWN}
-              /> */}
               <SvgUri
                 width={32}
                 height={32}
-                source={require("src/assets/icons/detail.svg")}
+                source={detailSvg}
                 fill={COLORS.BROWN}
               />
             </TouchableOpacity>

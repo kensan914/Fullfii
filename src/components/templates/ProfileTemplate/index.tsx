@@ -1,6 +1,7 @@
 import React from "react";
+import { Button} from "galio-framework";
 import { StyleSheet } from "react-native";
-import { Button } from "galio-framework";
+
 
 type Props = {
   onTransitionProfileEditor: () => void;

@@ -32,7 +32,7 @@ export const SignupScreen: React.FC = () => {
   const jobModalItems = profileState.profileParams?.job
     ? Object.values(profileState.profileParams.job).map((jobObj) => {
         return {
-          title: jobObj.label,
+          label: jobObj.label,
           onPress: () => {
             setJob(jobObj);
             setIsOpenJobModal(false);
