@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
+
 import { COLORS } from "src/constants/theme";
 import { Icon } from "src/components/atoms/Icon";
-import { PrivateRoomDemoModal } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomDemoModal";
+import { FavoriteUserDemoModal } from "src/components/templates/ProfileTemplate/molecules/FavoriteUserDemoModal";
 
-export const ListPrivateUserEmpty = () => {
+export const FavoriteUserListEmpty: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <Block center>
+        <Block>
+          <Text size={14} bold color={COLORS.LIGHT_GRAY}>
+            また相談したい人リストは0人です
+          </Text>
+        </Block>
         <Button
           shadowless={true}
           color="transparent"
@@ -21,11 +27,11 @@ export const ListPrivateUserEmpty = () => {
         >
           <Icon name="info" family="Feather" size={26} color={COLORS.BROWN} />
           <Text size={14} bold color={COLORS.BROWN} style={styles.textHeight}>
-            プライベートルームとは？
+            また相談したい人リストとは？
           </Text>
         </Button>
       </Block>
-      <PrivateRoomDemoModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <FavoriteUserDemoModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 };

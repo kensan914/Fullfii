@@ -129,6 +129,9 @@ export const ProfileIoTs = t.type({
   job: JobIoTs,
   introduction: t.string,
   image: t.union([t.string, t.null]),
+  numOfOwner: t.number,
+  numOfParticipated: t.number,
+  isPrivateProfile: t.boolean,
 });
 export const MeProfileIoTs = t.intersection([
   t.type({

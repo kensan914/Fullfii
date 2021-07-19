@@ -1,44 +1,29 @@
-import React, { useState } from "react";
-import { StyleSheet, Image } from "react-native";
+import React from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { Block, Text, Button } from "galio-framework";
+
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
-import IconExtra from "src/components/atoms/Icon";
-import { ToTalkUserListItem } from "src/components/templates/ProfileTemplate/organisms/ToTalkUserListItem";
-import { ListOtherUserEmpty } from "src/components/templates/ProfileTemplate/organisms/ListOtherUserEmpty";
-import { ScrollView } from "react-native-gesture-handler";
-import { TALK_LIST_DEMO_IMG } from "src/constants/imagePath";
-import Avatar from "src/components/atoms/Avatar";
-
-type userInfo = {
-  name: string;
-  gender: string;
-  job: string;
-  image: string;
-  sumOfTalkedRoom: number;
-  sumOfListenedRoom: number;
-};
-type wantToTalkUsers = {
-  name: string;
-  image: string;
-}[];
+import { Avatar } from "src/components/atoms/Avatar";
+import { MeProfile, Profile } from "src/types/Types.context";
+import { formatGender } from "src/utils";
+import { FavoriteUserList } from "src/components/templates/ProfileTemplate/organisms/FavoriteUserList";
 
 type Props = {
+  meProfile: MeProfile;
+  favoriteUsers: Profile[];
   onTransitionProfileEditor: () => void;
-  userInfo: userInfo;
-  wantToTalkUsers: wantToTalkUsers;
 };
 export const ProfileTemplate: React.FC<Props> = (props) => {
-  const [isList, setIsList] = useState(true);
+  const { meProfile, onTransitionProfileEditor, favoriteUsers } = props;
 
-  const { onTransitionProfileEditor, userInfo, wantToTalkUsers } = props;
   return (
     <ScrollView style={styles.container}>
       <Block flex>
         <Block row style={styles.profilePostBox}>
           <Avatar
             size={84}
-            // image={}
+            imageUri={meProfile.image}
             style={styles.profileImage}
           />
           <Block row flex style={styles.postContents}>
@@ -51,7 +36,7 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
                 size={16}
                 style={styles.textHeight}
               >
-                {userInfo.sumOfTalkedRoom}
+                {meProfile.numOfOwner}
               </Text>
               <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
                 話した
@@ -65,7 +50,7 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
                 color={COLORS.BLACK}
                 style={styles.textHeight}
               >
-                {userInfo.sumOfListenedRoom}
+                {meProfile.numOfParticipated}
               </Text>
               <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
                 聞いた
@@ -74,11 +59,14 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
           </Block>
         </Block>
         <Block style={styles.profileInfoBox}>
-          <Text size={16} color={COLORS.BLACK} style={styles.textHeight}>
-            {userInfo.name}
+          <Text bold size={16} color={COLORS.BLACK} style={styles.textHeight}>
+            {meProfile.name}
           </Text>
           <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
-            性別：{userInfo.gender} / 職業：{userInfo.job}
+            性別：
+            {formatGender(meProfile.gender, meProfile.isSecretGender).label}
+            {"   |   "}
+            職業：{meProfile.job.label}
           </Text>
         </Block>
         <Button
@@ -100,18 +88,7 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
           </Text>
         </Block>
         <Block style={styles.postBody}>
-          {isList ? (
-            wantToTalkUsers.map((wantToTalkUsers) => {
-              return (
-                <ToTalkUserListItem
-                  name={wantToTalkUsers.name}
-                  image={wantToTalkUsers.image}
-                />
-              );
-            })
-          ) : (
-            <ListOtherUserEmpty />
-          )}
+          <FavoriteUserList users={favoriteUsers} />
         </Block>
       </Block>
     </ScrollView>
