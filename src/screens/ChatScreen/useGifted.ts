@@ -6,9 +6,10 @@ import { RoomMemberCollection } from "src/types/Types";
 import { AllMessages } from "src/types/Types.context";
 
 type ConvertMessagesToGifted = (messages: AllMessages) => IMessage[];
-type UseGifted = (
-  roomMemberCollection: RoomMemberCollection
-) => { giftedMe: User; convertMessagesToGifted: ConvertMessagesToGifted };
+type UseGifted = (roomMemberCollection: RoomMemberCollection) => {
+  giftedMe: User;
+  convertMessagesToGifted: ConvertMessagesToGifted;
+};
 export const useGifted: UseGifted = (roomMemberCollection) => {
   const profileState = useProfileState();
   const me = profileState.profile;
@@ -26,7 +27,16 @@ export const useGifted: UseGifted = (roomMemberCollection) => {
    */
   const convertMessagesToGifted: ConvertMessagesToGifted = (messages) => {
     const _giftedMessages: IMessage[] = [...messages]
-      .reverse()
+      .sort((_messageA, _messageB) => {
+        // オンライン/オフライン含めてソート
+        if (_messageA.time > _messageB.time) {
+          return -1;
+        } else if (_messageA.time < _messageB.time) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
       .map((_message) => {
         // normal message
         if ("senderId" in _message) {
