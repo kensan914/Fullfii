@@ -35,7 +35,7 @@ export const ImageModal: React.FC<Props> = (props) => {
         <ImageBackground
           source={imageSource}
           style={styles.informationImage}
-          imageStyle={{ borderRadius: 20 }}
+          imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
         />
         <TouchableOpacity style={styles.closeIcon} onPress={close}>
           <Icon
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   titleContainer: {
-    marginTop: 24,
+    marginTop: 32,
   },
   subTitleContainer: {
     marginTop: 16,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
-import { Block, Input, Text } from "galio-framework";
+import { StyleSheet, TextInput, Switch } from "react-native";
+import { Block, Input, Text,  } from "galio-framework";
 
 import {
   FormattedGender,
@@ -43,13 +43,14 @@ export const InputBlock: React.FC<InputBlockProps> = (props) => {
 
     case "InputGender":
       return (
-        <GenderInputBlock
-          value={value as FormattedGenderKey}
-          prevValue={prevValue as FormattedGenderKey}
-          setCanSubmit={setCanSubmit}
-          setValue={setValue}
-          formattedGender={formatGender(me.gender, me.isSecretGender)}
-        />
+        // <GenderInputBlock
+        //   value={value as FormattedGenderKey}
+        //   prevValue={prevValue as FormattedGenderKey}
+        //   setCanSubmit={setCanSubmit}
+        //   setValue={setValue}
+        //   formattedGender={formatGender(me.gender, me.isSecretGender)}
+        // />
+        <SwitchPublicDomain/>
       );
 
     case "InputIntroduction":
@@ -70,6 +71,29 @@ export const InputBlock: React.FC<InputBlockProps> = (props) => {
       return <></>;
   }
 };
+
+const SwitchPublicDomain = () => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(!isEnabled);
+  return(
+    <Block>
+      <Block row space="between" style={styles.switchContainer}>
+        <Text size={14} color={COLORS.BLACK}>公開</Text>
+        <Switch
+        trackColor={{ false: COLORS.HIGHLIGHT_GRAY, true: COLORS.PINK}}
+        ios_backgroundColor={COLORS.HIGHLIGHT_GRAY}
+        onValueChange={toggleSwitch}
+        value={isEnabled}
+      />
+      </Block>
+        <Text size={12} color={COLORS.BLACK} style={styles.explainSwitch}>
+        「公開しない」に設定する場合、他ユーザーはあなたの名前、性別、職業、写真のみ閲覧することができます{"\n"}
+        「公開する」に設定する場合、他ユーザーはあなたのプロフィール情報全てを閲覧することができます
+        </Text>
+    </Block>
+  )
+}
+
 
 type GenderInputBlockProps = {
   prevValue: FormattedGenderKey;
@@ -178,4 +202,12 @@ const styles = StyleSheet.create({
   genderInputButtonListContainer: {
     marginTop: 30,
   },
+  switchContainer: {
+    alignItems: "center",
+    height: 48,
+  },
+  explainSwitch:{
+    lineHeight: 16,
+    marginTop: 16
+  }
 });

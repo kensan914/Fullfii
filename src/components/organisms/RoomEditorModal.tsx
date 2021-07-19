@@ -16,8 +16,12 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
 
 import { COLORS } from "src/constants/theme";
+import {
+  MAN_AND_WOMAN_IMG,
+  MEN_IMG,
+  PRIVATE_IMG,
+} from "src/constants/imagePath";
 import { Icon } from "src/components/atoms/Icon";
-import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import { width } from "src/constants";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
@@ -390,6 +394,34 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                   </Block>
                 </ImageBackground>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.circleButton,
+                  isExcludeDifferentGender !== null && isExcludeDifferentGender
+                    ? { borderColor: COLORS.GREEN }
+                    : { borderColor: "#f4f8f7" },
+                ]}
+                onPress={() => {
+                  if (!canSetIsExcludeDifferentGender) {
+                    Alert.alert(
+                      ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
+                    );
+                  } else {
+                    setIsExcludeDifferentGender(true);
+                  }
+                }}
+              >
+                <ImageBackground
+                  source={PRIVATE_IMG}
+                  style={styles.disclosureRangeImage}
+                >
+                  <Block style={styles.disclosureRangeText}>
+                    <Text size={10} bold>
+                      プライベート
+                    </Text>
+                  </Block>
+                </ImageBackground>
+              </TouchableOpacity>
             </Block>
             <Block center style={styles.submitButtonContainer}>
               <Button
@@ -553,7 +585,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   circleButtons: {
-    paddingHorizontal: 64,
+    paddingHorizontal: 16,
     marginBottom: 32,
   },
   circleButton: {
