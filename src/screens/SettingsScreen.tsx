@@ -1,10 +1,5 @@
-import React, {useState} from "react";
-import {
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { Block, theme, Text, Button } from "galio-framework";
 import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from "@react-navigation/core";
@@ -15,17 +10,15 @@ import {
   USER_POLICY_URL,
   VERSION,
   CONTACT_US_URL,
-  ACCOUNT_DELETION_URL,
   PRIVACY_POLICY_URL,
   ADMOB_BANNER_HEIGHT,
   ADMOB_BANNER_WIDTH,
 } from "src/constants/env";
 import { OnPress } from "src/types/Types";
 import { COLORS } from "src/constants/theme";
+import { width } from "src/constants";
 
-const { width } = Dimensions.get("screen");
-
-const Settings: React.FC = () => {
+export const SettingsScreen: React.FC = () => {
   const _handleOpenWithWebBrowser = () => {
     WebBrowser.openBrowserAsync(USER_POLICY_URL);
   };
@@ -38,19 +31,15 @@ const Settings: React.FC = () => {
     WebBrowser.openBrowserAsync(CONTACT_US_URL);
   };
 
-  const _handleOpenWithWebBrowserAccountDeletion = () => {
-    WebBrowser.openBrowserAsync(ACCOUNT_DELETION_URL);
-  };
-
   const navigation = useNavigation();
-  const [openFirstContent, setOpenFirstContent] = useState(false)
-  const [openSecondContent, setOpenSecondContent] = useState(false)
-  const [openThirdContent, setOpenThirdContent] = useState(false)
-  const [openFourthContent, setOpenFourthContent] = useState(false)
+  const [openFirstContent, setOpenFirstContent] = useState(false);
+  const [openSecondContent, setOpenSecondContent] = useState(false);
+  const [openThirdContent, setOpenThirdContent] = useState(false);
+  const [openFourthContent, setOpenFourthContent] = useState(false);
 
   return (
     <Block flex center style={{ backgroundColor: COLORS.BEIGE, width: width }}>
-      <ScrollView >
+      <ScrollView>
         <SettingsTitle title="Fullfiiについて" />
         <SettingsLabel title="バージョン" content={VERSION} />
         <SettingsCard
@@ -86,19 +75,20 @@ const Settings: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openFirstContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
-              setOpenFirstContent(!openFirstContent)
+              setOpenFirstContent(!openFirstContent);
             }}
           />
-          {
-            openFirstContent ?
-              <Block style={styles.hiddenContent}>
-                <Text size={14} color={COLORS.GRAY} style={styles.hiddenContentText}>
+          {openFirstContent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
                 ルームを通じて自分の悩みを話したり、相手の悩みを聞くことができるアプリです
-                </Text>
-              </Block>
-              :
-              null
-          }
+              </Text>
+            </Block>
+          ) : null}
         </>
         <>
           <SettingsCard
@@ -106,20 +96,21 @@ const Settings: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openSecondContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
-              setOpenSecondContent(!openSecondContent)
+              setOpenSecondContent(!openSecondContent);
             }}
           />
-          {
-            openSecondContent ?
-              <Block style={styles.hiddenContent}>
-                <Text size={14} color={COLORS.GRAY} style={styles.hiddenContentText}>
+          {openSecondContent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
                 悩み相談を行うトークルームをルームと呼びます{"\n"}
                 ルーム内で話した内容は他の人には表示されません
-                </Text>
-              </Block>
-              :
-              null
-          }
+              </Text>
+            </Block>
+          ) : null}
         </>
         <>
           <SettingsCard
@@ -127,53 +118,53 @@ const Settings: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openThirdContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
-              setOpenThirdContent(!openThirdContent)
+              setOpenThirdContent(!openThirdContent);
             }}
           />
-          {
-            openThirdContent ?
-              <Block style={styles.hiddenContent}>
-                <Text size={14} color={COLORS.GRAY} style={styles.hiddenContentText}>
-                ①ホーム画面またはマイトーク画面下部の「悩みを話すボタン」を押し、相談したいことを記載してルームを作成します{"\n"}
-                ②他の人があなたのルームに入ってメッセージを送信すると、あなたに通知が届きます{"\n"}
+          {openThirdContent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                ①ホーム画面またはマイトーク画面下部の「悩みを話すボタン」を押し、相談したいことを記載してルームを作成します
+                {"\n"}
+                ②他の人があなたのルームに入ってメッセージを送信すると、あなたに通知が届きます
+                {"\n"}
                 ③悩みを話し終えたら、トークの右上から「終了」ボタンを押して悩み相談を終了しましょう
-                </Text>
-              </Block>
-              :
-              null
-          }
+              </Text>
+            </Block>
+          ) : null}
         </>
-        <Block style={{marginBottom: 40}}>
+        <Block style={{ marginBottom: 40 }}>
           <SettingsCard
             title="悩みを聞くには？"
             titleColor={COLORS.GRAY}
             iconName={openFourthContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
-              setOpenFourthContent(!openFourthContent)
+              setOpenFourthContent(!openFourthContent);
             }}
           />
-          {
-            openFourthContent ?
-              <Block style={styles.hiddenContent}>
-                <Text size={14} color={COLORS.GRAY} style={styles.hiddenContentText}>
-                ①ホーム画面に一覧で表示されているルームの中から、悩みに共感できそうなルームを選んで「聞いてみる！」ボタンを押します{"\n"}
+          {openFourthContent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                ①ホーム画面に一覧で表示されているルームの中から、悩みに共感できそうなルームを選んで「聞いてみる！」ボタンを押します
+                {"\n"}
                 ②ルームに入室したら相手の悩みを聞いてあげます{"\n"}
                 ③相談が終了したらトーク画面右上の「退室」ボタンを押して退室しましょう
-                </Text>
-              </Block>
-              :
-              null
-          }
+              </Text>
+            </Block>
+          ) : null}
         </Block>
       </ScrollView>
-      {/* <Block style={styles.adMobBanner}>
-        {!isExpo && <Admob adUnitId={ADMOB_UNIT_ID_SETTINGS} />}
-      </Block> */}
     </Block>
   );
 };
-
-export default Settings;
 
 const SettingsTitle: React.FC<{ title: string }> = (props) => {
   const { title } = props;
@@ -189,26 +180,6 @@ const SettingsTitle: React.FC<{ title: string }> = (props) => {
   );
 };
 
-const HiddenCard: React.FC<{
-  openStatus: boolean;
-}> = (props) => {
-  const {openStatus} = props
-  return (
-    <>
-      {
-        openStatus ?
-          <Block style={styles.hiddenContent}>
-            <Text>
-            ルームを通じて、自分の悩みを話す、相手の悩みを聞くことができるアプリです
-            </Text>
-          </Block>
-          :
-          null
-      }
-    </>
-  )
-}
-
 const SettingsCard: React.FC<{
   title: string;
   titleColor: string;
@@ -218,13 +189,9 @@ const SettingsCard: React.FC<{
   const { title, titleColor, iconName, onPress } = props;
   return (
     <Button shadowless={true} onPress={onPress} style={styles.settingsInner}>
-      <Block row space="between" style={styles.settingsCard} >
+      <Block row space="between" style={styles.settingsCard}>
         <Block center>
-          <Text
-            bold
-            size={14}
-            color={titleColor}
-          >
+          <Text bold size={14} color={titleColor}>
             {title}
           </Text>
         </Block>
@@ -237,8 +204,8 @@ const SettingsCard: React.FC<{
           />
         </Block>
       </Block>
-    <Hr h={1} color="whitesmoke" />
-  </Button>
+      <Hr h={1} color="whitesmoke" />
+    </Button>
   );
 };
 
@@ -248,12 +215,12 @@ const SettingsLabel: React.FC<{ title: string; content: string }> = (props) => {
     <>
       <Block flex row space="between" style={styles.settingsCard}>
         <Block center>
-          <Text bold size={14} color={COLORS.GRAY} >
+          <Text bold size={14} color={COLORS.GRAY}>
             {title}
           </Text>
         </Block>
         <Block style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text size={14} color={COLORS.GRAY} >
+          <Text size={14} color={COLORS.GRAY}>
             {content}
           </Text>
         </Block>
@@ -297,9 +264,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     backgroundColor: COLORS.WHITE,
-    height: "auto"
+    height: "auto",
   },
   hiddenContentText: {
-    lineHeight: 20
-  }
+    lineHeight: 20,
+  },
 });

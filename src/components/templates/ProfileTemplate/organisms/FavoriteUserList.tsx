@@ -16,6 +16,7 @@ export const FavoriteUserList: React.FC<Props> = (props) => {
         {users.map((user) => {
           return (
             <FavoriteUserListItem
+              key={user.id}
               name={user.name}
               ProfileImageUri={user.image}
             />

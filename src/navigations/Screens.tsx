@@ -5,7 +5,7 @@ import SafeAreaView from "react-native-safe-area-view";
 import { Header } from "src/components/organisms/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
 import { ProfileInputScreen } from "src/screens/ProfileInputScreen";
-import SettingsScreen from "src/screens/Settings";
+import { SettingsScreen } from "src/screens/SettingsScreen";
 import AccountDeleteScreen from "src/screens/AccountDelete";
 import {
   useAuthState,
@@ -25,7 +25,6 @@ import { AttManager } from "src/screens/AttManager";
 import { SignupScreen } from "src/screens/signup/SignupScreen";
 import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
-import { ProfileScreen } from "src/screens/ProfileScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 

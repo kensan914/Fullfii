@@ -27,16 +27,7 @@ export const useGifted: UseGifted = (roomMemberCollection) => {
    */
   const convertMessagesToGifted: ConvertMessagesToGifted = (messages) => {
     const _giftedMessages: IMessage[] = [...messages]
-      .sort((_messageA, _messageB) => {
-        // オンライン/オフライン含めてソート
-        if (_messageA.time > _messageB.time) {
-          return -1;
-        } else if (_messageA.time < _messageB.time) {
-          return 1;
-        } else {
-          return 0;
-        }
-      })
+      .reverse()
       .map((_message) => {
         // normal message
         if ("senderId" in _message) {
