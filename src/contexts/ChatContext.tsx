@@ -213,19 +213,17 @@ const chatReducer = (
       ) {
         // WSの重複を防ぐ
         closeWsSafely(action.ws);
-        return { ...prevState };
       } else {
         _talkingRoom.ws = action.ws;
-        _talkingRoom.isStart = true;
-
-        _talkingRoomCollection[action.roomId] = _talkingRoom;
-
-        asyncStoreTalkingRoomCollection(_talkingRoomCollection);
-        return {
-          ...prevState,
-          talkingRoomCollection: _talkingRoomCollection,
-        };
       }
+
+      _talkingRoom.isStart = true;
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
     }
 
     case "RESTART_TALK": {

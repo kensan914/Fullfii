@@ -35,6 +35,7 @@ import { useGifted } from "src/screens/ChatScreen/useGifted";
 import { useAuthState } from "src/contexts/AuthContext";
 import { width } from "src/constants";
 import { useDomState } from "src/contexts/DomContext";
+import { ALERT_MESSAGES } from "src/constants/alertMessages";
 
 type Props = {
   roomMemberCollection: RoomMemberCollection;
@@ -45,6 +46,7 @@ type Props = {
   isEnd: boolean;
   openProfileModal: (userId: string) => void;
   setIsOpenNotificationReminderModal: Dispatch<boolean>;
+  isStart: boolean;
 };
 const ChatBody: React.FC<Props> = (props) => {
   const {
@@ -56,6 +58,7 @@ const ChatBody: React.FC<Props> = (props) => {
     isEnd,
     openProfileModal,
     setIsOpenNotificationReminderModal,
+    isStart,
   } = props;
 
   const authState = useAuthState();
@@ -115,13 +118,16 @@ const ChatBody: React.FC<Props> = (props) => {
       const _giftedMessage = _giftedMessages[0];
 
       if (isEnd) {
-        Alert.alert(`このルームは終了されています`);
+        Alert.alert(...ALERT_MESSAGES["CANNOT_SEND_MSG_ALREADY_END_ROOM"]);
         return;
       } else if (Object.keys(roomMemberCollection).length <= 1) {
-        Alert.alert("まだ相手が参加していません");
+        Alert.alert(...ALERT_MESSAGES["CANNOT_SEND_MSG_NOT_EXIST_USER"]);
         return;
       } else if (includeUrl(_giftedMessage.text)) {
-        Alert.alert("このメッセージは送信することができません");
+        Alert.alert(...ALERT_MESSAGES["CANNOT_SEND_MSG_INAPPROPRIATE"]);
+        return;
+      } else if (!isStart) {
+        Alert.alert(...ALERT_MESSAGES["CANNOT_SEND_MSG_NOT_START"]);
         return;
       }
 

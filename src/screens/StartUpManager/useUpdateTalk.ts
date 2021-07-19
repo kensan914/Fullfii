@@ -90,6 +90,14 @@ export const useUpdateTalk: UseUpdateTalk = () => {
         if (_prevTalkingRoom.isStart) {
           connectWsChat(_prevTalkingRoom.id, false);
         }
+
+        // HACK: トーク開始時isStartがtrueにならなかった場合の対処. (☚現在原因を調査中)
+        if (
+          !_prevTalkingRoom.isStart &&
+          _prevTalkingRoom.participants.length > 0
+        ) {
+          connectWsChat(_prevTalkingRoom.id, true);
+        }
       });
 
       // 参加者追加. quit時に自身が作成したルームに誰かが参加してくれた場合.

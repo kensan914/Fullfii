@@ -12,6 +12,10 @@ type AlertMessages = {
   CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER: AlertMessagesValue;
   SEND_TABOO: AlertMessagesValue;
   OWNER_LEAVE_PARTICIPANT: AlertMessagesValue;
+  CANNOT_SEND_MSG_ALREADY_END_ROOM: AlertMessagesValue;
+  CANNOT_SEND_MSG_NOT_EXIST_USER: AlertMessagesValue;
+  CANNOT_SEND_MSG_INAPPROPRIATE: AlertMessagesValue;
+  CANNOT_SEND_MSG_NOT_START: AlertMessagesValue;
 };
 /**
  * アラートメッセージのみこの定数で管理. 確認モーダルとしてのアラートなどは実行元で管理
@@ -43,6 +47,16 @@ export const ALERT_MESSAGES: AlertMessages = {
   OWNER_LEAVE_PARTICIPANT: [
     "さんを退室させますか？",
     "相手をブロックして強制的にルームから退出させます。相手には通知されません。",
+  ],
+  CANNOT_SEND_MSG_ALREADY_END_ROOM: ["このルームは終了されています", ""],
+  CANNOT_SEND_MSG_NOT_EXIST_USER: ["まだ相手が参加していません", ""],
+  CANNOT_SEND_MSG_INAPPROPRIATE: [
+    "このメッセージは送信することができません",
+    "",
+  ],
+  CANNOT_SEND_MSG_NOT_START: [
+    "トークが開始されていません",
+    "アプリを再起動しますと改善する場合があります。",
   ],
 };
 
