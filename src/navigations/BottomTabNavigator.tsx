@@ -1,6 +1,7 @@
 import React from "react";
 import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
 import { Header } from "src/components/organisms/Header";
@@ -21,9 +22,11 @@ import {
   mypageIconFocusSvg,
   mypageIconSvg,
 } from "src/constants/svgSources";
+import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
+  const TopTab = createMaterialTopTabNavigator();
   const Stack = createStackNavigator();
 
   const chatState = useChatState();
@@ -116,11 +119,29 @@ export const BottomTabNavigator: React.FC = () => {
             <Stack.Navigator>
               <Stack.Screen
                 name="Rooms"
-                component={RoomsScreen}
+                // component={RoomsScreen}
                 options={() => ({
                   header: () => <Header name={"Rooms"} />,
                 })}
-              />
+              >
+                {() => (
+                  <TopTab.Navigator
+                    tabBarOptions={{
+                      style: { backgroundColor: COLORS.BEIGE },
+                      indicatorStyle: {
+                        backgroundColor: COLORS.PINK,
+                        height: 3,
+                      },
+                    }}
+                  >
+                    <Tab.Screen name="ルーム一覧" component={RoomsScreen} />
+                    <Tab.Screen
+                      name="プライベート"
+                      component={PrivateRoomsScreen}
+                    />
+                  </TopTab.Navigator>
+                )}
+              </Stack.Screen>
             </Stack.Navigator>
           </Block>
         )}

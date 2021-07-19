@@ -16,6 +16,7 @@ import { COLORS } from "src/constants/theme";
 import { useDomDispatch } from "src/contexts/DomContext";
 import { width } from "src/constants";
 import { RouteName } from "src/types/Types";
+import { AddPrivateButton } from "src/components/organisms/AddPrivateButton";
 
 const SettingsButton: React.FC<{ style?: ViewStyle }> = (props) => {
   const { style } = props;
@@ -38,9 +39,18 @@ type Props = {
   white?: boolean;
   transparent?: boolean;
   roomId?: string;
+  isLeftTitle?: boolean;
 };
 export const Header: React.FC<Props> = (props) => {
-  const { back, title, name, white, transparent, roomId } = props;
+  const {
+    back,
+    title,
+    name,
+    white,
+    transparent,
+    roomId,
+    isLeftTitle = false,
+  } = props;
 
   const navigation = useNavigation();
   const domDispatch = useDomDispatch();
@@ -55,6 +65,7 @@ export const Header: React.FC<Props> = (props) => {
           key="TalkMenuButton"
           style={{ flexDirection: "row", justifyContent: "center" }}
         >
+          <AddPrivateButton />
           <LeaveParticipantMenu
             key="TalkMenuButton"
             roomId={roomId}
@@ -174,7 +185,7 @@ export const Header: React.FC<Props> = (props) => {
         style={[styles.navbar]}
         transparent={transparent}
         title={convertNameToTitle(name)}
-        titleStyle={[styles.title, { color: COLORS.GRAY }]}
+        titleStyle={[styles.title, isLeftTitle ? {} : { textAlign: "center" }]}
         right={renderRight()}
         rightStyle={{ flex: 0.3 }}
         left={renderLeft()}
@@ -192,7 +203,7 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
+    color: COLORS.GRAY,
   },
   navbar: {
     zIndex: 5,
