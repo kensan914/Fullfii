@@ -158,8 +158,8 @@ export const Header: React.FC<Props> = (props) => {
         return "ユーザネーム";
       case "InputGender":
         return "性別";
-      case "InputIntroduction":
-        return "今悩んでいること";
+      case "InputIsPrivateProfile":
+        return "公開範囲";
       case "Chat":
         if (title) return title;
         else return "トーク";

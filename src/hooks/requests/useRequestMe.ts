@@ -1,12 +1,18 @@
+import { AxiosError } from "axios";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { useState } from "react";
 import { Platform } from "react-native";
+
 import { BASE_URL } from "src/constants/env";
 import { useAuthState } from "src/contexts/AuthContext";
 import useAllContext from "src/contexts/ContextUtils";
 import { useProfileDispatch } from "src/contexts/ProfileContext";
 import requestAxios, { useAxios } from "src/hooks/useAxios";
-import { Request } from "src/types/Types";
+import {
+  PutGenderResData,
+  PutGenderResDataIoTs,
+  Request,
+} from "src/types/Types";
 import { MeProfile, MeProfileIoTs, Profile } from "src/types/Types.context";
 import { URLJoin } from "src/utils";
 import { alertDeleteAuth } from "src/utils/auth/crud";
@@ -51,12 +57,16 @@ export const useRequestGetMe: UseRequestGetMe = (additionalThenCallback) => {
 };
 
 type UseRequestPatchMe = (
-  additionalThenCallback?: (meProfile: MeProfile) => void
+  additionalThenCallback?: (meProfile: MeProfile) => void,
+  additionalCatchCallback?: (err: AxiosError) => void,
+  additionalFinallyCallback?: (() => void) | undefined
 ) => {
   requestPatchMe: Request;
 };
 export const useRequestPatchMe: UseRequestPatchMe = (
-  additionalThenCallback
+  additionalThenCallback,
+  additionalCatchCallback,
+  additionalFinallyCallback
 ) => {
   const authState = useAuthState();
   const profileDispatch = useProfileDispatch();
@@ -72,6 +82,12 @@ export const useRequestPatchMe: UseRequestPatchMe = (
         profileDispatch({ type: "SET_ALL", profile: meProfile });
 
         additionalThenCallback && additionalThenCallback(meProfile);
+      },
+      catchCallback: (err) => {
+        additionalCatchCallback && err && additionalCatchCallback(err);
+      },
+      finallyCallback: () => {
+        additionalFinallyCallback && additionalFinallyCallback();
       },
     }
   );
@@ -169,4 +185,46 @@ export const useRequestPatchBlockedAccount: UseRequestPatchBlockedAccount = (
     dynamicRequestPatchBlockedAccount,
     isLoadingRequestPatchBlockedAccount,
   };
+};
+
+type UseRequestPutGender = (
+  genderKey: string, // FormattedGenderKey
+  additionalThenCallback?: (resData: PutGenderResData) => void,
+  additionalCatchCallback?: (err: AxiosError) => void,
+  additionalFinallyCallback?: (() => void) | undefined
+) => {
+  requestPutGender: Request;
+};
+export const useRequestPutGender: UseRequestPutGender = (
+  genderKey,
+  additionalThenCallback,
+  additionalCatchCallback,
+  additionalFinallyCallback
+) => {
+  const authState = useAuthState();
+  const profileDispatch = useProfileDispatch();
+
+  const { request: requestPutGender } = useAxios(
+    URLJoin(BASE_URL, "me/gender"),
+    "put",
+    PutGenderResDataIoTs,
+    {
+      token: authState.token ? authState.token : "",
+      data: { key: genderKey },
+      thenCallback: (resData) => {
+        const _resData = resData as PutGenderResData;
+        profileDispatch({ type: "SET_ALL", profile: _resData.me });
+
+        additionalThenCallback && additionalThenCallback(_resData);
+      },
+      catchCallback: (err) => {
+        additionalCatchCallback && err && additionalCatchCallback(err);
+      },
+      finallyCallback: () => {
+        additionalFinallyCallback && additionalFinallyCallback();
+      },
+    }
+  );
+
+  return { requestPutGender };
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import { Block, theme } from "galio-framework";
 import { useNavigation } from "@react-navigation/native";
 
@@ -8,81 +8,62 @@ import {
   ErrorSubmitProfile,
   ProfileInputData,
   ProfileInputScreen,
-  RequestPatchProfile,
   SuccessSubmitProfile,
   ProfileInputNavigationProps,
-  RequestPutGender,
-  FormattedGenderKey,
 } from "src/types/Types";
-import { ProfileDispatch, TokenNullable } from "src/types/Types.context";
-
-const { width } = Dimensions.get("screen");
+import { width } from "src/constants";
+import {
+  useRequestPatchMe,
+  useRequestPutGender,
+} from "src/hooks/requests/useRequestMe";
 
 type SubmitProfileButtonProps = {
   screen: ProfileInputScreen;
   value: unknown;
   canSubmit: boolean;
-  token: TokenNullable;
-  profileDispatch: ProfileDispatch;
   setValidationText: React.Dispatch<string>;
-  requestPatchProfile: RequestPatchProfile;
-  requestPutGender: RequestPutGender;
 };
 export const ProfileSubmitButton: React.FC<SubmitProfileButtonProps> = (
   props
 ) => {
-  const {
-    screen,
-    value,
-    canSubmit,
-    token,
-    profileDispatch,
-    setValidationText,
-    requestPatchProfile,
-    requestPutGender,
-  } = props;
+  const { screen, value, canSubmit, setValidationText } = props;
+
   const navigation = useNavigation<ProfileInputNavigationProps>();
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const onSuccessSubmit: SuccessSubmitProfile = () => {
+    setIsLoading(false);
+    navigation.goBack();
+  };
+
+  const onErrorSubmit: ErrorSubmitProfile = (err) => {
+    setValidationText(err.response && err.response.data.name);
+    setIsLoading(false);
+  };
+
+  const { requestPatchMe } = useRequestPatchMe(onSuccessSubmit, onErrorSubmit);
+  const { requestPutGender } = useRequestPutGender(
+    typeof value === "string" ? value : "",
+    onSuccessSubmit,
+    onErrorSubmit
+  );
 
   const submit = () => {
     setIsLoading(true);
 
     if (screen === "InputGender") {
-      token &&
-        requestPutGender(
-          token,
-          value as FormattedGenderKey,
-          profileDispatch,
-          successSubmit,
-          errorSubmit
-        );
+      requestPutGender();
     } else {
       let data: ProfileInputData = {};
       if (screen === "InputName") {
         data = { name: value };
-      } else if (screen === "InputIntroduction") {
-        data = { introduction: value };
+      } else if (screen === "InputIsPrivateProfile") {
+        data = { is_private_profile: value };
       }
 
-      token &&
-        requestPatchProfile(
-          token,
-          data,
-          profileDispatch,
-          successSubmit,
-          errorSubmit
-        );
+      requestPatchMe({ data: data });
     }
-  };
-
-  const successSubmit: SuccessSubmitProfile = () => {
-    setIsLoading(false);
-    navigation.goBack();
-  };
-
-  const errorSubmit: ErrorSubmitProfile = (err) => {
-    setValidationText(err.response && err.response.data.name);
-    setIsLoading(false);
   };
 
   return (

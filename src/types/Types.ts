@@ -68,7 +68,7 @@ export type WorrySelectNavigationProps = StackNavigationProp<
 export type ProfileInputScreen =
   | "InputName"
   | "InputGender"
-  | "InputIntroduction";
+  | "InputIsPrivateProfile";
 
 export type RouteName =
   | (
