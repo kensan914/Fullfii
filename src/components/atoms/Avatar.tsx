@@ -1,20 +1,25 @@
 import React from "react";
 import { Block } from "galio-framework";
-import { Image, StyleSheet } from "react-native";
+import { Image, ImageStyle, StyleSheet } from "react-native";
 
-import Icon from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const Avatar = (props) => {
-  const { size, border, style, image } = props;
+type Props = {
+  size: number;
+  hasBorder?: boolean;
+  style?: ImageStyle;
+  imageUri?: string | null;
+};
+export const Avatar: React.FC<Props> = (props) => {
+  const { size, hasBorder, style, imageUri } = props;
   const avatarStyle = {
     height: size,
     width: size,
     borderRadius: size / 2,
   };
 
-  if (!image) {
+  if (!imageUri) {
     return (
       <Block
         style={[
@@ -35,7 +40,7 @@ const Avatar = (props) => {
         />
       </Block>
     );
-  } else if (border) {
+  } else if (hasBorder) {
     const additionalSize = 10;
     return (
       <Block
@@ -48,15 +53,13 @@ const Avatar = (props) => {
           },
         ]}
       >
-        <Image source={{ uri: image }} style={[avatarStyle, style]} />
+        <Image source={{ uri: imageUri }} style={[avatarStyle, style]} />
       </Block>
     );
   } else {
-    return <Image source={{ uri: image }} style={[avatarStyle, style]} />;
+    return <Image source={{ uri: imageUri }} style={[avatarStyle, style]} />;
   }
 };
-
-export default Avatar;
 
 const styles = StyleSheet.create({
   avatarContainer: {

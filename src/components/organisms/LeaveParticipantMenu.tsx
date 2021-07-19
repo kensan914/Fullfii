@@ -15,7 +15,7 @@ import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
 import { COLORS } from "src/constants/theme";
 import { useLeaveAndRecreateRoom } from "./ByeByeMenu/useLeaveAndRecreateRoom";
-import Icon from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { useRequestPatchBlockedAccount } from "src/hooks/requests/useRequestMe";
 
 type Props = {

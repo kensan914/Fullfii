@@ -15,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { RoomCardDemoModal } from "src/components/templates/signup/organisms/RoomCardDemoModal";
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
 import { ALERT_MESSAGES } from "src/constants/alertMessages";
@@ -60,7 +60,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
       <Block style={styles.header}>
         <TouchableOpacity style={styles.goBack} onPress={onPressBack}>
           <Block row center>
-            <IconExtra
+            <Icon
               name="chevron-left"
               family="Feather"
               size={32}
@@ -76,7 +76,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             <Text size={16} bold color={COLORS.BROWN}>
               後で作成する
             </Text>
-            <IconExtra
+            <Icon
               name="chevron-right"
               family="Feather"
               size={32}

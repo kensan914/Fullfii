@@ -48,9 +48,8 @@ function cacheImages(images: (string | number)[]): Promise<Asset>[] {
 }
 
 const App: React.FC = () => {
-  const [isFinishLoadingResources, setIsFinishLoadingResources] = useState(
-    false
-  );
+  const [isFinishLoadingResources, setIsFinishLoadingResources] =
+    useState(false);
   const [assets, setAssets] = useState<Assets>({});
 
   const loadResourcesAsync = async (): Promise<Asset[]> => {
@@ -89,9 +88,8 @@ const RootNavigator: React.FC<Props> = (props) => {
   const [status, setStatus] = useState<InitState<AuthStatus>>();
   const [token, setToken] = useState<InitState<string>>();
   const [profile, setProfile] = useState<InitState<MeProfile>>();
-  const [talkingRoomCollection, setTalkingRoomCollection] = useState<
-    InitState<TalkingRoomCollectionAsync>
-  >();
+  const [talkingRoomCollection, setTalkingRoomCollection] =
+    useState<InitState<TalkingRoomCollectionAsync>>();
   const [isBanned, setIsBanned] = useState<InitState<boolean>>();
 
   useEffect(() => {
@@ -149,8 +147,12 @@ const RootNavigator: React.FC<Props> = (props) => {
                 <DomProvider>
                   <GalioProvider theme={materialTheme}>
                     <StartUpManager>
-                      {Platform.OS === "ios" && (
+                      {Platform.OS === "ios" ? (
                         <StatusBar barStyle="dark-content" />
+                      ) : (
+                        // HACK: react-native-modal内でkeyboardを開くと意図せずavoidがかかる(Android). Androidのステータスバーを全面非表示
+                        // https://github.com/react-native-modal/react-native-modal/issues/344#issuecomment-629400548
+                        <StatusBar hidden />
                       )}
                       <Screens />
                       <Toast ref={(ref) => Toast.setRef(ref)} />

@@ -7,10 +7,10 @@ import {
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
-import Hr from "src/components/atoms/Hr";
-import Icon from "src/components/atoms/Icon";
+import { Hr } from "src/components/atoms/Hr";
+import { Icon } from "src/components/atoms/Icon";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
-import Avatar from "src/components/atoms/Avatar";
+import { Avatar } from "src/components/atoms/Avatar";
 import {
   useProfileState,
   useProfileDispatch,
@@ -129,35 +129,39 @@ export const ProfileEditorScreen: React.FC = () => {
           isOpen={isOpenJobModal}
           setIsOpen={setIsOpenJobModal}
           items={
-            profileState.profileParams?.job &&
-            Object.values(profileState.profileParams.job).map((jobObj) => {
-              return {
-                title: jobObj.label,
-                onPress: () => {
-                  if (authState.token) {
-                    authDispatch({ type: "SET_IS_SHOW_SPINNER", value: true });
-                    requestPatchProfile(
-                      authState.token,
-                      { job: jobObj.key },
-                      profileDispatch,
-                      () => {
-                        return void 0;
-                      },
-                      () => {
-                        return void 0;
-                      },
-                      () => {
+            profileState.profileParams?.job
+              ? Object.values(profileState.profileParams.job).map((jobObj) => {
+                  return {
+                    label: jobObj.label,
+                    onPress: () => {
+                      if (authState.token) {
                         authDispatch({
                           type: "SET_IS_SHOW_SPINNER",
-                          value: false,
+                          value: true,
                         });
+                        requestPatchProfile(
+                          authState.token,
+                          { job: jobObj.key },
+                          profileDispatch,
+                          () => {
+                            return void 0;
+                          },
+                          () => {
+                            return void 0;
+                          },
+                          () => {
+                            authDispatch({
+                              type: "SET_IS_SHOW_SPINNER",
+                              value: false,
+                            });
+                          }
+                        );
                       }
-                    );
-                  }
-                  setIsOpenJobModal(false);
-                },
-              };
-            })
+                      setIsOpenJobModal(false);
+                    },
+                  };
+                })
+              : []
           }
         />
 
@@ -190,9 +194,9 @@ export const ProfileEditorScreen: React.FC = () => {
                 }}
               >
                 <Avatar
-                  border
+                  hasBorder
                   size={150}
-                  image={user.image}
+                  imageUri={user.image}
                   style={styles.avatar}
                 />
               </Block>

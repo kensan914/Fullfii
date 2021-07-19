@@ -2,8 +2,8 @@ import React from "react";
 import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import SvgUri from "react-native-svg-uri";
 
+import { SvgUri } from "src/components/atoms/SvgUri";
 import { Header } from "src/components/organisms/Header";
 import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
@@ -14,6 +14,14 @@ import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
 import { MyRoomsRouteProp } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
+import {
+  chatIconFocusSvg,
+  chatIconSvg,
+  homeIconFocusSvg,
+  homeIconSvg,
+  mypageIconFocusSvg,
+  mypageIconSvg,
+} from "src/constants/svgSources";
 import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
 
 export const BottomTabNavigator: React.FC = () => {
@@ -35,20 +43,14 @@ export const BottomTabNavigator: React.FC = () => {
           const routeName = route.name;
 
           if (routeName === "Rooms") {
-            iconName = focused
-              ? require("../assets/icons/homeIcon.svg")
-              : require("../assets/icons/homeIcon.svg");
+            iconName = focused ? homeIconFocusSvg : homeIconSvg;
             label = "ホーム";
           } else if (routeName === "MyRooms") {
-            iconName = focused
-              ? require("../assets/icons/chatIcon.svg")
-              : require("../assets/icons/chatIcon.svg");
+            iconName = focused ? chatIconFocusSvg : chatIconSvg;
             label = "トーク";
             badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Profile") {
-            iconName = focused
-              ? require("../assets/icons/mypageIcon.svg")
-              : require("../assets/icons/mypageIcon.svg");
+            iconName = focused ? mypageIconFocusSvg : mypageIconSvg;
             label = "マイページ";
           }
           return (
@@ -59,7 +61,7 @@ export const BottomTabNavigator: React.FC = () => {
                 alignItems: "center",
               }}
             >
-              <SvgUri width={32} height={32} source={iconName} fill={color} />
+              <SvgUri width={32} height={32} source={iconName} />
               <Text bold size={12} style={{ color: color }}>
                 {label}
               </Text>

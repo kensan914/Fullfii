@@ -5,7 +5,7 @@ import Modal from "react-native-modal";
 
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { width } from "src/constants";
 
 type Props = {
@@ -32,9 +32,13 @@ export const ImageModal: React.FC<Props> = (props) => {
   return (
     <Modal isVisible={isOpen} onBackdropPress={close} deviceWidth={width}>
       <Block center style={styles.modalContent}>
-        <ImageBackground source={imageSource} style={styles.informationImage} imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20}}/>
+        <ImageBackground
+          source={imageSource}
+          style={styles.informationImage}
+          imageStyle={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+        />
         <TouchableOpacity style={styles.closeIcon} onPress={close}>
-          <IconExtra
+          <Icon
             name="close"
             family="Ionicons"
             size={32}

@@ -78,14 +78,14 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       hideRoom={hideRoom}
                       blockRoom={blockRoom}
                     />
-                    {/* {index > 0 && (index + 1) % 3 === 0 && (
+                    {index > 0 && (index + 1) % 3 === 0 && (
                       <AdView
                         media={false}
-                        type="video"
+                        type="images"
                         index={2}
                         adUnitId={ADMOB_UNIT_ID_NATIVE.image}
                       />
-                    )} */}
+                    )}
                   </>
                 );
               }
@@ -94,7 +94,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             numColumns={numColumns}
             keyExtractor={(item, index) => index.toString()}
             onEndReached={onEndReached}
-            onEndReachedThreshold={0}
+            onEndReachedThreshold={0.3}
             ListFooterComponent={() =>
               hasMore && !isRefreshing ? (
                 <ActivityIndicator

@@ -1,12 +1,23 @@
-import React from "react";
+import React, { Dispatch, ReactNode } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 import Modal from "react-native-modal";
 
 import { COLORS } from "src/constants/theme";
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const MenuModal = (props) => {
+type Item = {
+  label: string;
+  onPress: () => void;
+};
+type Props = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<boolean>;
+  items: Item[];
+  otherModal?: ReactNode;
+  spinnerOverlay?: ReactNode;
+  canPressBackdrop?: boolean;
+};
+export const MenuModal: React.FC<Props> = (props) => {
   const {
     isOpen,
     setIsOpen,
@@ -36,8 +47,7 @@ export const MenuModal = (props) => {
               style={styles.menuItem}
             >
               <Text style={{}} size={20} bold color={COLORS.GRAY}>
-                {item.icon && <>{item.icon} </>}
-                {item.title}
+                {item.label}
               </Text>
             </TouchableOpacity>
           ))}
