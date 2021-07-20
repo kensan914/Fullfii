@@ -70,6 +70,8 @@ type ToastMessages = {
   HIDE_ROOM: ShowToastSettings;
   BLOCK_ROOM: ShowToastSettings;
   LEAVE_PARTICIPANT: ShowToastSettings;
+  ADD_FAVORITE_USER: ShowToastSettings;
+  DELETE_FAVORITE_USER: ShowToastSettings;
 };
 export const TOAST_SETTINGS: ToastMessages = {
   CREATE_ROOM: {
@@ -98,5 +100,11 @@ export const TOAST_SETTINGS: ToastMessages = {
   },
   LEAVE_PARTICIPANT: {
     text1: "相手を退室させました",
+  },
+  ADD_FAVORITE_USER: {
+    text1: "また話したいリストに追加しました",
+  },
+  DELETE_FAVORITE_USER: {
+    text1: "また話したいリストから削除しました",
   },
 };

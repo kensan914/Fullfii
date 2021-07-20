@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import SafeAreaView from "react-native-safe-area-view";
 
-import { Header } from "src/components/organisms/Header";
+import { Header } from "src/navigations/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
 import { ProfileInputScreen } from "src/screens/ProfileInputScreen";
 import { SettingsScreen } from "src/screens/SettingsScreen";

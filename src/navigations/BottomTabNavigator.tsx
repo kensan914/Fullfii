@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
-import { Header } from "src/components/organisms/Header";
+import { Header } from "src/navigations/Header";
 import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { RoomsScreen } from "src/screens/RoomsScreen";

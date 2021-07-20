@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert } from "react-native";
 
 import { BASE_URL_WS } from "src/constants/env";
-import { URLJoin, closeWsSafely, generateUuid4 } from "src/utils";
+import { URLJoin, closeWsSafely } from "src/utils";
 import { MessageJson, ProfileDispatch } from "src/types/Types.context";
 import { WsResChat, WsResChatIoTs } from "src/types/Types";
 import { useChatDispatch, useChatState } from "src/contexts/ChatContext";

@@ -5,7 +5,7 @@ import { COLORS } from "src/constants/theme";
 import { Icon } from "src/components/atoms/Icon";
 import { PrivateRoomDemoModal } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomDemoModal";
 
-export const ListPrivateUserEmpty = () => {
+export const ListPrivateUserEmpty: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>

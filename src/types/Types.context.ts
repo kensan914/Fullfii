@@ -203,6 +203,16 @@ export type ChatActionType =
       token: string;
       isForceSendReadNotification?: boolean;
     }
+  | {
+      type: "ADD_FAVORITE_USER";
+      roomId: string;
+      userId: string;
+    }
+  | {
+      type: "DELETE_FAVORITE_USER";
+      roomId: string;
+      userId: string;
+    }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
   | { type: "EXECUTED_DELAY_DISPATCH" }
@@ -347,6 +357,7 @@ export const BaseRoomIoTs = t.type({
   isExcludeDifferentGender: t.boolean,
   isEnd: t.boolean,
   isActive: t.boolean,
+  addedFavoriteUserIds: t.array(t.string),
 });
 const RoomCreatedAtIoTs = t.type({
   createdAt: DateType,

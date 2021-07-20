@@ -100,6 +100,8 @@ const chatReducer = (
 
       _talkingRoomCollection[talkingRoom.id] = talkingRoom;
 
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+
       return {
         ...prevState,
         talkingRoomCollection: _talkingRoomCollection,
@@ -127,6 +129,8 @@ const chatReducer = (
         ..._talkingRoomCollection[roomJson.id],
         ...room,
       };
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
 
       return {
         ...prevState,
@@ -586,6 +590,58 @@ const chatReducer = (
         ...prevState,
         talkingRoomCollection: _talkingRoomCollection,
         totalUnreadNum: totalUnreadNum,
+      };
+    }
+
+    case "ADD_FAVORITE_USER": {
+      /** また話したい人追加
+       * @param {Object} action [type, roomId, userId] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      if (!_talkingRoom.addedFavoriteUserIds.includes(action.userId)) {
+        _talkingRoom.addedFavoriteUserIds = [
+          ..._talkingRoom.addedFavoriteUserIds,
+          action.userId,
+        ];
+      }
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
+    }
+
+    case "DELETE_FAVORITE_USER": {
+      /** また話したい人削除
+       * @param {Object} action [type, roomId, userId] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      if (_talkingRoom.addedFavoriteUserIds.includes(action.userId)) {
+        _talkingRoom.addedFavoriteUserIds =
+          _talkingRoom.addedFavoriteUserIds.filter(
+            (_addedFavoriteUserId) => _addedFavoriteUserId !== action.userId
+          );
+      }
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 
