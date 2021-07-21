@@ -13,6 +13,7 @@ import { useAuthDispatch, useAuthState } from "src/contexts/AuthContext";
 import { useRequestPostRoom } from "src/hooks/requests/useRequestRooms";
 import { TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
+import {logEvent} from "src/utils/firebase/logEvent"
 
 export const IntroCreateRoomScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -68,6 +69,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
   };
 
   const onPressLater = () => {
+    logEvent("press_intro_screen_later_button")
     requestPostSignup({
       thenCallback: (resData) => {
         const _resData = resData as SignupResData;
@@ -87,6 +89,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
 
   const [isDelayRequestPostRoom, setIsDelayRequestPostRoom] = useState(false);
   const onPressSubmit = () => {
+    logEvent("press_intro_screen_submit_button")
     requestPostSignup({
       thenCallback: (resData) => {
         const _resData = resData as SignupResData;

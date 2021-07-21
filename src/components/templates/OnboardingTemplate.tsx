@@ -5,6 +5,7 @@ import AppIntroSlider from "react-native-app-intro-slider";
 
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
+import {logEvent} from "src/utils/firebase/logEvent"
 
 type Props = {
   onPressCompleteInto: () => void;
@@ -86,6 +87,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
   const onDone = () => {
     // User finished the introduction. Show real app through
     // navigation or simply by controlling state
+    logEvent("press_onbording_screen_done_button")
     onPressCompleteInto();
   };
   return (
