@@ -18,7 +18,7 @@ import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
 import { COLORS } from "src/constants/theme";
-import { BottomTabNavigator } from "./BottomTabNavigator";
+import { BottomTabNavigator } from "src/navigations/BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";

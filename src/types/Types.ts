@@ -1,11 +1,12 @@
-import { Dispatch } from "react";
+import React, { Dispatch } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AxiosError, AxiosResponse } from "axios";
-import { GestureResponderEvent } from "react-native";
+import { Animated, FlatList, GestureResponderEvent } from "react-native";
 import * as t from "io-ts";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { Asset } from "expo-asset";
+import { NavigationState, SceneRendererProps } from "react-native-tab-view";
 
 import {
   GenderKey,
@@ -223,6 +224,38 @@ export type SubmitSettings = {
   canSubmit?: boolean;
 };
 //--------- FormTemplate.tsx ---------//
+
+//--------- Profile.tsx -----------//
+export type RouteKey = "tab1" | "tab2";
+export type Route = { key: RouteKey; title: string };
+export type Routes = Route[];
+export type AnimatedScrollY = Animated.Value;
+export type ScrollYCollection = { [key in RouteKey]?: number };
+export type FlatListRef = React.RefObject<FlatList | null>;
+export type FlatListRefCollection = { [key in RouteKey]?: FlatListRef };
+export type OnIndexChange = (index: number) => void;
+export type SceneProps = {
+  animatedScrollY: AnimatedScrollY;
+  onUpdateOffsetY: (offsetY: number) => void;
+  ref: FlatListRef;
+  PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
+  PROFILE_BODY_HEIGHT: number;
+};
+export type GeneSceneProps = (routeKey: RouteKey) => SceneProps;
+export type RenderScene = (
+  props: SceneRendererProps & {
+    route: Route;
+  }
+) => React.ReactNode;
+export type RenderTabBar = () => React.ReactNode;
+export type RenderHeader = () => (
+  props: SceneRendererProps & {
+    navigationState: NavigationState<Route>;
+  }
+) => React.ReactNode;
+export type PROFILE_VIEW_HEIGHT_TYPE = 224;
+export type TAB_BAR_HEIGHT_TYPE = 48;
+//--------- Profile.tsx -----------//
 
 //--------- axios ---------//
 export type AxiosMethod = "get" | "post" | "delete" | "put" | "patch";

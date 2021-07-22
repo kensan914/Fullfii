@@ -10,7 +10,7 @@ export const FavoriteUserListEmpty: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Block center>
+      <Block style={styles.container} center>
         <Block>
           <Text size={14} bold color={COLORS.LIGHT_GRAY}>
             また相談したい人リストは0人です
@@ -37,6 +37,7 @@ export const FavoriteUserListEmpty: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  container: { paddingTop: 48 },
   textHeight: {
     lineHeight: 20,
   },

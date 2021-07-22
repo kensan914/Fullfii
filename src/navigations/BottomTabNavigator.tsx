@@ -23,6 +23,7 @@ import {
   mypageIconSvg,
 } from "src/constants/svgSources";
 import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
+import { BOTTOM_TAB_BAR_HEIGHT } from "src/constants";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -102,6 +103,7 @@ export const BottomTabNavigator: React.FC = () => {
         inactiveTintColor: "gray",
         showLabel: false,
         style: {
+          height: BOTTOM_TAB_BAR_HEIGHT,
           backgroundColor: COLORS.BEIGE,
           borderTopWidth: 0,
           elevation: 0, // for Android

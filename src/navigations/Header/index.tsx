@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 import materialTheme from "src/constants/theme";
 import { COLORS } from "src/constants/theme";
-import { width } from "src/constants";
+import { HEADER_HEIGHT, width } from "src/constants";
 import { RouteName } from "src/types/Types";
 import { SettingsHeaderMenu } from "src/navigations/Header/organisms/SettingsHeaderMenu";
 import { ChatHeaderMenu } from "src/navigations/Header/organisms/ChatHeaderMenu";
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   navbar: {
     zIndex: 5,
-    height: 54,
+    height: HEADER_HEIGHT,
     backgroundColor: COLORS.BEIGE,
   },
   shadow: {
