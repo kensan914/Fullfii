@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { ProfileTemplate } from "src/components/templates/ProfileTemplate";
 import { useProfileState } from "src/contexts/ProfileContext";
-import { Profile } from "src/types/Types.context";
 import { useListInList } from "src/screens/ProfileScreen/useListInList";
 import { Tab } from "src/components/templates/ProfileTemplate/organisms/TabForTest";
 import {
@@ -17,8 +16,6 @@ export const ProfileScreen: React.FC = () => {
   const profileState = useProfileState();
 
   const meProfile = profileState.profile;
-  // const favoriteUsers: Profile[] = new Array(14).fill(meProfile);
-  const favoriteUsers: Profile[] = []; // if empty
 
   // list in list
   const [PROFILE_VIEW_HEIGHT] = useState<PROFILE_VIEW_HEIGHT_TYPE>(224); // プロフィール
@@ -34,13 +31,7 @@ export const ProfileScreen: React.FC = () => {
     const { route } = props;
     switch (route.key) {
       case "tab1": {
-        return (
-          <FavoriteUserList
-            users={favoriteUsers}
-            {...props}
-            {...geneSceneProps(route.key)}
-          />
-        );
+        return <FavoriteUserList {...props} {...geneSceneProps(route.key)} />;
       }
       case "tab2": {
         return <Tab {...props} {...geneSceneProps(route.key)} />;

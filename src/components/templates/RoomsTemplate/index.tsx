@@ -1,13 +1,13 @@
 import React, { Dispatch } from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { COLORS } from "src/constants/theme";
 import { RoomCard } from "src/components/templates/RoomsTemplate/organisms/RoomCard";
 import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
-import { LinearGradient } from "expo-linear-gradient";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { AdView } from "src/components/molecules/AdView";
 import { ADMOB_UNIT_ID_NATIVE } from "src/constants/env";
@@ -92,7 +92,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             }}
             style={styles.list}
             numColumns={numColumns}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item) => item.id.toString()}
             onEndReached={onEndReached}
             onEndReachedThreshold={0.3}
             ListFooterComponent={() =>

@@ -12,6 +12,7 @@ import {
   GenderKey,
   MeProfile,
   MeProfileIoTs,
+  ProfileIoTs,
   MessageJsonIoTs,
   Profile,
   ProfileDispatch,
@@ -333,6 +334,13 @@ export const PutGenderResDataIoTs = t.type({
 export type GetRoomsResData = t.TypeOf<typeof GetRoomsResDataIoTs>;
 export const GetRoomsResDataIoTs = t.type({
   rooms: t.array(RoomJsonIoTs),
+  hasMore: t.boolean,
+});
+export type GetFavoriteUsersResData = t.TypeOf<
+  typeof GetFavoriteUsersResDataIoTs
+>;
+export const GetFavoriteUsersResDataIoTs = t.type({
+  favoriteUsers: t.array(ProfileIoTs),
   hasMore: t.boolean,
 });
 //--------- axios res.data ---------//

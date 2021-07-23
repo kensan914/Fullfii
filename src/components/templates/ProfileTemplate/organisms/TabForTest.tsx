@@ -21,7 +21,7 @@ export const Tab = React.forwardRef((props, ref) => {
   );
 
   const [dataSource] = useState(
-    Array(20)
+    Array(2)
       .fill()
       .map((_, index) => ({ id: index }))
   );
@@ -38,6 +38,8 @@ export const Tab = React.forwardRef((props, ref) => {
           <Text>{item.id}</Text>
         </View>
       )}
+      onEndReached={() => {}}
+      onEndReachedThreshold={0.3}
     />
   );
 });
