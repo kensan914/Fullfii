@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Animated, FlatList } from "react-native";
 import {
   AnimatedScrollY,
@@ -73,44 +73,48 @@ export const useListInList: UseListInList = (
   const synchronizeScrollY = () => {
     Object.keys(scrollYCollection.current).forEach((routeKeyStr) => {
       const routeKey = routeKeyStr as RouteKey;
+
+      // スクロールされていない
       const targetScrollY = scrollYCollection.current[routeKey];
-      // ⇓ スクロールされた
-      if (prevScrollYCollection.current[routeKey] !== targetScrollY) {
-        const otherRouteKeys = Object.keys(scrollYCollection.current).filter(
-          (filteredRk) => filteredRk !== routeKey
-        );
-        // tab barが完全に上につかない状態
-        if (
-          typeof targetScrollY !== "undefined" &&
-          targetScrollY < PROFILE_VIEW_HEIGHT
-        ) {
-          otherRouteKeys.forEach((otherRouteKeyStr) => {
-            const otherRouteKey = otherRouteKeyStr as RouteKey;
-            const otherFlatListRef = flatListRefCollection[otherRouteKey];
-            if (typeof otherFlatListRef !== "undefined") {
-              scrollToOffset(otherRouteKey, otherFlatListRef, targetScrollY);
-            }
-          });
-        }
-        // tab barが完全に上についた状態
-        else {
-          otherRouteKeys.forEach((otherRouteKeyStr) => {
-            const otherRouteKey = otherRouteKeyStr as RouteKey;
-            const otherScrollY = scrollYCollection.current[otherRouteKey];
-            const otherFlatListRef = flatListRefCollection[otherRouteKey];
-            if (
-              typeof otherScrollY !== "undefined" &&
-              otherScrollY < PROFILE_VIEW_HEIGHT &&
-              typeof otherFlatListRef !== "undefined"
-            ) {
-              scrollToOffset(
-                otherRouteKey,
-                otherFlatListRef,
-                PROFILE_VIEW_HEIGHT
-              );
-            }
-          });
-        }
+      if (prevScrollYCollection.current[routeKey] === targetScrollY) {
+        return;
+      }
+
+      // スクロールされた
+      const otherRouteKeys = Object.keys(scrollYCollection.current).filter(
+        (filteredRk) => filteredRk !== routeKey
+      );
+      // tab barが完全に上につかない状態
+      if (
+        typeof targetScrollY !== "undefined" &&
+        targetScrollY < PROFILE_VIEW_HEIGHT
+      ) {
+        otherRouteKeys.forEach((otherRouteKeyStr) => {
+          const otherRouteKey = otherRouteKeyStr as RouteKey;
+          const otherFlatListRef = flatListRefCollection[otherRouteKey];
+          if (typeof otherFlatListRef !== "undefined") {
+            scrollToOffset(otherRouteKey, otherFlatListRef, targetScrollY);
+          }
+        });
+      }
+      // tab barが完全に上についた状態
+      else {
+        otherRouteKeys.forEach((otherRouteKeyStr) => {
+          const otherRouteKey = otherRouteKeyStr as RouteKey;
+          const otherScrollY = scrollYCollection.current[otherRouteKey];
+          const otherFlatListRef = flatListRefCollection[otherRouteKey];
+          if (
+            typeof otherScrollY !== "undefined" &&
+            otherScrollY < PROFILE_VIEW_HEIGHT &&
+            typeof otherFlatListRef !== "undefined"
+          ) {
+            scrollToOffset(
+              otherRouteKey,
+              otherFlatListRef,
+              PROFILE_VIEW_HEIGHT
+            );
+          }
+        });
       }
     });
 
@@ -120,11 +124,11 @@ export const useListInList: UseListInList = (
         ...scrollYCollection.current,
         ...scrollYCollectionTemp.current,
       };
+
+      // prevScrollYCollectionの更新
+      prevScrollYCollection.current = { ...scrollYCollection.current };
     }
     scrollYCollectionTemp.current = null;
-
-    // prevScrollYCollectionの更新
-    prevScrollYCollection.current = { ...scrollYCollection.current };
   };
 
   const onIndexChange: OnIndexChange = (_index) => {

@@ -2,11 +2,23 @@
 
 import React, { useState } from "react";
 import { Text, Animated, View, StyleSheet } from "react-native";
-import { height } from "src/constants";
+import { useAnimatedFlatListProps } from "src/screens/ProfileScreen/useAnimatedFlatListProps";
 
 export const Tab = React.forwardRef((props, ref) => {
-  const { animatedScrollY, route, onUpdateOffsetY, PROFILE_BODY_HEIGHT } =
-    props;
+  const {
+    animatedScrollY,
+    route,
+    onUpdateOffsetY,
+    PROFILE_VIEW_HEIGHT,
+    PROFILE_BODY_HEIGHT,
+  } = props;
+
+  const { animatedFlatListProps } = useAnimatedFlatListProps(
+    animatedScrollY,
+    onUpdateOffsetY,
+    PROFILE_VIEW_HEIGHT,
+    PROFILE_BODY_HEIGHT
+  );
 
   const [dataSource] = useState(
     Array(20)
@@ -16,6 +28,7 @@ export const Tab = React.forwardRef((props, ref) => {
   return (
     <Animated.FlatList
       ref={ref}
+      {...animatedFlatListProps}
       style={styles.wrapper}
       data={dataSource}
       keyExtractor={(item) => item.id.toString()}
@@ -24,23 +37,6 @@ export const Tab = React.forwardRef((props, ref) => {
         <View style={styles.item}>
           <Text>{item.id}</Text>
         </View>
-      )}
-      contentContainerStyle={{
-        paddingTop: PROFILE_BODY_HEIGHT,
-        minHeight: height - 48,
-      }}
-      onMomentumScrollEnd={(e) => {
-        onUpdateOffsetY(e.nativeEvent.contentOffset.y);
-      }}
-      onScroll={Animated.event(
-        [
-          {
-            nativeEvent: { contentOffset: { y: animatedScrollY } },
-          },
-        ],
-        {
-          useNativeDriver: true,
-        }
       )}
     />
   );
