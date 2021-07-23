@@ -210,7 +210,7 @@ export type ChatActionType =
     }
   | {
       type: "DELETE_FAVORITE_USER";
-      roomId: string;
+      roomId: string | null;
       userId: string;
     }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }

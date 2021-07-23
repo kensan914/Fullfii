@@ -12,7 +12,7 @@ export type ActionSheetSettings = {
  * cancel, destructiveは一つまで (必ずtrue指定)
  * @param settings
  * @example 
- * showActionSheet([
+    showActionSheet([
       {
         label: "キャンセル",
         cancel: true,

@@ -9,7 +9,7 @@ import useAllContext from "src/contexts/ContextUtils";
 import { dangerouslyDelete } from "src/utils/auth/crud";
 import { RoundButton } from "src/components/atoms/RoundButton";
 
-const SuccessAccountDelete: React.FC = () => {
+export const SuccessAccountDeleteScreen: React.FC = () => {
   const [lottieSuccessSource, setLottieSuccessSource] =
     useState<LottieSource>();
 
@@ -85,8 +85,6 @@ const SuccessAccountDelete: React.FC = () => {
     </Block>
   );
 };
-
-export default SuccessAccountDelete;
 
 const styles = StyleSheet.create({
   container: {

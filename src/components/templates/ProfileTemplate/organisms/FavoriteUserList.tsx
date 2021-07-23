@@ -19,9 +19,15 @@ import { FavoriteUserListItem } from "src/components/templates/ProfileTemplate/m
 import { COLORS } from "src/constants/theme";
 import { useAnimatedFlatListProps } from "src/screens/ProfileScreen/useAnimatedFlatListProps";
 import { useFetchItems } from "src/hooks/useFetchItems";
-import { URLJoin } from "src/utils";
+import { alertModal, URLJoin } from "src/utils";
 import { BASE_URL } from "src/constants/env";
 import { width } from "src/constants";
+import { useNavigation } from "@react-navigation/native";
+import { showActionSheet, showToast } from "src/utils/customModules";
+import { requestDeleteMeFavoritesUsers } from "src/hooks/requests/useRequestMeFavorites";
+import { useAuthState } from "src/contexts/AuthContext";
+import { useChatDispatch } from "src/contexts/ChatContext";
+import { TOAST_SETTINGS } from "src/constants/alertMessages";
 
 // type Props = {
 // };
@@ -35,6 +41,10 @@ export const FavoriteUserList = React.forwardRef<
     PROFILE_VIEW_HEIGHT,
     PROFILE_BODY_HEIGHT,
   } = props;
+
+  const navigation = useNavigation();
+  const authState = useAuthState();
+  const chatDispatch = useChatDispatch();
 
   const [favoriteUsers, setFavoriteUsers] = useState<Profile[]>([]);
 
@@ -70,6 +80,49 @@ export const FavoriteUserList = React.forwardRef<
     handleRefresh();
   }, []);
 
+  // item methods
+  const navigateMessageHistory = (user: Profile): void => {
+    navigation.navigate("MessageHistory", { user: user });
+  };
+  const onLongPressItem = (user: Profile): void => {
+    showActionSheet([
+      {
+        label: "キャンセル",
+        cancel: true,
+      },
+      {
+        label: "削除する",
+        destructive: true,
+        onPress: () => {
+          const _mainText = "また話したい人リストから削除";
+          const _subText = `本当に${user.name}さんをまた話したい人リストから削除してよろしいですか？`;
+          alertModal({
+            mainText: _mainText,
+            subText: _subText,
+            cancelButton: "キャンセル",
+            okButton: "削除する",
+            okButtonStyle: "destructive",
+            onPress: () => {
+              requestDeleteMeFavoritesUsers(user.id, authState.token, () => {
+                showToast(TOAST_SETTINGS["DELETE_FAVORITE_USER"]);
+                setFavoriteUsers(
+                  favoriteUsers.filter((favoriteUser) => {
+                    return favoriteUser.id !== user.id;
+                  })
+                );
+                chatDispatch({
+                  type: "DELETE_FAVORITE_USER",
+                  roomId: null,
+                  userId: user.id,
+                });
+              });
+            },
+          });
+        },
+      },
+    ]);
+  };
+
   return (
     <>
       <Animated.FlatList
@@ -79,8 +132,9 @@ export const FavoriteUserList = React.forwardRef<
         renderItem={({ item }) => (
           <FavoriteUserListItem
             key={item.id}
-            name={item.name}
-            ProfileImageUri={item.image}
+            user={item}
+            navigateMessageHistory={navigateMessageHistory}
+            onLongPressItem={onLongPressItem}
           />
         )}
         style={styles.container}
@@ -132,8 +186,6 @@ export const FavoriteUserList = React.forwardRef<
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 16,
-    paddingRight: 16,
     backgroundColor: COLORS.BEIGE,
   },
   indicatorOnlyIOS: {

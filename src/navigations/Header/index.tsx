@@ -101,6 +101,8 @@ export const Header: React.FC<Props> = (props) => {
         return "設定";
       case "AccountDelete":
         return "アカウント削除";
+      case "MessageHistory":
+        return "トーク履歴";
       default:
         return name;
     }

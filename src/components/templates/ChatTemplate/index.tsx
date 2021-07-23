@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Block } from "galio-framework";
 
 import { Profile, TalkingRoom } from "src/types/Types.context";
-import ChatBody from "src/components/templates/ChatTemplate/organisms/ChatBody";
+import { ChatBody } from "src/components/templates/ChatTemplate/organisms/ChatBody";
 import { COLORS } from "src/constants/theme";
 import { RoomMemberCollection } from "src/types/Types";
 import { ProfileModal } from "src/components/molecules/ProfileModal";

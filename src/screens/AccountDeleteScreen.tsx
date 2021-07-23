@@ -7,7 +7,7 @@ import FormTemplate from "src/components/templates/FormTemplate";
 import { BASE_URL } from "src/constants/env";
 import useAllContext from "src/contexts/ContextUtils";
 
-const AccountDelete: React.FC = () => {
+export const AccountDeleteScreen: React.FC = () => {
   const [deleteReason, setDeleteReason] = useState("");
 
   const [states, dispatches] = useAllContext();
@@ -94,5 +94,3 @@ const AccountDelete: React.FC = () => {
     />
   );
 };
-
-export default AccountDelete;

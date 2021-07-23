@@ -6,7 +6,7 @@ import { Header } from "src/navigations/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
 import { ProfileInputScreen } from "src/screens/ProfileInputScreen";
 import { SettingsScreen } from "src/screens/SettingsScreen";
-import AccountDeleteScreen from "src/screens/AccountDelete";
+import { AccountDeleteScreen } from "src/screens/AccountDeleteScreen";
 import {
   useAuthState,
   AUTHENTICATED,
@@ -16,7 +16,7 @@ import {
 } from "src/contexts/AuthContext";
 import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
-import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
+import { SuccessAccountDeleteScreen } from "src/screens/SuccessAccountDeleteScreen";
 import { COLORS } from "src/constants/theme";
 import { BottomTabNavigator } from "src/navigations/BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
@@ -25,6 +25,7 @@ import { AttManager } from "src/screens/AttManager";
 import { SignupScreen } from "src/screens/signup/SignupScreen";
 import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
+import { MessageHistoryScreen } from "src/screens/MessageHistoryScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -64,6 +65,15 @@ const HomeStack = () => {
           header: () => {
             const roomId = route.params.roomId;
             return <Header isLeftTitle back name={"Chat"} roomId={roomId} />;
+          },
+        })}
+      />
+      <Stack.Screen
+        name="MessageHistory"
+        component={MessageHistoryScreen}
+        options={() => ({
+          header: () => {
+            return <Header back name={"MessageHistory"} />;
           },
         })}
       />
@@ -148,7 +158,7 @@ const AppStack: React.FC = () => {
       );
 
     case DELETED:
-      return withSafeAreaView(<SuccessAccountDelete />);
+      return withSafeAreaView(<SuccessAccountDeleteScreen />);
 
     default:
       return <></>;

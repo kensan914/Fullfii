@@ -1,4 +1,4 @@
-import { Animated, Platform, ScrollViewProps } from "react-native";
+import { Animated, ScrollViewProps } from "react-native";
 
 import { BOTTOM_TAB_BAR_HEIGHT, HEADER_HEIGHT, height } from "src/constants";
 import { AnimatedScrollY, PROFILE_VIEW_HEIGHT_TYPE } from "src/types/Types";

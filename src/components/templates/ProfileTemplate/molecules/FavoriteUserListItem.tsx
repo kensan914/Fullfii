@@ -1,53 +1,68 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 
 import { COLORS } from "src/constants/theme";
 import { Icon } from "src/components/atoms/Icon";
 import { Avatar } from "src/components/atoms/Avatar";
+import { Profile } from "src/types/Types.context";
 
 type Props = {
-  name: string;
-  ProfileImageUri: string | null;
+  user: Profile;
+  navigateMessageHistory: (user: Profile) => void;
+  onLongPressItem: (user: Profile) => void;
 };
 
 export const FavoriteUserListItem: React.FC<Props> = (props) => {
-  const { name, ProfileImageUri } = props;
+  const { user, navigateMessageHistory, onLongPressItem } = props;
   return (
-    <Block row space="between" style={styles.listItemContainer}>
-      <Block row center>
-        <Avatar
-          size={40}
-          imageUri={ProfileImageUri}
-          style={styles.otherProfileImage}
-        />
-        <Block style={styles.otherProfileName}>
-          <Text size={14} bold color={COLORS.BLACK} style={styles.textHeight}>
-            {name}
-          </Text>
-        </Block>
-      </Block>
-      <Button
-        shadowless={true}
-        color="transparent"
-        opacity={0.6}
-        style={styles.toSeeTalkHistoryBox}
-      >
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => {
+        navigateMessageHistory(user);
+      }}
+      onLongPress={() => {
+        onLongPressItem(user);
+      }}
+    >
+      <Block row space="between" style={styles.listItemContainer}>
         <Block row center>
-          <Text size={14} bold color={COLORS.BROWN} style={styles.textHeight}>
-            トーク履歴を見る
-          </Text>
-          <Block center style={styles.iconAngleRight}>
-            <Icon
-              name="angle-right"
-              family="font-awesome"
-              size={32}
-              color={COLORS.BROWN}
-            />
+          <Avatar
+            size={40}
+            imageUri={user.image}
+            style={styles.otherProfileImage}
+          />
+          <Block style={styles.otherProfileName}>
+            <Text size={14} bold color={COLORS.BLACK} style={styles.textHeight}>
+              {user.name}
+            </Text>
           </Block>
         </Block>
-      </Button>
-    </Block>
+        <Button
+          shadowless={true}
+          color="transparent"
+          opacity={0.6}
+          style={styles.toSeeTalkHistoryBox}
+          onPress={() => {
+            navigateMessageHistory(user);
+          }}
+        >
+          <Block row center>
+            <Text size={14} bold color={COLORS.BROWN} style={styles.textHeight}>
+              トーク履歴を見る
+            </Text>
+            <Block center style={styles.iconAngleRight}>
+              <Icon
+                name="angle-right"
+                family="font-awesome"
+                size={32}
+                color={COLORS.BROWN}
+              />
+            </Block>
+          </Block>
+        </Button>
+      </Block>
+    </TouchableOpacity>
   );
 };
 
@@ -62,6 +77,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.BLACK,
   },
   listItemContainer: {
+    paddingLeft: 16,
+    paddingRight: 16,
     alignItems: "center",
     height: 64,
   },

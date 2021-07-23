@@ -620,14 +620,29 @@ const chatReducer = (
     }
 
     case "DELETE_FAVORITE_USER": {
-      /** また話したい人削除
+      /** また話したい人削除. ルームが不明な場合, roomIdをnullに.
        * @param {Object} action [type, roomId, userId] */
 
       _talkingRoomCollection = { ...prevState.talkingRoomCollection };
-      _talkingRoom = _talkingRoomCollection[action.roomId];
-      if (!_talkingRoom) {
-        consoleErrorNotFountRoom(action.roomId);
-        return { ...prevState };
+
+      if (action.roomId !== null) {
+        _talkingRoom = _talkingRoomCollection[action.roomId];
+        if (!_talkingRoom) {
+          consoleErrorNotFountRoom(action.roomId);
+          return { ...prevState };
+        }
+      } else {
+        // ルームが不明. 検索から行う.
+        const talkingRoomFindResult = Object.values(
+          _talkingRoomCollection
+        ).find((tr) => {
+          return tr.addedFavoriteUserIds.includes(action.userId);
+        });
+        if (typeof talkingRoomFindResult === "undefined") {
+          // 該当userIdが見つからない
+          return { ...prevState };
+        }
+        _talkingRoom = talkingRoomFindResult;
       }
 
       if (_talkingRoom.addedFavoriteUserIds.includes(action.userId)) {
@@ -636,7 +651,7 @@ const chatReducer = (
             (_addedFavoriteUserId) => _addedFavoriteUserId !== action.userId
           );
       }
-      _talkingRoomCollection[action.roomId] = _talkingRoom;
+      _talkingRoomCollection[_talkingRoom.id] = _talkingRoom;
 
       asyncStoreTalkingRoomCollection(_talkingRoomCollection);
       return {

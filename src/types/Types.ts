@@ -35,6 +35,7 @@ export type RootStackParamList = {
     user: MeProfile;
   };
   Chat: { roomId: string };
+  MessageHistory: { user: Profile };
   Settings: undefined;
   AccountDelete: undefined;
   Authenticated: undefined;
@@ -45,6 +46,10 @@ export type RootStackParamList = {
   MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
+export type MessageHistoryRouteProp = RouteProp<
+  RootStackParamList,
+  "MessageHistory"
+>;
 export type ProfileInputRouteProp = RouteProp<
   RootStackParamList,
   "ProfileInput"
@@ -79,6 +84,7 @@ export type RouteName =
       | "Profile"
       | "ProfileEditor"
       | "Chat"
+      | "MessageHistory"
       | "Settings"
       | "AccountDelete"
     )

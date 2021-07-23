@@ -2,8 +2,9 @@ import { BASE_URL } from "src/constants/env";
 import { useAuthState } from "src/contexts/AuthContext";
 import { Request } from "src/types/Types";
 import { URLJoin } from "src/utils";
-import { useAxios } from "src/hooks/useAxios";
+import requestAxios, { useAxios } from "src/hooks/useAxios";
 import { AxiosError } from "axios";
+import { TokenNullable } from "src/types/Types.context";
 
 type UseRequestPatchMeFavoritesUsers = (
   userId: string | undefined,
@@ -66,3 +67,25 @@ export const useRequestDeleteMeFavoritesUsers: UseRequestDeleteMeFavoritesUsers 
 
     return { requestDeleteMeFavoritesUsers, isLoadingDeleteMeFavoritesUsers };
   };
+
+export const requestDeleteMeFavoritesUsers = (
+  userId: string | undefined,
+  token: TokenNullable,
+  additionalThenCallback?: () => void,
+  additionalCatchCallback?: (err: AxiosError) => void
+): void => {
+  requestAxios(
+    URLJoin(BASE_URL, "me/favorites/users/", userId),
+    "delete",
+    null,
+    {
+      token: token ? token : "",
+      thenCallback: () => {
+        additionalThenCallback && additionalThenCallback();
+      },
+      catchCallback: (err) => {
+        additionalCatchCallback && err && additionalCatchCallback(err);
+      },
+    }
+  );
+};

@@ -23,7 +23,7 @@ export const ProfileScreen: React.FC = () => {
   const [PROFILE_BODY_HEIGHT] = useState(PROFILE_VIEW_HEIGHT + TAB_BAR_HEIGHT);
   const [routes] = useState<Routes>([
     { key: "tab1", title: "また話したい人" },
-    { key: "tab2", title: "独り言" },
+    // { key: "tab2", title: "独り言" },
   ]);
   const { tabIndex, animatedScrollY, onIndexChange, geneSceneProps } =
     useListInList(routes, PROFILE_VIEW_HEIGHT, PROFILE_BODY_HEIGHT);
