@@ -104,6 +104,7 @@ export const FavoriteUserList = React.forwardRef<
         <RefreshControl
           refreshing={isRefreshing}
           onRefresh={handleRefresh}
+          // android only (インジケータの位置は, iOSでは既にuseAnimatedFlatListProps.ts内にて対応済み)
           progressViewOffset={PROFILE_BODY_HEIGHT}
         />
       }
