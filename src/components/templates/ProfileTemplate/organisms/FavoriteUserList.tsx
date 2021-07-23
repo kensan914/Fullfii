@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
+  Platform,
   RefreshControl,
   StyleSheet,
 } from "react-native";
@@ -20,6 +21,7 @@ import { useAnimatedFlatListProps } from "src/screens/ProfileScreen/useAnimatedF
 import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";
 import { BASE_URL } from "src/constants/env";
+import { width } from "src/constants";
 
 // type Props = {
 // };
@@ -69,46 +71,62 @@ export const FavoriteUserList = React.forwardRef<
   }, []);
 
   return (
-    <Animated.FlatList
-      ref={ref}
-      {...animatedFlatListProps}
-      data={favoriteUsers}
-      renderItem={({ item }) => (
-        <FavoriteUserListItem
-          key={item.id}
-          name={item.name}
-          ProfileImageUri={item.image}
-        />
-      )}
-      style={styles.container}
-      keyExtractor={(user) => user.id.toString()}
-      onEndReached={() => {
-        onEndReached();
-      }}
-      onEndReachedThreshold={0.3}
-      ListFooterComponent={() =>
-        hasMore && !isRefreshing ? (
-          <ActivityIndicator
-            size="large"
-            color={COLORS.LIGHT_GRAY}
-            style={{
-              marginVertical: 16,
-            }}
+    <>
+      <Animated.FlatList
+        ref={ref}
+        {...animatedFlatListProps}
+        data={favoriteUsers}
+        renderItem={({ item }) => (
+          <FavoriteUserListItem
+            key={item.id}
+            name={item.name}
+            ProfileImageUri={item.image}
           />
-        ) : (
-          <></>
-        )
-      }
-      ListEmptyComponent={hasMore ? <></> : FavoriteUserListEmpty}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefreshing}
-          onRefresh={handleRefresh}
-          // android only (インジケータの位置は, iOSでは既にuseAnimatedFlatListProps.ts内にて対応済み)
-          progressViewOffset={PROFILE_BODY_HEIGHT}
-        />
-      }
-    />
+        )}
+        style={styles.container}
+        keyExtractor={(user) => user.id.toString()}
+        onEndReached={() => {
+          onEndReached();
+        }}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={() =>
+          hasMore && !isRefreshing ? (
+            <ActivityIndicator
+              size="large"
+              color={COLORS.LIGHT_GRAY}
+              style={{
+                marginVertical: 16,
+              }}
+            />
+          ) : (
+            <></>
+          )
+        }
+        ListHeaderComponent={
+          // iOSはprogressViewOffsetがきかないため, 擬似インジケータで対処
+          Platform.OS === "ios"
+            ? () => {
+                return (
+                  <ActivityIndicator
+                    size="large"
+                    color={COLORS.LIGHT_GRAY}
+                    style={styles.indicatorOnlyIOS}
+                  />
+                );
+              }
+            : void 0
+        }
+        ListEmptyComponent={hasMore ? <></> : FavoriteUserListEmpty}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            // android only (インジケータの位置は, iOSでは上記ListHeaderComponentにて対応済み)
+            progressViewOffset={PROFILE_BODY_HEIGHT}
+          />
+        }
+      />
+    </>
   );
 });
 
@@ -117,5 +135,14 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     backgroundColor: COLORS.BEIGE,
+  },
+  indicatorOnlyIOS: {
+    position: "absolute",
+    top: -60,
+    width: width,
+    height: 60,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
