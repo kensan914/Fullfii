@@ -36,6 +36,7 @@ type Props = {
   onPressLater: () => void;
   onPressSubmit: () => void;
   isLoadingSubmit: boolean;
+  isLoadingLater: boolean;
 };
 export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
   const {
@@ -54,6 +55,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
     onPressLater,
     onPressSubmit,
     isLoadingSubmit,
+    isLoadingLater,
   } = props;
   return (
     <>
@@ -71,19 +73,6 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             </Text>
           </Block>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.goNext} onPress={onPressLater}>
-          <Block row center>
-            <Text size={16} bold color={COLORS.BROWN}>
-              後で作成する
-            </Text>
-            <Icon
-              name="chevron-right"
-              family="Feather"
-              size={32}
-              color={COLORS.BROWN}
-            />
-          </Block>
-        </TouchableOpacity> */}
       </Block>
 
       <Block style={styles.container}>
@@ -282,7 +271,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
           />
         </LinearGradient>
         <Block style={styles.buttonContainer}>
-        <RoundButton
+          <RoundButton
             buttonColor={"#F69896"}
             iconName={""}
             iconFamily={""}
@@ -298,7 +287,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             iconFamily={""}
             label="後で作成する"
             onPress={onPressLater}
-            isLoading={isLoadingSubmit}
+            isLoading={isLoadingLater}
             style={{ marginTop: 16 }}
           />
         </Block>
@@ -312,7 +301,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
   );
 };
 
-const bottomButtonHeight = 128;
+const bottomButtonHeight = 160;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

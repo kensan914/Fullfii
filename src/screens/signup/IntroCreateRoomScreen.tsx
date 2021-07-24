@@ -13,7 +13,7 @@ import { useAuthDispatch, useAuthState } from "src/contexts/AuthContext";
 import { useRequestPostRoom } from "src/hooks/requests/useRequestRooms";
 import { TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
-import {logEvent} from "src/utils/firebase/logEvent"
+import { logEvent } from "src/utils/firebase/logEvent";
 
 export const IntroCreateRoomScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -43,7 +43,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
 
   // サインアップ
   const [password] = useState(generatePassword());
-  const { isLoadingPostSignup, requestPostSignup } = useRequestPostSignup(
+  const { requestPostSignup } = useRequestPostSignup(
     profileState.profileBuffer.username,
     password,
     profileState.profileBuffer.genderKey,
@@ -51,7 +51,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
   );
 
   // ルーム作成用
-  const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
+  const { requestPostRoom } = useRequestPostRoom(
     roomName,
     isExcludeDifferentGender,
     null, // プライベート設定はできない
@@ -69,42 +69,50 @@ export const IntroCreateRoomScreen: React.FC = () => {
     navigation.goBack();
   };
 
+  const [isLoadingLater, setIsLoadingLater] = useState(false);
   const onPressLater = () => {
-    logEvent("press_intro_screen_later_button")
-    requestPostSignup({
-      thenCallback: (resData) => {
-        const _resData = resData as SignupResData;
-        const _me = _resData.me;
-        const _token = _resData.token;
+    if (!isLoading) {
+      setIsLoadingLater(true);
+      logEvent("press_intro_screen_later_button");
+      requestPostSignup({
+        thenCallback: (resData) => {
+          const _resData = resData as SignupResData;
+          const _me = _resData.me;
+          const _token = _resData.token;
 
-        profileDispatch({ type: "SET_ALL", profile: _me });
-        authDispatch({ type: "SET_TOKEN", token: _token });
-        authDispatch({ type: "SET_PASSWORD", password: password });
-        authDispatch({
-          type: "COMPLETE_SIGNUP",
-          initBottomTabRouteName: "Rooms",
-        });
-      },
-    });
+          profileDispatch({ type: "SET_ALL", profile: _me });
+          authDispatch({ type: "SET_TOKEN", token: _token });
+          authDispatch({ type: "SET_PASSWORD", password: password });
+          authDispatch({
+            type: "COMPLETE_SIGNUP",
+            initBottomTabRouteName: "Rooms",
+          });
+        },
+      });
+    }
   };
 
   const [isDelayRequestPostRoom, setIsDelayRequestPostRoom] = useState(false);
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const onPressSubmit = () => {
-    logEvent("press_intro_screen_submit_button")
-    requestPostSignup({
-      thenCallback: (resData) => {
-        const _resData = resData as SignupResData;
-        const _me = _resData.me;
-        const _token = _resData.token;
+    if (!isLoading) {
+      setIsLoadingSubmit(true);
+      logEvent("press_intro_screen_submit_button");
+      requestPostSignup({
+        thenCallback: (resData) => {
+          const _resData = resData as SignupResData;
+          const _me = _resData.me;
+          const _token = _resData.token;
 
-        profileDispatch({ type: "SET_ALL", profile: _me });
-        authDispatch({ type: "SET_TOKEN", token: _token });
-        authDispatch({ type: "SET_PASSWORD", password: password });
+          profileDispatch({ type: "SET_ALL", profile: _me });
+          authDispatch({ type: "SET_TOKEN", token: _token });
+          authDispatch({ type: "SET_PASSWORD", password: password });
 
-        // tokenが反映されるまで遅延
-        setIsDelayRequestPostRoom(true);
-      },
-    });
+          // tokenが反映されるまで遅延
+          setIsDelayRequestPostRoom(true);
+        },
+      });
+    }
   };
   useEffect(() => {
     if (isDelayRequestPostRoom && authState.token) {
@@ -112,7 +120,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
       setIsDelayRequestPostRoom(false);
     }
   }, [isDelayRequestPostRoom, authState.token]);
-  const isLoadingSubmit = isLoadingPostRoom || isLoadingPostSignup;
+  const isLoading = isLoadingSubmit || isLoadingLater;
 
   return (
     <IntroCreateRoomTemplate
@@ -131,6 +139,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
       onPressLater={onPressLater}
       onPressSubmit={onPressSubmit}
       isLoadingSubmit={isLoadingSubmit}
+      isLoadingLater={isLoadingLater}
     />
   );
 };
