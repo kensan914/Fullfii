@@ -4,7 +4,8 @@ import { Animated } from "react-native";
 
 import { TopTemplate } from "src/components/templates/TopTemplate";
 import { LottieSource } from "src/types/Types";
-import {logEvent} from "src/utils/firebase/logEvent"
+import { logEvent } from "src/utils/firebase/logEvent";
+import { useAuthDispatch } from "src/contexts/AuthContext";
 
 // CONSTANTS
 const BALLOON_ANIMATION_DURATION_MS = 4180;
@@ -13,12 +14,11 @@ const BALLOON_ANIMATION_DELAY_MS = 200;
 
 export const TopScreen: React.FC = () => {
   const navigation = useNavigation();
+  const authDispatch = useAuthDispatch();
 
   // ==== 風船アニメーション ====
-  const [
-    lottieBalloonSource,
-    setLottieBalloonSource,
-  ] = useState<LottieSource>();
+  const [lottieBalloonSource, setLottieBalloonSource] =
+    useState<LottieSource>();
   const animationProgressRef = useRef(new Animated.Value(0));
   const isAnimated = useRef(false);
   const [isEndAnimation, setIsEndAnimation] = useState(false);
@@ -66,8 +66,9 @@ export const TopScreen: React.FC = () => {
   };
 
   const onPressConsent = () => {
-    logEvent("push_top_screen_button")
-    navigation.navigate("Onboarding");
+    logEvent("push_top_screen_button");
+    // navigation.navigate("Onboarding");
+    authDispatch({ type: "COMPLETE_INTRO" });
   };
 
   return (

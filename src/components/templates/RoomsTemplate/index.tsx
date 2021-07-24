@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode } from "react";
+import React, { Dispatch } from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
