@@ -11,7 +11,7 @@ import { useProfileState } from "src/contexts/ProfileContext";
 import { formatGender } from "src/utils";
 import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
 import { GenderKey } from "src/types/Types.context";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 type InputBlockProps = {
   screen: ProfileInputScreen;

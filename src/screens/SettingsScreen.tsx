@@ -15,9 +15,9 @@ import {
   ADMOB_BANNER_WIDTH,
 } from "src/constants/env";
 import { OnPress } from "src/types/Types";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { width } from "src/constants";
-import {logEvent} from "src/utils/firebase/logEvent"
+import { logEvent } from "src/utils/firebase/logEvent";
 
 export const SettingsScreen: React.FC = () => {
   const _handleOpenWithWebBrowser = () => {
@@ -77,7 +77,7 @@ export const SettingsScreen: React.FC = () => {
             iconName={openFirstContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
               if (openFirstContent) {
-              logEvent("press_what_is_this_app")
+                logEvent("press_what_is_this_app");
               }
               setOpenFirstContent(!openFirstContent);
             }}
@@ -101,7 +101,7 @@ export const SettingsScreen: React.FC = () => {
             iconName={openSecondContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
               if (openSecondContent) {
-              logEvent("press_what_is_room")
+                logEvent("press_what_is_room");
               }
               setOpenSecondContent(!openSecondContent);
             }}
@@ -126,7 +126,7 @@ export const SettingsScreen: React.FC = () => {
             iconName={openThirdContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
               if (openThirdContent) {
-              logEvent("press_how_to_speak")
+                logEvent("press_how_to_speak");
               }
               setOpenThirdContent(!openThirdContent);
             }}
@@ -154,7 +154,7 @@ export const SettingsScreen: React.FC = () => {
             iconName={openFourthContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
               if (openFourthContent) {
-              logEvent("press_how_to_listen_to")
+                logEvent("press_how_to_listen_to");
               }
               setOpenFourthContent(!openFourthContent);
             }}

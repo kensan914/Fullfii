@@ -2,7 +2,7 @@ import React, { Dispatch } from "react";
 import { Block, Button, Text } from "galio-framework";
 import { StyleSheet, ScrollView } from "react-native";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
 import { width } from "src/constants";
@@ -67,6 +67,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
                     <TalkingRoomCard
                       key={participatingRoom.id}
                       talkingRoom={participatingRoom}
+                      style={styles.talkingRoomCard}
                     />
                   );
                 })
@@ -107,6 +108,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
                   <TalkingRoomCard
                     key={createdRoom.id}
                     talkingRoom={createdRoom}
+                    style={styles.talkingRoomCard}
                   />
                 );
               })}
@@ -212,5 +214,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     paddingLeft: 4,
+  },
+  talkingRoomCard: {
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
   },
 });

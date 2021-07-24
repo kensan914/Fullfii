@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { Text, Block } from "galio-framework";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { GenderKey } from "src/types/Types.context";
 import { FormattedGenderKey } from "src/types/Types";
 import { width } from "src/constants";

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Platform, StatusBar, LogBox } from "react-native";
 import { Asset } from "expo-asset";
-import { GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "react-native-splash-screen";
 import * as t from "io-ts";
@@ -13,7 +12,6 @@ import Toast from "react-native-toast-message";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Screens from "src/navigations/Screens";
-import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
 import {
   asyncGetBool,
@@ -142,19 +140,17 @@ const RootNavigator: React.FC<Props> = (props) => {
             <ProfileProvider profile={profile} isBanned={isBanned}>
               <ChatProvider talkingRoomCollection={talkingRoomCollection}>
                 <DomProvider>
-                  <GalioProvider theme={materialTheme}>
-                    <StartUpManager>
-                      {Platform.OS === "ios" ? (
-                        <StatusBar barStyle="dark-content" />
-                      ) : (
-                        // HACK: react-native-modal内でkeyboardを開くと意図せずavoidがかかる(Android). Androidのステータスバーを全面非表示
-                        // https://github.com/react-native-modal/react-native-modal/issues/344#issuecomment-629400548
-                        <StatusBar hidden />
-                      )}
-                      <Screens />
-                      <Toast ref={(ref) => Toast.setRef(ref)} />
-                    </StartUpManager>
-                  </GalioProvider>
+                  <StartUpManager>
+                    {Platform.OS === "ios" ? (
+                      <StatusBar barStyle="dark-content" />
+                    ) : (
+                      // HACK: react-native-modal内でkeyboardを開くと意図せずavoidがかかる(Android). Androidのステータスバーを全面非表示
+                      // https://github.com/react-native-modal/react-native-modal/issues/344#issuecomment-629400548
+                      <StatusBar hidden />
+                    )}
+                    <Screens />
+                    <Toast ref={(ref) => Toast.setRef(ref)} />
+                  </StartUpManager>
                 </DomProvider>
               </ChatProvider>
             </ProfileProvider>

@@ -6,7 +6,7 @@ import {
   useProfileState,
 } from "src/contexts/ProfileContext";
 
-const useAllContext = (): [States, Dispatches] => {
+export const useAllContext = (): [States, Dispatches] => {
   const states: States = {
     authState: useAuthState(),
     profileState: useProfileState(),
@@ -20,5 +20,3 @@ const useAllContext = (): [States, Dispatches] => {
 
   return [states, dispatches];
 };
-
-export default useAllContext;

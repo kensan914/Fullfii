@@ -16,7 +16,7 @@ import {
 } from "src/types/Types";
 import { FavoriteUserListEmpty } from "src/components/templates/ProfileTemplate/molecules/FavoriteUserListEmpty";
 import { FavoriteUserListItem } from "src/components/templates/ProfileTemplate/molecules/FavoriteUserListItem";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { useAnimatedFlatListProps } from "src/screens/ProfileScreen/useAnimatedFlatListProps";
 import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";

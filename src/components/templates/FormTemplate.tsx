@@ -5,13 +5,13 @@ import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { Forms, SubmitSettings } from "src/types/Types";
 import { SubmitButton } from "src/components/atoms/SubmitButton";
 import { width } from "src/constants";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 type Props = {
   forms: Forms;
   submitSettings: SubmitSettings;
 };
-const FormTemplate: React.FC<Props> = (props) => {
+export const FormTemplate: React.FC<Props> = (props) => {
   const { forms, submitSettings } = props;
   return (
     <>
@@ -67,8 +67,6 @@ const FormTemplate: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default FormTemplate;
 
 const styles = StyleSheet.create({
   container: {

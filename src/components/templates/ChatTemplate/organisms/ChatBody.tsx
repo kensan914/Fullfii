@@ -4,7 +4,7 @@ import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import "dayjs/locale/ja";
 import { getBottomSpace } from "react-native-iphone-x-helper";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { generateUuid4, includeUrl } from "src/utils";
 import { useTurnOnRead } from "src/screens/ChatScreen/useTurnOnRead";

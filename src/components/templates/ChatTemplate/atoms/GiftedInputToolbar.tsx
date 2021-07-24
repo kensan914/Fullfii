@@ -1,7 +1,7 @@
 import React from "react";
 import { InputToolbar, InputToolbarProps } from "react-native-gifted-chat";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 export const GiftedInputToolbar: React.FC<InputToolbarProps> = (props) => {
   return (

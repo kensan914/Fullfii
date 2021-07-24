@@ -3,7 +3,7 @@ import { Block } from "galio-framework";
 import { Image, ImageStyle, StyleSheet } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 type Props = {
   size: number;

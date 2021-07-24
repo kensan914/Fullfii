@@ -16,10 +16,9 @@ import NativeAdView, {
 } from "react-native-admob-native-ads";
 import { Block } from "galio-framework";
 
-import { Events, Logger } from "src/constants";
-import { COLORS } from "src/constants/theme";
-
-const { width } = Dimensions.get("screen");
+import { COLORS } from "src/constants/colors";
+import { width } from "src/constants";
+import { logAdmob } from "src/utils";
 
 export const AdView = (props) => {
   const { index, media, type, adUnitId } = props;
@@ -33,23 +32,23 @@ export const AdView = (props) => {
   const _onAdFailedToLoad = (event) => {
     setError(true);
     setLoading(false);
-    Logger("AD", "FAILED", event?.error?.message);
+    logAdmob("AD", "FAILED", event?.error?.message);
   };
 
   const _onAdLoaded = () => {
-    Logger("AD", "LOADED", "Ad has loaded successfully");
+    logAdmob("AD", "LOADED", "Ad has loaded successfully");
   };
 
   const _onAdClicked = () => {
-    Logger("AD", "CLICK", "User has clicked the Ad");
+    logAdmob("AD", "CLICK", "User has clicked the Ad");
   };
 
   const _onAdImpression = () => {
-    Logger("AD", "IMPRESSION", "Ad impression recorded");
+    logAdmob("AD", "IMPRESSION", "Ad impression recorded");
   };
 
   const _onUnifiedNativeAdLoaded = (event) => {
-    Logger("AD", "RECIEVED", "Unified ad  Recieved", event);
+    logAdmob("AD", "RECIEVED", "Unified ad  Recieved", event);
     setLoading(false);
     setAdLoaded(true);
     setError(false);
@@ -73,7 +72,7 @@ export const AdView = (props) => {
         setLoading(true);
         setAdLoaded(false);
         setError(false);
-        Logger("AD", "IN VIEW", "Loading " + index);
+        logAdmob("AD", "IN VIEW", "Loading " + index);
         nativeAdRef.current?.loadAd();
       } else {
         /**
@@ -83,9 +82,9 @@ export const AdView = (props) => {
          * to server.
          */
         if (adLoaded) {
-          Logger("AD", "IN VIEW", "Loaded " + index);
+          logAdmob("AD", "IN VIEW", "Loaded " + index);
         } else {
-          Logger("AD", "NOT IN VIEW", index);
+          logAdmob("AD", "NOT IN VIEW", index);
         }
       }
     });
@@ -99,7 +98,7 @@ export const AdView = (props) => {
      */
     if (!loadOnMount) {
       DeviceEventEmitter.addListener(
-        Events.onViewableItemsChanged,
+        "onViewableItemsChanged",
         onViewableItemsChanged
       );
     }
@@ -107,7 +106,7 @@ export const AdView = (props) => {
     return () => {
       if (!loadOnMount) {
         DeviceEventEmitter.removeListener(
-          Events.onViewableItemsChanged,
+          "onViewableItemsChanged",
           onViewableItemsChanged
         );
       }

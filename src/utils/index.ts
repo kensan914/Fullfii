@@ -1,21 +1,5 @@
-import { Alert, Platform, Dimensions } from "react-native";
-import { isRight } from "fp-ts/lib/Either";
-
-import { FREE_PLAN } from "src/constants/env";
-import { CODE } from "src/constants/statusCodes";
-import {
-  FormattedGender,
-  FormattedGenderKey,
-  WsSettings,
-} from "src/types/Types";
-import {
-  Gender,
-  MeProfile,
-  Room,
-  RoomJson,
-  TalkTicket,
-  TalkTicketJson,
-} from "src/types/Types.context";
+import { FormattedGender, FormattedGenderKey } from "src/types/Types";
+import { Gender } from "src/types/Types.context";
 
 /**
  * ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo"
@@ -197,76 +181,6 @@ export const isObject = (val: unknown): val is Record<string, unknown> => {
   return val !== null && typeof val === "object" && !Array.isArray(val);
 };
 
-/** TODO: いらない
- * Object.keys(webSetting) >>> [url, onopen, onmessage, onclose, registerWs]
- * axios.ts同様、wsSettings.onmessageのeDataは整形済みであり型安全が保証されているためasしても構わない
- * @param wsSettings
- */
-export class Ws {
-  connectIntervalTime = 2000;
-  wsSettings: WsSettings;
-  isReconnect: boolean;
-  connectInterval: NodeJS.Timeout;
-  constructor(wsSettings: WsSettings) {
-    this.wsSettings = wsSettings;
-    this.isReconnect = false;
-    this.connectInterval = setTimeout(() => {
-      return void 0;
-    }, 0);
-
-    this.connect();
-  }
-
-  connect = (isReconnect = false): void => {
-    const ws = new WebSocket(this.wsSettings.url);
-
-    ws.onopen = this.wsSettings.onopen
-      ? () => {
-          clearTimeout(this.connectInterval);
-          this.wsSettings.onopen(ws);
-        }
-      : () => {
-          return void 0;
-        };
-    ws.onmessage = this.wsSettings.onmessage
-      ? (e) => {
-          const eData = deepCvtKeyFromSnakeToCamel(JSON.parse(e.data));
-          const typeIoTsResult =
-            this.wsSettings.typeIoTsOfResData.decode(eData);
-          if (!isRight(typeIoTsResult)) {
-            console.group();
-            console.error(
-              `Type does not match(ws onmessage). The object can be found below.`
-            );
-            console.error({ ...eData });
-            console.groupEnd();
-          }
-          this.wsSettings.onmessage(eData, e, ws, isReconnect);
-        }
-      : (e) => {
-          return e;
-        };
-    ws.onclose = (e) => {
-      if (
-        e.code === CODE.WS.UNAUTHORIZED ||
-        e.code === 1000 /* 接続の正常な完了 */ ||
-        typeof e.code === "undefined" /* サーバダウン */
-      ) {
-        // ws切断
-      } else {
-        // ws再接続
-        this.connectInterval = setTimeout(() => {
-          if (!ws || ws.readyState == WebSocket.CLOSED) {
-            this.connect(true); // isReconnect = true
-          }
-        }, this.connectIntervalTime);
-      }
-      this.wsSettings.onclose(e, ws);
-    };
-    this.wsSettings.registerWs && this.wsSettings.registerWs(ws);
-  };
-}
-
 // ios環境でcloseCodeが1001で固定されてしまうため対処
 export const closeWsSafely = (ws: WebSocket): void => {
   if (isObject(ws) && Object.keys(ws).length) {
@@ -277,33 +191,6 @@ export const closeWsSafely = (ws: WebSocket): void => {
   } else {
     console.log("ws is empty object");
   }
-};
-
-/**
- * 有料Planに加入しているか判定し、加入していれば、callbackを実行。加入していなければalertTextをアラートし加入を促す。
- */
-export const checkSubscribePlan = (
-  profile: MeProfile,
-  callback: () => void,
-  alertText: string
-): void => {
-  if (profile.plan.key !== FREE_PLAN.productId) {
-    callback();
-  } else {
-    Alert.alert(alertText);
-  }
-};
-
-/**
- * iPhoneX系か判定
- * @deprecated
- */
-export const checkiPhoneX = (Dimensions: Dimensions): boolean => {
-  const { height, width } = Dimensions.get("window");
-  const iPhoneX =
-    Platform.OS === "ios" &&
-    (height === 812 || width === 812 || height === 896 || width === 896);
-  return iPhoneX;
 };
 
 /** オブジェクトに不正なkeyが含まれていないか判定
@@ -350,24 +237,6 @@ export const hasProperty = (
   key: string
 ): boolean => {
   return !!obj && Object.prototype.hasOwnProperty.call(obj, key);
-};
-
-/**
- *
- * @param talkTicketJson
- */
-export const isTalkTicket = (
-  _talkTicket: TalkTicketJson | TalkTicket
-): _talkTicket is TalkTicket => {
-  return !!_talkTicket.room && "messages" in _talkTicket.room;
-};
-
-/**
- *
- * @param talkTicketJson
- */
-export const isRoom = (room: Room | RoomJson): room is Room => {
-  return !!room && "messages" in room;
 };
 
 /**
@@ -421,4 +290,13 @@ export const equalsArray: EqualsArray = (
     }
   }
   return true;
+};
+
+/**
+ * @param {string} tag
+ * @param {string} type
+ * @param {string} value
+ */
+export const logAdmob = (tag = "AD", type: string, value: string): void => {
+  console.log(`[${tag}][${type}]:`, value);
 };

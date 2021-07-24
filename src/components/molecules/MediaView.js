@@ -2,27 +2,27 @@ import React from "react";
 import { Dimensions } from "react-native";
 import { MediaView } from "react-native-admob-native-ads";
 
-import { Logger } from "src/constants";
+import { logAdmob } from "src/utils";
 
 export const MediaViews = ({ aspectRatio = 1.5 }) => {
   const onVideoPlay = () => {
-    Logger("VIDEO", "PLAY", "Video is now playing");
+    logAdmob("VIDEO", "PLAY", "Video is now playing");
   };
 
   const onVideoPause = () => {
-    Logger("VIDEO", "PAUSED", "Video is now paused");
+    logAdmob("VIDEO", "PAUSED", "Video is now paused");
   };
 
   const onVideoProgress = (event) => {
-    Logger("VIDEO", "PROGRESS UPDATE", event);
+    logAdmob("VIDEO", "PROGRESS UPDATE", event);
   };
 
   const onVideoEnd = () => {
-    Logger("VIDEO", "ENDED", "Video end reached");
+    logAdmob("VIDEO", "ENDED", "Video end reached");
   };
 
   const onVideoMute = (muted) => {
-    Logger("VIDEO", "MUTE", muted);
+    logAdmob("VIDEO", "MUTE", muted);
   };
 
   return (

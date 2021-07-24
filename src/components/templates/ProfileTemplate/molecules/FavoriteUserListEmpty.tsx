@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 import { FavoriteUserDemoModal } from "src/components/templates/ProfileTemplate/molecules/FavoriteUserDemoModal";
 

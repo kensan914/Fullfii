@@ -3,7 +3,7 @@ import { Block, Button, Text } from "galio-framework";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 import { width } from "src/constants";
 import { useDomState } from "src/contexts/DomContext";

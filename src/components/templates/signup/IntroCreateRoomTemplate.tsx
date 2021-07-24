@@ -13,7 +13,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 import { RoomCardDemoModal } from "src/components/templates/signup/organisms/RoomCardDemoModal";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { width } from "src/constants";
 import { Icon } from "src/components/atoms/Icon";
 import { RoundButton } from "src/components/atoms/RoundButton";
