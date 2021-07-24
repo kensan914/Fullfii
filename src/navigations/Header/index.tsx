@@ -1,36 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-  Platform,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import { Block, NavBar, theme } from "galio-framework";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import { Icon } from "src/components/atoms/Icon";
 import materialTheme from "src/constants/theme";
-import { ByeByeMenu } from "src/components/organisms/ByeByeMenu";
-import { LeaveParticipantMenu } from "src/components/organisms/LeaveParticipantMenu";
 import { COLORS } from "src/constants/theme";
-import { useDomDispatch } from "src/contexts/DomContext";
-import { width } from "src/constants";
+import { HEADER_HEIGHT, width } from "src/constants";
 import { RouteName } from "src/types/Types";
-import { AddPrivateButton } from "src/components/organisms/AddPrivateButton";
-
-const SettingsButton: React.FC<{ style?: ViewStyle }> = (props) => {
-  const { style } = props;
-
-  const navigation = useNavigation();
-  return (
-    <TouchableOpacity
-      style={[style]}
-      onPress={() => navigation.navigate("Settings")}
-    >
-      <Icon family="AntDesign" size={32} name="setting" color={COLORS.BROWN} />
-    </TouchableOpacity>
-  );
-};
+import { SettingsHeaderMenu } from "src/navigations/Header/organisms/SettingsHeaderMenu";
+import { ChatHeaderMenu } from "src/navigations/Header/organisms/ChatHeaderMenu";
+import { BackButton } from "src/navigations/Header/atoms/BackButton";
+import { ReloadHeaderMenu } from "src/navigations/Header/organisms/ReloadHeaderMenu";
 
 type Props = {
   name: RouteName;
@@ -53,32 +33,18 @@ export const Header: React.FC<Props> = (props) => {
   } = props;
 
   const navigation = useNavigation();
-  const domDispatch = useDomDispatch();
   const route = useRoute();
 
   const renderRight = () => {
     const routeName = route.name;
 
     if (routeName === "Chat" && roomId)
-      return (
-        <Block
-          key="TalkMenuButton"
-          style={{ flexDirection: "row", justifyContent: "center" }}
-        >
-          <AddPrivateButton />
-          <LeaveParticipantMenu
-            key="TalkMenuButton"
-            roomId={roomId}
-            style={{ marginRight: 8 }}
-          />
-          <ByeByeMenu roomId={roomId} style={{ marginRight: 20 }} />
-        </Block>
-      );
+      return <ChatHeaderMenu key="Chat" roomId={roomId} />;
     switch (name) {
       case "Profile":
       case "Rooms":
       case "MyRooms":
-        return <SettingsButton key="Settings" />;
+        return <SettingsHeaderMenu key="Settings" />;
       default:
         break;
     }
@@ -87,51 +53,19 @@ export const Header: React.FC<Props> = (props) => {
   const renderLeft = () => {
     if (back) {
       return (
-        <TouchableOpacity
-          onPress={handleLeftPress}
-          style={styles.backIconContainer}
-        >
-          {Platform.OS === "ios" ? (
-            <Icon
-              family="font-awesome"
-              size={30}
-              name="angle-left"
-              color={COLORS.GRAY}
-            />
-          ) : (
-            <Icon
-              family="material"
-              size={30}
-              name="arrow-back"
-              color={COLORS.GRAY}
-            />
-          )}
-        </TouchableOpacity>
+        <BackButton
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
       );
     } else {
       const routeName = route.name;
       switch (routeName) {
         case "Rooms":
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                domDispatch({ type: "SCHEDULE_TASK", taskKey: "refreshRooms" });
-              }}
-            >
-              <Icon
-                family="AntDesign"
-                size={32}
-                name="reload1"
-                color={COLORS.BROWN}
-              />
-            </TouchableOpacity>
-          );
+          return <ReloadHeaderMenu />;
       }
     }
-  };
-
-  const handleLeftPress = () => {
-    if (back) navigation.goBack();
   };
 
   const [currentScreenName, setCurrentScreenName] = useState(name);
@@ -158,8 +92,8 @@ export const Header: React.FC<Props> = (props) => {
         return "ユーザネーム";
       case "InputGender":
         return "性別";
-      case "InputIntroduction":
-        return "今悩んでいること";
+      case "InputIsPrivateProfile":
+        return "公開範囲";
       case "Chat":
         if (title) return title;
         else return "トーク";
@@ -167,6 +101,8 @@ export const Header: React.FC<Props> = (props) => {
         return "設定";
       case "AccountDelete":
         return "アカウント削除";
+      case "MessageHistory":
+        return "トーク履歴";
       default:
         return name;
     }
@@ -187,11 +123,11 @@ export const Header: React.FC<Props> = (props) => {
         title={convertNameToTitle(name)}
         titleStyle={[styles.title, isLeftTitle ? {} : { textAlign: "center" }]}
         right={renderRight()}
-        rightStyle={{ flex: 0.3 }}
+        rightStyle={{ flex: isLeftTitle ? 0.6 : 0.3 }}
         left={renderLeft()}
         leftStyle={styles.leftStyle}
         leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
-        onLeftPress={() => handleLeftPress()}
+        // onLeftPress={() => handleLeftPress()}
       />
     </Block>
   );
@@ -207,7 +143,7 @@ const styles = StyleSheet.create({
   },
   navbar: {
     zIndex: 5,
-    height: 54,
+    height: HEADER_HEIGHT,
     backgroundColor: COLORS.BEIGE,
   },
   shadow: {
@@ -243,9 +179,5 @@ const styles = StyleSheet.create({
   },
   leftStyle: {
     flex: 0.3,
-  },
-  backIconContainer: {
-    height: "100%",
-    justifyContent: "center",
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Alert,
   AlertButton,
@@ -17,14 +17,16 @@ import { useProfileState } from "src/contexts/ProfileContext";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
 import { COLORS } from "src/constants/theme";
-import { useLeaveAndRecreateRoom } from "src/components/organisms/ByeByeMenu/useLeaveAndRecreateRoom";
+import { useLeaveAndRecreateRoom } from "src/navigations/Header/organisms/ChatHeaderMenu/ByeByeMenu/useLeaveAndRecreateRoom";
 
 type Props = {
   roomId: string;
+  isReadyTalk: boolean;
+  isReadyTalkForOwner: boolean;
   style?: ViewStyle;
 };
 export const ByeByeMenu: React.FC<Props> = (props) => {
-  const { roomId, style } = props;
+  const { roomId, isReadyTalk, isReadyTalkForOwner, style } = props;
 
   const chatState = useChatState();
   const profileState = useProfileState();
@@ -171,11 +173,14 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
               "plain-text"
             )
           : prompt(mainText, subText, [
+              // 2番目のボタンはキャンセルボタンらしい
+              // https://github.com/shimohq/react-native-prompt-android/blob/master/index.android.js
+              buttons[0],
               {
                 text: "キャンセル",
                 style: "cancel",
               },
-              ...buttons,
+              buttons[1],
             ]);
       }
 
@@ -234,43 +239,19 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
     }
   };
 
-  const [disable, setDisable] = useState(true);
-  useEffect(() => {
-    // トーク開始済みのみ表示
-    if (
-      roomId in chatState.talkingRoomCollection &&
-      chatState.talkingRoomCollection[roomId].isStart
-    ) {
-      setDisable(false);
-    }
-  }, [chatState.talkingRoomCollection]);
-
-  const [isOwner, setIsOwner] = useState(false);
-  useEffect(() => {
-    if (
-      roomId in chatState.talkingRoomCollection &&
-      chatState.talkingRoomCollection[roomId].owner.id ===
-        profileState.profile.id
-    ) {
-      setIsOwner(true);
-    } else {
-      setIsOwner(false);
-    }
-  }, [chatState.talkingRoomCollection, profileState.profile.id]);
-
   return (
     <>
-      {!disable && (
+      {isReadyTalk && (
         <TouchableOpacity
           style={[styles.byeByeButton, style]}
           onPress={() => {
-            if (!disable) {
+            if (isReadyTalk) {
               onPressByeBye();
             }
           }}
         >
           <Text size={16} color={"white"} bold style={styles.byeByeButtonLabel}>
-            {isOwner ? "終了👋" : "退室🤫"}
+            {isReadyTalkForOwner ? "終了👋" : "退室🤫"}
           </Text>
         </TouchableOpacity>
       )}

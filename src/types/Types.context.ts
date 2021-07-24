@@ -129,6 +129,9 @@ export const ProfileIoTs = t.type({
   job: JobIoTs,
   introduction: t.string,
   image: t.union([t.string, t.null]),
+  numOfOwner: t.number,
+  numOfParticipated: t.number,
+  isPrivateProfile: t.boolean,
 });
 export const MeProfileIoTs = t.intersection([
   t.type({
@@ -199,6 +202,14 @@ export type ChatActionType =
       roomId: string;
       token: string;
       isForceSendReadNotification?: boolean;
+    }
+  | {
+      type: "ADD_FAVORITE_USER";
+      userId: string;
+    }
+  | {
+      type: "DELETE_FAVORITE_USER";
+      userId: string;
     }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
@@ -342,8 +353,10 @@ export const BaseRoomIoTs = t.type({
   leftMembers: t.array(ProfileIoTs),
   maxNumParticipants: t.number,
   isExcludeDifferentGender: t.boolean,
+  isPrivate: t.boolean,
   isEnd: t.boolean,
   isActive: t.boolean,
+  addedFavoriteUserIds: t.array(t.string),
 });
 const RoomCreatedAtIoTs = t.type({
   createdAt: DateType,

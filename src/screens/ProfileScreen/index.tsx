@@ -1,77 +1,57 @@
-import { useNavigation } from "@react-navigation/native";
-import React, {useState} from "react";
-import { ProfileTemplate } from "src/components/templates/ProfileTemplate";
+import React, { useState } from "react";
 
-type userInfo = {
-  name: string,
-  gender: string,
-  job: string,
-  image: string,
-  sumOfTalkedRoom: number,
-  sumOfListenedRoom: number
-};
-type wantToTalkUsers = {
-  name: string,
-  image: string
-}[]
+import { ProfileTemplate } from "src/components/templates/ProfileTemplate";
+import { useProfileState } from "src/contexts/ProfileContext";
+import { useListInList } from "src/screens/ProfileScreen/useListInList";
+import { Tab } from "src/components/templates/ProfileTemplate/organisms/TabForTest";
+import {
+  PROFILE_VIEW_HEIGHT_TYPE,
+  RenderScene,
+  Routes,
+  TAB_BAR_HEIGHT_TYPE,
+} from "src/types/Types";
+import { FavoriteUserList } from "src/components/templates/ProfileTemplate/organisms/FavoriteUserList";
 
 export const ProfileScreen: React.FC = () => {
-  const navigation = useNavigation();
-  const [isList, setIsList] = useState(false);
+  const profileState = useProfileState();
 
-  const onTransitionProfileEditor = () => {
-    navigation.navigate("ProfileEditor");
+  const meProfile = profileState.profile;
+
+  // list in list
+  const [PROFILE_VIEW_HEIGHT] = useState<PROFILE_VIEW_HEIGHT_TYPE>(224); // プロフィール
+  const [TAB_BAR_HEIGHT] = useState<TAB_BAR_HEIGHT_TYPE>(48); // その下のタブバー
+  const [PROFILE_BODY_HEIGHT] = useState(PROFILE_VIEW_HEIGHT + TAB_BAR_HEIGHT);
+  const [routes] = useState<Routes>([
+    { key: "tab1", title: "また話したい人" },
+    // { key: "tab2", title: "独り言" },
+  ]);
+  const { tabIndex, animatedScrollY, onIndexChange, geneSceneProps } =
+    useListInList(routes, PROFILE_VIEW_HEIGHT, PROFILE_BODY_HEIGHT);
+  const renderScene: RenderScene = (props) => {
+    const { route } = props;
+    switch (route.key) {
+      case "tab1": {
+        return <FavoriteUserList {...props} {...geneSceneProps(route.key)} />;
+      }
+      case "tab2": {
+        return <Tab {...props} {...geneSceneProps(route.key)} />;
+      }
+      default:
+        return null;
+    }
   };
 
-  const wantToTalkUsers: wantToTalkUsers = [
-    {
-      name: '匿名子',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子2',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子3',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子4',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子5',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子6',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子7',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子8',
-      image: 'sample image',
-    },
-    {
-      name: '匿名子9',
-      image: 'sample image',
-    },
-  ];
-
-  const userInfo: userInfo = {
-    name: "名無しさん",
-    gender: "女性",
-    job: "フリーター",
-    image: "ddd",
-    sumOfTalkedRoom: 24,
-    sumOfListenedRoom: 5
-  }
-
   return (
-    <ProfileTemplate onTransitionProfileEditor={onTransitionProfileEditor} userInfo={userInfo} wantToTalkUsers={wantToTalkUsers} />
+    <ProfileTemplate
+      meProfile={meProfile}
+      routes={routes}
+      tabIndex={tabIndex}
+      animatedScrollY={animatedScrollY}
+      onIndexChange={onIndexChange}
+      renderScene={renderScene}
+      PROFILE_VIEW_HEIGHT={PROFILE_VIEW_HEIGHT}
+      TAB_BAR_HEIGHT={TAB_BAR_HEIGHT}
+      PROFILE_BODY_HEIGHT={PROFILE_BODY_HEIGHT}
+    />
   );
 };

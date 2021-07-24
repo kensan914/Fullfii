@@ -22,14 +22,12 @@ export const useLeaveAndRecreateRoom: UseLeaveAndRecreateRoom = (
   requestPostRoomLeftMembers,
   thenRecreateRoom
 ) => {
-  const { requestPostRoom } = useRequestPostRoom(null, null, null);
+  const { requestPostRoom } = useRequestPostRoom(null, null, null, null);
   const [additionalThenClose, setAdditionalThenClose] = useState<{
     fn: () => void;
   }>();
-  const [
-    postDataRecreate,
-    setPostDataRecreate,
-  ] = useState<AxiosReActionType | null>();
+  const [postDataRecreate, setPostDataRecreate] =
+    useState<AxiosReActionType | null>();
   const leaveAndRecreateRoom: LeaveAndRecreateRoom = (
     _talkingRoom,
     postDataIncludeLeaveMessage
@@ -41,6 +39,7 @@ export const useLeaveAndRecreateRoom: UseLeaveAndRecreateRoom = (
           data: {
             name: _talkingRoom.name,
             is_exclude_different_gender: _talkingRoom.isExcludeDifferentGender,
+            is_private: _talkingRoom.isPrivate,
           },
           thenCallback: () => {
             thenRecreateRoom && thenRecreateRoom();

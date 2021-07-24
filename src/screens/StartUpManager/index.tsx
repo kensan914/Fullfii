@@ -4,9 +4,9 @@ import { Block } from "galio-framework";
 import { exeSiren } from "src/utils/siren";
 import { useRequestGetMe } from "src/hooks/requests/useRequestMe";
 import { useAuthState } from "src/contexts/AuthContext";
-import { useWsNotification } from "./useWsNotification";
+import { useWsNotification } from "src/screens/StartUpManager/useWsNotification";
 import { useRequestGetTalkInfo } from "src/hooks/requests/useRequestTalkInfo";
-import { useUpdateTalk } from "./useUpdateTalk";
+import { useUpdateTalk } from "src/screens/StartUpManager/useUpdateTalk";
 import { usePushNotificationParams } from "src/hooks/pushNotifications/usePushNotificationParams";
 
 export const StartUpManager: React.FC = (props) => {

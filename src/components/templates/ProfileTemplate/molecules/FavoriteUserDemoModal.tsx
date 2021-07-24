@@ -7,7 +7,7 @@ type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<boolean>;
 };
-export const TalkListDemoModal: React.FC<Props> = (props) => {
+export const FavoriteUserDemoModal: React.FC<Props> = (props) => {
   const { isOpen, setIsOpen } = props;
 
   return (

@@ -6,9 +6,10 @@ import { RoomMemberCollection } from "src/types/Types";
 import { AllMessages } from "src/types/Types.context";
 
 type ConvertMessagesToGifted = (messages: AllMessages) => IMessage[];
-type UseGifted = (
-  roomMemberCollection: RoomMemberCollection
-) => { giftedMe: User; convertMessagesToGifted: ConvertMessagesToGifted };
+type UseGifted = (roomMemberCollection: RoomMemberCollection) => {
+  giftedMe: User;
+  convertMessagesToGifted: ConvertMessagesToGifted;
+};
 export const useGifted: UseGifted = (roomMemberCollection) => {
   const profileState = useProfileState();
   const me = profileState.profile;

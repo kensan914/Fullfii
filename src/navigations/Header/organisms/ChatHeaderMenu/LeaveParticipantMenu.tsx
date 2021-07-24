@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Alert,
   AlertButton,
@@ -10,23 +10,22 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useChatState } from "src/contexts/ChatContext";
 import { useRequestPostRoomLeftMembers } from "src/hooks/requests/useRequestRoomMembers";
-import { useProfileState } from "src/contexts/ProfileContext";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
 import { COLORS } from "src/constants/theme";
-import { useLeaveAndRecreateRoom } from "./ByeByeMenu/useLeaveAndRecreateRoom";
+import { useLeaveAndRecreateRoom } from "src/navigations/Header/organisms/ChatHeaderMenu/ByeByeMenu/useLeaveAndRecreateRoom";
 import { Icon } from "src/components/atoms/Icon";
 import { useRequestPatchBlockedAccount } from "src/hooks/requests/useRequestMe";
 
 type Props = {
   roomId: string;
+  isReadyTalkForOwner: boolean;
   style?: ViewStyle;
 };
 export const LeaveParticipantMenu: React.FC<Props> = (props) => {
-  const { roomId, style } = props;
+  const { roomId, isReadyTalkForOwner, style } = props;
 
   const chatState = useChatState();
-  const profileState = useProfileState();
   const navigation = useNavigation();
 
   const { requestPostRoomLeftMembers } = useRequestPostRoomLeftMembers(
@@ -61,7 +60,7 @@ export const LeaveParticipantMenu: React.FC<Props> = (props) => {
       let subText = "";
       let buttons: AlertButton[];
 
-      if (!disable) {
+      if (isReadyTalkForOwner) {
         mainTextSuffix = ALERT_MESSAGES["OWNER_LEAVE_PARTICIPANT"][0];
         subText = ALERT_MESSAGES["OWNER_LEAVE_PARTICIPANT"][1];
         buttons = [
@@ -85,25 +84,29 @@ export const LeaveParticipantMenu: React.FC<Props> = (props) => {
     }
   };
 
-  const [disable, setDisable] = useState(true);
-  useEffect(() => {
-    // トーク開始済み, かつ作成者のみ表示
-    if (
-      roomId in chatState.talkingRoomCollection &&
-      chatState.talkingRoomCollection[roomId].isStart &&
-      chatState.talkingRoomCollection[roomId].owner.id ===
-        profileState.profile.id
-    ) {
-      setDisable(false);
-    }
-  }, [chatState.talkingRoomCollection]);
+  // const [disable, setDisable] = useState(true);
+  // useEffect(() => {
+  //   // トーク開始済み, かつ作成者のみ表示
+  //   if (
+  //     roomId in chatState.talkingRoomCollection &&
+  //     chatState.talkingRoomCollection[roomId].isStart &&
+  //     chatState.talkingRoomCollection[roomId].owner.id ===
+  //       profileState.profile.id
+  //   ) {
+  //     setDisable(false);
+  //   }
+  // }, [chatState.talkingRoomCollection]);
 
   return (
     <>
       <TouchableOpacity
-        style={[styles.leaveButton, style]}
+        style={[
+          styles.leaveButton,
+          style,
+          isReadyTalkForOwner ? {} : { width: 0, height: 0, marginRight: 0 },
+        ]}
         onPress={() => {
-          if (!disable) {
+          if (isReadyTalkForOwner) {
             onPressLeaveParticipant();
           }
         }}
@@ -112,7 +115,7 @@ export const LeaveParticipantMenu: React.FC<Props> = (props) => {
           family="Entypo"
           size={32}
           name="block"
-          color={!disable ? COLORS.BROWN : COLORS.TRANSPARENT}
+          color={isReadyTalkForOwner ? COLORS.BROWN : COLORS.TRANSPARENT}
         />
       </TouchableOpacity>
     </>

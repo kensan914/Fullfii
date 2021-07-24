@@ -7,7 +7,7 @@ import FormTemplate from "src/components/templates/FormTemplate";
 import { BASE_URL } from "src/constants/env";
 import useAllContext from "src/contexts/ContextUtils";
 
-const AccountDelete: React.FC = () => {
+export const AccountDeleteScreen: React.FC = () => {
   const [deleteReason, setDeleteReason] = useState("");
 
   const [states, dispatches] = useAllContext();
@@ -35,10 +35,10 @@ const AccountDelete: React.FC = () => {
     null,
     {
       data: { reason: deleteReason },
-      thenCallback: (resData, res) => {
+      thenCallback: async (resData, res) => {
         if (res.status === 204) {
           // async storage削除
-          dangerouslyDelete(dispatches, ["status"]);
+          await dangerouslyDelete(dispatches, ["status"]);
           dispatches.authDispatch({ type: "DELETE_ACCOUNT" });
         }
       },
@@ -94,5 +94,3 @@ const AccountDelete: React.FC = () => {
     />
   );
 };
-
-export default AccountDelete;

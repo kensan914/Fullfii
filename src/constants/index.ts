@@ -4,6 +4,9 @@ export const width = Dimensions.get("window").width;
 export const height = Dimensions.get("window").height;
 export const StatusHeight = StatusBar.currentHeight;
 
+export const HEADER_HEIGHT = 54;
+export const BOTTOM_TAB_BAR_HEIGHT = 49;
+
 /**
  *
  * @param {string} tag

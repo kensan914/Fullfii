@@ -5,18 +5,23 @@ import { TypeIoTsOfResData } from "src/types/Types";
 import { TalkingRoomCollection } from "src/types/Types.context";
 import { deepCopy } from "src/utils";
 
-export type AsyncStorageKey =
+export type AsyncStorageKeyString =
   | "token"
   | "password"
   | "status"
-  | "profile"
-  | "talkingRoomCollection"
   | "versionNum"
-  | "skipUpdateVersion"
-  | "isBanned";
+  | "skipUpdateVersion";
+export type AsyncStorageKeyBool = "isBanned";
+export type AsyncStorageKeyObject = "profile" | "talkingRoomCollection";
+export type AsyncStorageKeyObjectIncludeId = "messageHistory";
+export type AsyncStorageKey =
+  | AsyncStorageKeyString
+  | AsyncStorageKeyBool
+  | AsyncStorageKeyObject
+  | AsyncStorageKeyObjectIncludeId;
 
 export const asyncStoreItem = async (
-  key: AsyncStorageKey,
+  key: AsyncStorageKeyString,
   value: string
 ): Promise<void> => {
   try {
@@ -27,18 +32,31 @@ export const asyncStoreItem = async (
 };
 
 export const asyncStoreBool = async (
-  key: AsyncStorageKey,
+  key: AsyncStorageKeyBool,
   value: boolean
 ): Promise<void> => {
-  await asyncStoreItem(key, JSON.stringify(value));
+  await asyncStoreItem(key as AsyncStorageKeyString, JSON.stringify(value));
 };
 
 export const asyncStoreObject = async (
-  key: AsyncStorageKey,
-  value: Record<string, unknown>
+  key: AsyncStorageKeyObject,
+  value: Record<string, unknown> | unknown[]
 ): Promise<void> => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/** keyにIDを含むデータのストア (object限定) */
+export const asyncStoreObjectIncludeId = async (
+  key: AsyncStorageKeyObjectIncludeId,
+  id: string,
+  value: Record<string, unknown> | unknown[]
+): Promise<void> => {
+  try {
+    await asyncStoreObject(`${key}_${id}` as AsyncStorageKeyObject, value);
   } catch (error) {
     console.error(error);
   }
@@ -50,7 +68,7 @@ export const asyncStoreObject = async (
  * (アップデート時, 古いデータがleftされる可能性がある & async storageのデータはAPIレスより安全であると判断)
  **/
 export const asyncGetItem = async (
-  key: AsyncStorageKey,
+  key: AsyncStorageKeyString,
   typeIoTsOfResData?: TypeIoTsOfResData
 ): Promise<string | null> => {
   try {
@@ -76,7 +94,7 @@ export const asyncGetItem = async (
 };
 
 export const asyncGetBool = async (
-  key: AsyncStorageKey,
+  key: AsyncStorageKeyBool,
   typeIoTsOfResData?: TypeIoTsOfResData
 ): Promise<boolean | null> => {
   try {
@@ -110,9 +128,9 @@ export const asyncGetBool = async (
  * (アップデート時, 古いデータがleftされる可能性がある & async storageのデータはAPIレスより安全であると判断)
  **/
 export const asyncGetObject = async (
-  key: AsyncStorageKey,
+  key: AsyncStorageKeyObject,
   typeIoTsOfResData: TypeIoTsOfResData
-): Promise<Record<string, unknown> | null> => {
+): Promise<Record<string, unknown> | unknown[] | null> => {
   try {
     const json = await AsyncStorage.getItem(key);
 
@@ -150,12 +168,31 @@ export const asyncGetObject = async (
   }
 };
 
+/** keyにIDを含むデータのフェッチ (object限定) */
+export const asyncGetObjectIncludeId = async (
+  key: AsyncStorageKeyObjectIncludeId,
+  id: string,
+  typeIoTsOfResData: TypeIoTsOfResData
+): Promise<Record<string, unknown> | unknown[] | null> => {
+  return await asyncGetObject(
+    `${key}_${id}` as AsyncStorageKeyObject,
+    typeIoTsOfResData
+  );
+};
+
 export const asyncRemoveItem = async (key: AsyncStorageKey): Promise<void> => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (error) {
     console.error(error);
   }
+};
+
+export const asyncRemoveItemIncludeId = async (
+  key: AsyncStorageKeyObjectIncludeId,
+  id: string
+): Promise<void> => {
+  asyncRemoveItem(`${key}_${id}` as AsyncStorageKeyObject);
 };
 
 export const asyncStoreTalkingRoomCollection = async (

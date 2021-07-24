@@ -8,7 +8,10 @@ import React, {
 
 import { isExpo } from "src/constants/env";
 import { isString, closeWsSafely } from "src/utils";
-import { asyncStoreTalkingRoomCollection } from "src/utils/asyncStorage";
+import {
+  asyncRemoveItemIncludeId,
+  asyncStoreTalkingRoomCollection,
+} from "src/utils/asyncStorage";
 import {
   ChatState,
   ChatDispatch,
@@ -100,6 +103,8 @@ const chatReducer = (
 
       _talkingRoomCollection[talkingRoom.id] = talkingRoom;
 
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+
       return {
         ...prevState,
         talkingRoomCollection: _talkingRoomCollection,
@@ -127,6 +132,8 @@ const chatReducer = (
         ..._talkingRoomCollection[roomJson.id],
         ...room,
       };
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
 
       return {
         ...prevState,
@@ -213,19 +220,17 @@ const chatReducer = (
       ) {
         // WSの重複を防ぐ
         closeWsSafely(action.ws);
-        return { ...prevState };
       } else {
         _talkingRoom.ws = action.ws;
-        _talkingRoom.isStart = true;
-
-        _talkingRoomCollection[action.roomId] = _talkingRoom;
-
-        asyncStoreTalkingRoomCollection(_talkingRoomCollection);
-        return {
-          ...prevState,
-          talkingRoomCollection: _talkingRoomCollection,
-        };
       }
+
+      _talkingRoom.isStart = true;
+      _talkingRoomCollection[action.roomId] = _talkingRoom;
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
     }
 
     case "RESTART_TALK": {
@@ -588,6 +593,68 @@ const chatReducer = (
         ...prevState,
         talkingRoomCollection: _talkingRoomCollection,
         totalUnreadNum: totalUnreadNum,
+      };
+    }
+
+    case "ADD_FAVORITE_USER": {
+      /** また話したい人追加
+       * @param {Object} action [type, userId] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+
+      // action.userIdが関わっているルームをfilter
+      const targetTalkingRooms = Object.values(_talkingRoomCollection).filter(
+        (tr) => {
+          return (
+            tr.owner.id === action.userId ||
+            tr.participants.map((p) => p.id).includes(action.userId)
+          );
+        }
+      );
+      targetTalkingRooms.forEach((_talkingRoom) => {
+        if (!_talkingRoom.addedFavoriteUserIds.includes(action.userId)) {
+          _talkingRoom.addedFavoriteUserIds = [
+            ..._talkingRoom.addedFavoriteUserIds,
+            action.userId,
+          ];
+        }
+        _talkingRoomCollection[_talkingRoom.id] = _talkingRoom;
+      });
+
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
+      };
+    }
+
+    case "DELETE_FAVORITE_USER": {
+      /** また話したい人削除 & async storageのトーク履歴削除.
+       * @param {Object} action [type, userId] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+
+      const targetTalkingRooms = Object.values(_talkingRoomCollection).filter(
+        (tr) => {
+          return tr.addedFavoriteUserIds.includes(action.userId);
+        }
+      );
+
+      targetTalkingRooms.forEach((_talkingRoom) => {
+        if (_talkingRoom.addedFavoriteUserIds.includes(action.userId)) {
+          _talkingRoom.addedFavoriteUserIds =
+            _talkingRoom.addedFavoriteUserIds.filter(
+              (_addedFavoriteUserId) => _addedFavoriteUserId !== action.userId
+            );
+        }
+        _talkingRoomCollection[_talkingRoom.id] = _talkingRoom;
+      });
+
+      asyncRemoveItemIncludeId("messageHistory", action.userId);
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 

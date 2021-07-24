@@ -1,69 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import { useRoute } from "@react-navigation/native";
 
 import { ProfileInputTemplate } from "src/components/templates/ProfileInputTemplate";
-import requestAxios from "src/hooks/useAxios";
-import { URLJoin } from "src/utils";
-import { BASE_URL } from "src/constants/env";
-import { MeProfile, MeProfileIoTs } from "src/types/Types.context";
-import {
-  PutGenderResData,
-  PutGenderResDataIoTs,
-  RequestPatchProfile,
-  RequestPutGender,
-} from "src/types/Types";
+import { ProfileInputRouteProp } from "src/types/Types";
 
 export const ProfileInputScreen: React.FC = () => {
+  const route = useRoute<ProfileInputRouteProp>();
+  const { prevValue, screen: profileInputScreen } = route.params;
+
+  const [value, setValue] = useState(prevValue);
+  const [canSubmit, setCanSubmit] = useState(false);
+  const [validationText, setValidationText] = useState("");
+
   return (
     <ProfileInputTemplate
-      requestPatchProfile={requestPatchProfile}
-      requestPutGender={requestPutGender}
+      value={value}
+      setValue={setValue}
+      prevValue={prevValue}
+      canSubmit={canSubmit}
+      setCanSubmit={setCanSubmit}
+      validationText={validationText}
+      setValidationText={setValidationText}
+      profileInputScreen={profileInputScreen}
     />
   );
-};
-
-export const requestPatchProfile: RequestPatchProfile = (
-  token,
-  data,
-  profileDispatch,
-  successSubmit,
-  errorSubmit,
-  finallySubmit
-) => {
-  const url = URLJoin(BASE_URL, "me/");
-
-  requestAxios(url, "patch", MeProfileIoTs, {
-    data: data,
-    thenCallback: (resData) => {
-      profileDispatch({ type: "SET_ALL", profile: resData as MeProfile });
-      successSubmit && successSubmit();
-    },
-    catchCallback: (err) => {
-      err && errorSubmit && errorSubmit(err);
-    },
-    finallyCallback: finallySubmit,
-    token: token,
-  });
-};
-
-const requestPutGender: RequestPutGender = (
-  token,
-  putGenderKey,
-  profileDispatch,
-  successSubmit,
-  errorSubmit
-) => {
-  const url = URLJoin(BASE_URL, "me/gender/");
-
-  requestAxios(url, "put", PutGenderResDataIoTs, {
-    data: { key: putGenderKey },
-    thenCallback: (resData) => {
-      const _resData = resData as PutGenderResData;
-      profileDispatch({ type: "SET_ALL", profile: _resData.me });
-      successSubmit && successSubmit();
-    },
-    catchCallback: (err) => {
-      err && errorSubmit && errorSubmit(err);
-    },
-    token: token,
-  });
 };

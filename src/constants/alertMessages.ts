@@ -12,6 +12,10 @@ type AlertMessages = {
   CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER: AlertMessagesValue;
   SEND_TABOO: AlertMessagesValue;
   OWNER_LEAVE_PARTICIPANT: AlertMessagesValue;
+  CANNOT_SEND_MSG_ALREADY_END_ROOM: AlertMessagesValue;
+  CANNOT_SEND_MSG_NOT_EXIST_USER: AlertMessagesValue;
+  CANNOT_SEND_MSG_INAPPROPRIATE: AlertMessagesValue;
+  CANNOT_SEND_MSG_NOT_START: AlertMessagesValue;
 };
 /**
  * アラートメッセージのみこの定数で管理. 確認モーダルとしてのアラートなどは実行元で管理
@@ -44,6 +48,16 @@ export const ALERT_MESSAGES: AlertMessages = {
     "さんを退室させますか？",
     "相手をブロックして強制的にルームから退出させます。相手には通知されません。",
   ],
+  CANNOT_SEND_MSG_ALREADY_END_ROOM: ["このルームは終了されています", ""],
+  CANNOT_SEND_MSG_NOT_EXIST_USER: ["まだ相手が参加していません", ""],
+  CANNOT_SEND_MSG_INAPPROPRIATE: [
+    "このメッセージは送信することができません",
+    "",
+  ],
+  CANNOT_SEND_MSG_NOT_START: [
+    "メッセージを送信できません",
+    "一度アプリを落として再度お試しください。",
+  ],
 };
 
 type ToastMessages = {
@@ -56,6 +70,8 @@ type ToastMessages = {
   HIDE_ROOM: ShowToastSettings;
   BLOCK_ROOM: ShowToastSettings;
   LEAVE_PARTICIPANT: ShowToastSettings;
+  ADD_FAVORITE_USER: ShowToastSettings;
+  DELETE_FAVORITE_USER: ShowToastSettings;
 };
 export const TOAST_SETTINGS: ToastMessages = {
   CREATE_ROOM: {
@@ -84,5 +100,11 @@ export const TOAST_SETTINGS: ToastMessages = {
   },
   LEAVE_PARTICIPANT: {
     text1: "相手を退室させました",
+  },
+  ADD_FAVORITE_USER: {
+    text1: "また話したいリストに追加しました",
+  },
+  DELETE_FAVORITE_USER: {
+    text1: "また話したいリストから削除しました",
   },
 };

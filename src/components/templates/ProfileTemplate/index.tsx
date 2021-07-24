@@ -1,168 +1,104 @@
-import React, { useState } from "react";
-import { StyleSheet, Image } from "react-native";
-import { Block, Text, Button } from "galio-framework";
-import { COLORS } from "src/constants/theme";
-import { width } from "src/constants";
-import IconExtra from "src/components/atoms/Icon";
-import { ToTalkUserListItem } from "src/components/templates/ProfileTemplate/organisms/ToTalkUserListItem";
-import { ListOtherUserEmpty } from "src/components/templates/ProfileTemplate/organisms/ListOtherUserEmpty";
-import { ScrollView } from "react-native-gesture-handler";
-import { TALK_LIST_DEMO_IMG } from "src/constants/imagePath";
-import Avatar from "src/components/atoms/Avatar";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Text } from "galio-framework";
+import { TabBar, TabView } from "react-native-tab-view";
 
-type userInfo = {
-  name: string;
-  gender: string;
-  job: string;
-  image: string;
-  sumOfTalkedRoom: number;
-  sumOfListenedRoom: number;
-};
-type wantToTalkUsers = {
-  name: string;
-  image: string;
-}[];
+import { COLORS } from "src/constants/theme";
+import { MeProfile } from "src/types/Types.context";
+import { ProfileBody } from "src/components/templates/ProfileTemplate/organisms/ProfileBody";
+import {
+  AnimatedScrollY,
+  OnIndexChange,
+  PROFILE_VIEW_HEIGHT_TYPE,
+  RenderHeader,
+  RenderScene,
+  Routes,
+  TAB_BAR_HEIGHT_TYPE,
+} from "src/types/Types";
 
 type Props = {
-  onTransitionProfileEditor: () => void;
-  userInfo: userInfo;
-  wantToTalkUsers: wantToTalkUsers;
+  meProfile: MeProfile;
+  routes: Routes;
+  tabIndex: number;
+  animatedScrollY: AnimatedScrollY;
+  onIndexChange: OnIndexChange;
+  renderScene: RenderScene;
+  PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
+  TAB_BAR_HEIGHT: TAB_BAR_HEIGHT_TYPE;
+  PROFILE_BODY_HEIGHT: number;
 };
 export const ProfileTemplate: React.FC<Props> = (props) => {
-  const [isList, setIsList] = useState(true);
+  const {
+    meProfile,
+    routes,
+    tabIndex,
+    animatedScrollY,
+    onIndexChange,
+    renderScene,
+    PROFILE_VIEW_HEIGHT,
+    TAB_BAR_HEIGHT,
+    PROFILE_BODY_HEIGHT,
+  } = props;
 
-  const { onTransitionProfileEditor, userInfo, wantToTalkUsers } = props;
-  return (
-    <ScrollView style={styles.container}>
-      <Block flex>
-        <Block row style={styles.profilePostBox}>
-          <Avatar
-            size={84}
-            // image={}
-            style={styles.profileImage}
+  const renderHeader: RenderHeader = () => (props) =>
+    (
+      <ProfileBody
+        meProfile={meProfile}
+        animatedScrollY={animatedScrollY}
+        renderTabBar={() => (
+          <TabBar
+            getLabelText={({ route }) => route.title}
+            indicatorStyle={styles.indicator}
+            style={[styles.tabBar, { height: TAB_BAR_HEIGHT }]}
+            activeColor={COLORS.LIGHT_GRAY}
+            inactiveColor={COLORS.LIGHT_GRAY}
+            renderLabel={({ route, focused, color }) => (
+              <Text bold={focused} size={12} style={{ color: color }}>
+                {route.title}
+              </Text>
+            )}
+            {...props}
           />
-          <Block row flex style={styles.postContents}>
-            <Block column center style={styles.postSpoke}>
-              {/* 他者のマイページ且つ公開しない状態の場合はアイコン表示 */}
-              {/* <IconExtra name="lock" family="Feather" size={20} color={COLORS.GRAY}/> */}
-              <Text
-                bold
-                color={COLORS.BLACK}
-                size={16}
-                style={styles.textHeight}
-              >
-                {userInfo.sumOfTalkedRoom}
-              </Text>
-              <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
-                話した
-              </Text>
-            </Block>
-            <Block column center style={styles.postListened}>
-              {/* <IconExtra name="lock" family="Feather" size={20} color={COLORS.GRAY}/> */}
-              <Text
-                bold
-                size={16}
-                color={COLORS.BLACK}
-                style={styles.textHeight}
-              >
-                {userInfo.sumOfListenedRoom}
-              </Text>
-              <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
-                聞いた
-              </Text>
-            </Block>
-          </Block>
-        </Block>
-        <Block style={styles.profileInfoBox}>
-          <Text size={16} color={COLORS.BLACK} style={styles.textHeight}>
-            {userInfo.name}
-          </Text>
-          <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
-            性別：{userInfo.gender} / 職業：{userInfo.job}
-          </Text>
-        </Block>
-        <Button
-          shadowless={true}
-          color="transparent"
-          opacity={0.6}
-          style={styles.editProfileButton}
-          onPress={() => {
-            onTransitionProfileEditor();
-          }}
-        >
-          <Text size={14} bold color={COLORS.BROWN}>
-            プロフィールを編集
-          </Text>
-        </Button>
-        <Block center style={styles.postHeader}>
-          <Text bold size={16} color={COLORS.BLACK}>
-            また相談したい人リスト
-          </Text>
-        </Block>
-        <Block style={styles.postBody}>
-          {isList ? (
-            wantToTalkUsers.map((wantToTalkUsers) => {
-              return (
-                <ToTalkUserListItem
-                  name={wantToTalkUsers.name}
-                  image={wantToTalkUsers.image}
-                />
-              );
-            })
-          ) : (
-            <ListOtherUserEmpty />
-          )}
-        </Block>
-      </Block>
-    </ScrollView>
+        )}
+        PROFILE_VIEW_HEIGHT={PROFILE_VIEW_HEIGHT}
+        PROFILE_BODY_HEIGHT={PROFILE_BODY_HEIGHT}
+      />
+    );
+
+  return (
+    <View style={{ flex: 1 }}>
+      <TabView
+        style={styles.container}
+        navigationState={{
+          index: tabIndex,
+          routes: routes,
+        }}
+        renderScene={renderScene}
+        renderTabBar={renderHeader()}
+        onIndexChange={onIndexChange}
+        swipeEnabled
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
+    flex: 1,
+    backgroundColor: "#edeef0",
+  },
+  tabBar: {
     backgroundColor: COLORS.BEIGE,
+    elevation: 0,
   },
-  profilePostBox: {
-    marginTop: 16,
-    alignItems: "center",
+  indicator: {
+    backgroundColor: COLORS.PINK,
+    height: 3,
   },
-  profileImage: {
-    width: 84,
-    height: 84,
-    borderRadius: 50,
-  },
-  postContents: {
-    justifyContent: "center",
-  },
-  postSpoke: {
-    width: 72,
-    height: 40,
-    justifyContent: "center",
-  },
-  postListened: {
-    width: 72,
-    height: 40,
-    justifyContent: "center",
-    marginLeft: 8,
-  },
-  textHeight: {
-    lineHeight: 20,
-  },
-  profileInfoBox: {
-    marginTop: 16,
-  },
-  editProfileButton: {
-    width: width - 32,
-    marginTop: 16,
-    borderWidth: 2,
-    borderColor: COLORS.BROWN,
-    borderRadius: 4,
-  },
-  postHeader: {
-    marginTop: 40,
-  },
-  postBody: {
-    marginTop: 16,
+  label: {
+    margin: 0,
+    marginTop: 6,
+    marginBottom: 6,
+    fontWeight: "400",
   },
 });
