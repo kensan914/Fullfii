@@ -19,11 +19,15 @@ import { FavoriteUserListItem } from "src/components/templates/ProfileTemplate/m
 import { COLORS } from "src/constants/theme";
 import { useAnimatedFlatListProps } from "src/screens/ProfileScreen/useAnimatedFlatListProps";
 import { useFetchItems } from "src/hooks/useFetchItems";
-import { alertModal, URLJoin } from "src/utils";
+import { URLJoin } from "src/utils";
 import { BASE_URL } from "src/constants/env";
 import { width } from "src/constants";
 import { useNavigation } from "@react-navigation/native";
-import { showActionSheet, showToast } from "src/utils/customModules";
+import {
+  alertModal,
+  showActionSheet,
+  showToast,
+} from "src/utils/customModules";
 import { requestDeleteMeFavoritesUsers } from "src/hooks/requests/useRequestMeFavorites";
 import { useAuthState } from "src/contexts/AuthContext";
 import { useChatDispatch } from "src/contexts/ChatContext";

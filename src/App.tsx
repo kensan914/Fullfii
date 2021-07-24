@@ -32,8 +32,7 @@ import {
   TalkingRoomCollectionAsyncIoTs,
 } from "src/types/Types.context";
 import { Assets } from "src/types/Types";
-import { setVersion } from "src/constants/env";
-import { DomProvider } from "./contexts/DomContext";
+import { DomProvider } from "src/contexts/DomContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -59,8 +58,6 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    setVersion(false);
-
     loadResourcesAsync().then((assetList) => {
       const downloadedAssets: Assets = {};
       assetList.forEach((elm: Asset) => {

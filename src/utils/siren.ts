@@ -10,9 +10,10 @@ import {
   PLAY_STORE_URL_SCHEME,
 } from "src/constants/env";
 import requestAxios from "src/hooks/useAxios";
-import { alertModal, generateUuid4 } from "src/utils";
+import { generateUuid4 } from "src/utils";
 import { checkUpdateVersion } from "src/utils/versionUpdate";
 import { asyncGetItem, asyncStoreItem } from "src/utils/asyncStorage";
+import { alertModal } from "./customModules";
 
 const fetchLatestVersion = (): Promise<string> => {
   if (Platform.OS === "ios") {

@@ -16,10 +16,10 @@ import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { useProfileState } from "src/contexts/ProfileContext";
-import { showActionSheet, showToast } from "src/utils/customModules";
+import { alertModal, showActionSheet, showToast } from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useNavigation } from "@react-navigation/core";
-import { alertModal, cvtBadgeCount, formatGender } from "src/utils";
+import { cvtBadgeCount, formatGender } from "src/utils";
 import { useRequestDeleteRoom } from "src/hooks/requests/useRequestRooms";
 
 type Props = {

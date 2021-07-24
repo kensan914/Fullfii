@@ -1,11 +1,18 @@
-import { StatusBar, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
+import {
+  getStatusBarHeight,
+  getBottomSpace,
+} from "react-native-iphone-x-helper";
 
 export const width = Dimensions.get("window").width;
 export const height = Dimensions.get("window").height;
-export const StatusHeight = StatusBar.currentHeight;
+export const STATUS_BAR_HEIGHT = getStatusBarHeight();
+export const BOTTOM_SPACE_HEIGHT = getBottomSpace();
 
 export const HEADER_HEIGHT = 54;
-export const BOTTOM_TAB_BAR_HEIGHT = 49;
+export const HEADER_HEIGHT_INCLUDE_STATUS_BAR =
+  HEADER_HEIGHT + STATUS_BAR_HEIGHT;
+export const BOTTOM_TAB_BAR_HEIGHT = 49 + BOTTOM_SPACE_HEIGHT;
 
 /**
  *

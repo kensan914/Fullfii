@@ -1,4 +1,4 @@
-import { Alert, Platform, Dimensions, AlertButton } from "react-native";
+import { Alert, Platform, Dimensions } from "react-native";
 import { isRight } from "fp-ts/lib/Either";
 
 import { FREE_PLAN } from "src/constants/env";
@@ -170,56 +170,6 @@ export const cvtBadgeCount = (badgeCount: number): number | null => {
   }
 };
 
-type alertModalProps = {
-  mainText: string;
-  subText?: string;
-  cancelButton?: string;
-  okButton?: string;
-  okButtonStyle?: "destructive" | "default" | "cancel" | undefined;
-  onPress?: () => void;
-  onCancel?: () => void;
-  cancelable?: boolean;
-};
-/**
- *  @example
-    alertModal({
-      mainText: alertTitle,
-      subText: alertText,
-      cancelButton: "キャンセル",
-      okButton: "送信する",
-      onPress: () => {
-        navigation.navigate("Home");
-      },
-      cancelOnPress: () => {}, // 任意. キャンセルを押した際の付加処理
-    });
- */
-export const alertModal = ({
-  mainText,
-  subText,
-  okButton,
-  okButtonStyle = "default",
-  onPress = () => void 0,
-  cancelButton,
-  onCancel = () => void 0,
-  cancelable,
-}: alertModalProps): void => {
-  const buttonSettings: AlertButton[] = [];
-  (typeof cancelable === "undefined" || cancelable) &&
-    buttonSettings.push({
-      text: cancelButton ? cancelButton : "キャンセル",
-      onPress: onCancel,
-      style: "cancel",
-    });
-
-  buttonSettings.push({
-    text: okButton ? okButton : "OK",
-    onPress: onPress,
-    style: okButtonStyle,
-  });
-
-  Alert.alert(mainText ? mainText : "", subText ? subText : "", buttonSettings);
-};
-
 export const isString = (str: unknown): str is string => {
   return typeof str === "string" || str instanceof String;
 };
@@ -281,9 +231,8 @@ export class Ws {
     ws.onmessage = this.wsSettings.onmessage
       ? (e) => {
           const eData = deepCvtKeyFromSnakeToCamel(JSON.parse(e.data));
-          const typeIoTsResult = this.wsSettings.typeIoTsOfResData.decode(
-            eData
-          );
+          const typeIoTsResult =
+            this.wsSettings.typeIoTsOfResData.decode(eData);
           if (!isRight(typeIoTsResult)) {
             console.group();
             console.error(
