@@ -122,7 +122,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
-        <Block row style={{position: "relative"}}>
+        <Block row style={{ position: "relative" }}>
           <Block>
             {talkingRoom.image ? (
               <Image source={{ uri: talkingRoom.image }} style={styles.image} />
@@ -172,7 +172,14 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 </Block>
               </Block>
             </Block>
-            <Block row>
+            <Block
+              flex
+              row
+              style={{
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
               <Block flex row style={styles.member}>
                 <Block>
                   <Icon
@@ -189,15 +196,15 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                   </Text>
                 </Block>
               </Block>
+              {talkingRoom.isPrivate ? (
+                <Block flex style={styles.privateRoomText}>
+                  <Text size={12} bold color={COLORS.GREEN}>
+                    プライベート{"\n"}ルーム
+                  </Text>
+                </Block>
+              ) : null}
             </Block>
           </Block>
-          {
-            talkingRoom.isPrivate ?
-          <Block style={styles.privateRoomText}>
-            <Text size={12} bold color={COLORS.GREEN}>プライベートルーム</Text>
-          </Block>
-          : null
-          }
         </Block>
         <RoomEditorModal
           isOpenRoomEditorModal={isOpenRoomEditorModal}
@@ -356,8 +363,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   privateRoomText: {
-    position: "absolute",
-    right:16,
-    bottom: 16
-  }
+    justifyContent: "center",
+    alignItems: "center",
+    height: 32,
+  },
 });
