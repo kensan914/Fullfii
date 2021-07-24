@@ -86,6 +86,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   const geneInitIsExcludeDifferentGender = () => {
     let _initIsExcludeDifferentGender = null;
     if (propsDependsOnMode.mode === "FIX") {
+      if (propsDependsOnMode.talkingRoom.isPrivate) return false;
       if (canSetIsExcludeDifferentGender) {
         _initIsExcludeDifferentGender =
           propsDependsOnMode.talkingRoom.isExcludeDifferentGender;
@@ -98,6 +99,11 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   const [initIsExcludeDifferentGender] = useState(
     geneInitIsExcludeDifferentGender()
   );
+  const [initIsPrivate] = useState(
+    propsDependsOnMode.mode === "FIX"
+      ? propsDependsOnMode.talkingRoom.isPrivate
+      : null
+  );
   // ====== init post or patch data ======
 
   // ====== post or patch data ======
@@ -109,6 +115,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   const [isExcludeDifferentGender, setIsExcludeDifferentGender] = useState<
     boolean | null
   >(initIsExcludeDifferentGender);
+  const [isPrivate, setIsPrivate] = useState<boolean | null>(initIsPrivate);
   // ====== post or patch data ======
 
   const maxRoomNameLength = 60;
@@ -117,7 +124,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   const canPost =
     (propsDependsOnMode.mode === "FIX"
       ? true
-      : isExcludeDifferentGender !== null) &&
+      : isExcludeDifferentGender !== null || isPrivate !== null) &&
     roomName &&
     roomName.length > 0;
 
@@ -130,6 +137,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     setRoomName(initRoomName);
     setRoomImage(initRoomImage);
     setIsExcludeDifferentGender(initIsExcludeDifferentGender);
+    setIsPrivate(initIsPrivate);
   };
   const addRoomOption = () => {
     resetDraftOption();
@@ -147,10 +155,11 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     setIsOpenRoomEditorModal(false);
   };
 
-  // ルーム作成用
+  // ルーム作成用 (プライベート含)
   const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
     roomName,
     isExcludeDifferentGender,
+    isPrivate,
     roomImage,
     () => {
       // then時、実行
@@ -164,6 +173,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     propsDependsOnMode.mode === "FIX" ? propsDependsOnMode.talkingRoom.id : "",
     roomName,
     isExcludeDifferentGender,
+    isPrivate,
     roomImage,
     () => {
       // then時、実行
@@ -347,12 +357,15 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               <TouchableOpacity
                 style={[
                   styles.circleButton,
-                  isExcludeDifferentGender !== null && !isExcludeDifferentGender
+                  isExcludeDifferentGender !== null &&
+                  !isExcludeDifferentGender &&
+                  !isPrivate
                     ? { borderColor: COLORS.GREEN }
                     : { borderColor: "#f4f8f7" },
                 ]}
                 onPress={() => {
                   setIsExcludeDifferentGender(false);
+                  setIsPrivate(false);
                 }}
               >
                 <ImageBackground
@@ -369,7 +382,9 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               <TouchableOpacity
                 style={[
                   styles.circleButton,
-                  isExcludeDifferentGender !== null && isExcludeDifferentGender
+                  isExcludeDifferentGender !== null &&
+                  isExcludeDifferentGender &&
+                  !isPrivate
                     ? { borderColor: COLORS.GREEN }
                     : { borderColor: "#f4f8f7" },
                 ]}
@@ -380,6 +395,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                     );
                   } else {
                     setIsExcludeDifferentGender(true);
+                    setIsPrivate(false);
                   }
                 }}
               >
@@ -397,18 +413,12 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               <TouchableOpacity
                 style={[
                   styles.circleButton,
-                  isExcludeDifferentGender !== null && isExcludeDifferentGender
+                  isPrivate !== null && isPrivate
                     ? { borderColor: COLORS.GREEN }
                     : { borderColor: "#f4f8f7" },
                 ]}
                 onPress={() => {
-                  if (!canSetIsExcludeDifferentGender) {
-                    Alert.alert(
-                      ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
-                    );
-                  } else {
-                    setIsExcludeDifferentGender(true);
-                  }
+                  setIsPrivate(true);
                 }}
               >
                 <ImageBackground

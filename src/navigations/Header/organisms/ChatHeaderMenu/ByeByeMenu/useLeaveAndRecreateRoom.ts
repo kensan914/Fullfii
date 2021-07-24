@@ -22,14 +22,12 @@ export const useLeaveAndRecreateRoom: UseLeaveAndRecreateRoom = (
   requestPostRoomLeftMembers,
   thenRecreateRoom
 ) => {
-  const { requestPostRoom } = useRequestPostRoom(null, null, null);
+  const { requestPostRoom } = useRequestPostRoom(null, null, null, null);
   const [additionalThenClose, setAdditionalThenClose] = useState<{
     fn: () => void;
   }>();
-  const [
-    postDataRecreate,
-    setPostDataRecreate,
-  ] = useState<AxiosReActionType | null>();
+  const [postDataRecreate, setPostDataRecreate] =
+    useState<AxiosReActionType | null>();
   const leaveAndRecreateRoom: LeaveAndRecreateRoom = (
     _talkingRoom,
     postDataIncludeLeaveMessage

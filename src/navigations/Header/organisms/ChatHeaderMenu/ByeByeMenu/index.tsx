@@ -173,11 +173,14 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
               "plain-text"
             )
           : prompt(mainText, subText, [
+              // 2番目のボタンはキャンセルボタンらしい
+              // https://github.com/shimohq/react-native-prompt-android/blob/master/index.android.js
+              buttons[0],
               {
                 text: "キャンセル",
                 style: "cancel",
               },
-              ...buttons,
+              buttons[1],
             ]);
       }
 
@@ -235,30 +238,6 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
       }
     }
   };
-
-  // const [disable, setDisable] = useState(true);
-  // useEffect(() => {
-  //   // トーク開始済みのみ表示
-  //   if (
-  //     roomId in chatState.talkingRoomCollection &&
-  //     chatState.talkingRoomCollection[roomId].isStart
-  //   ) {
-  //     setDisable(false);
-  //   }
-  // }, [chatState.talkingRoomCollection]);
-
-  // const [isOwner, setIsOwner] = useState(false);
-  // useEffect(() => {
-  //   if (
-  //     roomId in chatState.talkingRoomCollection &&
-  //     chatState.talkingRoomCollection[roomId].owner.id ===
-  //       profileState.profile.id
-  //   ) {
-  //     setIsOwner(true);
-  //   } else {
-  //     setIsOwner(false);
-  //   }
-  // }, [chatState.talkingRoomCollection, profileState.profile.id]);
 
   return (
     <>

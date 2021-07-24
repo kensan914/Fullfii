@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, ReactNode } from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -28,6 +28,10 @@ type Props = {
   blockRoom: BlockRoom;
   checkCanCreateRoom: () => boolean;
   roomsFlatListRef: React.MutableRefObject<null>;
+  ListEmptyComponent?:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | React.ComponentType<any>
+    | null;
 };
 export const RoomsTemplate: React.FC<Props> = (props) => {
   const numColumns = 1;
@@ -46,6 +50,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
     blockRoom,
     checkCanCreateRoom,
     roomsFlatListRef,
+    ListEmptyComponent,
   } = props;
 
   const isHiddenAll =
@@ -111,6 +116,9 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
             contentContainerStyle={{ paddingBottom: bottomButtonHeight }}
+            ListEmptyComponent={
+              hasMore && ListEmptyComponent ? <></> : ListEmptyComponent
+            }
           />
         )}
         <LinearGradient

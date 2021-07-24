@@ -53,6 +53,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
   const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
     roomName,
     isExcludeDifferentGender,
+    null, // プライベート設定はできない
     null, // ルーム画像の設定はできない
     () => {
       authDispatch({

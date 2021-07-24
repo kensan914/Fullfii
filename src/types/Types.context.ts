@@ -353,6 +353,7 @@ export const BaseRoomIoTs = t.type({
   leftMembers: t.array(ProfileIoTs),
   maxNumParticipants: t.number,
   isExcludeDifferentGender: t.boolean,
+  isPrivate: t.boolean,
   isEnd: t.boolean,
   isActive: t.boolean,
   addedFavoriteUserIds: t.array(t.string),

@@ -343,6 +343,13 @@ export const GetRoomsResDataIoTs = t.type({
   rooms: t.array(RoomJsonIoTs),
   hasMore: t.boolean,
 });
+export type GetPrivateRoomsResData = t.TypeOf<
+  typeof GetPrivateRoomsResDataIoTs
+>;
+export const GetPrivateRoomsResDataIoTs = t.type({
+  privateRooms: t.array(RoomJsonIoTs),
+  hasMore: t.boolean,
+});
 export type GetFavoriteUsersResData = t.TypeOf<
   typeof GetFavoriteUsersResDataIoTs
 >;

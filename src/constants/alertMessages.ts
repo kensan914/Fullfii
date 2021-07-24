@@ -55,8 +55,8 @@ export const ALERT_MESSAGES: AlertMessages = {
     "",
   ],
   CANNOT_SEND_MSG_NOT_START: [
-    "トークが開始されていません",
-    "アプリを再起動しますと改善する場合があります。",
+    "メッセージを送信できません",
+    "一度アプリを落として再度お試しください。",
   ],
 };
 
