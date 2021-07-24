@@ -4,9 +4,10 @@ import { URLJoin } from "src/utils";
 import { useAxios } from "src/hooks/useAxios";
 import { RoomJson, RoomJsonIoTs } from "src/types/Types.context";
 import { Request } from "src/types/Types";
-import { useChatDispatch } from "src/contexts/ChatContext";
+import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useWsChat } from "src/screens/StartUpManager/useWsChat";
+import { asyncStoreObjectIncludeId } from "src/utils/asyncStorage";
 
 type UseRequestPostRoomParticipant = (
   roomId: string,
@@ -141,39 +142,49 @@ type UseRequestPostRoomClosedMembers = (
  * @param additionalThenCallback
  * @returns
  */
-export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers = (
-  roomId,
-  additionalThenCallback = () => void 0
-) => {
-  const authState = useAuthState();
-  const profileState = useProfileState();
-  const chatDispatch = useChatDispatch();
+export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
+  (roomId, additionalThenCallback = () => void 0) => {
+    const authState = useAuthState();
+    const profileState = useProfileState();
+    const chatDispatch = useChatDispatch();
+    const chatState = useChatState();
 
-  const {
-    isLoading: isLoadingPostRoomClosedMembers,
-    request: requestPostRoomClosedMembers,
-  } = useAxios(
-    URLJoin(BASE_URL, "rooms/", roomId, "closed-members/"),
-    "post",
-    null,
-    {
-      data: {
-        account_id: profileState.profile.id,
-      },
-      thenCallback: () => {
-        chatDispatch({
-          type: "CLOSE_TALK",
-          roomId: roomId,
-        });
+    const {
+      isLoading: isLoadingPostRoomClosedMembers,
+      request: requestPostRoomClosedMembers,
+    } = useAxios(
+      URLJoin(BASE_URL, "rooms/", roomId, "closed-members/"),
+      "post",
+      null,
+      {
+        data: {
+          account_id: profileState.profile.id,
+        },
+        thenCallback: async () => {
+          // メッセージ履歴のストア
+          if (roomId in chatState.talkingRoomCollection) {
+            for (const userId of chatState.talkingRoomCollection[roomId]
+              .addedFavoriteUserIds)
+              await asyncStoreObjectIncludeId(
+                "messageHistory",
+                userId,
+                chatState.talkingRoomCollection[roomId].messages
+              );
+          }
 
-        additionalThenCallback && additionalThenCallback();
-      },
-      token: authState.token ? authState.token : "",
-    }
-  );
+          chatDispatch({
+            type: "CLOSE_TALK",
+            roomId: roomId,
+          });
 
-  return {
-    requestPostRoomClosedMembers,
-    isLoadingPostRoomClosedMembers,
+          additionalThenCallback && additionalThenCallback();
+        },
+        token: authState.token ? authState.token : "",
+      }
+    );
+
+    return {
+      requestPostRoomClosedMembers,
+      isLoadingPostRoomClosedMembers,
+    };
   };
-};

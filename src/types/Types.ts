@@ -302,7 +302,8 @@ export type TypeIoTsOfResData =
   | t.UnionC<any>
   | t.IntersectionC<any>
   | t.BooleanC
-  | t.StringC;
+  | t.StringC
+  | t.ArrayC<any>;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export type UseAxios = (
   url: string,

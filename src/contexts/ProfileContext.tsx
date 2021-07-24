@@ -12,11 +12,7 @@ import {
   ProfileParamsIoTs,
   ProfileState,
 } from "src/types/Types.context";
-import {
-  asyncStoreBool,
-  asyncStoreItem,
-  asyncStoreObject,
-} from "src/utils/asyncStorage";
+import { asyncStoreBool, asyncStoreObject } from "src/utils/asyncStorage";
 
 const profileReducer = (
   prevState: ProfileState,
@@ -93,6 +89,9 @@ export const initProfile: Profile = Object.freeze({
   genreOfWorries: [],
   image: "",
   me: true,
+  numOfOwner: 0,
+  numOfParticipated: 0,
+  isPrivateProfile: true,
 });
 
 export const initMeProfile: MeProfile = Object.freeze({
@@ -112,6 +111,9 @@ export const initMeProfile: MeProfile = Object.freeze({
   deviceToken: "",
   isActive: true,
   isBan: false,
+  numOfOwner: 0,
+  numOfParticipated: 0,
+  isPrivateProfile: true,
 });
 
 const initProfileBuffer = {

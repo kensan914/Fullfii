@@ -112,7 +112,6 @@ export const FavoriteUserList = React.forwardRef<
                 );
                 chatDispatch({
                   type: "DELETE_FAVORITE_USER",
-                  roomId: null,
                   userId: user.id,
                 });
               });

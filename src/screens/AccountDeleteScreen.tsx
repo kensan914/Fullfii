@@ -35,10 +35,10 @@ export const AccountDeleteScreen: React.FC = () => {
     null,
     {
       data: { reason: deleteReason },
-      thenCallback: (resData, res) => {
+      thenCallback: async (resData, res) => {
         if (res.status === 204) {
           // async storage削除
-          dangerouslyDelete(dispatches, ["status"]);
+          await dangerouslyDelete(dispatches, ["status"]);
           dispatches.authDispatch({ type: "DELETE_ACCOUNT" });
         }
       },

@@ -46,8 +46,8 @@ export const SuccessAccountDeleteScreen: React.FC = () => {
   };
 
   const [, dispatches] = useAllContext();
-  const onPressToTop = () => {
-    dangerouslyDelete(dispatches);
+  const onPressToTop = async () => {
+    await dangerouslyDelete(dispatches);
   };
 
   return (

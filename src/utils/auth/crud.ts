@@ -3,30 +3,80 @@ import * as WebBrowser from "expo-web-browser";
 import { Dispatches } from "src/types/Types.context";
 import { alertModal } from "src/utils";
 import { CONTACT_US_URL } from "src/constants/env";
-import { AsyncStorageKey, asyncRemoveItem } from "src/utils/asyncStorage";
+import {
+  AsyncStorageKey,
+  AsyncStorageKeyString,
+  AsyncStorageKeyBool,
+  AsyncStorageKeyObject,
+  asyncGetItem,
+  asyncGetBool,
+  asyncGetObject,
+  asyncStoreItem,
+  asyncStoreBool,
+  asyncStoreObject,
+} from "src/utils/asyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * async storageからtokenを含む全ての認証情報を削除するため復帰ができません。
  * 加えて、各stateもリセットされる
  */
-export const dangerouslyDelete = (
+export const dangerouslyDelete = async (
   dispatches: Dispatches,
-  excludeKeys?: string[]
-): void => {
+  _excludeKeysString?: AsyncStorageKeyString[],
+  _excludeKeysBool?: AsyncStorageKeyBool[],
+  _excludeKeysObject?: AsyncStorageKeyObject[]
+): Promise<void> => {
+  const excludeKeysString =
+    typeof _excludeKeysString !== "undefined" ? _excludeKeysString : [];
+  const excludeKeysBool =
+    typeof _excludeKeysBool !== "undefined" ? _excludeKeysBool : [];
+  const excludeKeysObject =
+    typeof _excludeKeysObject !== "undefined" ? _excludeKeysObject : [];
+
   // 永久データ: ("isBanned",) は除外
-  const willRemoveItemKeys: AsyncStorageKey[] = [
-    "status",
-    "token",
-    "talkingRoomCollection",
-    "profile",
-    "versionNum",
-    "skipUpdateVersion",
-  ];
-  willRemoveItemKeys.forEach((willRemoveItemKey) => {
-    if (!excludeKeys?.includes(willRemoveItemKey)) {
-      asyncRemoveItem(willRemoveItemKey);
+  excludeKeysBool.push("isBanned");
+
+  // 永久データをバッファに避難
+  const fetchExcludeBuffer = async (
+    excludeKeys: AsyncStorageKey[],
+    asyncGet: any
+  ): Promise<{ key: AsyncStorageKey; value: unknown }[]> => {
+    const excludeBuffer: { key: AsyncStorageKey; value: unknown }[] = [];
+    for (const excludeKey of excludeKeys) {
+      const value = await asyncGet(excludeKey);
+      excludeBuffer.push({ key: excludeKey, value: value });
     }
-  });
+    return excludeBuffer;
+  };
+  const excludeBufferString = await fetchExcludeBuffer(
+    excludeKeysString,
+    asyncGetItem
+  );
+  const excludeBufferBool = await fetchExcludeBuffer(
+    excludeKeysBool,
+    asyncGetBool
+  );
+  const excludeBufferObject = await fetchExcludeBuffer(
+    excludeKeysObject,
+    asyncGetObject
+  );
+
+  // クリア
+  await AsyncStorage.clear();
+
+  // 永久データの復元
+  const storeExcludeBuffer = async (
+    excludeBuffer: { key: AsyncStorageKey; value: unknown }[],
+    asyncSet: any
+  ): Promise<void> => {
+    excludeBuffer.forEach(async (partOfExcludeBuffer) => {
+      await asyncSet(partOfExcludeBuffer.key, partOfExcludeBuffer.value);
+    });
+  };
+  await storeExcludeBuffer(excludeBufferString, asyncStoreItem);
+  await storeExcludeBuffer(excludeBufferBool, asyncStoreBool);
+  await storeExcludeBuffer(excludeBufferObject, asyncStoreObject);
 
   dispatches.authDispatch({ type: "DANGEROUSLY_RESET" });
   dispatches.chatDispatch({ type: "DANGEROUSLY_RESET" });

@@ -205,12 +205,10 @@ export type ChatActionType =
     }
   | {
       type: "ADD_FAVORITE_USER";
-      roomId: string;
       userId: string;
     }
   | {
       type: "DELETE_FAVORITE_USER";
-      roomId: string | null;
       userId: string;
     }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }

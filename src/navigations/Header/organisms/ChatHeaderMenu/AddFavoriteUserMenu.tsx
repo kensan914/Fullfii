@@ -70,7 +70,6 @@ export const AddFavoriteUserMenu: React.FC<Props> = (props) => {
         if (targetFavoriteUserId) {
           chatDispatch({
             type: "DELETE_FAVORITE_USER",
-            roomId: roomId,
             userId: targetFavoriteUserId,
           });
         }
@@ -89,7 +88,6 @@ export const AddFavoriteUserMenu: React.FC<Props> = (props) => {
         if (targetFavoriteUserId) {
           chatDispatch({
             type: "ADD_FAVORITE_USER",
-            roomId: roomId,
             userId: targetFavoriteUserId,
           });
         }
@@ -107,7 +105,6 @@ export const AddFavoriteUserMenu: React.FC<Props> = (props) => {
           requestDeleteMeFavoritesUsers();
           chatDispatch({
             type: "DELETE_FAVORITE_USER",
-            roomId: roomId,
             userId: targetFavoriteUserId,
           });
         }
@@ -116,7 +113,6 @@ export const AddFavoriteUserMenu: React.FC<Props> = (props) => {
           requestPatchMeFavoritesUsers();
           chatDispatch({
             type: "ADD_FAVORITE_USER",
-            roomId: roomId,
             userId: targetFavoriteUserId,
           });
         }
