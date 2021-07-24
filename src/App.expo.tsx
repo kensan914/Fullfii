@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Platform, StatusBar, LogBox } from "react-native";
-import { GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
@@ -8,7 +7,6 @@ enableScreens();
 import Toast from "react-native-toast-message";
 
 import Screens from "src/navigations/Screens";
-import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
 import { asyncGetItem, asyncGetObject } from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
@@ -31,9 +29,8 @@ import { DomProvider } from "src/contexts/DomContext";
 LogBox.ignoreAllLogs(true);
 
 const App: React.FC = () => {
-  const [isFinishLoadingResources, setIsFinishLoadingResources] = useState(
-    false
-  );
+  const [isFinishLoadingResources, setIsFinishLoadingResources] =
+    useState(false);
 
   useEffect(() => {
     setIsExpo(true);
@@ -53,9 +50,8 @@ const RootNavigator: React.FC<Props> = (props) => {
   const [token, setToken] = useState<InitState<string>>();
   const [signupBuffer, setSignupBuffer] = useState<InitState<SignupBuffer>>();
   const [profile, setProfile] = useState<InitState<MeProfile>>();
-  const [talkTicketCollection, setTalkTicketCollection] = useState<
-    InitState<TalkTicketCollection>
-  >();
+  const [talkTicketCollection, setTalkTicketCollection] =
+    useState<InitState<TalkTicketCollection>>();
 
   useEffect(() => {
     (async () => {
@@ -101,15 +97,13 @@ const RootNavigator: React.FC<Props> = (props) => {
           <ProfileProvider profile={profile}>
             <ChatProvider talkTicketCollection={talkTicketCollection}>
               <DomProvider>
-                <GalioProvider theme={materialTheme}>
-                  <StartUpManager>
-                    {Platform.OS === "ios" && (
-                      <StatusBar barStyle="dark-content" />
-                    )}
-                    <Screens />
-                    <Toast ref={(ref) => Toast.setRef(ref)} />
-                  </StartUpManager>
-                </GalioProvider>
+                <StartUpManager>
+                  {Platform.OS === "ios" && (
+                    <StatusBar barStyle="dark-content" />
+                  )}
+                  <Screens />
+                  <Toast ref={(ref) => Toast.setRef(ref)} />
+                </StartUpManager>
               </DomProvider>
             </ChatProvider>
           </ProfileProvider>

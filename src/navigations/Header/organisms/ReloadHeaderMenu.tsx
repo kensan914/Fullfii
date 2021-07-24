@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { useDomDispatch } from "src/contexts/DomContext";
 
 export const ReloadHeaderMenu: React.FC = () => {

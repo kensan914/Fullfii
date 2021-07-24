@@ -2,10 +2,11 @@ import React, { useState } from "react";
 
 import { dangerouslyDelete } from "src/utils/auth/crud";
 import { useAxios } from "src/hooks/useAxios";
-import { alertModal, URLJoin } from "src/utils";
-import FormTemplate from "src/components/templates/FormTemplate";
+import { URLJoin } from "src/utils";
+import { FormTemplate } from "src/components/templates/FormTemplate";
 import { BASE_URL } from "src/constants/env";
-import useAllContext from "src/contexts/ContextUtils";
+import { useAllContext } from "src/contexts/ContextUtils";
+import { alertModal } from "src/utils/customModules";
 
 export const AccountDeleteScreen: React.FC = () => {
   const [deleteReason, setDeleteReason] = useState("");

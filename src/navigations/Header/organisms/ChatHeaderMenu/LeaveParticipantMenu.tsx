@@ -12,7 +12,7 @@ import { useChatState } from "src/contexts/ChatContext";
 import { useRequestPostRoomLeftMembers } from "src/hooks/requests/useRequestRoomMembers";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { useLeaveAndRecreateRoom } from "src/navigations/Header/organisms/ChatHeaderMenu/ByeByeMenu/useLeaveAndRecreateRoom";
 import { Icon } from "src/components/atoms/Icon";
 import { useRequestPatchBlockedAccount } from "src/hooks/requests/useRequestMe";

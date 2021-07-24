@@ -3,7 +3,7 @@ import { TouchableOpacity, ViewStyle } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
 import { TOAST_SETTINGS } from "src/constants/alertMessages";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
 import {
   useRequestDeleteMeFavoritesUsers,

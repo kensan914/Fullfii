@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
 import { Avatar } from "src/components/atoms/Avatar";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { width } from "src/constants";
 import { ProfileEditorBlock } from "src/components/templates/ProfileEditorTemplate/molecules/ProfileEditorBlock";
 import { MeProfile } from "src/types/Types.context";

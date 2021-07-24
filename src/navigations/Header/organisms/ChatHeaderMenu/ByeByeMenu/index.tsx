@@ -16,7 +16,7 @@ import { useRequestPostRoomLeftMembers } from "src/hooks/requests/useRequestRoom
 import { useProfileState } from "src/contexts/ProfileContext";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { useLeaveAndRecreateRoom } from "src/navigations/Header/organisms/ChatHeaderMenu/ByeByeMenu/useLeaveAndRecreateRoom";
 
 type Props = {

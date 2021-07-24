@@ -5,7 +5,7 @@ import * as WebBrowser from "expo-web-browser";
 import LottieView from "lottie-react-native";
 
 import { USER_POLICY_URL } from "src/constants/env";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { LottieSource } from "src/types/Types";
 import { height, width } from "src/constants";
 

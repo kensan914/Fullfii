@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { GiftedChat, IMessage, User } from "react-native-gifted-chat";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { GiftedBubble } from "src/components/templates/ChatTemplate/atoms/GiftedBubble";
 import { GiftedScrollToBottom } from "src/components/templates/ChatTemplate/atoms/GiftedScrollToBottom";
 import { GiftedSystemMessage } from "src/components/templates/ChatTemplate/atoms/GiftedSystemMessage";

@@ -6,7 +6,7 @@ import {
 } from "react-native-gifted-chat";
 
 import { width } from "src/constants";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 export const GiftedSystemMessage: React.FC<SystemMessageProps<IMessage>> = (
   props

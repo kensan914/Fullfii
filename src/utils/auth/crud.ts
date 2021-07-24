@@ -1,7 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Dispatches } from "src/types/Types.context";
-import { alertModal } from "src/utils";
 import { CONTACT_US_URL } from "src/constants/env";
 import {
   AsyncStorageKey,
@@ -15,7 +15,7 @@ import {
   asyncStoreBool,
   asyncStoreObject,
 } from "src/utils/asyncStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alertModal } from "../customModules";
 
 /**
  * async storageからtokenを含む全ての認証情報を削除するため復帰ができません。

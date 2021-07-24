@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Block, Text, Button } from "galio-framework";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
 import { formatGender } from "src/utils";
 import { width } from "src/constants";

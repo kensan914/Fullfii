@@ -2,7 +2,7 @@ import React from "react";
 import { Send } from "react-native-gifted-chat";
 
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 export const GiftedSender: React.FC<Send["props"]> = (props) => (
   <Send

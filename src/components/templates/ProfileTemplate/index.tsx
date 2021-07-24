@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "galio-framework";
 import { TabBar, TabView } from "react-native-tab-view";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { MeProfile } from "src/types/Types.context";
 import { ProfileBody } from "src/components/templates/ProfileTemplate/organisms/ProfileBody";
 import {

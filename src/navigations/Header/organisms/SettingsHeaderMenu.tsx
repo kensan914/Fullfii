@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity, ViewStyle } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 export const SettingsHeaderMenu: React.FC<{ style?: ViewStyle }> = (props) => {
   const { style } = props;

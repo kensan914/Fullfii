@@ -1,9 +1,9 @@
-import React, { Dispatch, ReactNode } from "react";
+import React, { Dispatch } from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { RoomCard } from "src/components/templates/RoomsTemplate/organisms/RoomCard";
 import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
@@ -82,6 +82,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       hiddenRoomIds={hiddenRoomIds}
                       hideRoom={hideRoom}
                       blockRoom={blockRoom}
+                      style={styles.roomCard}
                     />
                     {index > 0 && (index + 1) % 3 === 0 && (
                       <AdView
@@ -115,7 +116,10 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             }
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            contentContainerStyle={{ paddingBottom: bottomButtonHeight }}
+            contentContainerStyle={{
+              paddingBottom: BOTTOM_BUTTON_HEIGHT,
+              paddingTop: 10,
+            }}
             ListEmptyComponent={
               hasMore && ListEmptyComponent ? <></> : ListEmptyComponent
             }
@@ -152,7 +156,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
   );
 };
 
-const bottomButtonHeight = 80;
+const BOTTOM_BUTTON_HEIGHT = 80;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.BEIGE,
@@ -182,7 +186,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: width,
-    height: bottomButtonHeight,
+    height: BOTTOM_BUTTON_HEIGHT,
     alignItems: "center",
     position: "absolute",
     bottom: 0,
@@ -204,6 +208,11 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: width,
-    height: bottomButtonHeight,
+    height: BOTTOM_BUTTON_HEIGHT,
+  },
+  roomCard: {
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
   },
 });

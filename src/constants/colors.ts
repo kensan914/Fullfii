@@ -1,0 +1,19 @@
+export const COLORS = {
+  TRANSPARENT: "rgba(255, 255, 255, 0)",
+  PINK: "#f5b5a7", //#f5b5a7, #f6bab2
+  GREEN: "#71DDA1",
+  ALERT: "#F44336",
+  BEIGE: "#eee2d3",
+  BEIGE_RGBA: "rgba(238, 226, 211, 0.8)",
+  BEIGE_TRANSPARENT: "rgba(238, 226, 211, 0)",
+  BROWN: "#c39c89",
+  BROWN_RGBA: "rgba(195, 156, 137, 0.4)",
+  BROWN_RGBA_1: "rgba(195, 156, 137, 0.2)",
+  WHITE: "#f8fcfb",
+  WHITE_RGBA: "rgba(248, 252, 251, 0.4)",
+  BLACK: "#333333",
+  GRAY: "#555555",
+  LIGHT_GRAY: "#6a6a6a",
+  HIGHLIGHT_GRAY: "#d0d0d0",
+  RED: "#EC6D62",
+};

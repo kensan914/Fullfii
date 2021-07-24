@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 import { Avatar } from "src/components/atoms/Avatar";
 import { Profile } from "src/types/Types.context";

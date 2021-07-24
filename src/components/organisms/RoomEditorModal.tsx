@@ -15,7 +15,7 @@ import {
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import {
   MAN_AND_WOMAN_IMG,
   MEN_IMG,
