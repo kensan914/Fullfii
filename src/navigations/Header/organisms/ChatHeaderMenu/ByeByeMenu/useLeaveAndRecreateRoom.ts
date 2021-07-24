@@ -39,6 +39,7 @@ export const useLeaveAndRecreateRoom: UseLeaveAndRecreateRoom = (
           data: {
             name: _talkingRoom.name,
             is_exclude_different_gender: _talkingRoom.isExcludeDifferentGender,
+            is_private: _talkingRoom.isPrivate,
           },
           thenCallback: () => {
             thenRecreateRoom && thenRecreateRoom();
