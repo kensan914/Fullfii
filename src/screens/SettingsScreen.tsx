@@ -17,6 +17,7 @@ import {
 import { OnPress } from "src/types/Types";
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
+import {logEvent} from "src/utils/firebase/logEvent"
 
 export const SettingsScreen: React.FC = () => {
   const _handleOpenWithWebBrowser = () => {
@@ -75,6 +76,9 @@ export const SettingsScreen: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openFirstContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
+              if (openFirstContent) {
+              logEvent("press_what_is_this_app")
+              }
               setOpenFirstContent(!openFirstContent);
             }}
           />
@@ -96,6 +100,9 @@ export const SettingsScreen: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openSecondContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
+              if (openSecondContent) {
+              logEvent("press_what_is_room")
+              }
               setOpenSecondContent(!openSecondContent);
             }}
           />
@@ -118,6 +125,9 @@ export const SettingsScreen: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openThirdContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
+              if (openThirdContent) {
+              logEvent("press_how_to_speak")
+              }
               setOpenThirdContent(!openThirdContent);
             }}
           />
@@ -143,6 +153,9 @@ export const SettingsScreen: React.FC = () => {
             titleColor={COLORS.GRAY}
             iconName={openFourthContent ? "chevron-up" : "chevron-down"}
             onPress={() => {
+              if (openFourthContent) {
+              logEvent("press_how_to_listen_to")
+              }
               setOpenFourthContent(!openFourthContent);
             }}
           />

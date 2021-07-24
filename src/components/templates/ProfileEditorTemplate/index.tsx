@@ -134,7 +134,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
           />
         </Block>
 
-        <Block style={styles.categoryContainer}>
+        {/* <Block style={styles.categoryContainer}>
           <Text size={16} bold color={COLORS.BLACK}>
             プロフィール公開設定
           </Text>
@@ -158,7 +158,7 @@ export const ProfileEditorTemplate: React.FC<Props> = (props) => {
               </Text>
             }
           />
-        </Block>
+        </Block> */}
       </Block>
     </ScrollView>
   );

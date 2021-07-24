@@ -122,7 +122,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
-        <Block row>
+        <Block row style={{position: "relative"}}>
           <Block>
             {talkingRoom.image ? (
               <Image source={{ uri: talkingRoom.image }} style={styles.image} />
@@ -191,6 +191,13 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Block>
+          {
+            talkingRoom.isPrivate ?
+          <Block style={styles.privateRoomText}>
+            <Text size={12} bold color={COLORS.GREEN}>プライベートルーム</Text>
+          </Block>
+          : null
+          }
         </Block>
         <RoomEditorModal
           isOpenRoomEditorModal={isOpenRoomEditorModal}
@@ -348,4 +355,9 @@ const styles = StyleSheet.create({
     height: 88,
     borderRadius: 20,
   },
+  privateRoomText: {
+    position: "absolute",
+    right:16,
+    bottom: 16
+  }
 });

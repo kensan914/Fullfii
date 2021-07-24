@@ -13,7 +13,7 @@ export const FavoriteUserListEmpty: React.FC = () => {
       <Block style={styles.container} center>
         <Block>
           <Text size={14} bold color={COLORS.LIGHT_GRAY}>
-            また相談したい人リストは0人です
+            また話したい人リストは0人です
           </Text>
         </Block>
         <Button
@@ -27,7 +27,7 @@ export const FavoriteUserListEmpty: React.FC = () => {
         >
           <Icon name="info" family="Feather" size={26} color={COLORS.BROWN} />
           <Text size={14} bold color={COLORS.BROWN} style={styles.textHeight}>
-            また相談したい人リストとは？
+            また話したい人リストとは？
           </Text>
         </Button>
       </Block>

@@ -16,7 +16,7 @@ export const PrivateRoomDemoModal: React.FC<Props> = (props) => {
       setIsOpen={setIsOpen}
       imageSource={PRIVATE_ROOM_DEMO_IMG}
       title={"あなたに特別通知されたルームです"}
-      subTitle={`他ユーザーがあなたを「また相談したい人リス\nト」に登録している状態でプライベートルームを\n作成した際に、ここに表示されます`}
+      subTitle={`他ユーザーがあなたを「また話したい人リス\nト」に登録している状態でプライベートルームを\n作成した際に、ここに表示されます`}
     />
   );
 };

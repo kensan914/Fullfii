@@ -16,7 +16,7 @@ export const FavoriteUserDemoModal: React.FC<Props> = (props) => {
       setIsOpen={setIsOpen}
       imageSource={TALK_LIST_DEMO_IMG}
       title={"信頼できる人に相談できます"}
-      subTitle={`追加すると「また相談したい人」だけに\nルームを公開することができるようになります`}
+      subTitle={`追加すると「また話したい人」だけに\nルームを公開することができるようになります`}
     />
   );
 };

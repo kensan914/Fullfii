@@ -70,7 +70,6 @@ const configurePushNotification = (
     });
     messaging().onMessage((message) => {
       _localNotification(message);
-
       // // badge=1が送信されるが, Foregroundであるためリセット
       // PushNotification.setApplicationIconBadgeNumber(0);
     });
@@ -84,7 +83,6 @@ const configurePushNotification = (
     PushNotification.localNotification({
       title: message?.notification?.title ? message.notification.title : "",
       message: message?.notification?.body ? message.notification.body : "",
-      userInfo: message.data,
     });
   };
 
