@@ -233,14 +233,14 @@ const SettingsLabel: React.FC<{ title: string; content: string }> = (props) => {
 const styles = StyleSheet.create({
   settingsInner: {
     width: width,
-    height: 60,
+    height: 48,
     backgroundColor: COLORS.WHITE,
   },
   settingsCard: {
     width: width,
     paddingHorizontal: 16,
     backgroundColor: COLORS.WHITE,
-    height: 60,
+    height: 48,
   },
   container: {
     paddingHorizontal: theme.SIZES.BASE,

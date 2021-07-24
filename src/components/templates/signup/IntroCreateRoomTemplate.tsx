@@ -71,7 +71,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             </Text>
           </Block>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.goNext} onPress={onPressLater}>
+        {/* <TouchableOpacity style={styles.goNext} onPress={onPressLater}>
           <Block row center>
             <Text size={16} bold color={COLORS.BROWN}>
               後で作成する
@@ -83,7 +83,7 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
               color={COLORS.BROWN}
             />
           </Block>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Block>
 
       <Block style={styles.container}>
@@ -282,8 +282,8 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
           />
         </LinearGradient>
         <Block style={styles.buttonContainer}>
-          <RoundButton
-            buttonColor={COLORS.BROWN}
+        <RoundButton
+            buttonColor={"#F69896"}
             iconName={""}
             iconFamily={""}
             label="作成して始める"
@@ -292,11 +292,15 @@ export const IntroCreateRoomTemplate: React.FC<Props> = (props) => {
             disabled={!canCreateRoom}
             style={{ marginTop: 0 }}
           />
-          <Block style={styles.buttonAnnotation}>
-            <Text size={14} color={COLORS.GRAY}>
-              後で作成したルームは修正できます
-            </Text>
-          </Block>
+          <RoundButton
+            buttonColor={COLORS.BROWN}
+            iconName={""}
+            iconFamily={""}
+            label="後で作成する"
+            onPress={onPressLater}
+            isLoading={isLoadingSubmit}
+            style={{ marginTop: 16 }}
+          />
         </Block>
       </Block>
 
@@ -367,7 +371,7 @@ const styles = StyleSheet.create({
     marginTop: 56,
   },
   informationContainer: {
-    marginTop: 76,
+    marginTop: 64,
     marginRight: 20,
     marginLeft: "auto",
   },

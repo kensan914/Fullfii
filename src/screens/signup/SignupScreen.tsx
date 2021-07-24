@@ -8,6 +8,7 @@ import {
 } from "src/contexts/ProfileContext";
 import { Job } from "src/types/Types.context";
 import { useNavigation } from "@react-navigation/native";
+import {logEvent} from "src/utils/firebase/logEvent"
 
 export const SignupScreen: React.FC = () => {
   const profileState = useProfileState();
@@ -48,6 +49,7 @@ export const SignupScreen: React.FC = () => {
 
   const onPressNext = () => {
     if (genderKey && job) {
+      logEvent("push_sign_up_screen_go_next_button")
       profileDispatch({
         type: "SET_PROFILE_BUFFER",
         username: username,
