@@ -3,13 +3,13 @@ import { Block, Button, Text } from "galio-framework";
 import { StyleSheet, ScrollView } from "react-native";
 
 import { COLORS } from "src/constants/theme";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
 import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 
 type Props = {
   participatingRooms: TalkingRoom[];
@@ -125,7 +125,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
                 }}
               >
                 <Block row center>
-                  <IconExtra
+                  <Icon
                     name="pluscircleo"
                     family="AntDesign"
                     size={32}

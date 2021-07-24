@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Block } from "galio-framework";
 
-import exeSiren from "src/utils/siren";
+import { exeSiren } from "src/utils/siren";
 import { useRequestGetMe } from "src/hooks/requests/useRequestMe";
 import { useAuthState } from "src/contexts/AuthContext";
-import { useWsNotification } from "./useWsNotification";
+import { useWsNotification } from "src/screens/StartUpManager/useWsNotification";
 import { useRequestGetTalkInfo } from "src/hooks/requests/useRequestTalkInfo";
-import { useUpdateTalk } from "./useUpdateTalk";
+import { useUpdateTalk } from "src/screens/StartUpManager/useUpdateTalk";
 import { usePushNotificationParams } from "src/hooks/pushNotifications/usePushNotificationParams";
 
 export const StartUpManager: React.FC = (props) => {
@@ -34,13 +34,3 @@ export const StartUpManager: React.FC = (props) => {
 
   return <Block flex>{children}</Block>;
 };
-
-// const startApprovingTalk = (
-//   chatDispatch: ChatDispatch,
-//   _talkTicketKey: TalkTicketKey
-// ): void => {
-//   chatDispatch({
-//     type: "START_APPROVING_TALK",
-//     talkTicketKey: _talkTicketKey,
-//   });
-// };

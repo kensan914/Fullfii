@@ -35,6 +35,7 @@ const FormTemplate: React.FC<Props> = (props) => {
                       padding: 10,
                       borderRadius: 10,
                       backgroundColor: "white",
+                      textAlignVertical: "top",
                     }}
                     maxLength={form.maxLength ? form.maxLength : void 0}
                     value={form.value}

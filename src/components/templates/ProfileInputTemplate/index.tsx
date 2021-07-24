@@ -1,34 +1,33 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { Dispatch } from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { Block, theme, Text } from "galio-framework";
-import { ScrollView } from "react-native-gesture-handler";
-import { useRoute } from "@react-navigation/native";
 
-import { useAuthState } from "src/contexts/AuthContext";
 import { InputBlock } from "src/components/templates/ProfileInputTemplate/organisms/ProfileInputBlock";
-import { useProfileDispatch } from "src/contexts/ProfileContext";
-import {
-  ProfileInputRouteProp,
-  RequestPatchProfile,
-  RequestPutGender,
-} from "src/types/Types";
-import { ProfileSubmitButton } from "src/components/molecules/ProfileSubmitButton";
+import { ProfileInputScreen } from "src/types/Types";
+import { ProfileSubmitButton } from "src/components/templates/ProfileInputTemplate/organisms/ProfileSubmitButton";
 import { COLORS } from "src/constants/theme";
 
 type Props = {
-  requestPatchProfile: RequestPatchProfile;
-  requestPutGender: RequestPutGender;
+  value: unknown;
+  setValue: Dispatch<unknown>;
+  prevValue: unknown;
+  canSubmit: boolean;
+  setCanSubmit: Dispatch<boolean>;
+  validationText: string;
+  setValidationText: Dispatch<string>;
+  profileInputScreen: ProfileInputScreen;
 };
 export const ProfileInputTemplate: React.FC<Props> = (props) => {
-  const { requestPatchProfile, requestPutGender } = props;
-  const route = useRoute<ProfileInputRouteProp>();
-  const { prevValue, screen: profileInputScreen } = route.params;
-  const authState = useAuthState();
-  const profileDispatch = useProfileDispatch();
-
-  const [value, setValue] = useState(prevValue);
-  const [canSubmit, setCanSubmit] = useState(false);
-  const [validationText, setValidationText] = useState("");
+  const {
+    value,
+    setValue,
+    prevValue,
+    canSubmit,
+    setCanSubmit,
+    validationText,
+    setValidationText,
+    profileInputScreen,
+  } = props;
 
   return (
     <>
@@ -53,11 +52,7 @@ export const ProfileInputTemplate: React.FC<Props> = (props) => {
         screen={profileInputScreen}
         value={value}
         canSubmit={canSubmit}
-        token={authState.token}
-        profileDispatch={profileDispatch}
         setValidationText={setValidationText}
-        requestPatchProfile={requestPatchProfile}
-        requestPutGender={requestPutGender}
       />
     </>
   );

@@ -3,20 +3,25 @@ import { Block, Button, Text } from "galio-framework";
 import {
   StyleSheet,
   Keyboard,
-  KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
   ImageBackground,
   Image,
   Alert,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
 
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
-import { MAN_AND_WOMAN_IMG, MEN_IMG } from "src/constants/imagePath";
+import {
+  MAN_AND_WOMAN_IMG,
+  MEN_IMG,
+  PRIVATE_IMG,
+} from "src/constants/imagePath";
+import { Icon } from "src/components/atoms/Icon";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import { width } from "src/constants";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
@@ -42,12 +47,13 @@ type PropsDependsOnMode =
       mode: "FIX";
       talkingRoom: TalkingRoom;
     };
+
 type Props = {
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
   propsDependsOnMode: PropsDependsOnMode;
 };
-const RoomEditorModal: React.FC<Props> = (props) => {
+export const RoomEditorModal: React.FC<Props> = (props) => {
   const {
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
@@ -80,6 +86,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   const geneInitIsExcludeDifferentGender = () => {
     let _initIsExcludeDifferentGender = null;
     if (propsDependsOnMode.mode === "FIX") {
+      if (propsDependsOnMode.talkingRoom.isPrivate) return false;
       if (canSetIsExcludeDifferentGender) {
         _initIsExcludeDifferentGender =
           propsDependsOnMode.talkingRoom.isExcludeDifferentGender;
@@ -92,6 +99,11 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   const [initIsExcludeDifferentGender] = useState(
     geneInitIsExcludeDifferentGender()
   );
+  const [initIsPrivate] = useState(
+    propsDependsOnMode.mode === "FIX"
+      ? propsDependsOnMode.talkingRoom.isPrivate
+      : null
+  );
   // ====== init post or patch data ======
 
   // ====== post or patch data ======
@@ -103,15 +115,16 @@ const RoomEditorModal: React.FC<Props> = (props) => {
   const [isExcludeDifferentGender, setIsExcludeDifferentGender] = useState<
     boolean | null
   >(initIsExcludeDifferentGender);
+  const [isPrivate, setIsPrivate] = useState<boolean | null>(initIsPrivate);
   // ====== post or patch data ======
 
-  const maxTopicLength = 60;
+  const maxRoomNameLength = 60;
 
   // canPostは作成時 & 修正時
   const canPost =
     (propsDependsOnMode.mode === "FIX"
       ? true
-      : isExcludeDifferentGender !== null) &&
+      : isExcludeDifferentGender !== null || isPrivate !== null) &&
     roomName &&
     roomName.length > 0;
 
@@ -124,6 +137,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     setRoomName(initRoomName);
     setRoomImage(initRoomImage);
     setIsExcludeDifferentGender(initIsExcludeDifferentGender);
+    setIsPrivate(initIsPrivate);
   };
   const addRoomOption = () => {
     resetDraftOption();
@@ -141,10 +155,11 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     setIsOpenRoomEditorModal(false);
   };
 
-  // ルーム作成用
+  // ルーム作成用 (プライベート含)
   const { requestPostRoom, isLoadingPostRoom } = useRequestPostRoom(
     roomName,
     isExcludeDifferentGender,
+    isPrivate,
     roomImage,
     () => {
       // then時、実行
@@ -158,6 +173,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
     propsDependsOnMode.mode === "FIX" ? propsDependsOnMode.talkingRoom.id : "",
     roomName,
     isExcludeDifferentGender,
+    isPrivate,
     roomImage,
     () => {
       // then時、実行
@@ -169,7 +185,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
 
   const renderRoomImage = () => {
     const emptyRoomImage = (
-      <IconExtra
+      <Icon
         name="image"
         family="Feather"
         size={48}
@@ -244,7 +260,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
           Keyboard.dismiss();
         }}
       >
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={0}>
+        <>
           <Block column style={styles.firstModalContent}>
             <Block row>
               <TouchableOpacity
@@ -253,7 +269,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   setIsOpenRoomEditorModal(false);
                 }}
               >
-                <IconExtra
+                <Icon
                   name="close"
                   family="Ionicons"
                   size={32}
@@ -269,7 +285,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             >
               <Block column>
                 <Block row center>
-                  <IconExtra
+                  <Icon
                     name="plus"
                     family="AntDesign"
                     size={16}
@@ -287,7 +303,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             (propsDependsOnMode.mode === "FIX" &&
               propsDependsOnMode.talkingRoom.image) ? (
               <Block row center style={styles.checkRoomImage}>
-                <IconExtra
+                <Icon
                   name="check-circle"
                   family="Feather"
                   size={14}
@@ -302,13 +318,13 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             ) : null}
             <Block row space="between" style={styles.subTitleTextInput}>
               <Block>
-                <Text size={12} color={COLORS.GRAY}>
-                  ルーム名
+                <Text size={14} color={COLORS.BLACK}>
+                  話したい悩みについて
                 </Text>
               </Block>
               <Block>
                 <Text size={12} color={COLORS.GRAY}>
-                  {roomName === null ? 0 : roomName.length}/{maxTopicLength}
+                  {roomName === null ? 0 : roomName.length}/{maxRoomNameLength}
                 </Text>
               </Block>
             </Block>
@@ -317,7 +333,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               numberOfLines={4}
               editable
               placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
-              maxLength={maxTopicLength}
+              maxLength={maxRoomNameLength}
               value={roomName === null ? "" : roomName}
               onChangeText={setRoomName}
               returnKeyType="done"
@@ -327,21 +343,29 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 Keyboard.dismiss();
               }}
             />
+            <Block style={styles.subText}>
+              <Text size={12} color={COLORS.LIGHT_GRAY}>
+                見た人が不快になるような表現は避けましょう
+              </Text>
+            </Block>
             <Block style={styles.choiceRangeTitle}>
-              <Text size={12} color={COLORS.GRAY}>
-                異性への表示
+              <Text size={14} color={COLORS.BLACK}>
+                表示範囲
               </Text>
             </Block>
             <Block row space="between" style={styles.circleButtons}>
               <TouchableOpacity
                 style={[
                   styles.circleButton,
-                  isExcludeDifferentGender !== null && !isExcludeDifferentGender
+                  isExcludeDifferentGender !== null &&
+                  !isExcludeDifferentGender &&
+                  !isPrivate
                     ? { borderColor: COLORS.GREEN }
                     : { borderColor: "#f4f8f7" },
                 ]}
                 onPress={() => {
                   setIsExcludeDifferentGender(false);
+                  setIsPrivate(false);
                 }}
               >
                 <ImageBackground
@@ -358,7 +382,9 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               <TouchableOpacity
                 style={[
                   styles.circleButton,
-                  isExcludeDifferentGender !== null && isExcludeDifferentGender
+                  isExcludeDifferentGender !== null &&
+                  isExcludeDifferentGender &&
+                  !isPrivate
                     ? { borderColor: COLORS.GREEN }
                     : { borderColor: "#f4f8f7" },
                 ]}
@@ -369,6 +395,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                     );
                   } else {
                     setIsExcludeDifferentGender(true);
+                    setIsPrivate(false);
                   }
                 }}
               >
@@ -379,6 +406,28 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                   <Block style={styles.disclosureRangeText}>
                     <Text size={10} bold>
                       同性のみ表示
+                    </Text>
+                  </Block>
+                </ImageBackground>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.circleButton,
+                  isPrivate !== null && isPrivate
+                    ? { borderColor: COLORS.GREEN }
+                    : { borderColor: "#f4f8f7" },
+                ]}
+                onPress={() => {
+                  setIsPrivate(true);
+                }}
+              >
+                <ImageBackground
+                  source={PRIVATE_IMG}
+                  style={styles.disclosureRangeImage}
+                >
+                  <Block style={styles.disclosureRangeText}>
+                    <Text size={10} bold>
+                      プライベート
                     </Text>
                   </Block>
                 </ImageBackground>
@@ -420,7 +469,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                 }
               >
                 <Block row center style={styles.submitButtonInner}>
-                  <IconExtra
+                  <Icon
                     name={propsDependsOnMode.mode === "FIX" ? "save" : ""}
                     family="AntDesign"
                     size={32}
@@ -439,13 +488,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
             </Block>
           </Block>
 
-          <Modal
-            isVisible={isOpenOptionModal}
-            deviceWidth={width}
-            // onBackdropPress={() => {
-            //   // setIsOpenOptionModal(false);
-            // }}
-          >
+          <Modal isVisible={isOpenOptionModal} deviceWidth={width}>
             <Block style={styles.secondModal}>
               <Block column style={styles.secondModalContent}>
                 <TouchableOpacity
@@ -455,7 +498,7 @@ const RoomEditorModal: React.FC<Props> = (props) => {
                     setIsOpenOptionModal(false);
                   }}
                 >
-                  <IconExtra
+                  <Icon
                     name="close"
                     family="Ionicons"
                     size={32}
@@ -504,11 +547,18 @@ const RoomEditorModal: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Modal>
-        </KeyboardAvoidingView>
+          {Platform.OS === "ios" && (
+            <KeyboardAvoidingView
+              behavior="padding"
+              keyboardVerticalOffset={0}
+            />
+          )}
+        </>
       </TouchableWithoutFeedback>
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   firstModal: {
     justifyContent: "flex-end",
@@ -519,7 +569,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    padding: 16,
+    padding: 20,
     position: "relative",
   },
   closeIcon: {
@@ -545,7 +595,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   circleButtons: {
-    paddingHorizontal: 64,
+    paddingHorizontal: 16,
     marginBottom: 32,
   },
   circleButton: {
@@ -608,8 +658,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   textArea: {
-    width: width * 0.8,
+    width: width - 40,
     alignSelf: "center",
+    textAlignVertical: "top",
     height: "auto",
     borderColor: "silver",
     borderWidth: 1,
@@ -617,6 +668,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     backgroundColor: COLORS.WHITE,
+    marginBottom: 8,
+  },
+  subText: {
     marginBottom: 40,
   },
   roomImageContainer: {
@@ -656,5 +710,3 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
 });
-
-export default RoomEditorModal;

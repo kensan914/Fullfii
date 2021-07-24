@@ -1,100 +1,104 @@
-import React, { Dispatch, useState } from "react";
-import { Block, Button, Text } from "galio-framework";
-import { StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { Text } from "galio-framework";
+import { TabBar, TabView } from "react-native-tab-view";
 
 import { COLORS } from "src/constants/theme";
-import IconExtra from "src/components/atoms/Icon";
-import { ProfileEditReminder } from "./molecules/ProfileEditReminder";
-import { ProfileEditor } from "./organisms/ProfileEditor";
+import { MeProfile } from "src/types/Types.context";
+import { ProfileBody } from "src/components/templates/ProfileTemplate/organisms/ProfileBody";
+import {
+  AnimatedScrollY,
+  OnIndexChange,
+  PROFILE_VIEW_HEIGHT_TYPE,
+  RenderHeader,
+  RenderScene,
+  Routes,
+  TAB_BAR_HEIGHT_TYPE,
+} from "src/types/Types";
 
 type Props = {
-  isInit: boolean;
-  isShowProfileEditor: boolean;
-  setIsShowProfileEditor: Dispatch<boolean>;
-  close: boolean;
-  onPressCloseProfileEditReminder: () => void;
+  meProfile: MeProfile;
+  routes: Routes;
+  tabIndex: number;
+  animatedScrollY: AnimatedScrollY;
+  onIndexChange: OnIndexChange;
+  renderScene: RenderScene;
+  PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
+  TAB_BAR_HEIGHT: TAB_BAR_HEIGHT_TYPE;
+  PROFILE_BODY_HEIGHT: number;
 };
 export const ProfileTemplate: React.FC<Props> = (props) => {
   const {
-    isInit,
-    isShowProfileEditor,
-    setIsShowProfileEditor,
-    close,
-    onPressCloseProfileEditReminder,
+    meProfile,
+    routes,
+    tabIndex,
+    animatedScrollY,
+    onIndexChange,
+    renderScene,
+    PROFILE_VIEW_HEIGHT,
+    TAB_BAR_HEIGHT,
+    PROFILE_BODY_HEIGHT,
   } = props;
 
-  return (
-    <Block flex style={styles.container}>
-      {!isInit || isShowProfileEditor ? (
-        <ProfileEditor />
-      ) : (
-        <>
-          {/* {!close ? (
-            <Block center style={styles.profileEditReminderContainer}>
-              <ProfileEditReminder
-                onPressClose={onPressCloseProfileEditReminder}
-              />
-            </Block>
-          ) : (
-            <></>
-          )} */}
-          <Block center style={styles.iconContainer}>
-            <IconExtra
-              name="user"
-              family="AntDesign"
-              size={80}
-              color={COLORS.LIGHT_GRAY}
-            />
-          </Block>
-          <Block center style={styles.textContainer}>
-            <Text size={16} color={COLORS.BLACK}>
-              プロフィールを作成しましょう
-            </Text>
-          </Block>
-          <Block center>
-            <Button
-              style={styles.button}
-              onPress={() => {
-                setIsShowProfileEditor(true);
-              }}
-            >
-              <Text size={20} bold color={COLORS.WHITE}>
-                作成
+  const renderHeader: RenderHeader = () => (props) =>
+    (
+      <ProfileBody
+        meProfile={meProfile}
+        animatedScrollY={animatedScrollY}
+        renderTabBar={() => (
+          <TabBar
+            getLabelText={({ route }) => route.title}
+            indicatorStyle={styles.indicator}
+            style={[styles.tabBar, { height: TAB_BAR_HEIGHT }]}
+            activeColor={COLORS.LIGHT_GRAY}
+            inactiveColor={COLORS.LIGHT_GRAY}
+            renderLabel={({ route, focused, color }) => (
+              <Text bold={focused} size={12} style={{ color: color }}>
+                {route.title}
               </Text>
-            </Button>
-          </Block>
-        </>
-      )}
-    </Block>
+            )}
+            {...props}
+          />
+        )}
+        PROFILE_VIEW_HEIGHT={PROFILE_VIEW_HEIGHT}
+        PROFILE_BODY_HEIGHT={PROFILE_BODY_HEIGHT}
+      />
+    );
+
+  return (
+    <View style={{ flex: 1 }}>
+      <TabView
+        style={styles.container}
+        navigationState={{
+          index: tabIndex,
+          routes: routes,
+        }}
+        renderScene={renderScene}
+        renderTabBar={renderHeader()}
+        onIndexChange={onIndexChange}
+        swipeEnabled
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: "#edeef0",
+  },
+  tabBar: {
     backgroundColor: COLORS.BEIGE,
+    elevation: 0,
   },
-  profileEditReminderContainer: {
-    marginTop: 24,
+  indicator: {
+    backgroundColor: COLORS.PINK,
+    height: 3,
   },
-  iconContainer: {
-    marginTop: "25%",
-    marginBottom: 40,
-  },
-  textContainer: {
-    marginBottom: 40,
-  },
-  button: {
-    backgroundColor: COLORS.BROWN,
-    width: 335,
-    height: 64,
-    borderRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 1,
+  label: {
+    margin: 0,
+    marginTop: 6,
+    marginBottom: 6,
+    fontWeight: "400",
   },
 });

@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, Image, ImageSourcePropType } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
-import { Request } from "src/types/Types";
+import {logEvent} from "src/utils/firebase/logEvent"
 
 type Props = {
-  requestPostSignup: Request;
-  isLoadingPostSignup: boolean;
+  onPressCompleteInto: () => void;
 };
 export const OnboardingTemplate: React.FC<Props> = (props) => {
-  const { requestPostSignup, isLoadingPostSignup } = props;
+  const { onPressCompleteInto } = props;
 
   type slideItem = {
     key: string;
@@ -88,7 +87,8 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
   const onDone = () => {
     // User finished the introduction. Show real app through
     // navigation or simply by controlling state
-    requestPostSignup();
+    logEvent("press_onbording_screen_done_button")
+    onPressCompleteInto();
   };
   return (
     <AppIntroSlider
@@ -96,7 +96,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
       data={slideItems}
       onDone={onDone}
       bottomButton={true}
-      doneLabel="はじめる"
+      doneLabel="ユーザー登録に進む"
       nextLabel="次へ"
     />
   );

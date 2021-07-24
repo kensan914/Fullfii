@@ -8,7 +8,7 @@ import PushNotificationIOS from "@react-native-community/push-notification-ios";
  * リクエストは行わず, 「既に設定され, かつ許可されている」かを判定.
  * @returns
  */
-export const hasPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+export const hasPermissionOfPN = async (): Promise<boolean> => {
   const authStatus = await messaging().hasPermission();
   return (
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -19,12 +19,12 @@ export const hasPermissionOfIOSPushNotification = async (): Promise<boolean> => 
  * リクエストは行わず, 「未だ通知設定がされていない」かを判定.
  * @returns
  */
-export const hasChosenPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+export const hasChosenPermissionOfPN = async (): Promise<boolean> => {
   const authStatus = await messaging().hasPermission();
   return authStatus !== messaging.AuthorizationStatus.NOT_DETERMINED;
 };
 
-export const requestPermissionOfIOSPushNotification = async (): Promise<boolean> => {
+const requestPermissionOfIosPN = async (): Promise<boolean> => {
   const authStatus = await messaging().requestPermission();
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -40,7 +40,7 @@ const configurePushNotification = (
     if (onlyConfig) {
       return initFcm();
     } else {
-      const enabled = await requestPermissionOfIOSPushNotification();
+      const enabled = await requestPermissionOfIosPN();
 
       if (enabled) {
         return initFcm();
@@ -56,7 +56,6 @@ const configurePushNotification = (
     PushNotification.configure({
       requestPermissions: false,
       onNotification: (notification) => {
-        console.log("プッシュ通知をタップした");
         notification.finish(PushNotificationIOS.FetchResult.NoData);
       },
       permissions: {
@@ -67,12 +66,10 @@ const configurePushNotification = (
     });
 
     messaging().onTokenRefresh(() => {
-      console.log("トークンリフレッシュ");
+      //
     });
     messaging().onMessage((message) => {
-      console.log("Foreground時にリモートプッシュ通知を受信した");
       _localNotification(message);
-
       // // badge=1が送信されるが, Foregroundであるためリセット
       // PushNotification.setApplicationIconBadgeNumber(0);
     });
@@ -86,7 +83,6 @@ const configurePushNotification = (
     PushNotification.localNotification({
       title: message?.notification?.title ? message.notification.title : "",
       message: message?.notification?.body ? message.notification.body : "",
-      userInfo: message.data,
     });
   };
 

@@ -1,16 +1,18 @@
-import { Dispatch } from "react";
+import React, { Dispatch } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AxiosError, AxiosResponse } from "axios";
-import { GestureResponderEvent } from "react-native";
+import { Animated, FlatList, GestureResponderEvent } from "react-native";
 import * as t from "io-ts";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import { Asset } from "expo-asset";
+import { NavigationState, SceneRendererProps } from "react-native-tab-view";
 
 import {
   GenderKey,
   MeProfile,
   MeProfileIoTs,
+  ProfileIoTs,
   MessageJsonIoTs,
   Profile,
   ProfileDispatch,
@@ -33,14 +35,21 @@ export type RootStackParamList = {
     user: MeProfile;
   };
   Chat: { roomId: string };
+  MessageHistory: { user: Profile };
   Settings: undefined;
   AccountDelete: undefined;
   Authenticated: undefined;
   Top: undefined;
   Onboarding: undefined;
+  Signup: undefined;
+  IntroCreateRoom: undefined;
   MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
+export type MessageHistoryRouteProp = RouteProp<
+  RootStackParamList,
+  "MessageHistory"
+>;
 export type ProfileInputRouteProp = RouteProp<
   RootStackParamList,
   "ProfileInput"
@@ -66,15 +75,16 @@ export type WorrySelectNavigationProps = StackNavigationProp<
 export type ProfileInputScreen =
   | "InputName"
   | "InputGender"
-  | "InputIntroduction";
+  | "InputIsPrivateProfile";
 
-export type HeaderName =
+export type RouteName =
   | (
       | "Rooms"
       | "MyRooms"
       | "Profile"
       | "ProfileEditor"
       | "Chat"
+      | "MessageHistory"
       | "Settings"
       | "AccountDelete"
     )
@@ -128,6 +138,7 @@ export type RequestPutGender = (
   errorSubmit?: ErrorSubmitProfile
 ) => void;
 export type FormattedGenderKey = "female" | "male" | "secret";
+export type NotSetGenderKey = "notset";
 export type FormattedGender = {
   key: FormattedGenderKey;
   label: string;
@@ -221,6 +232,38 @@ export type SubmitSettings = {
 };
 //--------- FormTemplate.tsx ---------//
 
+//--------- Profile.tsx -----------//
+export type RouteKey = "tab1" | "tab2";
+export type Route = { key: RouteKey; title: string };
+export type Routes = Route[];
+export type AnimatedScrollY = Animated.Value;
+export type ScrollYCollection = { [key in RouteKey]?: number };
+export type FlatListRef = React.RefObject<FlatList | null>;
+export type FlatListRefCollection = { [key in RouteKey]?: FlatListRef };
+export type OnIndexChange = (index: number) => void;
+export type SceneProps = {
+  animatedScrollY: AnimatedScrollY;
+  onUpdateOffsetY: (offsetY: number) => void;
+  ref: FlatListRef;
+  PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
+  PROFILE_BODY_HEIGHT: number;
+};
+export type GeneSceneProps = (routeKey: RouteKey) => SceneProps;
+export type RenderScene = (
+  props: SceneRendererProps & {
+    route: Route;
+  }
+) => React.ReactNode;
+export type RenderTabBar = () => React.ReactNode;
+export type RenderHeader = () => (
+  props: SceneRendererProps & {
+    navigationState: NavigationState<Route>;
+  }
+) => React.ReactNode;
+export type PROFILE_VIEW_HEIGHT_TYPE = 224;
+export type TAB_BAR_HEIGHT_TYPE = 48;
+//--------- Profile.tsx -----------//
+
 //--------- axios ---------//
 export type AxiosMethod = "get" | "post" | "delete" | "put" | "patch";
 export type AxiosHeaders = {
@@ -254,7 +297,13 @@ export type UseAxiosReturn = {
 };
 export type TypeIoTsOfResData =
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  t.TypeC<any> | t.RecordC<any, any> | t.UnionC<any> | t.IntersectionC<any>;
+  | t.TypeC<any>
+  | t.RecordC<any, any>
+  | t.UnionC<any>
+  | t.IntersectionC<any>
+  | t.BooleanC
+  | t.StringC
+  | t.ArrayC<any>;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 export type UseAxios = (
   url: string,
@@ -292,6 +341,20 @@ export const PutGenderResDataIoTs = t.type({
 export type GetRoomsResData = t.TypeOf<typeof GetRoomsResDataIoTs>;
 export const GetRoomsResDataIoTs = t.type({
   rooms: t.array(RoomJsonIoTs),
+  hasMore: t.boolean,
+});
+export type GetPrivateRoomsResData = t.TypeOf<
+  typeof GetPrivateRoomsResDataIoTs
+>;
+export const GetPrivateRoomsResDataIoTs = t.type({
+  privateRooms: t.array(RoomJsonIoTs),
+  hasMore: t.boolean,
+});
+export type GetFavoriteUsersResData = t.TypeOf<
+  typeof GetFavoriteUsersResDataIoTs
+>;
+export const GetFavoriteUsersResDataIoTs = t.type({
+  favoriteUsers: t.array(ProfileIoTs),
   hasMore: t.boolean,
 });
 //--------- axios res.data ---------//
@@ -354,6 +417,11 @@ export const WsResEndTalkIoTs = t.type({
   type: t.literal("end_talk"),
   room: RoomJsonIoTs,
 });
+export const WsResChatTabooMessageIoTs = t.type({
+  type: t.literal("chat_taboo_message"),
+  roomId: t.string,
+  messageId: t.string,
+});
 export const WsResErrorIoTs = t.intersection([
   t.type({
     type: t.literal("error"),
@@ -366,6 +434,7 @@ export const WsResErrorIoTs = t.intersection([
 export const WsResChatIoTs = t.union([
   WsResChatAuthIoTs,
   WsResChatMessageIoTs,
+  WsResChatTabooMessageIoTs,
   WsResEndTalkIoTs,
   WsResErrorIoTs,
 ]);

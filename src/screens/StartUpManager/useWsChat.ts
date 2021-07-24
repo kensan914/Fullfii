@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert } from "react-native";
 
 import { BASE_URL_WS } from "src/constants/env";
-import { URLJoin, closeWsSafely, generateUuid4 } from "src/utils";
-import { MessageJson } from "src/types/Types.context";
+import { URLJoin, closeWsSafely } from "src/utils";
+import { MessageJson, ProfileDispatch } from "src/types/Types.context";
 import { WsResChat, WsResChatIoTs } from "src/types/Types";
 import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
-import { useProfileState } from "src/contexts/ProfileContext";
+import {
+  useProfileDispatch,
+  useProfileState,
+} from "src/contexts/ProfileContext";
 import { useWebsocket } from "src/hooks/useWebsocket";
 import { useAuthState } from "src/contexts/AuthContext";
+import { ALERT_MESSAGES } from "src/constants/alertMessages";
 
 type ConnectWsChat = (roomId: string, shouldStart?: boolean) => void;
 type UseWsChat = () => {
@@ -19,6 +23,7 @@ export const useWsChat: UseWsChat = () => {
   const chatState = useChatState();
   const profileState = useProfileState();
   const authState = useAuthState();
+  const profileDispatch = useProfileDispatch();
 
   // useWebsocketのwsSettingsがroomIdに依存していて, かつroomIdがconnectWsChat()を呼び出さない限り確定しないため, もう一つwsSettings用のroomId・onSuccessAuthを用意 (詳しくはuseWebsocket.ts参照).
   const [roomId, setRoomId] = useState<string>();
@@ -111,7 +116,8 @@ export const useWsChat: UseWsChat = () => {
           handleChatMessage(
             data,
             authState.token ? authState.token : "",
-            roomId
+            roomId,
+            profileDispatch
           );
         }
       },
@@ -127,8 +133,13 @@ export const useWsChat: UseWsChat = () => {
   const handleChatMessage = (
     data: WsResChat,
     token: string,
-    roomId: string
+    roomId: string,
+    profileDispatch: ProfileDispatch
   ) => {
+    if (!(roomId in chatState.talkingRoomCollection)) {
+      console.error(`not found the room (${roomId}).`);
+    }
+
     if (data.type === "chat_message") {
       const {
         id: messageId,
@@ -137,33 +148,15 @@ export const useWsChat: UseWsChat = () => {
         time,
       } = data.message as MessageJson;
 
-      if (roomId in chatState.talkingRoomCollection) {
-        const room = chatState.talkingRoomCollection[roomId];
-        const offlineMessages = room.offlineMessages;
+      const room = chatState.talkingRoomCollection[roomId];
+      const offlineMessages = room.offlineMessages;
 
-        if (senderId === profileState.profile.id) {
-          // appendMessage → offlineMessagesの該当messageを削除
-          const offlineMsgIDs = offlineMessages.map(
-            (offlineMessage) => offlineMessage.id
-          );
-          if (offlineMsgIDs.includes(messageId)) {
-            chatDispatch({
-              type: "APPEND_MESSAGE",
-              roomId: roomId,
-              messageId: messageId,
-              text: text,
-              senderId: senderId,
-              time: time,
-              meId: profileState.profile.id,
-              token,
-            });
-            chatDispatch({
-              type: "DELETE_OFFLINE_MESSAGE",
-              roomId: roomId,
-              messageId: messageId,
-            });
-          }
-        } else {
+      if (senderId === profileState.profile.id) {
+        // appendMessage → offlineMessagesの該当messageを削除
+        const offlineMsgIDs = offlineMessages.map(
+          (offlineMessage) => offlineMessage.id
+        );
+        if (offlineMsgIDs.includes(messageId)) {
           chatDispatch({
             type: "APPEND_MESSAGE",
             roomId: roomId,
@@ -174,9 +167,47 @@ export const useWsChat: UseWsChat = () => {
             meId: profileState.profile.id,
             token,
           });
+          chatDispatch({
+            type: "DELETE_OFFLINE_MESSAGE",
+            roomId: roomId,
+            messageId: messageId,
+          });
         }
       } else {
-        console.error(`not found the room (${roomId}).`);
+        chatDispatch({
+          type: "APPEND_MESSAGE",
+          roomId: roomId,
+          messageId: messageId,
+          text: text,
+          senderId: senderId,
+          time: time,
+          meId: profileState.profile.id,
+          token,
+        });
+      }
+    } else if (data.type === "chat_taboo_message") {
+      const roomId = data.roomId;
+      const messageId = data.messageId;
+
+      Alert.alert(...ALERT_MESSAGES["SEND_TABOO"]);
+
+      profileDispatch({
+        type: "SET_IS_BANNED",
+        isBan: true,
+      });
+
+      // offline messageの削除
+      const room = chatState.talkingRoomCollection[roomId];
+      const offlineMessages = room.offlineMessages;
+      const offlineMsgIDs = offlineMessages.map(
+        (offlineMessage) => offlineMessage.id
+      );
+      if (offlineMsgIDs.includes(messageId)) {
+        chatDispatch({
+          type: "DELETE_OFFLINE_MESSAGE",
+          roomId: roomId,
+          messageId: messageId,
+        });
       }
     }
   };

@@ -12,7 +12,7 @@ import {
   ProfileParamsIoTs,
   ProfileState,
 } from "src/types/Types.context";
-import { asyncStoreObject } from "src/utils/asyncStorage";
+import { asyncStoreBool, asyncStoreObject } from "src/utils/asyncStorage";
 
 const profileReducer = (
   prevState: ProfileState,
@@ -38,6 +38,29 @@ const profileReducer = (
       return {
         ...prevState,
         profileParams: action.profileParams,
+      };
+
+    case "SET_IS_BANNED":
+      /** 凍結経験（isBanned）をセット. Async storageへのストアも行う.
+       * @param {Object} action [type, isBan] */
+
+      asyncStoreBool("isBanned", action.isBan);
+      return {
+        ...prevState,
+        isBanned: action.isBan,
+      };
+
+    case "SET_PROFILE_BUFFER":
+      /** set profileBuffer
+       * @param {Object} action [type, username, genderKey, jobKey] */
+
+      return {
+        ...prevState,
+        profileBuffer: {
+          username: action.username,
+          genderKey: action.genderKey,
+          jobKey: action.jobKey,
+        },
       };
 
     case "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS":
@@ -66,6 +89,9 @@ export const initProfile: Profile = Object.freeze({
   genreOfWorries: [],
   image: "",
   me: true,
+  numOfOwner: 0,
+  numOfParticipated: 0,
+  isPrivateProfile: true,
 });
 
 export const initMeProfile: MeProfile = Object.freeze({
@@ -84,11 +110,23 @@ export const initMeProfile: MeProfile = Object.freeze({
   plan: { key: "", label: "" },
   deviceToken: "",
   isActive: true,
+  isBan: false,
+  numOfOwner: 0,
+  numOfParticipated: 0,
+  isPrivateProfile: true,
 });
+
+const initProfileBuffer = {
+  username: "",
+  genderKey: "",
+  jobKey: "",
+};
 
 const profileStateContext = createContext<ProfileState>({
   profile: { ...initMeProfile },
   profileParams: null,
+  isBanned: false,
+  profileBuffer: initProfileBuffer,
 });
 const profileDispatchContext = createContext<ProfileDispatch>(() => {
   return void 0;
@@ -105,11 +143,18 @@ export const useProfileDispatch = (): ProfileDispatch => {
 
 type Props = {
   profile: MeProfile | null;
+  isBanned: boolean | null;
 };
-export const ProfileProvider: React.FC<Props> = ({ children, profile }) => {
+export const ProfileProvider: React.FC<Props> = ({
+  children,
+  profile,
+  isBanned,
+}) => {
   const [profileState, profileDispatch] = useReducer(profileReducer, {
     profile: profile ? profile : { ...initMeProfile },
     profileParams: null,
+    isBanned: isBanned !== null ? isBanned : false,
+    profileBuffer: initProfileBuffer,
   });
 
   // fetch profile params

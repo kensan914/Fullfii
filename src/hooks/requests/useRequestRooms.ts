@@ -53,6 +53,7 @@ export const useRequestPostRoomImage: UseRequestPostRoomImage = () => {
 type UseRequestPostRoom = (
   roomName: string | null,
   isExcludeDifferentGender: boolean | null,
+  isPrivate: boolean | null,
   roomImage: ImageInfo | null,
   additionalThenCallback?: (roomJson: RoomJson) => void
 ) => {
@@ -62,6 +63,7 @@ type UseRequestPostRoom = (
 export const useRequestPostRoom: UseRequestPostRoom = (
   roomName,
   isExcludeDifferentGender,
+  isPrivate,
   roomImage,
   additionalThenCallback = () => void 0
 ) => {
@@ -80,6 +82,7 @@ export const useRequestPostRoom: UseRequestPostRoom = (
         ...(isExcludeDifferentGender !== null
           ? { is_exclude_different_gender: isExcludeDifferentGender }
           : {}),
+        ...(isPrivate !== null ? { is_private: isPrivate } : {}),
       },
       thenCallback: (resData) => {
         const roomJson = resData as RoomJson;
@@ -121,6 +124,7 @@ type UseRequestPatchRoom = (
   roomId: string,
   roomName?: string | null,
   isExcludeDifferentGender?: boolean | null,
+  isPrivate?: boolean | null,
   roomImage?: ImageInfo | null,
   additionalThenCallback?: (roomJson: RoomJson) => void
 ) => {
@@ -131,6 +135,7 @@ export const useRequestPatchRoom: UseRequestPatchRoom = (
   roomId,
   roomName = null,
   isExcludeDifferentGender = null,
+  isPrivate = null,
   roomImage = null,
   additionalThenCallback = () => void 0
 ) => {
@@ -149,6 +154,7 @@ export const useRequestPatchRoom: UseRequestPatchRoom = (
         ...(isExcludeDifferentGender !== null
           ? { is_exclude_different_gender: isExcludeDifferentGender }
           : {}),
+        ...(isPrivate !== null ? { is_private: isPrivate } : {}),
       },
       thenCallback: (resData) => {
         const roomJson = resData as RoomJson;
@@ -192,25 +198,23 @@ export const useRequestDeleteRoom: UseRequestDeleteRoom = (
   const authState = useAuthState();
   const chatDispatch = useChatDispatch();
 
-  const {
-    isLoading: isLoadingDeleteRoom,
-    request: requestDeleteRoom,
-  } = useAxios(URLJoin(BASE_URL, "rooms/", roomId), "delete", RoomJsonIoTs, {
-    thenCallback: () => {
-      chatDispatch({
-        type: "I_END_TALK",
-        roomId: roomId,
-      });
+  const { isLoading: isLoadingDeleteRoom, request: requestDeleteRoom } =
+    useAxios(URLJoin(BASE_URL, "rooms/", roomId), "delete", RoomJsonIoTs, {
+      thenCallback: () => {
+        chatDispatch({
+          type: "I_END_TALK",
+          roomId: roomId,
+        });
 
-      chatDispatch({
-        type: "CLOSE_TALK",
-        roomId: roomId,
-      });
+        chatDispatch({
+          type: "CLOSE_TALK",
+          roomId: roomId,
+        });
 
-      additionalThenCallback && additionalThenCallback();
-    },
-    token: authState.token ? authState.token : "",
-  });
+        additionalThenCallback && additionalThenCallback();
+      },
+      token: authState.token ? authState.token : "",
+    });
 
   return {
     requestDeleteRoom,

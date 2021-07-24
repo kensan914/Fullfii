@@ -4,15 +4,22 @@ import { Asset } from "expo-asset";
 import { GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "react-native-splash-screen";
+import * as t from "io-ts";
+
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
 import Toast from "react-native-toast-message";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import Screens from "src/navigations/Screens";
 import materialTheme from "src/constants/theme";
 import { AuthProvider } from "src/contexts/AuthContext";
-import { asyncGetItem, asyncGetObject } from "src/utils/asyncStorage";
+import {
+  asyncGetBool,
+  asyncGetItem,
+  asyncGetObject,
+} from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
 import { StartUpManager } from "src/screens/StartUpManager";
@@ -41,9 +48,8 @@ function cacheImages(images: (string | number)[]): Promise<Asset>[] {
 }
 
 const App: React.FC = () => {
-  const [isFinishLoadingResources, setIsFinishLoadingResources] = useState(
-    false
-  );
+  const [isFinishLoadingResources, setIsFinishLoadingResources] =
+    useState(false);
   const [assets, setAssets] = useState<Assets>({});
 
   const loadResourcesAsync = async (): Promise<Asset[]> => {
@@ -82,9 +88,9 @@ const RootNavigator: React.FC<Props> = (props) => {
   const [status, setStatus] = useState<InitState<AuthStatus>>();
   const [token, setToken] = useState<InitState<string>>();
   const [profile, setProfile] = useState<InitState<MeProfile>>();
-  const [talkingRoomCollection, setTalkingRoomCollection] = useState<
-    InitState<TalkingRoomCollectionAsync>
-  >();
+  const [talkingRoomCollection, setTalkingRoomCollection] =
+    useState<InitState<TalkingRoomCollectionAsync>>();
+  const [isBanned, setIsBanned] = useState<InitState<boolean>>();
 
   useEffect(() => {
     (async () => {
@@ -93,13 +99,16 @@ const RootNavigator: React.FC<Props> = (props) => {
         AuthStatusIoTs
       )) as AuthStatus;
       setStatus(_status ? _status : null);
-      const _token = await asyncGetItem("token");
-      setToken(_token ? _token : null);
+
+      const _token = await asyncGetItem("token", t.string);
+      setToken(typeof _token === "string" ? _token : null);
+
       const _profile = (await asyncGetObject(
         "profile",
         MeProfileIoTs
       )) as MeProfile;
       setProfile(_profile ? _profile : null);
+
       const _talkingRoomCollection = (await asyncGetObject(
         "talkingRoomCollection",
         TalkingRoomCollectionAsyncIoTs
@@ -107,6 +116,11 @@ const RootNavigator: React.FC<Props> = (props) => {
       setTalkingRoomCollection(
         _talkingRoomCollection ? _talkingRoomCollection : null
       );
+
+      const _isBannedNullable = await asyncGetBool("isBanned", t.boolean);
+      const _isBanned =
+        typeof _isBannedNullable === "boolean" ? _isBannedNullable : null;
+      setIsBanned(_isBanned !== null ? _isBanned : null);
     })();
   }, []);
 
@@ -115,6 +129,7 @@ const RootNavigator: React.FC<Props> = (props) => {
     typeof token === "undefined" ||
     typeof profile === "undefined" ||
     typeof talkingRoomCollection === "undefined" ||
+    typeof isBanned === "undefined" ||
     !props.isFinishLoadingResources
   ) {
     return <></>; // AppLording
@@ -124,25 +139,31 @@ const RootNavigator: React.FC<Props> = (props) => {
     }, 150);
 
     return (
-      <NavigationContainer>
-        <AuthProvider status={status} token={token}>
-          <ProfileProvider profile={profile}>
-            <ChatProvider talkingRoomCollection={talkingRoomCollection}>
-              <DomProvider>
-                <GalioProvider theme={materialTheme}>
-                  <StartUpManager>
-                    {Platform.OS === "ios" && (
-                      <StatusBar barStyle="dark-content" />
-                    )}
-                    <Screens />
-                    <Toast ref={(ref) => Toast.setRef(ref)} />
-                  </StartUpManager>
-                </GalioProvider>
-              </DomProvider>
-            </ChatProvider>
-          </ProfileProvider>
-        </AuthProvider>
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <AuthProvider status={status} token={token}>
+            <ProfileProvider profile={profile} isBanned={isBanned}>
+              <ChatProvider talkingRoomCollection={talkingRoomCollection}>
+                <DomProvider>
+                  <GalioProvider theme={materialTheme}>
+                    <StartUpManager>
+                      {Platform.OS === "ios" ? (
+                        <StatusBar barStyle="dark-content" />
+                      ) : (
+                        // HACK: react-native-modal内でkeyboardを開くと意図せずavoidがかかる(Android). Androidのステータスバーを全面非表示
+                        // https://github.com/react-native-modal/react-native-modal/issues/344#issuecomment-629400548
+                        <StatusBar hidden />
+                      )}
+                      <Screens />
+                      <Toast ref={(ref) => Toast.setRef(ref)} />
+                    </StartUpManager>
+                  </GalioProvider>
+                </DomProvider>
+              </ChatProvider>
+            </ProfileProvider>
+          </AuthProvider>
+        </NavigationContainer>
+      </SafeAreaProvider>
     );
   }
 };

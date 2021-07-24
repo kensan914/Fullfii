@@ -4,6 +4,7 @@ import { Animated } from "react-native";
 
 import { TopTemplate } from "src/components/templates/TopTemplate";
 import { LottieSource } from "src/types/Types";
+import {logEvent} from "src/utils/firebase/logEvent"
 
 // CONSTANTS
 const BALLOON_ANIMATION_DURATION_MS = 4180;
@@ -65,6 +66,7 @@ export const TopScreen: React.FC = () => {
   };
 
   const onPressConsent = () => {
+    logEvent("push_top_screen_button")
     navigation.navigate("Onboarding");
   };
 

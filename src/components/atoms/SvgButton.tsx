@@ -6,7 +6,8 @@ import {
   Pressable,
   StyleSheet,
 } from "react-native";
-import SvgUri from "react-native-svg-uri";
+
+import { SvgUri } from "src/components/atoms/SvgUri";
 
 type Props = {
   source: ImageURISource;

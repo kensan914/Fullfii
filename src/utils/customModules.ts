@@ -1,6 +1,6 @@
-import { ActionSheetIOS } from "react-native";
 import Toast from "react-native-toast-message";
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
+import ActionSheet from "react-native-action-sheet";
 
 export type ActionSheetSettings = {
   label: string;
@@ -12,7 +12,7 @@ export type ActionSheetSettings = {
  * cancel, destructiveは一つまで (必ずtrue指定)
  * @param settings
  * @example 
- * showActionSheet([
+    showActionSheet([
       {
         label: "キャンセル",
         cancel: true,
@@ -29,7 +29,7 @@ export type ActionSheetSettings = {
     ]);
  */
 export const showActionSheet = (settings: ActionSheetSettings): void => {
-  ActionSheetIOS.showActionSheetWithOptions(
+  ActionSheet.showActionSheetWithOptions(
     {
       options: settings.map((setting) => setting.label),
       destructiveButtonIndex: settings.findIndex(
@@ -38,8 +38,8 @@ export const showActionSheet = (settings: ActionSheetSettings): void => {
       cancelButtonIndex: settings.findIndex((setting) => setting.cancel),
     },
     (buttonIndex) => {
-      const setting = settings[buttonIndex];
-      typeof setting.onPress !== "undefined" && setting.onPress();
+      const setting = settings ? settings[buttonIndex] : void 0;
+      typeof setting?.onPress !== "undefined" && setting.onPress();
     }
   );
 };

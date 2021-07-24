@@ -1,33 +1,56 @@
-import { Alert, Linking } from "react-native";
+import { Alert, Linking, Platform } from "react-native";
 
 import {
   APP_STORE_URI_ITMS_APPS,
   APP_STORE_URL,
   isExpo,
   ITUNES_LOOKUP_URL,
+  LATEST_VERSION_JSON_URL,
+  PLAY_STORE_URL,
+  PLAY_STORE_URL_SCHEME,
 } from "src/constants/env";
 import requestAxios from "src/hooks/useAxios";
-import { alertModal } from "src/utils";
+import { alertModal, generateUuid4 } from "src/utils";
 import { checkUpdateVersion } from "src/utils/versionUpdate";
-import { asyncGetItem, asyncStoreItem } from "./asyncStorage";
+import { asyncGetItem, asyncStoreItem } from "src/utils/asyncStorage";
 
 const fetchLatestVersion = (): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    requestAxios(ITUNES_LOOKUP_URL, "get", null, {
-      thenCallback: (_resData) => {
-        const resData = _resData as any;
-        if (resData.resultCount === 1) {
-          const latestVersion: string = resData.results[0].version;
-          resolve(latestVersion);
-        } else {
+  if (Platform.OS === "ios") {
+    return new Promise((resolve, reject) => {
+      requestAxios(ITUNES_LOOKUP_URL, "get", null, {
+        thenCallback: (_resData) => {
+          const resData = _resData as any;
+          if (resData.resultCount === 1) {
+            const latestVersion: string = resData.results[0].version;
+            resolve(latestVersion);
+          } else {
+            reject();
+          }
+        },
+        catchCallback: () => {
           reject();
-        }
-      },
-      catchCallback: () => {
-        reject();
-      },
+        },
+      });
     });
-  });
+  } else {
+    return new Promise((resolve, reject) => {
+      requestAxios(
+        `${LATEST_VERSION_JSON_URL}?request_id=${generateUuid4()}`, // 強制キャッシュクリア
+        "get",
+        null,
+        {
+          thenCallback: (_resData) => {
+            const versions = _resData as any;
+            const androidLatestVersion = versions.android;
+            resolve(androidLatestVersion);
+          },
+          catchCallback: () => {
+            reject();
+          },
+        }
+      );
+    });
+  }
 };
 
 // const fetchCurrentVersion = () => {};
@@ -81,15 +104,25 @@ const compareLatestVerWithCurrentVer = (
 };
 
 const attemptUpgrade = () => {
-  Linking.canOpenURL(APP_STORE_URL).then((supported) => {
-    Linking.openURL(APP_STORE_URL);
-
-    if (supported) {
-      Linking.openURL(APP_STORE_URI_ITMS_APPS);
-    } else {
+  if (Platform.OS === "ios") {
+    Linking.canOpenURL(APP_STORE_URL).then((supported) => {
       Linking.openURL(APP_STORE_URL);
-    }
-  });
+
+      if (supported) {
+        Linking.openURL(APP_STORE_URI_ITMS_APPS);
+      } else {
+        Linking.openURL(APP_STORE_URL);
+      }
+    });
+  } else {
+    Linking.canOpenURL(PLAY_STORE_URL_SCHEME).then((supported) => {
+      if (supported) {
+        Linking.openURL(PLAY_STORE_URL_SCHEME);
+      } else {
+        Linking.openURL(PLAY_STORE_URL);
+      }
+    });
+  }
 };
 
 const showUpdatePrompt = (
@@ -128,8 +161,9 @@ const showUpdatePrompt = (
   } else {
     alertModal({
       mainText: "アップデートのお願い",
-      subText:
-        "Fullfiiは、大幅な機能追加を行いました。現在のバージョンでは、正常にFullfiiをお楽しみいただけない場合がございます。お手数ですが、App Storeからアップデートをお願いします！",
+      subText: `Fullfiiは、大幅な機能追加を行いました。現在のバージョンでは、正常にFullfiiをお楽しみいただけない場合がございます。お手数ですが、${
+        Platform.OS === "ios" ? "App Store" : "Google Play"
+      }からアップデートをお願いします！`,
       okButton: "アップデート",
       onPress: () => {
         attemptUpgrade();
@@ -139,13 +173,16 @@ const showUpdatePrompt = (
   }
 };
 
-const exeSiren = async (): Promise<void> => {
+export const exeSiren = async (): Promise<void> => {
   if (!isExpo) {
     const latestVersion = await fetchLatestVersion();
     const DeviceInfoModule = await import("react-native-device-info");
     const DeviceInfo = DeviceInfoModule.default;
     const currentVersion = DeviceInfo.getVersion();
-    const skipUpdateVersion = await asyncGetItem("skipUpdateVersion");
+    // ↓boolean値の可能性があるため
+    const skipUpdateVersionAny = await asyncGetItem("skipUpdateVersion");
+    const skipUpdateVersion =
+      typeof skipUpdateVersionAny !== "boolean" ? skipUpdateVersionAny : null;
 
     const compareVersionResult = compareLatestVerWithCurrentVer(
       latestVersion,
@@ -172,5 +209,3 @@ const exeSiren = async (): Promise<void> => {
     }
   }
 };
-
-export default exeSiren;

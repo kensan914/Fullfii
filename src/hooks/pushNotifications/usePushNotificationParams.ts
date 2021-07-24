@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
 import { useDomDispatch, useDomState } from "src/contexts/DomContext";
-import configurePushNotification, {
-  hasChosenPermissionOfIOSPushNotification,
-  hasPermissionOfIOSPushNotification,
+import {
+  hasChosenPermissionOfPN,
+  hasPermissionOfPN,
 } from "src/utils/firebase/pushNotification";
 import { useConfigPushNotification } from "src/hooks/pushNotifications/useConfigPushNotification";
 
@@ -11,13 +11,13 @@ export const usePushNotificationParams = (): void => {
   const domState = useDomState();
   const domDispatch = useDomDispatch();
 
-  const { isRequiredConfigPN } = useConfigPushNotification();
+  const { isRequiredConfigPN, configPushNotification } =
+    useConfigPushNotification();
 
   const setPushNotificationParams = async () => {
-    const _isPermission = await hasPermissionOfIOSPushNotification();
+    const _isPermission = await hasPermissionOfPN();
+    const _isChosenPermission = await hasChosenPermissionOfPN();
 
-    const _isChosenPermission =
-      await hasChosenPermissionOfIOSPushNotification();
     domDispatch({
       type: "SET_PUSH_NOTIFICATION_PARAMS",
       isPermission: _isPermission,
@@ -40,7 +40,7 @@ export const usePushNotificationParams = (): void => {
   // アプリ起動時, 通知許可していた場合に通知設定のみを行う.
   useEffect(() => {
     if (isRequiredConfigPN && domState.pushNotificationParams.isPermission) {
-      configurePushNotification(true);
+      configPushNotification();
     }
   }, [isRequiredConfigPN, domState.pushNotificationParams.isPermission]);
 };

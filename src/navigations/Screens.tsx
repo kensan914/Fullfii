@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SafeAreaView } from "react-navigation";
+import SafeAreaView from "react-native-safe-area-view";
 
-import { Header } from "src/components/organisms/Header";
+import { Header } from "src/navigations/Header";
 import { ChatScreen } from "src/screens/ChatScreen";
-import ProfileInputScreen from "src/screens/ProfileInput";
-import SettingsScreen from "src/screens/Settings";
-import AccountDeleteScreen from "src/screens/AccountDelete";
+import { ProfileInputScreen } from "src/screens/ProfileInputScreen";
+import { SettingsScreen } from "src/screens/SettingsScreen";
+import { AccountDeleteScreen } from "src/screens/AccountDeleteScreen";
 import {
   useAuthState,
   AUTHENTICATED,
@@ -14,14 +14,18 @@ import {
   DELETED,
   AUTHENTICATING,
 } from "src/contexts/AuthContext";
-import Spinner from "src/components/atoms/Spinner";
+import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
-import SuccessAccountDelete from "src/screens/SuccessAccountDelete";
+import { SuccessAccountDeleteScreen } from "src/screens/SuccessAccountDeleteScreen";
 import { COLORS } from "src/constants/theme";
-import { BottomTabNavigator } from "./BottomTabNavigator";
+import { BottomTabNavigator } from "src/navigations/BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
+import { SignupScreen } from "src/screens/signup/SignupScreen";
+import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
+import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
+import { MessageHistoryScreen } from "src/screens/MessageHistoryScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -35,13 +39,15 @@ const HomeStack = () => {
           header: () => null,
         })}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="ProfileEditor"
         component={ProfileEditorScreen}
         options={() => ({
-          header: () => <Header back name={"ProfileEditor"} />,
+          header: () => {
+            return <Header back name={"ProfileEditor"} />;
+          },
         })}
-      /> */}
+      />
       <Stack.Screen
         name="ProfileInput"
         component={ProfileInputScreen}
@@ -58,7 +64,16 @@ const HomeStack = () => {
         options={({ route }) => ({
           header: () => {
             const roomId = route.params.roomId;
-            return <Header back name={"Chat"} roomId={roomId} />;
+            return <Header isLeftTitle back name={"Chat"} roomId={roomId} />;
+          },
+        })}
+      />
+      <Stack.Screen
+        name="MessageHistory"
+        component={MessageHistoryScreen}
+        options={() => ({
+          header: () => {
+            return <Header back name={"MessageHistory"} />;
           },
         })}
       />
@@ -111,8 +126,24 @@ const AppStack: React.FC = () => {
         </AttManager>
       );
 
-    case UNAUTHENTICATED:
     case AUTHENTICATING:
+      return withSafeAreaView(
+        <Stack.Navigator
+          mode="card"
+          headerMode="none"
+          screenOptions={{
+            gestureEnabled: false, // backを可能に。
+          }}
+        >
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen
+            name="IntroCreateRoom"
+            component={IntroCreateRoomScreen}
+          />
+        </Stack.Navigator>
+      );
+
+    case UNAUTHENTICATED:
       return (
         <Stack.Navigator
           mode="card"
@@ -127,7 +158,7 @@ const AppStack: React.FC = () => {
       );
 
     case DELETED:
-      return withSafeAreaView(<SuccessAccountDelete />);
+      return withSafeAreaView(<SuccessAccountDeleteScreen />);
 
     default:
       return <></>;

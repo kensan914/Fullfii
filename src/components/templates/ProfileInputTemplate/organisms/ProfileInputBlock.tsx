@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, Switch, Platform } from "react-native";
 import { Block, Input, Text } from "galio-framework";
 
 import {
@@ -9,7 +9,7 @@ import {
 } from "src/types/Types";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { formatGender } from "src/utils";
-import GenderInputButtonList from "src/components/molecules/GenderInputButtonList";
+import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
 import { GenderKey } from "src/types/Types.context";
 import { COLORS } from "src/constants/theme";
 
@@ -29,7 +29,7 @@ export const InputBlock: React.FC<InputBlockProps> = (props) => {
   switch (screen) {
     case "InputName":
       maxLength = 15;
-      if (typeof value === "string" && typeof prevValue === "string")
+      if (typeof value === "string" && typeof prevValue === "string") {
         return (
           <TextInputBlock
             maxLength={maxLength}
@@ -39,7 +39,7 @@ export const InputBlock: React.FC<InputBlockProps> = (props) => {
             setValue={setValue}
           />
         );
-      else return <></>;
+      } else return <></>;
 
     case "InputGender":
       return (
@@ -52,20 +52,18 @@ export const InputBlock: React.FC<InputBlockProps> = (props) => {
         />
       );
 
-    case "InputIntroduction":
-      maxLength = 250;
-      if (typeof value === "string" && typeof prevValue === "string")
+    case "InputIsPrivateProfile":
+      if (typeof value === "boolean" && typeof prevValue === "boolean") {
         return (
-          <TextInputBlock
-            isTextarea
-            maxLength={maxLength}
+          <IsPrivateProfileInputBlock
             value={value}
             prevValue={prevValue}
             setCanSubmit={setCanSubmit}
             setValue={setValue}
           />
         );
-      else return <></>;
+      } else return <></>;
+
     default:
       return <></>;
   }
@@ -115,14 +113,8 @@ type TextInputBlockProps = {
   setValue: React.Dispatch<string>;
 };
 const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
-  const {
-    maxLength,
-    isTextarea,
-    prevValue,
-    setCanSubmit,
-    value,
-    setValue,
-  } = props;
+  const { maxLength, isTextarea, prevValue, setCanSubmit, value, setValue } =
+    props;
 
   const [length, setLength] = useState(prevValue.length);
   useEffect(() => {
@@ -145,6 +137,7 @@ const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
           marginVertical: 10,
           borderRadius: 10,
           backgroundColor: COLORS.WHITE,
+          textAlignVertical: "top",
         }}
         maxLength={maxLength}
         value={value}
@@ -179,8 +172,61 @@ const TextInputBlock: React.FC<TextInputBlockProps> = (props) => {
   );
 };
 
+type IsPrivateProfileInputBlockProps = {
+  prevValue: boolean;
+  setCanSubmit: React.Dispatch<boolean>;
+  value: boolean;
+  setValue: React.Dispatch<boolean>;
+};
+const IsPrivateProfileInputBlock: React.FC<IsPrivateProfileInputBlockProps> = (
+  props
+) => {
+  const { prevValue, setCanSubmit, value, setValue } = props;
+
+  const toggleSwitch = (val: boolean) => setValue(!val);
+  useEffect(() => {
+    setCanSubmit(prevValue !== value);
+  }, [value]);
+
+  return (
+    <Block>
+      <Block row space="between" style={styles.switchContainer}>
+        <Text size={14} color={COLORS.BLACK}>
+          公開
+        </Text>
+        <Switch
+          thumbColor={
+            Platform.OS === "android"
+              ? value
+                ? COLORS.HIGHLIGHT_GRAY
+                : COLORS.PINK
+              : void 0
+          } // for Android
+          trackColor={{ false: COLORS.HIGHLIGHT_GRAY, true: COLORS.PINK }}
+          ios_backgroundColor={COLORS.HIGHLIGHT_GRAY}
+          onValueChange={toggleSwitch}
+          value={!value} // valueにはis非公開のbool値が入っているが, 表示に使用する値はis公開の必要があるため
+        />
+      </Block>
+      <Text size={12} color={COLORS.BLACK} style={styles.explainSwitch}>
+        「公開しない」に設定する場合、他ユーザーはあなたの名前、性別、職業、写真のみ閲覧することができます
+        {"\n"}
+        「公開する」に設定する場合、他ユーザーはあなたのプロフィール情報全てを閲覧することができます
+      </Text>
+    </Block>
+  );
+};
+
 const styles = StyleSheet.create({
   genderInputButtonListContainer: {
     marginTop: 30,
+  },
+  switchContainer: {
+    alignItems: "center",
+    height: 48,
+  },
+  explainSwitch: {
+    lineHeight: 16,
+    marginTop: 16,
   },
 });

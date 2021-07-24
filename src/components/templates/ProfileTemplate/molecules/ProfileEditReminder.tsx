@@ -2,7 +2,7 @@ import React from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
 import { width } from "src/constants";
 import { cvtBadgeCount } from "src/utils";
@@ -16,7 +16,7 @@ export const ProfileEditReminder: React.FC<Props> = (props) => {
   return (
     <Block style={styles.alert}>
       <TouchableOpacity style={styles.closeIcon} onPress={onPressClose}>
-        <IconExtra
+        <Icon
           name="close"
           family="Ionicons"
           size={32}

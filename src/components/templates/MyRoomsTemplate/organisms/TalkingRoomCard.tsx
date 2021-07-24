@@ -8,10 +8,10 @@ import {
   TouchableHighlight,
 } from "react-native";
 
-import IconExtra from "src/components/atoms/Icon";
+import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/theme";
-import Avatar from "src/components/atoms/Avatar";
-import RoomEditorModal from "src/components/organisms/RoomEditorModal";
+import { Avatar } from "src/components/atoms/Avatar";
+import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
@@ -113,7 +113,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 openTalkingRoomCardActionSheet();
               }}
             >
-              <IconExtra
+              <Icon
                 name="dots-three-horizontal"
                 family="Entypo"
                 size={32}
@@ -122,7 +122,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
-        <Block row>
+        <Block row style={{ position: "relative" }}>
           <Block>
             {talkingRoom.image ? (
               <Image source={{ uri: talkingRoom.image }} style={styles.image} />
@@ -134,7 +134,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             <Block row>
               <Avatar
                 size={32}
-                image={talkingRoom.owner.image}
+                imageUri={talkingRoom.owner.image}
                 style={styles.avatar}
               />
               <Block column style={styles.userInfo}>
@@ -172,10 +172,17 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 </Block>
               </Block>
             </Block>
-            <Block row>
+            <Block
+              flex
+              row
+              style={{
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
               <Block flex row style={styles.member}>
                 <Block>
-                  <IconExtra
+                  <Icon
                     name={participantIconName}
                     family="Ionicons"
                     size={32}
@@ -189,6 +196,13 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                   </Text>
                 </Block>
               </Block>
+              {talkingRoom.isPrivate ? (
+                <Block flex style={styles.privateRoomText}>
+                  <Text size={12} bold color={COLORS.GREEN}>
+                    プライベート{"\n"}ルーム
+                  </Text>
+                </Block>
+              ) : null}
             </Block>
           </Block>
         </Block>
@@ -235,7 +249,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 setIsToggleUp(!isToggleUp);
               }}
             >
-              <IconExtra
+              <Icon
                 name={isToggleUp ? "upcircleo" : "circledowno"}
                 family="AntDesign"
                 size={32}
@@ -347,5 +361,10 @@ const styles = StyleSheet.create({
     width: 88,
     height: 88,
     borderRadius: 20,
+  },
+  privateRoomText: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 32,
   },
 });

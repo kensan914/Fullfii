@@ -2,33 +2,28 @@ package com.fullfii.fullfii;
 
 import android.app.Application;
 import android.content.Context;
-import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.actionsheet.ActionSheetPackage;
+import im.shimo.react.prompt.RNPromptPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+// import com.facebook.react.BuildConfig; // HACK:
 import com.fullfii.fullfii.generated.BasePackageList;
 
-import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
 import org.unimodules.adapters.react.ReactModuleRegistryProvider;
-import org.unimodules.core.interfaces.Package;
-import org.unimodules.core.interfaces.SingletonModule;
-import expo.modules.constants.ConstantsPackage;
-import expo.modules.permissions.PermissionsPackage;
-import expo.modules.filesystem.FileSystemPackage;
+
 import expo.modules.updates.UpdatesController;
+import com.airbnb.android.react.lottie.LottiePackage; // https://github.com/lottie-react-native/lottie-react-native#installing-react-native--0600
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.fullfii.fullfii.Debug;
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
@@ -38,13 +33,15 @@ public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
     public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
+      // return BuildConfig.DEBUG;
+      return Debug.debug;
     }
 
     @Override
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
+      packages.add(new LottiePackage()); // https://github.com/lottie-react-native/lottie-react-native#installing-react-native--0600
       return packages;
     }
 
@@ -55,7 +52,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected @Nullable String getJSBundleFile() {
-      if (BuildConfig.DEBUG) {
+    //  if (BuildConfig.DEBUG) {
+      if (Debug.debug) {
         return super.getJSBundleFile();
       } else {
         return UpdatesController.getInstance().getLaunchAssetFile();
@@ -64,7 +62,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected @Nullable String getBundleAssetName() {
-      if (BuildConfig.DEBUG) {
+//      if (BuildConfig.DEBUG) {
+      if (Debug.debug) {
         return super.getBundleAssetName();
       } else {
         return UpdatesController.getInstance().getBundleAssetName();
@@ -82,8 +81,8 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
-
-    if (!BuildConfig.DEBUG) {
+//    if (!BuildConfig.DEBUG) {
+    if (!Debug.debug) {
       UpdatesController.initialize(this);
     }
   }
@@ -94,7 +93,8 @@ public class MainApplication extends Application implements ReactApplication {
    * @param context
    */
   private static void initializeFlipper(Context context) {
-    if (BuildConfig.DEBUG) {
+    // if (BuildConfig.DEBUG) {
+    if (Debug.debug) {
       try {
         /*
          We use reflection here to pick up the class that initializes Flipper,

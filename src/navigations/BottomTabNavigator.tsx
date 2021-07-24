@@ -1,9 +1,10 @@
 import React from "react";
 import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SvgUri from "react-native-svg-uri";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { Header } from "src/components/organisms/Header";
+import { SvgUri } from "src/components/atoms/SvgUri";
+import { Header } from "src/navigations/Header";
 import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { RoomsScreen } from "src/screens/RoomsScreen";
@@ -11,14 +12,26 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { COLORS } from "src/constants/theme";
 import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
-import { useRoute } from "@react-navigation/core";
 import { MyRoomsRouteProp } from "src/types/Types";
+import { useAuthState } from "src/contexts/AuthContext";
+import {
+  chatIconFocusSvg,
+  chatIconSvg,
+  homeIconFocusSvg,
+  homeIconSvg,
+  mypageIconFocusSvg,
+  mypageIconSvg,
+} from "src/constants/svgSources";
+import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
+import { BOTTOM_TAB_BAR_HEIGHT } from "src/constants";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
+  const TopTab = createMaterialTopTabNavigator();
   const Stack = createStackNavigator();
 
   const chatState = useChatState();
+  const authState = useAuthState();
 
   return (
     <Tab.Navigator
@@ -31,22 +44,15 @@ export const BottomTabNavigator: React.FC = () => {
           const routeName = route.name;
 
           if (routeName === "Rooms") {
-            iconName = focused
-              ? require("../assets/icons/homeIcon.svg")
-              : require("../assets/icons/homeIcon.svg");
+            iconName = focused ? homeIconFocusSvg : homeIconSvg;
             label = "ホーム";
           } else if (routeName === "MyRooms") {
-            iconName = focused
-              ? require("../assets/icons/chatIcon.svg")
-              : require("../assets/icons/chatIcon.svg");
+            iconName = focused ? chatIconFocusSvg : chatIconSvg;
             label = "トーク";
             badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           } else if (routeName === "Profile") {
-            iconName = focused
-              ? require("../assets/icons/mypageIcon.svg")
-              : require("../assets/icons/mypageIcon.svg");
+            iconName = focused ? mypageIconFocusSvg : mypageIconSvg;
             label = "マイページ";
-            // badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
           }
           return (
             <Block
@@ -56,7 +62,7 @@ export const BottomTabNavigator: React.FC = () => {
                 alignItems: "center",
               }}
             >
-              <SvgUri width={32} height={32} source={iconName} fill={color} />
+              <SvgUri width={32} height={32} source={iconName} />
               <Text bold size={12} style={{ color: color }}>
                 {label}
               </Text>
@@ -97,10 +103,17 @@ export const BottomTabNavigator: React.FC = () => {
         inactiveTintColor: "gray",
         showLabel: false,
         style: {
+          height: BOTTOM_TAB_BAR_HEIGHT,
           backgroundColor: COLORS.BEIGE,
           borderTopWidth: 0,
+          elevation: 0, // for Android
         },
       }}
+      initialRouteName={
+        authState.initBottomTabRouteName
+          ? authState.initBottomTabRouteName
+          : void 0
+      }
     >
       <Tab.Screen name="Rooms">
         {() => (
@@ -108,11 +121,29 @@ export const BottomTabNavigator: React.FC = () => {
             <Stack.Navigator>
               <Stack.Screen
                 name="Rooms"
-                component={RoomsScreen}
+                // component={RoomsScreen}
                 options={() => ({
                   header: () => <Header name={"Rooms"} />,
                 })}
-              />
+              >
+                {() => (
+                  <TopTab.Navigator
+                    tabBarOptions={{
+                      style: { backgroundColor: COLORS.BEIGE },
+                      indicatorStyle: {
+                        backgroundColor: COLORS.PINK,
+                        height: 3,
+                      },
+                    }}
+                  >
+                    <Tab.Screen name="ルーム一覧" component={RoomsScreen} />
+                    <Tab.Screen
+                      name="プライベート"
+                      component={PrivateRoomsScreen}
+                    />
+                  </TopTab.Navigator>
+                )}
+              </Stack.Screen>
             </Stack.Navigator>
           </Block>
         )}

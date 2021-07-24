@@ -1,5 +1,21 @@
 {
   "expo": {
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "expo.ts",
+        "expo.tsx",
+        "expo.js",
+        "expo.jsx",
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "wasm",
+        "svg"
+      ]
+    },
     "appKey": "main",
     "name": "fullfii",
     "description": "fullfii",
@@ -9,7 +25,7 @@
       "ios",
       "android"
     ],
-    "version": "1.6.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon/icon.jpg",
     "splash": {
