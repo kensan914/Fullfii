@@ -3,7 +3,7 @@ import { Block, Text } from "galio-framework";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { width } from "src/constants";
 import { cvtBadgeCount } from "src/utils";
 

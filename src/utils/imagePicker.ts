@@ -4,7 +4,7 @@ import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import deviceInfoModule from "react-native-device-info";
 import IntentLauncher from "react-native-intent-launcher";
 
-import { alertModal } from "src/utils";
+import { alertModal } from "src/utils/customModules";
 
 const pkg = deviceInfoModule.getBundleId();
 const openAppSettings = () => {

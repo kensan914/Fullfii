@@ -1,6 +1,57 @@
+import { Alert, AlertButton } from "react-native";
 import Toast from "react-native-toast-message";
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
 import ActionSheet from "react-native-action-sheet";
+
+type alertModalProps = {
+  mainText: string;
+  subText?: string;
+  cancelButton?: string;
+  okButton?: string;
+  okButtonStyle?: "destructive" | "default" | "cancel" | undefined;
+  onPress?: () => void;
+  onCancel?: () => void;
+  cancelable?: boolean;
+};
+/**
+ *  @example
+    alertModal({
+      mainText: alertTitle,
+      subText: alertText,
+      cancelButton: "キャンセル",
+      okButton: "送信する",
+      onPress: () => {
+        navigation.navigate("Home");
+      },
+      cancelOnPress: () => {}, // 任意. キャンセルを押した際の付加処理
+    });
+ */
+export const alertModal = ({
+  mainText,
+  subText,
+  okButton,
+  okButtonStyle = "default",
+  onPress = () => void 0,
+  cancelButton,
+  onCancel = () => void 0,
+  cancelable,
+}: alertModalProps): void => {
+  const buttonSettings: AlertButton[] = [];
+  (typeof cancelable === "undefined" || cancelable) &&
+    buttonSettings.push({
+      text: cancelButton ? cancelButton : "キャンセル",
+      onPress: onCancel,
+      style: "cancel",
+    });
+
+  buttonSettings.push({
+    text: okButton ? okButton : "OK",
+    onPress: onPress,
+    style: okButtonStyle,
+  });
+
+  Alert.alert(mainText ? mainText : "", subText ? subText : "", buttonSettings);
+};
 
 export type ActionSheetSettings = {
   label: string;
@@ -63,6 +114,7 @@ export type ShowToastSettings = {
 export const showToast = (settings: ShowToastSettings): void => {
   Toast.show({
     ...settings,
+    type: typeof settings.type !== "undefined" ? settings.type : "success",
     topOffset: getStatusBarHeight() + 10,
   });
 };

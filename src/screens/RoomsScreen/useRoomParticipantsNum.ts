@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Room, TalkingRoom } from "src/types/Types.context";
 
 export const useRoomParticipantsNum = (

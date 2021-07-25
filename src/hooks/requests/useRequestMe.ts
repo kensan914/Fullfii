@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 
 import { BASE_URL } from "src/constants/env";
 import { useAuthState } from "src/contexts/AuthContext";
-import useAllContext from "src/contexts/ContextUtils";
+import { useAllContext } from "src/contexts/ContextUtils";
 import { useProfileDispatch } from "src/contexts/ProfileContext";
 import requestAxios, { useAxios } from "src/hooks/useAxios";
 import {

@@ -41,9 +41,13 @@ export type RootStackParamList = {
   Authenticated: undefined;
   Top: undefined;
   Onboarding: undefined;
-  Signup: undefined;
-  IntroCreateRoom: undefined;
   MyRooms: { navigateState: { willOpenRoomCreatedModal: boolean; id: string } };
+  OldSignup: undefined;
+  OldIntroCreateRoom: undefined;
+  IntroTop: undefined;
+  IntroCreateRoom: undefined;
+  IntroParticipateRoom: undefined;
+  IntroSignup: undefined;
 };
 export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
 export type MessageHistoryRouteProp = RouteProp<
@@ -202,7 +206,7 @@ export type RequestPostProfileImage = (
 //--------- ProfileEditor.tsx ---------//
 
 //--------- useSlideView.tsx ---------//
-export type GoToPage = (toPageNum: number) => void;
+export type GoToPage = (toPageNum?: number) => void;
 //--------- useSlideView.tsx ---------//
 
 //--------- useAdMobInterstitial.tsx ---------//

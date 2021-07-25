@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 import { Block, NavBar, theme } from "galio-framework";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import materialTheme from "src/constants/theme";
-import { COLORS } from "src/constants/theme";
+import materialTheme from "src/constants/colors";
+import { COLORS } from "src/constants/colors";
 import { HEADER_HEIGHT, width } from "src/constants";
 import { RouteName } from "src/types/Types";
 import { SettingsHeaderMenu } from "src/navigations/Header/organisms/SettingsHeaderMenu";
@@ -110,7 +110,6 @@ export const Header: React.FC<Props> = (props) => {
 
   const hasBorder = ["Worry"].includes(name);
   const headerStyles = [
-    // hasShadow ? styles.shadow : null,
     transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
     hasBorder ? { borderBottomColor: "silver", borderBottomWidth: 0.5 } : null,
   ];
@@ -145,37 +144,6 @@ const styles = StyleSheet.create({
     zIndex: 5,
     height: HEADER_HEIGHT,
     backgroundColor: COLORS.BEIGE,
-  },
-  shadow: {
-    backgroundColor: theme.COLORS.WHITE,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.2,
-    elevation: 3,
-  },
-  notify: {
-    backgroundColor: materialTheme.COLORS.LABEL,
-    borderRadius: 4,
-    height: theme.SIZES.BASE / 2,
-    width: theme.SIZES.BASE / 2,
-    position: "absolute",
-    top: 8,
-    right: 8,
-  },
-  header: {
-    backgroundColor: theme.COLORS.BEIGE,
-  },
-  divider: {
-    borderRightWidth: 0.3,
-    borderRightColor: theme.COLORS.MUTED,
-  },
-  search: {
-    height: 48,
-    width: width - 32,
-    marginHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 3,
   },
   leftStyle: {
     flex: 0.3,

@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
 import Modal from "react-native-modal";
 
 import { RoundButton } from "src/components/atoms/RoundButton";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 import { width } from "src/constants";
 

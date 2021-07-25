@@ -4,7 +4,7 @@ import { Bubble, IMessage, BubbleProps } from "react-native-gifted-chat";
 import "dayjs/locale/ja";
 import { Text } from "galio-framework";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { fmtfromDateToStr } from "src/utils";
 
 export const GiftedBubble: React.FC<BubbleProps<IMessage>> = (props) => {

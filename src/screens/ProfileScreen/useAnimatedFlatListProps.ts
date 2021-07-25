@@ -1,6 +1,10 @@
 import { Animated, ScrollViewProps } from "react-native";
 
-import { BOTTOM_TAB_BAR_HEIGHT, HEADER_HEIGHT, height } from "src/constants";
+import {
+  BOTTOM_TAB_BAR_HEIGHT,
+  HEADER_HEIGHT_INCLUDE_STATUS_BAR,
+  height,
+} from "src/constants";
 import { AnimatedScrollY, PROFILE_VIEW_HEIGHT_TYPE } from "src/types/Types";
 
 export const useAnimatedFlatListProps = (
@@ -13,7 +17,9 @@ export const useAnimatedFlatListProps = (
     contentContainerStyle: {
       paddingTop: PROFILE_BODY_HEIGHT,
       minHeight:
-        height - (HEADER_HEIGHT + BOTTOM_TAB_BAR_HEIGHT) + PROFILE_VIEW_HEIGHT,
+        height -
+        (HEADER_HEIGHT_INCLUDE_STATUS_BAR + BOTTOM_TAB_BAR_HEIGHT) +
+        PROFILE_VIEW_HEIGHT,
     },
     onMomentumScrollEnd: (e) => {
       onUpdateOffsetY(e.nativeEvent.contentOffset.y);

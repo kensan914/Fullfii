@@ -5,7 +5,7 @@ import { Block, theme, Text } from "galio-framework";
 import { InputBlock } from "src/components/templates/ProfileInputTemplate/organisms/ProfileInputBlock";
 import { ProfileInputScreen } from "src/types/Types";
 import { ProfileSubmitButton } from "src/components/templates/ProfileInputTemplate/organisms/ProfileSubmitButton";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 type Props = {
   value: unknown;

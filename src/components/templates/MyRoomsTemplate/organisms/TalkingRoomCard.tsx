@@ -6,27 +6,33 @@ import {
   Image,
   Alert,
   TouchableHighlight,
+  ViewStyle,
 } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
 import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { useProfileState } from "src/contexts/ProfileContext";
-import { showActionSheet, showToast } from "src/utils/customModules";
+import {
+  alertModal,
+  showActionSheet,
+  showToast,
+} from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useNavigation } from "@react-navigation/core";
-import { alertModal, cvtBadgeCount, formatGender } from "src/utils";
+import { cvtBadgeCount, formatGender } from "src/utils";
 import { useRequestDeleteRoom } from "src/hooks/requests/useRequestRooms";
 
 type Props = {
   talkingRoom: TalkingRoom;
+  style?: ViewStyle;
 };
 export const TalkingRoomCard: React.FC<Props> = (props) => {
-  const { talkingRoom } = props;
+  const { talkingRoom, style } = props;
 
   const profileState = useProfileState();
   const navigation = useNavigation();
@@ -122,7 +128,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
-        <Block row style={{position: "relative"}}>
+        <Block row style={{ position: "relative" }}>
           <Block>
             {talkingRoom.image ? (
               <Image source={{ uri: talkingRoom.image }} style={styles.image} />
@@ -172,7 +178,14 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 </Block>
               </Block>
             </Block>
-            <Block row>
+            <Block
+              flex
+              row
+              style={{
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
               <Block flex row style={styles.member}>
                 <Block>
                   <Icon
@@ -189,15 +202,15 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                   </Text>
                 </Block>
               </Block>
+              {talkingRoom.isPrivate ? (
+                <Block flex style={styles.privateRoomText}>
+                  <Text size={12} bold color={COLORS.GREEN}>
+                    プライベート{"\n"}ルーム
+                  </Text>
+                </Block>
+              ) : null}
             </Block>
           </Block>
-          {
-            talkingRoom.isPrivate ?
-          <Block style={styles.privateRoomText}>
-            <Text size={12} bold color={COLORS.GREEN}>プライベートルーム</Text>
-          </Block>
-          : null
-          }
         </Block>
         <RoomEditorModal
           isOpenRoomEditorModal={isOpenRoomEditorModal}
@@ -212,7 +225,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
   };
 
   return (
-    <Block style={styles.container}>
+    <Block style={[styles.container, style]}>
       <TouchableHighlight
         onPress={() => {
           navigation.navigate("Chat", {
@@ -266,9 +279,6 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 20,
-    marginLeft: 20,
-    marginTop: 10,
     borderRadius: 20,
   },
   touchableHighlight: {
@@ -356,8 +366,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   privateRoomText: {
-    position: "absolute",
-    right:16,
-    bottom: 16
-  }
+    justifyContent: "center",
+    alignItems: "center",
+    height: 32,
+  },
 });

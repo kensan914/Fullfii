@@ -3,7 +3,7 @@ import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import {
   checkPermissionATT,
   requestPermissionATT,

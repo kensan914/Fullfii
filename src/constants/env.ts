@@ -1,7 +1,9 @@
 import { Platform } from "react-native";
+import Config from "react-native-config";
+import deviceInfoModule from "react-native-device-info";
 
-const DEBUG = true;
-// const DEBUG = false;
+// const DEBUG = true;
+const DEBUG = false;
 // const ADMOB_DEBUG = true;
 const ADMOB_DEBUG = false;
 
@@ -19,21 +21,11 @@ export const REPORT_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLScuWE_hUXY8GN2Nu4CpMa7rNsUTtVRfcL0_avj5h69XwwjD8g/viewform";
 export const ACCOUNT_DELETION_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSclvk_l4JsWCMQf6a6qh2AmoAkiM9ReU6eZOaYTUoTz9MP3gw/viewform?usp=sf_link";
-export let VERSION = "";
-export let VERSION_NUM = 0; // 243
-
-export const setVersion = (isExpo: boolean): void => {
-  if (!isExpo)
-    import("react-native-device-info").then((DeviceInfoModule) => {
-      const DeviceInfo = DeviceInfoModule.default;
-      VERSION = DeviceInfo.getVersion();
-
-      const _VERSION_NUM = Number(VERSION.split(".").join(""));
-      VERSION_NUM = isNaN(_VERSION_NUM) ? 0 : _VERSION_NUM;
-    });
-};
-
-export const PRODUCT_ID_LIST = ["com.fullfii.fullfii.normal_plan"];
+export const VERSION = deviceInfoModule.getVersion();
+export const VERSION_NUM = (() => {
+  const _VERSION_NUM = Number(VERSION.split(".").join(""));
+  return isNaN(_VERSION_NUM) ? 0 : _VERSION_NUM;
+})(); // 243
 
 export const FREE_PLAN = Object.freeze({
   productId: "com.fullfii.fullfii.free_plan",
@@ -89,7 +81,6 @@ export const setIsExpo = (val: boolean): void => {
   isExpo = val;
 };
 
-import Config from "react-native-config";
 export const CAN_APP_TRACKING_TRANSPARENCY =
   Config.CAN_APP_TRACKING_TRANSPARENCY === "false" ? false : true;
 

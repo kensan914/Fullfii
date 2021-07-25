@@ -9,7 +9,7 @@ import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { RoomsScreen } from "src/screens/RoomsScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
 import { MyRoomsRouteProp } from "src/types/Types";

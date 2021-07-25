@@ -17,15 +17,19 @@ import {
 import { Spinner } from "src/components/atoms/Spinner";
 import { RootStackParamList } from "src/types/Types";
 import { SuccessAccountDeleteScreen } from "src/screens/SuccessAccountDeleteScreen";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { BottomTabNavigator } from "src/navigations/BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { OnboardingScreen } from "src/screens/OnboardingScreen";
 import { AttManager } from "src/screens/AttManager";
-import { SignupScreen } from "src/screens/signup/SignupScreen";
-import { IntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
+import { SignupScreen as OldSignupScreen } from "src/screens/signup/SignupScreen";
+import { IntroCreateRoomScreen as OldIntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
 import { MessageHistoryScreen } from "src/screens/MessageHistoryScreen";
+import { IntroCreateRoomScreen } from "src/screens/intro/IntroCreateRoomScreen";
+import { IntroParticipateRoomScreen } from "src/screens/intro/IntroParticipateRoomScreen";
+import { IntroSignupScreen } from "src/screens/intro/IntroSignupScreen";
+import { IntroTopScreen } from "src/screens/intro/IntroTopScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -134,12 +138,24 @@ const AppStack: React.FC = () => {
           screenOptions={{
             gestureEnabled: false, // backを可能に。
           }}
+          // initialRouteName="OldSignup" // ~ ver3.3.0
+          initialRouteName="IntroTop" // 新イントロ開発用
         >
-          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="OldSignup" component={OldSignupScreen} />
+          <Stack.Screen
+            name="OldIntroCreateRoom"
+            component={OldIntroCreateRoomScreen}
+          />
+          <Stack.Screen name="IntroTop" component={IntroTopScreen} />
           <Stack.Screen
             name="IntroCreateRoom"
             component={IntroCreateRoomScreen}
           />
+          <Stack.Screen
+            name="IntroParticipateRoom"
+            component={IntroParticipateRoomScreen}
+          />
+          <Stack.Screen name="IntroSignup" component={IntroSignupScreen} />
         </Stack.Navigator>
       );
 
@@ -153,7 +169,7 @@ const AppStack: React.FC = () => {
           }}
         >
           <Stack.Screen name="Top" component={TopScreen} />
-          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          {/* <Stack.Screen name="Onboarding" component={OnboardingScreen} /> */}
         </Stack.Navigator>
       );
 

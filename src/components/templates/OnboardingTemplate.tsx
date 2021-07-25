@@ -3,9 +3,9 @@ import { Block, Text } from "galio-framework";
 import { StyleSheet, Image, ImageSourcePropType } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { width } from "src/constants";
-import {logEvent} from "src/utils/firebase/logEvent"
+import { logEvent } from "src/utils/firebase/logEvent";
 
 type Props = {
   onPressCompleteInto: () => void;
@@ -33,8 +33,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
     {
       key: "two",
       title: "みんなに見られない",
-      text:
-        "ルームにはあなたと相手しかいないので、\n他の人に会話が見られることはありません",
+      text: "ルームにはあなたと相手しかいないので、\n他の人に会話が見られることはありません",
       image: require("../../assets/images/intro/46.png"),
       backgroundColor: "#C7ACDA",
       textColor: COLORS.WHITE,
@@ -50,8 +49,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
     {
       key: "four",
       title: "はなそう\nきいてあげよう",
-      text:
-        "ルームを作って悩みを話したり、\nルームに入って悩みを聞いてあげましょう",
+      text: "ルームを作って悩みを話したり、\nルームに入って悩みを聞いてあげましょう",
       image: require("../../assets/images/intro/47.png"),
       backgroundColor: "#7BBD9F",
       textColor: COLORS.WHITE,
@@ -87,7 +85,7 @@ export const OnboardingTemplate: React.FC<Props> = (props) => {
   const onDone = () => {
     // User finished the introduction. Show real app through
     // navigation or simply by controlling state
-    logEvent("press_onbording_screen_done_button")
+    logEvent("press_onbording_screen_done_button");
     onPressCompleteInto();
   };
   return (

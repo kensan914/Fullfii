@@ -2,7 +2,7 @@ import React from "react";
 
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 type Props = {
   onPress: () => void;

@@ -4,7 +4,7 @@ import { Block, Text } from "galio-framework";
 import Modal from "react-native-modal";
 
 import { Avatar } from "src/components/atoms/Avatar";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 
 type Props = {
   isOpen: boolean;

@@ -5,11 +5,12 @@ import {
   TouchableHighlight,
   Image,
   TouchableOpacity,
+  ViewStyle,
 } from "react-native";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
 import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
 import { width } from "src/constants";
@@ -24,9 +25,10 @@ type Props = {
   hiddenRoomIds: string[];
   hideRoom: HideRoom;
   blockRoom: BlockRoom;
+  style?: ViewStyle;
 };
 export const RoomCard: React.FC<Props> = (props) => {
-  const { room, hiddenRoomIds, hideRoom, blockRoom } = props;
+  const { room, hiddenRoomIds, hideRoom, blockRoom, style } = props;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -38,7 +40,7 @@ export const RoomCard: React.FC<Props> = (props) => {
   );
   return (
     <>
-      <Block style={styles.container}>
+      <Block style={[styles.container, style]}>
         <TouchableHighlight
           activeOpacity={0.7}
           underlayColor="#DDDDDD"
@@ -161,9 +163,6 @@ export const RoomCard: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginRight: 20,
-    marginLeft: 20,
-    marginTop: 10,
     height: "auto",
   },
   card: {

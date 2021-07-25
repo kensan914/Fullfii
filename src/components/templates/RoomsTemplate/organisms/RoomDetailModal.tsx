@@ -6,7 +6,7 @@ import ActionSheet from "react-native-action-sheet";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
 import { Icon } from "src/components/atoms/Icon";
-import { COLORS } from "src/constants/theme";
+import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";

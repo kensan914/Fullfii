@@ -5,7 +5,7 @@ import LottieView from "lottie-react-native";
 
 import { width } from "src/constants";
 import { LottieSource } from "src/types/Types";
-import useAllContext from "src/contexts/ContextUtils";
+import { useAllContext } from "src/contexts/ContextUtils";
 import { dangerouslyDelete } from "src/utils/auth/crud";
 import { RoundButton } from "src/components/atoms/RoundButton";
 
