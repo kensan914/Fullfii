@@ -29,8 +29,13 @@ export const IntroSlide: React.FC<Props> = (props) => {
   return (
     <>
       <Block style={styles.header}>
-        <Text>ヘッダー</Text>
-        <Text>戻るボタン・プログレスバー・タイトルが入ります</Text>
+        <Block row center style={styles.headerTopContainer}>
+          <Block style={styles.headerIcon}/>
+          <Block style={styles.headerProgressbar}/>
+        </Block>
+        <Block style={styles.title}>
+          <Text bold size={16} color={COLORS.BLACK}>あなたの悩みを話すためのルームを作ろう</Text>
+        </Block>
       </Block>
       <ScrollView
         ref={scrollViewRef}
@@ -47,6 +52,7 @@ export const IntroSlide: React.FC<Props> = (props) => {
       </ScrollView>
       <Block style={styles.footer}>
         <RoundButton
+          style={styles.roundButton}
           label="次へ"
           onPress={() => {
             goToPage();
@@ -57,12 +63,47 @@ export const IntroSlide: React.FC<Props> = (props) => {
   );
 };
 
-const HEADER_HEIGHT = 96;
-const FOOTER_HEIGHT = 96;
+const HEADER_HEIGHT = 104;
+const FOOTER_HEIGHT = 120;
 const BODY_HEIGHT = height - (HEADER_HEIGHT + FOOTER_HEIGHT);
 const styles = StyleSheet.create({
-  signupScrollView: {},
-  pageWrapper: { flex: 1, width: width, height: BODY_HEIGHT },
-  header: { height: 96, backgroundColor: COLORS.BEIGE },
-  footer: { height: 96, backgroundColor: COLORS.BEIGE, alignItems: "center" },
+  signupScrollView: {
+    backgroundColor: COLORS.BEIGE
+  },
+  pageWrapper: {
+    flex: 1,
+    width: width,
+    height: BODY_HEIGHT
+  },
+  header: {
+    height: 104,
+    backgroundColor: COLORS.BEIGE
+  },
+  headerTopContainer: {
+    paddingTop: 32
+  },
+  headerIcon: {
+    width: 32,
+    height:32,
+    backgroundColor: COLORS.GRAY
+  },
+  headerProgressbar: {
+    width: width-32-32-16,
+    height: 12,
+    backgroundColor: COLORS.PINK,
+    marginLeft: 16,
+    borderRadius: 4
+  },
+  title: {
+    paddingTop: 22,
+    paddingLeft: 20
+  },
+  footer: {
+    height: 120,
+    backgroundColor: COLORS.BEIGE,
+    alignItems: "center"
+  },
+  roundButton: {
+    marginTop: 0
+  }
 });
