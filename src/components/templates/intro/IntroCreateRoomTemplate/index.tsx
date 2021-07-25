@@ -9,11 +9,18 @@ import { CreatedRoomTemplate } from "src/components/templates/intro/IntroCreateR
 export const IntroCreateRoomTemplate: React.FC = () => {
   return (
     <IntroSlide
-      pageStack={[
-        <ExplanationRoomTemplate />,
-        <InputRoomNameTemplate />,
-        <InputIsExcludeDifferentGenderTemplate />,
-        <CreatedRoomTemplate />,
+      pageSettings={[
+        {
+          body: <ExplanationRoomTemplate />,
+          title: "あなたの悩みを話すためのルームを作ろう",
+        },
+        { body: <InputRoomNameTemplate />, title: "" },
+        { body: <InputIsExcludeDifferentGenderTemplate />, title: "" },
+        {
+          body: <CreatedRoomTemplate />,
+          title: "",
+          bottomButtonLabel: "分かった！",
+        },
       ]}
     />
   );

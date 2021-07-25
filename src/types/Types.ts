@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, ReactNode } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AxiosError, AxiosResponse } from "axios";
@@ -267,6 +267,16 @@ export type RenderHeader = () => (
 export type PROFILE_VIEW_HEIGHT_TYPE = 224;
 export type TAB_BAR_HEIGHT_TYPE = 48;
 //--------- Profile.tsx -----------//
+
+//--------- IntroSlide.tsx -----------//
+export type IntroPageSetting = {
+  body: ReactNode;
+  title: string;
+  onPressBottom?: () => void;
+  bottomButtonLabel?: string;
+};
+export type IntroPageSettings = IntroPageSetting[];
+//--------- IntroSlide.tsx -----------//
 
 //--------- axios ---------//
 export type AxiosMethod = "get" | "post" | "delete" | "put" | "patch";

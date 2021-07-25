@@ -7,9 +7,9 @@ import { PushNotificationReminderTemplate } from "src/components/templates/intro
 export const IntroSignupTemplate: React.FC = () => {
   return (
     <IntroSlide
-      pageStack={[
-        <InputProfileTemplate />,
-        <PushNotificationReminderTemplate />,
+      pageSettings={[
+        { body: <InputProfileTemplate />, title: "" },
+        { body: <PushNotificationReminderTemplate />, title: "" },
       ]}
     />
   );

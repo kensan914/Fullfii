@@ -7,9 +7,9 @@ import { ExplanationRoomParticipate2Template } from "src/components/templates/in
 export const IntroParticipateRoomTemplate: React.FC = () => {
   return (
     <IntroSlide
-      pageStack={[
-        <ExplanationRoomParticipateTemplate />,
-        <ExplanationRoomParticipate2Template />,
+      pageSettings={[
+        { body: <ExplanationRoomParticipateTemplate />, title: "" },
+        { body: <ExplanationRoomParticipate2Template />, title: "", bottomButtonLabel: "分かった！" },
       ]}
     />
   );
