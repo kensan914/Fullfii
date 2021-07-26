@@ -274,8 +274,13 @@ export type IntroPageSetting = {
   title: string;
   onPressBottom?: () => void;
   bottomButtonLabel?: string;
+  // isForbiddenBack?: boolean;
+  headerLeftAnimationType?: "POP" | null;
 };
 export type IntroPageSettings = IntroPageSetting[];
+export type IntroTemplateProps = {
+  onComplete: () => void;
+};
 //--------- IntroSlide.tsx -----------//
 
 //--------- axios ---------//

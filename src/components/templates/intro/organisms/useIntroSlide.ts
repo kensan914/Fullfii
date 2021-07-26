@@ -8,7 +8,9 @@ import { GoToPage } from "src/types/Types";
 /**
  * イントロスライドビューに必要なstate, functionを提供
  */
-export const useIntroSlide = (): {
+export const useIntroSlide = (
+  pageLength: number
+): {
   initPage: number;
   currentPage: number;
   scrollViewRef: React.RefObject<ScrollView>;
@@ -23,13 +25,15 @@ export const useIntroSlide = (): {
   const scrollViewRef = useRef<ScrollView>(null);
 
   const goToPage: GoToPage = (toPageNum = currentPage + 1) => {
-    scrollViewRef.current &&
-      scrollViewRef.current.scrollTo({
-        y: 0,
-        x: width * (toPageNum - initPage),
-        animated: true,
-      });
-    setCurrentPage(toPageNum);
+    if (0 < toPageNum && toPageNum <= pageLength) {
+      scrollViewRef.current &&
+        scrollViewRef.current.scrollTo({
+          y: 0,
+          x: width * (toPageNum - initPage),
+          animated: true,
+        });
+      setCurrentPage(toPageNum);
+    }
   };
 
   useEffect(() => {

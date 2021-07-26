@@ -1,6 +1,6 @@
-import LottieView from "lottie-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, ViewStyle, Animated } from "react-native";
+import LottieView from "lottie-react-native";
 
 import { COLORS } from "src/constants/colors";
 
@@ -27,7 +27,6 @@ export const ProgressBar: React.FC<Props> = (props) => {
   const [width, setWidth] = useState(0);
   const animatedValue = useRef(new Animated.Value(-1000)).current;
   const reactive = useRef(new Animated.Value(-1000)).current;
-
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: reactive,
@@ -35,16 +34,17 @@ export const ProgressBar: React.FC<Props> = (props) => {
       useNativeDriver: true,
     }).start();
   }, []);
-
   useEffect(() => {
     if (0 <= step && step <= steps) {
       reactive.setValue(-width + (width * step) / steps);
     }
   }, [step, width]);
+  const [dotSize] = useState(height * 0.56);
+  // ex) step=3 => [1, 2, 3]
+  const [stepRange] = useState(Array.from(Array(steps), (v, k) => k + 1));
 
   // popアニメーション
   const lottieViewRef = useRef<LottieView>(null);
-  const animationProgressRef = useRef(new Animated.Value(0));
   const playPopAnimation = () => {
     lottieViewRef.current && lottieViewRef.current.reset();
     lottieViewRef.current && lottieViewRef.current.play();
@@ -62,15 +62,16 @@ export const ProgressBar: React.FC<Props> = (props) => {
         const newWidth = e.nativeEvent.layout.width;
         setWidth(newWidth);
       }}
-      style={[{ height: height }, style]}
+      style={[styles.container, { height: height }, style]}
     >
+      {/* ⇓ バー本体 */}
       <View
         style={[
           styles.barContainer,
           {
             height: height,
             width: width,
-            borderRadius: height / 2.4,
+            borderRadius: height / 2,
             backgroundColor: containerColor,
           },
         ]}
@@ -80,7 +81,7 @@ export const ProgressBar: React.FC<Props> = (props) => {
             styles.bar,
             {
               height: height,
-              borderRadius: height / 2.4,
+              borderRadius: height / 2,
               backgroundColor: barColor,
               transform: [
                 {
@@ -89,8 +90,64 @@ export const ProgressBar: React.FC<Props> = (props) => {
               ],
             },
           ]}
-        />
+        >
+          <View
+            style={{
+              width: dotSize,
+              height: dotSize,
+              borderRadius: dotSize / 2,
+              position: "absolute",
+              top: (height - dotSize) / 2,
+              right: (height - dotSize) / 2,
+              backgroundColor: COLORS.PINK,
+            }}
+          />
+        </Animated.View>
+
+        {/* チェック */}
+        {stepRange.map((page) => {
+          const isChecked = page < step;
+          const isCurrent = page == step;
+
+          const containerSize = isChecked ? height * 0 : dotSize;
+          const contentSize = isChecked ? height * 0 : dotSize;
+
+          return (
+            <View
+              style={[
+                {
+                  position: "absolute",
+                  top: (height - containerSize) / 2,
+
+                  left: (width * page) / steps - containerSize * 1.3,
+                  width: containerSize,
+                  height: containerSize,
+                  borderRadius: containerSize / 2,
+                  backgroundColor: isChecked ? COLORS.BEIGE : COLORS.WHITE,
+                },
+                isCurrent ? { zIndex: -1 } : {},
+              ]}
+            >
+              {isChecked && (
+                <View
+                  style={{
+                    position: "absolute",
+
+                    top: (containerSize - contentSize) / 2,
+                    left: (containerSize - contentSize) / 2,
+                    width: contentSize,
+                    height: contentSize,
+                    borderRadius: contentSize / 2,
+                    backgroundColor: COLORS.PINK,
+                  }}
+                />
+              )}
+            </View>
+          );
+        })}
       </View>
+
+      {/* ⇓ popアニメーション */}
       {isShowPopAnimation && (
         <View
           style={[
@@ -117,7 +174,6 @@ export const ProgressBar: React.FC<Props> = (props) => {
             <LottieView
               ref={lottieViewRef}
               source={require("src/assets/animations/pop2.json")}
-              progress={animationProgressRef.current}
               style={{
                 height: lottieViewSize,
                 width: lottieViewSize,
@@ -136,11 +192,15 @@ export const ProgressBar: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+  },
   barContainer: {
     overflow: "hidden",
     position: "absolute",
     left: 0,
     top: 0,
+    zIndex: 10,
   },
   bar: {
     width: "100%",
