@@ -1,6 +1,7 @@
 export const COLORS = {
   TRANSPARENT: "rgba(255, 255, 255, 0)",
   PINK: "#f5b5a7", //#f5b5a7, #f6bab2
+  DEEP_PINK: "#F69896",
   GREEN: "#71DDA1",
   ALERT: "#F44336",
   BEIGE: "#eee2d3",
@@ -9,6 +10,7 @@ export const COLORS = {
   BROWN: "#c39c89",
   BROWN_RGBA: "rgba(195, 156, 137, 0.4)",
   BROWN_RGBA_1: "rgba(195, 156, 137, 0.2)",
+  LIGHT_BROWN: "#D29D89",
   WHITE: "#f8fcfb",
   WHITE_RGBA: "rgba(248, 252, 251, 0.4)",
   BLACK: "#333333",

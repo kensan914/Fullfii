@@ -3,13 +3,12 @@ import { StyleSheet } from "react-native";
 import { Block, NavBar, theme } from "galio-framework";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
-import materialTheme from "src/constants/colors";
 import { COLORS } from "src/constants/colors";
-import { HEADER_HEIGHT, width } from "src/constants";
+import { HEADER_HEIGHT } from "src/constants";
 import { RouteName } from "src/types/Types";
 import { SettingsHeaderMenu } from "src/navigations/Header/organisms/SettingsHeaderMenu";
 import { ChatHeaderMenu } from "src/navigations/Header/organisms/ChatHeaderMenu";
-import { BackButton } from "src/navigations/Header/atoms/BackButton";
+import { BackButton } from "src/components/atoms/BackButton";
 import { ReloadHeaderMenu } from "src/navigations/Header/organisms/ReloadHeaderMenu";
 
 type Props = {

@@ -72,6 +72,7 @@ type ToastMessages = {
   LEAVE_PARTICIPANT: ShowToastSettings;
   ADD_FAVORITE_USER: ShowToastSettings;
   DELETE_FAVORITE_USER: ShowToastSettings;
+  BACK_IN_INTRO_LAST_PAGE_ONLY_ANDROID: ShowToastSettings;
 };
 export const TOAST_SETTINGS: ToastMessages = {
   CREATE_ROOM: {
@@ -106,5 +107,9 @@ export const TOAST_SETTINGS: ToastMessages = {
   },
   DELETE_FAVORITE_USER: {
     text1: "また話したいリストから削除しました",
+  },
+  BACK_IN_INTRO_LAST_PAGE_ONLY_ANDROID: {
+    text1: "画面下のボタンを押してください",
+    type: "info",
   },
 };
