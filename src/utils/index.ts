@@ -300,3 +300,20 @@ export const equalsArray: EqualsArray = (
 export const logAdmob = (tag = "AD", type: string, value: string): void => {
   console.log(`[${tag}][${type}]:`, value);
 };
+
+// export const getValue = <T>(
+//   object: Record<string, T>,
+//   key: string,
+//   initValue: T
+// ): T => {
+//   return typeof object[key] !== "undefined" ? object[key] : initValue;
+// };
+
+export const getValue = <T>(
+  valueMaybeUndefine: T | undefined,
+  initValue: T
+): T => {
+  return typeof valueMaybeUndefine !== "undefined"
+    ? valueMaybeUndefine
+    : initValue;
+};

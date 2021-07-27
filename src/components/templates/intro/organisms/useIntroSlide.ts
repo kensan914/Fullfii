@@ -13,7 +13,8 @@ export const useIntroSlide = (
 ): {
   initPage: number;
   currentPage: number;
-  scrollViewRef: React.RefObject<ScrollView>;
+  bodyScrollViewRef: React.RefObject<ScrollView>;
+  footerScrollViewRef: React.RefObject<ScrollView>;
   goToPage: GoToPage;
 } => {
   // const authState = useAuthState();
@@ -22,16 +23,25 @@ export const useIntroSlide = (
     1
   );
   const [currentPage, setCurrentPage] = useState(initPage);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const bodyScrollViewRef = useRef<ScrollView>(null);
+  const footerScrollViewRef = useRef<ScrollView>(null);
+
+  const scroll = (
+    scrollViewRef: React.RefObject<ScrollView>,
+    toPageNum: number
+  ) => {
+    scrollViewRef.current &&
+      scrollViewRef.current.scrollTo({
+        y: 0,
+        x: width * (toPageNum - initPage),
+        animated: true,
+      });
+  };
 
   const goToPage: GoToPage = (toPageNum = currentPage + 1) => {
     if (0 < toPageNum && toPageNum <= pageLength) {
-      scrollViewRef.current &&
-        scrollViewRef.current.scrollTo({
-          y: 0,
-          x: width * (toPageNum - initPage),
-          animated: true,
-        });
+      scroll(bodyScrollViewRef, toPageNum);
+      scroll(footerScrollViewRef, toPageNum);
       setCurrentPage(toPageNum);
     }
   };
@@ -42,5 +52,11 @@ export const useIntroSlide = (
     // setPageStack(_pageStack);
   }, []);
 
-  return { initPage, currentPage, scrollViewRef, goToPage };
+  return {
+    initPage,
+    currentPage,
+    bodyScrollViewRef,
+    footerScrollViewRef,
+    goToPage,
+  };
 };

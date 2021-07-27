@@ -358,11 +358,6 @@ const styles = StyleSheet.create({
     width: width - 64,
     height: 40,
   },
-  // buttonContainer: {
-  //   width: width - 40,
-  //   position: "absolute",
-  //   bottom: 48,
-  // },
   button: {
     paddingTop: 24,
   },

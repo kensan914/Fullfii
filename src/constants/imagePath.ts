@@ -5,7 +5,7 @@ import roomCardDemo from "src/assets/images/signup/homeInfo.png";
 import talkListDemo from "src/assets/images/mypage/talkListInfo.png";
 import privateRoomDemo from "src/assets/images/privateRoom/privateRoomInfo.png";
 import lectureWoman from "src/assets/images/intro/lectureWoman.png";
-import notification from "src/assets/images/intro/notification.png";
+import notificationPermissionDialog from "src/assets/images/intro/notificationPermissionDialog.png";
 
 export const MAN_AND_WOMAN_IMG = manAndWomanImg;
 export const MEN_IMG = menImg;
@@ -14,4 +14,4 @@ export const ROOM_CARD_DEMO_IMG = roomCardDemo;
 export const TALK_LIST_DEMO_IMG = talkListDemo;
 export const PRIVATE_ROOM_DEMO_IMG = privateRoomDemo;
 export const LECTURE_WOMAN_IMG = lectureWoman;
-export const NOTIFICATION_IMG = notification;
+export const NOTIFICATION_PERMISSION_DIALOG_IMG = notificationPermissionDialog;

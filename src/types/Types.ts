@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode } from "react";
+import React, { Dispatch, ReactNode, RefObject } from "react";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AxiosError, AxiosResponse } from "axios";
@@ -19,6 +19,7 @@ import {
   RoomJsonIoTs,
   TalkTicketKey,
 } from "src/types/Types.context";
+import { AnimatedViewMethods } from "src/components/templates/intro/organisms/AnimatedView";
 
 //--------- App.tsx ---------//
 export type Assets = { [key: string]: Asset };
@@ -272,15 +273,62 @@ export type TAB_BAR_HEIGHT_TYPE = 48;
 export type IntroPageSetting = {
   body: ReactNode;
   title: string;
+  bodyAnimSettings: BodyAnimSettings;
+  headerLeftAnimationType?: "CHECK" | null;
   onPressBottom?: () => void;
   bottomButtonLabel?: string;
-  // isForbiddenBack?: boolean;
-  headerLeftAnimationType?: "POP" | null;
+  canPressBottomButton?: boolean;
+  isLoading?: boolean;
 };
 export type IntroPageSettings = IntroPageSetting[];
 export type IntroTemplateProps = {
   onComplete: () => void;
 };
+export type InAnimatedViewType = "FADE_IN" | "FADE_IN_UP";
+export type InAnimatedViewSettingByType =
+  | {
+      type: "FADE_IN";
+    }
+  | {
+      type: "FADE_IN_UP";
+      initTransLateBottom: number;
+    };
+export type InAnimatedViewSetting = {
+  settingByType: InAnimatedViewSettingByType;
+  duration?: number;
+  delayStartIntervalMs?: number;
+};
+export type OutAnimatedViewType = "FADE_OUT";
+export type OutAnimatedViewSettingByType = {
+  type: "FADE_OUT";
+};
+export type OutAnimatedViewSetting = {
+  settingByType: OutAnimatedViewSettingByType;
+  duration?: number;
+  delayStartIntervalMs?: number;
+};
+
+// IntroBodyAnimationSetting
+export type BodyAnimSetting = {
+  ref: RefObject<AnimatedViewMethods>;
+  isAuto?: boolean;
+  duration?: number;
+  delayStartIntervalMs?: number;
+};
+export type BodyAnimSettings = BodyAnimSetting[];
+// ⇓ イントロページごとにBodyAnimSettingsの長さを定義
+type FixedBodyAnimSettings<T extends number> = FixedArray<BodyAnimSetting, T>;
+// introCreateRoom
+export type BodyAnimSettings_explanationRoom = FixedBodyAnimSettings<3>;
+export type BodyAnimSettings_inputRoomName = FixedBodyAnimSettings<2>;
+export type BodyAnimSettings_createdRoom = FixedBodyAnimSettings<3>;
+// introParticipateRoom
+export type BodyAnimSettings_explanationRoomParticipate =
+  FixedBodyAnimSettings<3>;
+// introSignup
+export type BodyAnimSettings_inputProfile = FixedBodyAnimSettings<2>;
+export type BodyAnimSettings_pushNotificationReminder = BodyAnimSettings; // platformごとに異なるため
+
 //--------- IntroSlide.tsx -----------//
 
 //--------- axios ---------//
@@ -471,4 +519,35 @@ export type HideRoom = (roomId: string) => void;
 export type BlockRoom = (roomId: string) => void;
 //--------- RoomsScreen ---------//
 
-//
+//--------- FixedArray ---------//
+type Shift<A extends Array<any>> = ((...args: A) => void) extends (
+  ...args: [A[0], ...infer R]
+) => void
+  ? R
+  : never;
+type GrowExpRev<
+  A extends Array<any>,
+  N extends number,
+  P extends Array<Array<any>>
+> = A["length"] extends N
+  ? A
+  : {
+      0: GrowExpRev<[...A, ...P[0]], N, P>;
+      1: GrowExpRev<A, N, Shift<P>>;
+    }[[...A, ...P[0]][N] extends undefined ? 0 : 1];
+type GrowExp<
+  A extends Array<any>,
+  N extends number,
+  P extends Array<Array<any>>
+> = A["length"] extends N
+  ? A
+  : {
+      0: GrowExp<[...A, ...A], N, [A, ...P]>;
+      1: GrowExpRev<A, N, P>;
+    }[[...A, ...A][N] extends undefined ? 0 : 1];
+export type FixedArray<T, N extends number> = N extends 0
+  ? []
+  : N extends 1
+  ? [T]
+  : GrowExp<[T, T], N, [[T]]>;
+//--------- FixedArray ---------//

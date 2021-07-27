@@ -6,10 +6,10 @@ import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 
 type Props = {
+  label: string;
   buttonColor?: string;
   iconName?: string;
   iconFamily?: string;
-  label: string;
   onPress?: () => void;
   isLoading?: boolean;
   style?: ViewStyle | ViewStyle[];
@@ -17,23 +17,23 @@ type Props = {
 };
 export const RoundButton: React.FC<Props> = (props) => {
   const {
-    buttonColor,
+    label,
     iconName,
     iconFamily,
-    label,
-    onPress,
-    isLoading,
+    buttonColor = COLORS.BROWN,
+    onPress = () => void 0,
+    isLoading = false,
+    disabled = false,
     style,
-    disabled,
   } = props;
   return (
     <Button
       style={[styles.button, disabled ? {} : styles.shadow, style]}
-      color={disabled ? "lightgray" : buttonColor ? buttonColor : COLORS.BROWN}
+      color={disabled ? "lightgray" : buttonColor}
       shadowless
       onPress={onPress}
       loading={isLoading}
-      disabled={disabled}
+      disabled={disabled || isLoading}
     >
       <Block row center style={styles.buttonInner}>
         <Icon

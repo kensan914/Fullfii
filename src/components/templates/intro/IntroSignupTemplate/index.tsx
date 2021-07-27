@@ -1,21 +1,61 @@
 import React from "react";
+import { Platform } from "react-native";
 
 import { IntroSlide } from "src/components/templates/intro/organisms/IntroSlide";
-import { InputProfileTemplate } from "src/components/templates/intro/IntroSignupTemplate/pages/InputProfileTemplate";
+import {
+  InputProfileTemplate,
+  SignupProps,
+} from "src/components/templates/intro/IntroSignupTemplate/pages/InputProfileTemplate";
 import { PushNotificationReminderTemplate } from "src/components/templates/intro/IntroSignupTemplate/pages/PushNotificationReminderTemplate";
-import { IntroTemplateProps } from "src/types/Types";
+import {
+  BodyAnimSettings_inputProfile,
+  BodyAnimSettings_pushNotificationReminder,
+  IntroTemplateProps,
+} from "src/types/Types";
 
-export const IntroSignupTemplate: React.FC<IntroTemplateProps> = (props) => {
-  const { onComplete } = props;
+type Props = {
+  bodyAnimSettings_inputProfile: BodyAnimSettings_inputProfile;
+  signupProps: SignupProps;
+  bodyAnimSettings_pushNotificationReminder: BodyAnimSettings_pushNotificationReminder;
+};
+export const IntroSignupTemplate: React.FC<Props & IntroTemplateProps> = (
+  props
+) => {
+  const {
+    bodyAnimSettings_inputProfile,
+    signupProps,
+    bodyAnimSettings_pushNotificationReminder,
+    onComplete,
+  } = props;
 
   return (
     <IntroSlide
       pageSettings={[
-        { body: <InputProfileTemplate />, title: "プロフィールを作成しよう" },
         {
-          body: <PushNotificationReminderTemplate />,
-          title: "メッセージが来たらお知らせするよ",
-          headerLeftAnimationType: "POP",
+          body: (
+            <InputProfileTemplate
+              bodyAnimSettings={bodyAnimSettings_inputProfile}
+              {...signupProps}
+            />
+          ),
+          title: "プロフィールを作成しよう",
+          bodyAnimSettings: bodyAnimSettings_inputProfile,
+          canPressBottomButton: signupProps.canSignup,
+          bottomButtonLabel: Platform.OS === "ios" ? "通知設定へ" : void 0,
+        },
+        {
+          body: (
+            <PushNotificationReminderTemplate
+              bodyAnimSettings={bodyAnimSettings_pushNotificationReminder}
+            />
+          ),
+          title:
+            Platform.OS === "ios"
+              ? "メッセージが来たらお知らせするよ"
+              : "プロフィールの登録が完了しました！",
+          headerLeftAnimationType: "CHECK",
+          bodyAnimSettings: bodyAnimSettings_pushNotificationReminder,
+          bottomButtonLabel: "HOME画面へ",
         },
       ]}
       onComplete={onComplete}

@@ -1,146 +1,196 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch } from "react";
 import { Text, Block } from "galio-framework";
 import {
   StyleSheet,
   Keyboard,
   TextInput,
   TouchableOpacity,
-  Image,
-  ScrollView,
-  TouchableWithoutFeedback,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
-import { width, height } from "src/constants";
-import { RoundButton } from "src/components/atoms/RoundButton";
+import { width } from "src/constants";
 import { GenderInputButtonList } from "src/components/molecules/GenderInputButtonList";
-import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
+import {
+  BodyAnimSettings_inputProfile,
+  FormattedGenderKey,
+  NotSetGenderKey,
+} from "src/types/Types";
 import { MenuModal } from "src/components/molecules/Menu";
 import { Job } from "src/types/Types.context";
-import { LECTURE_WOMAN_IMG } from "src/constants/imagePath";
+import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
+import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 
-
-export const InputProfileTemplate: React.FC = () => {
-  const maxUsernameLength=60
-  const [username, setUsername] = useState("ジントニック")
-  const [isFocusInputUsername, setIsFocusInputUsername] = useState(false)
-  const [isOpenJobModal, setIsOpenJobModal] = useState(false)
-  const job = {label: "看護師"}
+export type SignupProps = {
+  username: string;
+  setUsername: Dispatch<string>;
+  maxUsernameLength: number;
+  isFocusInputUsername: boolean;
+  setIsFocusInputUsername: Dispatch<boolean>;
+  genderKeys: FormattedGenderKey[];
+  genderKey: FormattedGenderKey | NotSetGenderKey | undefined;
+  setGenderKey: Dispatch<FormattedGenderKey | NotSetGenderKey | undefined>;
+  isOpenJobModal: boolean;
+  setIsOpenJobModal: Dispatch<boolean>;
+  job: Job | undefined;
+  jobModalItems: {
+    label: string;
+    onPress: () => void;
+  }[];
+  canSignup: boolean;
+};
+type Props = {
+  bodyAnimSettings: BodyAnimSettings_inputProfile;
+} & SignupProps;
+export const InputProfileTemplate: React.FC<Props> = (props) => {
+  const {
+    bodyAnimSettings,
+    username,
+    setUsername,
+    maxUsernameLength,
+    isFocusInputUsername,
+    setIsFocusInputUsername,
+    genderKeys,
+    genderKey,
+    setGenderKey,
+    isOpenJobModal,
+    setIsOpenJobModal,
+    job,
+    jobModalItems,
+  } = props;
 
   return (
     <Block flex style={styles.container}>
-      <Block >
-        <Block style={styles.userNameContainer}>
-          <Block row space="between" style={styles.userNameLabels}>
-            <Text size={16} color={COLORS.BLACK}>
-              ユーザーネーム
-            </Text>
-            <Text size={12} color={COLORS.LIGHT_GRAY}>
-              {username.length}/{maxUsernameLength}
-            </Text>
-          </Block>
-          <TextInput
-            multiline
-            numberOfLines={4}
-            editable
-            maxLength={maxUsernameLength}
-            value={username}
-            onChangeText={setUsername}
-            returnKeyType="done"
-            blurOnSubmit
-            // textContentType="username"
-            style={[
-              styles.textArea,
-              {
-                borderColor: isFocusInputUsername
-                  ? COLORS.BROWN
-                  : COLORS.WHITE,
-              },
-            ]}
-            onSubmitEditing={() => {
-              Keyboard.dismiss();
-            }}
-            onFocus={() => {
-              setIsFocusInputUsername(true);
-            }}
-          />
-        </Block>
-        <Block style={styles.genderContainer}>
-          <Block space="between" style={styles.userNameLabels}>
-            <Text size={16} color={COLORS.BLACK}>
-              性別
-            </Text>
-          </Block>
-          <Block row space="between" style={[styles.genderButtons]}>
-            <GenderInputButtonList
-              // genderKeys={genderKeys}
-              // genderKey={genderKey}
-              // setGenderKey={setGenderKey}
-              genderKeys={[]}
-              genderKey={undefined}
-              setGenderKey={"notset"}
-              style={{ height: 48 }}
-              renderItem={(label, isSelected) => {
-                return (
-                  <Block
-                    style={[
-                      styles.genderSelectButton,
-                      {
-                        backgroundColor: isSelected
-                          ? COLORS.BROWN
-                          : COLORS.WHITE,
-                      },
-                    ]}
-                  >
-                    <Text
-                      size={16}
-                      bold
-                      color={isSelected ? COLORS.WHITE : COLORS.BLACK}
-                    >
-                      {label}
-                    </Text>
-                  </Block>
-                );
+      {/* <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          setIsFocusInputUsername(false);
+          Keyboard.dismiss();
+        }}
+      > */}
+      <>
+        <AnimatedView {...bodyAnimSettings[0]}>
+          <Block style={styles.userNameContainer}>
+            <Block row space="between" style={styles.inputTitleContainer}>
+              <Text size={16} color={COLORS.BLACK}>
+                ユーザーネーム
+              </Text>
+              <Text size={12} color={COLORS.LIGHT_GRAY}>
+                {username.length}/{maxUsernameLength}
+              </Text>
+            </Block>
+            <TextInput
+              multiline
+              numberOfLines={4}
+              editable
+              maxLength={maxUsernameLength}
+              value={username}
+              onChangeText={setUsername}
+              returnKeyType="done"
+              blurOnSubmit
+              style={[
+                styles.textArea,
+                {
+                  borderColor: isFocusInputUsername
+                    ? COLORS.BROWN
+                    : COLORS.WHITE,
+                },
+              ]}
+              onSubmitEditing={() => {
+                Keyboard.dismiss();
+              }}
+              onFocus={() => {
+                setIsFocusInputUsername(true);
+              }}
+              onBlur={() => {
+                setIsFocusInputUsername(false);
+                Keyboard.dismiss();
               }}
             />
           </Block>
-        </Block>
-
-        <Block style={styles.jobContainer}>
-          <Block space="between" style={styles.userNameLabels}>
-            <Text size={16} color={COLORS.BLACK}>
-              職業
-            </Text>
-          </Block>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => {
-              setIsOpenJobModal(true);
-            }}
-          >
-            <Block row center space="between" style={styles.selectJob}>
+          <Block style={styles.genderContainer}>
+            <Block space="between" style={styles.inputTitleContainer}>
               <Text size={16} color={COLORS.BLACK}>
-                {job ? job.label : "選択してください"}
+                性別
               </Text>
-              <Icon
-                name="chevron-right"
-                family="Feather"
-                size={32}
-                color={COLORS.LIGHT_GRAY}
+            </Block>
+            <Block
+              row
+              space="between"
+              style={[styles.genderInputButtonContainer]}
+            >
+              <GenderInputButtonList
+                genderKeys={genderKeys}
+                genderKey={genderKey}
+                setGenderKey={setGenderKey}
+                style={{ height: 48 }}
+                renderItem={(label, isSelected) => {
+                  return (
+                    <Block
+                      // flex
+                      style={[
+                        styles.genderInputButton,
+                        {
+                          backgroundColor: isSelected
+                            ? COLORS.BROWN
+                            : COLORS.WHITE,
+                        },
+                      ]}
+                    >
+                      <Text
+                        size={16}
+                        bold
+                        color={isSelected ? COLORS.WHITE : COLORS.BLACK}
+                      >
+                        {label}
+                      </Text>
+                    </Block>
+                  );
+                }}
               />
             </Block>
-          </TouchableOpacity>
+          </Block>
 
-          <MenuModal
-            isOpen={isOpenJobModal}
-            setIsOpen={setIsOpenJobModal}
-            items={[]}
-            // items={jobModalItems}
-          />
-        </Block>
-      </Block>
+          <Block style={styles.jobContainer}>
+            <Block space="between" style={styles.inputTitleContainer}>
+              <Text size={16} color={COLORS.BLACK}>
+                職業
+              </Text>
+            </Block>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                setIsOpenJobModal(true);
+              }}
+            >
+              <Block row center space="between" style={styles.selectJob}>
+                <Text size={16} color={COLORS.BLACK}>
+                  {job ? job.label : "選択してください"}
+                </Text>
+                <Icon
+                  name="chevron-right"
+                  family="Feather"
+                  size={32}
+                  color={COLORS.LIGHT_GRAY}
+                />
+              </Block>
+            </TouchableOpacity>
+
+            <MenuModal
+              isOpen={isOpenJobModal}
+              setIsOpen={setIsOpenJobModal}
+              items={jobModalItems}
+            />
+          </Block>
+        </AnimatedView>
+
+        <AnimatedView {...bodyAnimSettings[1]}>
+          <IntroComment style={{ marginTop: 56 }}>
+            後でプロフィールは編集できるよ！
+          </IntroComment>
+        </AnimatedView>
+      </>
+      {/* </TouchableOpacity> */}
     </Block>
   );
 };
@@ -148,65 +198,33 @@ export const InputProfileTemplate: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    height: height -120-104-48
-  },
-
-  textLineHeight: {
-    lineHeight: 20
-  },
-  avater: {
-    width: 40,
-    height: 40,
-    borderRadius: 50,
-    marginRight: 8,
-  },
-  leftMessageContainer: {
-    alignItems: "center",
-  },
-  leftMessage: {
-    backgroundColor: COLORS.WHITE,
-    height: "auto",
-    width: 250,
-    padding: 16,
-    borderBottomRightRadius: 16,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16
-  },
-  tainer: {
-    marginTop: 32
-  },
-  textAreaLabel: {
-    marginBottom: 8
-  },
-  textAreaSubLabel: {
-    marginTop: 8
   },
   userNameContainer: {
-    marginTop: 64,
+    // marginTop: 64,
+    marginTop: 32,
+    paddingHorizontal: 8,
   },
-  userNameLabels: {
-    paddingHorizontal: 20,
+  inputTitleContainer: {
     paddingBottom: 8,
   },
   textArea: {
     alignSelf: "center",
     textAlignVertical: "top",
     height: 40,
-    width: width - 40,
+    width: "100%",
     borderRadius: 10,
     backgroundColor: COLORS.WHITE,
     borderWidth: 2,
     paddingHorizontal: 8,
-    paddingTop: 9,
+    // paddingTop: 9,
   },
   genderContainer: {
     marginTop: 32,
+    paddingHorizontal: 8,
   },
-  genderButtons: {
-    paddingHorizontal: 20,
-  },
-  genderSelectButton: {
-    width: 104,
+  genderInputButtonContainer: {},
+  genderInputButton: {
+    width: width * 0.26,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
@@ -214,9 +232,10 @@ const styles = StyleSheet.create({
   },
   jobContainer: {
     marginTop: 32,
+    paddingHorizontal: 8,
   },
   selectJob: {
     width: width - 64,
     height: 40,
   },
-})
+});
