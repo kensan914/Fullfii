@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
-import { SignupTemplate } from "src/components/templates/signup/SignupTemplate";
+import { SignupProps } from "src/components/templates/intro/IntroSignupTemplate/pages/InputProfileTemplate";
 import {
   useProfileDispatch,
   useProfileState,
 } from "src/contexts/ProfileContext";
+import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
 import { Job } from "src/types/Types.context";
-import { useNavigation } from "@react-navigation/native";
-import { logEvent } from "src/utils/firebase/logEvent";
 
-export const SignupScreen: React.FC = () => {
+export const useSignup = (): SignupProps => {
   const profileState = useProfileState();
   const profileDispatch = useProfileDispatch();
-  const navigation = useNavigation();
 
   // ユーザネーム
   const [username, setUsername] = useState("");
@@ -47,36 +44,21 @@ export const SignupScreen: React.FC = () => {
     setCanSignup(username.length > 0 && !!genderKey && !!job);
   }, [username, genderKey, job]);
 
-  const onPressNext = () => {
-    if (genderKey && job) {
-      logEvent("push_sign_up_screen_go_next_button");
-      profileDispatch({
-        type: "SET_PROFILE_BUFFER",
-        username: username,
-        genderKey: genderKey,
-        jobKey: job.key,
-      });
-    }
-
-    navigation.navigate("IntroCreateRoom");
+  const signupProps: SignupProps = {
+    username: username,
+    setUsername: setUsername,
+    maxUsernameLength: maxUsernameLength,
+    isFocusInputUsername: isFocusInputUsername,
+    setIsFocusInputUsername: setIsFocusInputUsername,
+    genderKeys: genderKeys,
+    genderKey: genderKey,
+    setGenderKey: setGenderKey,
+    isOpenJobModal: isOpenJobModal,
+    setIsOpenJobModal: setIsOpenJobModal,
+    job: job,
+    jobModalItems: jobModalItems,
+    canSignup: canSignup,
   };
 
-  return (
-    <SignupTemplate
-      username={username}
-      setUsername={setUsername}
-      maxUsernameLength={maxUsernameLength}
-      isFocusInputUsername={isFocusInputUsername}
-      setIsFocusInputUsername={setIsFocusInputUsername}
-      genderKeys={genderKeys}
-      genderKey={genderKey}
-      setGenderKey={setGenderKey}
-      isOpenJobModal={isOpenJobModal}
-      setIsOpenJobModal={setIsOpenJobModal}
-      job={job}
-      jobModalItems={jobModalItems}
-      canSignup={canSignup}
-      onPressNext={onPressNext}
-    />
-  );
+  return signupProps;
 };

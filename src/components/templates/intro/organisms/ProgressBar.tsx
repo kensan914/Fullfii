@@ -114,6 +114,7 @@ export const ProgressBar: React.FC<Props> = (props) => {
 
           return (
             <View
+              key={page}
               style={[
                 {
                   position: "absolute",

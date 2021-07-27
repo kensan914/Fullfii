@@ -2,28 +2,70 @@ import React from "react";
 
 import { IntroSlide } from "src/components/templates/intro/organisms/IntroSlide";
 import { ExplanationRoomTemplate } from "src/components/templates/intro/IntroCreateRoomTemplate/pages/ExplanationRoomTemplate";
-import { InputRoomNameTemplate } from "src/components/templates/intro/IntroCreateRoomTemplate/pages/InputRoomNameTemplate";
+import {
+  CreateRoomProps,
+  InputRoomNameTemplate,
+} from "src/components/templates/intro/IntroCreateRoomTemplate/pages/InputRoomNameTemplate";
 import { CreatedRoomTemplate } from "src/components/templates/intro/IntroCreateRoomTemplate/pages/CreatedRoomTemplate";
-import { IntroTemplateProps } from "src/types/Types";
+import {
+  BodyAnimSettings_createdRoom,
+  BodyAnimSettings_explanationRoom,
+  BodyAnimSettings_inputRoomName,
+  IntroTemplateProps,
+} from "src/types/Types";
 
-export const IntroCreateRoomTemplate: React.FC<IntroTemplateProps> = (
+type Props = {
+  bodyAnimSettings_explanationRoom: BodyAnimSettings_explanationRoom;
+  bodyAnimSettings_inputRoomName: BodyAnimSettings_inputRoomName;
+  canCreateRoom: boolean;
+  createRoomProps: CreateRoomProps;
+  bodyAnimSettings_createdRoom: BodyAnimSettings_createdRoom;
+};
+export const IntroCreateRoomTemplate: React.FC<Props & IntroTemplateProps> = (
   props
 ) => {
-  const { onComplete } = props;
+  const {
+    bodyAnimSettings_explanationRoom,
+    bodyAnimSettings_inputRoomName,
+    canCreateRoom,
+    createRoomProps,
+    bodyAnimSettings_createdRoom,
+    onComplete,
+  } = props;
 
   return (
     <IntroSlide
       pageSettings={[
         {
-          body: <ExplanationRoomTemplate />,
+          body: (
+            <ExplanationRoomTemplate
+              bodyAnimSettings={bodyAnimSettings_explanationRoom}
+            />
+          ),
           title: "あなたの悩みを話すためのルームを作ろう",
+          bodyAnimSettings: bodyAnimSettings_explanationRoom,
         },
-        { body: <InputRoomNameTemplate />, title: "話したい悩みは何ですか？" },
         {
-          body: <CreatedRoomTemplate />,
+          body: (
+            <InputRoomNameTemplate
+              {...createRoomProps}
+              bodyAnimSettings={bodyAnimSettings_inputRoomName}
+            />
+          ),
+          title: "話したい悩みは何ですか？",
+          bodyAnimSettings: bodyAnimSettings_inputRoomName,
+          canPressBottomButton: canCreateRoom,
+        },
+        {
+          body: (
+            <CreatedRoomTemplate
+              bodyAnimSettings={bodyAnimSettings_createdRoom}
+            />
+          ),
           title: "ルームが出来ました！",
           bottomButtonLabel: "分かった！",
-          headerLeftAnimationType: "POP",
+          headerLeftAnimationType: "CHECK",
+          bodyAnimSettings: bodyAnimSettings_createdRoom,
         },
       ]}
       onComplete={onComplete}

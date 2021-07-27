@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BackHandler, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
@@ -109,11 +109,6 @@ export const IntroHeaderLeft: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // width: 40,
-    // backgroundColor: "red",
-  },
-  backButton: {
-    // paddingRight: 16,
-  },
+  container: {},
+  backButton: {},
 });
