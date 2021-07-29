@@ -156,10 +156,7 @@ export const IntroSlide: React.FC<Props> = (props) => {
 const HEADER_HEIGHT = 104;
 const FOOTER_HEIGHT = 120;
 export const INTRO_BODY_HEIGHT =
-  height +
-  STATUS_BAR_HEIGHT +
-  BOTTOM_SPACE_HEIGHT -
-  (HEADER_HEIGHT + FOOTER_HEIGHT);
+  height - (HEADER_HEIGHT + STATUS_BAR_HEIGHT + FOOTER_HEIGHT);
 const PROGRESS_BAR_CONTAINER = 56;
 const styles = StyleSheet.create({
   container: {

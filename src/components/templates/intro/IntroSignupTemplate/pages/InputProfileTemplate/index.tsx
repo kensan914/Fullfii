@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderWidth: 2,
     paddingHorizontal: 8,
-    // paddingTop: 9,
+    paddingTop: 9,
   },
   genderContainer: {
     marginTop: 32,

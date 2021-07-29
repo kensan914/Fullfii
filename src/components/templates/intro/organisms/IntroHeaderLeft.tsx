@@ -80,7 +80,7 @@ export const IntroHeaderLeft: React.FC<Props> = (props) => {
     }
   };
 
-  const [lottieViewSize] = useState(36);
+  const [lottieViewSize] = useState(48);
   useEffect(() => {
     if (currentPageSetting.headerLeftAnimationType) {
       playAnimation();
@@ -146,5 +146,7 @@ export const IntroHeaderLeft: React.FC<Props> = (props) => {
 
 const styles = StyleSheet.create({
   container: {},
-  backButton: {},
+  backButton: {
+    paddingLeft: 8,
+  },
 });

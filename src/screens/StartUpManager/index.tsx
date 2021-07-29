@@ -24,13 +24,13 @@ export const StartUpManager: React.FC = (props) => {
   usePushNotificationParams();
   useEffect(() => {
     // ログイン済みでアプリを起動した時、またはsignup成功時に実行
-    if (authState.token) {
+    if (authState.token && authState.status === "Authenticated") {
       exeSiren();
       requestGetMe();
       requestGetTalkInfo();
       connectWsNotification();
     }
-  }, [authState.token]);
+  }, [authState.token, authState.status]);
 
   return <Block flex>{children}</Block>;
 };
