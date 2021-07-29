@@ -20,8 +20,6 @@ import { SuccessAccountDeleteScreen } from "src/screens/SuccessAccountDeleteScre
 import { COLORS } from "src/constants/colors";
 import { BottomTabNavigator } from "src/navigations/BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
-import { OnboardingScreen } from "src/screens/OnboardingScreen";
-import { AttManager } from "src/screens/AttManager";
 import { SignupScreen as OldSignupScreen } from "src/screens/signup/SignupScreen";
 import { IntroCreateRoomScreen as OldIntroCreateRoomScreen } from "src/screens/signup/IntroCreateRoomScreen";
 import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
@@ -116,18 +114,16 @@ const AppStack: React.FC = () => {
   switch (authState.status) {
     case AUTHENTICATED:
       return withSafeAreaView(
-        <AttManager>
-          <Stack.Navigator mode="card" headerMode="none">
-            <Stack.Screen name="Authenticated">
-              {() => (
-                <>
-                  <HomeStack />
-                  {authState.isShowSpinner && <Spinner />}
-                </>
-              )}
-            </Stack.Screen>
-          </Stack.Navigator>
-        </AttManager>
+        <Stack.Navigator mode="card" headerMode="none">
+          <Stack.Screen name="Authenticated">
+            {() => (
+              <>
+                <HomeStack />
+                {authState.isShowSpinner && <Spinner />}
+              </>
+            )}
+          </Stack.Screen>
+        </Stack.Navigator>
       );
 
     case AUTHENTICATING:
@@ -169,7 +165,6 @@ const AppStack: React.FC = () => {
           }}
         >
           <Stack.Screen name="Top" component={TopScreen} />
-          {/* <Stack.Screen name="Onboarding" component={OnboardingScreen} /> */}
         </Stack.Navigator>
       );
 

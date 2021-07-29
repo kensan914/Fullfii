@@ -10,9 +10,10 @@ import { width } from "src/constants";
 
 type Props = {
   bodyAnimSettings: BodyAnimSettings_pushNotificationReminder;
+  username: string;
 };
 export const PushNotificationReminderTemplate: React.FC<Props> = (props) => {
-  const { bodyAnimSettings } = props;
+  const { bodyAnimSettings, username } = props;
 
   return (
     <Block flex style={styles.container}>
@@ -36,7 +37,7 @@ export const PushNotificationReminderTemplate: React.FC<Props> = (props) => {
       ) : (
         <AnimatedView {...bodyAnimSettings[0]}>
           <IntroComment style={{ marginTop: 56 }}>
-            これで準備完了！ケントニックさん、下のボタンを押してみんなが作ったルームを見てみよう！
+            {`これで準備完了！${username}さん、早速はじめてみよう！`}
           </IntroComment>
         </AnimatedView>
       )}

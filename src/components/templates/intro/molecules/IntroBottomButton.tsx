@@ -8,6 +8,7 @@ import { GoToPage, IntroPageSetting } from "src/types/Types";
 
 type Props = {
   page: number;
+  currentPage: number;
   pageLength: number;
   pageSetting: IntroPageSetting;
   isReadyFooter: boolean;
@@ -15,8 +16,15 @@ type Props = {
   goToPage: GoToPage;
 };
 export const IntroBottomButton: React.FC<Props> = (props) => {
-  const { page, pageLength, pageSetting, isReadyFooter, onComplete, goToPage } =
-    props;
+  const {
+    page,
+    currentPage,
+    pageLength,
+    pageSetting,
+    isReadyFooter,
+    onComplete,
+    goToPage,
+  } = props;
 
   const {
     bottomButtonRef,
@@ -25,6 +33,7 @@ export const IntroBottomButton: React.FC<Props> = (props) => {
     isShowBottomButton,
   } = useIntroSliderBottomButton(
     page,
+    currentPage,
     pageLength,
     pageSetting,
     isReadyFooter,

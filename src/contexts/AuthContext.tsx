@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext } from "react";
 
-import { asyncStoreItem } from "src/utils/asyncStorage";
+import { asyncStoreItem, asyncStoreObject } from "src/utils/asyncStorage";
 import {
   AuthenticatedType,
   AuthenticatingType,
@@ -11,37 +11,42 @@ import {
   TokenNullable,
   AuthStatusNullable,
   DeletedType,
+  SignupBuffer,
+  SignupBufferNullable,
 } from "src/types/Types.context";
 
 const authReducer = (prevState: AuthState, action: AuthActionType) => {
+  let _signupBuffer: SignupBuffer;
   switch (action.type) {
-    case "COMPLETE_SIGNUP": {
-      /** HOMEに遷移. statusを"AUTHENTICATING"に.
-       ** initBottomTabRouteNameに指定したbottomタブに遷移.
-       * @param {Object} action [type, initBottomTabRouteName] */
+    // TODO: 使用しない
+    // case "COMPLETE_SIGNUP": {
+    //   /** HOMEに遷移. statusを"AUTHENTICATED"に.
+    //    ** initBottomTabRouteNameに指定したbottomタブに遷移.
+    //    * @param {Object} action [type, initBottomTabRouteName] */
 
-      const authenticatedStatus = AUTHENTICATED;
-      asyncStoreItem("status", authenticatedStatus);
+    //   const authenticatedStatus = AUTHENTICATED;
+    //   asyncStoreItem("status", authenticatedStatus);
 
-      return {
-        ...prevState,
-        status: authenticatedStatus,
-        initBottomTabRouteName: action.initBottomTabRouteName,
-      };
-    }
+    //   return {
+    //     ...prevState,
+    //     status: authenticatedStatus,
+    //     initBottomTabRouteName: action.initBottomTabRouteName,
+    //   };
+    // }
 
-    case "COMPLETE_INTRO": {
-      /** イントロを終了した. statusを"AUTHENTICATED"に.
-       * @param {Object} action [type] */
+    // TODO: 使用しない
+    // case "COMPLETE_INTRO": {
+    //   /** イントロを終了した. statusを"AUTHENTICATING"に.
+    //    * @param {Object} action [type] */
 
-      const authenticatingStatus = AUTHENTICATING;
-      asyncStoreItem("status", authenticatingStatus);
+    //   const authenticatingStatus = AUTHENTICATING;
+    //   asyncStoreItem("status", authenticatingStatus);
 
-      return {
-        ...prevState,
-        status: authenticatingStatus,
-      };
-    }
+    //   return {
+    //     ...prevState,
+    //     status: authenticatingStatus,
+    //   };
+    // }
 
     case "SET_TOKEN": {
       /** set token. tokenが設定されていた場合、変更しない
@@ -63,6 +68,93 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
       asyncStoreItem("password", action.password);
       return {
         ...prevState,
+      };
+    }
+
+    case "START_INTRO": {
+      /** start intro.
+       * @param {Object} action [type] */
+
+      const authenticatingStatus = AUTHENTICATING;
+      asyncStoreItem("status", authenticatingStatus);
+      return {
+        ...prevState,
+        status: authenticatingStatus,
+      };
+    }
+
+    case "COMPLETE_ROOM_INTRO": {
+      /** ルーム作成イントロ or ルーム参加イントロ完了時に実行.
+       * @param {Object} action [type, introType] */
+
+      _signupBuffer = { ...prevState.signupBuffer };
+      switch (action.introType) {
+        case "introCreateRoom":
+          _signupBuffer["introCreateRoom"] = {
+            ..._signupBuffer["introCreateRoom"],
+            isComplete: true,
+          };
+          break;
+        case "introParticipateRoom":
+          _signupBuffer["introParticipateRoom"] = {
+            ..._signupBuffer["introParticipateRoom"],
+            isComplete: true,
+          };
+          break;
+      }
+
+      asyncStoreObject("signupBuffer", _signupBuffer);
+      return {
+        ...prevState,
+        signupBuffer: _signupBuffer,
+      };
+    }
+
+    case "SET_ROOM_NAME_INTRO": {
+      /** イントロ時のルーム名をset.
+       * @param {Object} action [type, roomName] */
+
+      _signupBuffer = { ...prevState.signupBuffer };
+      _signupBuffer["introCreateRoom"] = {
+        ..._signupBuffer["introCreateRoom"],
+        roomName: action.roomName,
+      };
+
+      asyncStoreObject("signupBuffer", _signupBuffer);
+      return {
+        ...prevState,
+        signupBuffer: _signupBuffer,
+      };
+    }
+
+    case "SUCCESS_SIGNUP_INTRO": {
+      /** イントロのサインアップ成功時に実行. この時点ではHOMEに遷移しない
+       * @param {Object} action [type] */
+
+      _signupBuffer = { ...prevState.signupBuffer };
+      _signupBuffer["introSignup"] = {
+        ..._signupBuffer["introSignup"],
+        isSignedup: true,
+      };
+
+      asyncStoreObject("signupBuffer", _signupBuffer);
+      return {
+        ...prevState,
+        signupBuffer: _signupBuffer,
+      };
+    }
+
+    case "COMPLETE_INTRO": {
+      /** 全イントロ終了時に実行. initBottomTabRouteNameに指定したbottomタブに遷移.
+       * @param {Object} action [type, initBottomTabRouteName] */
+
+      const authenticatedStatus = AUTHENTICATED;
+      asyncStoreItem("status", authenticatedStatus);
+
+      return {
+        ...prevState,
+        status: authenticatedStatus,
+        initBottomTabRouteName: action.initBottomTabRouteName,
       };
     }
 
@@ -105,11 +197,24 @@ export const AUTHENTICATING: AuthenticatingType = "Authenticating"; // signup処
 export const AUTHENTICATED: AuthenticatedType = "Authenticated"; // signup処理後. Home描画
 export const DELETED: DeletedType = "Deleted"; // アカウント削除されている状態. 「無事削除されました」描画
 
+const initSignupBuffer: SignupBuffer = Object.freeze({
+  introCreateRoom: {
+    isComplete: false,
+    roomName: "",
+  },
+  introParticipateRoom: {
+    isComplete: false,
+  },
+  introSignup: {
+    isSignedup: false,
+  },
+});
 const initAuthState = Object.freeze({
   status: UNAUTHENTICATED,
   token: null,
   isShowSpinner: false,
   initBottomTabRouteName: null, // イントロ完了時にどのタブへ遷移するか
+  signupBuffer: { ...initSignupBuffer },
 });
 const authStateContext = createContext<AuthState>({ ...initAuthState });
 const authDispatchContext = createContext<AuthDispatch>(() => {
@@ -128,13 +233,20 @@ export const useAuthDispatch = (): AuthDispatch => {
 type Props = {
   status: AuthStatusNullable;
   token: TokenNullable;
+  signupBuffer: SignupBufferNullable;
 };
-export const AuthProvider: React.FC<Props> = ({ children, status, token }) => {
+export const AuthProvider: React.FC<Props> = ({
+  children,
+  status,
+  token,
+  signupBuffer,
+}) => {
   const initAuthState: AuthState = {
     status: status ? status : UNAUTHENTICATED,
     token: token ? token : null,
     isShowSpinner: false,
     initBottomTabRouteName: null, // イントロ完了時にどのタブへ遷移するか
+    signupBuffer: signupBuffer ? signupBuffer : initSignupBuffer,
   };
   const [authState, authDispatch] = useReducer(authReducer, {
     ...initAuthState,

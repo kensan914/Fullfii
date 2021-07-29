@@ -16,7 +16,7 @@ export const ExplanationRoomTemplate: React.FC<Props> = (props) => {
   return (
     <Block flex style={styles.container}>
       <AnimatedView {...bodyAnimSettings[0]}>
-        <IntroComment isLocateRight>ルームってなに？？</IntroComment>
+        <IntroComment isLocateRight>ルームってなに ？？</IntroComment>
       </AnimatedView>
 
       <AnimatedView {...bodyAnimSettings[1]}>

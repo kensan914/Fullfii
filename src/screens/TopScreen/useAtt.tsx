@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
@@ -9,28 +9,14 @@ import {
   requestPermissionATT,
 } from "src/utils/appTrackingTransparency";
 
-export const AttManager: React.FC = (props) => {
-  const { children } = props;
+export const useAtt = (): {
+  showAttModal: () => void;
+  renderAttModal: () => ReactNode;
+} => {
   const [isOpenAttModal, setIsOpenAttModal] = useState(false);
-
-  // const [attModule, setAttModule] = useState(); // 未設定: undefined, expo等環境不適合: null, import成功: module本体
   const requested = useRef(false);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     // XCode12じゃない開発者への対処
-  //     if (CAN_APP_TRACKING_TRANSPARENCY && !isExpo) {
-  //       const appTrackingTransparencyModule = await import(
-  //         "src/utils/appTrackingTransparency"
-  //       );
-  //       setAttModule(appTrackingTransparencyModule);
-  //     } else {
-  //       setAttModule(null);
-  //     }
-  //   })();
-  // }, []);
-
-  useEffect(() => {
+  const showAttModal = (): void => {
     if (!requested.current) {
       checkPermissionATT(
         () => {
@@ -42,23 +28,27 @@ export const AttManager: React.FC = (props) => {
         }
       );
     }
-  }, []);
+  };
 
   const onOpenRequestPermissionDialog = () => {
     requestPermissionATT();
     setIsOpenAttModal(false);
   };
 
-  return (
-    <>
-      {children}
+  const renderAttModal = () => {
+    return (
       <AttModal
         isOpenAttModal={isOpenAttModal}
         setIsOpenAttModal={setIsOpenAttModal}
         onPress={onOpenRequestPermissionDialog}
       />
-    </>
-  );
+    );
+  };
+
+  return {
+    showAttModal,
+    renderAttModal,
+  };
 };
 
 type Props = {
@@ -74,6 +64,7 @@ const AttModal: React.FC<Props> = (props) => {
       backdropOpacity={0.3}
       isVisible={isOpenAttModal}
       style={styles.attModal}
+      onModalHide={onPress}
     >
       <Block style={styles.attContainer}>
         <Text size={21} bold color={COLORS.BLACK} style={styles.attTitle}>
@@ -97,16 +88,6 @@ const AttModal: React.FC<Props> = (props) => {
             次の画面で設定する
           </Text>
         </Button>
-        {/* <Button
-          round
-          color="transparent"
-          style={styles.attOffButton}
-          onPress={onPress}
-        >
-          <Text size={16} color="#80ccf0" bold>
-            関連性の低い広告を引き続き表示する
-          </Text>
-        </Button> */}
       </Block>
     </Modal>
   );
@@ -133,7 +114,6 @@ const styles = StyleSheet.create({
   },
   attOnButton: {
     width: "100%",
-    // marginBottom: 10,
   },
   attOffButton: {
     width: "100%",

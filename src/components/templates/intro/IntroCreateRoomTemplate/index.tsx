@@ -19,6 +19,7 @@ type Props = {
   bodyAnimSettings_inputRoomName: BodyAnimSettings_inputRoomName;
   canCreateRoom: boolean;
   createRoomProps: CreateRoomProps;
+  setRoomNameIntro: () => void;
   bodyAnimSettings_createdRoom: BodyAnimSettings_createdRoom;
 };
 export const IntroCreateRoomTemplate: React.FC<Props & IntroTemplateProps> = (
@@ -29,6 +30,7 @@ export const IntroCreateRoomTemplate: React.FC<Props & IntroTemplateProps> = (
     bodyAnimSettings_inputRoomName,
     canCreateRoom,
     createRoomProps,
+    setRoomNameIntro,
     bodyAnimSettings_createdRoom,
     onComplete,
   } = props;
@@ -55,16 +57,18 @@ export const IntroCreateRoomTemplate: React.FC<Props & IntroTemplateProps> = (
           title: "話したい悩みは何ですか？",
           bodyAnimSettings: bodyAnimSettings_inputRoomName,
           canPressBottomButton: canCreateRoom,
+          onPressBottom: setRoomNameIntro,
         },
         {
           body: (
             <CreatedRoomTemplate
+              roomName={createRoomProps.roomName}
               bodyAnimSettings={bodyAnimSettings_createdRoom}
             />
           ),
           title: "ルームが出来ました！",
           bottomButtonLabel: "分かった！",
-          headerLeftAnimationType: "CHECK",
+          headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_createdRoom,
         },
       ]}

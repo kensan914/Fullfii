@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BackHandler, StyleSheet, View } from "react-native";
+import { BackHandler, Image, Platform, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
 
@@ -8,6 +8,11 @@ import { COLORS } from "src/constants/colors";
 import { GoToPage, IntroPageSetting } from "src/types/Types";
 import { showToast } from "src/utils/customModules";
 import { TOAST_SETTINGS } from "src/constants/alertMessages";
+import {
+  AnimatedView,
+  AnimatedViewMethods,
+} from "src/components/templates/intro/organisms/AnimatedView";
+import { CRACKER_IMG } from "src/constants/imagePath";
 
 type Props = {
   currentPage: number;
@@ -54,16 +59,31 @@ export const IntroHeaderLeft: React.FC<Props> = (props) => {
     return true;
   };
 
-  // back禁止代替アニメーション
+  // back禁止代替アニメーション (Androidが🎉などの複雑なlottie fileに対応できないため)
+  // for iOS
   const lottieViewRef = useRef<LottieView>(null);
-  const playPopAnimation = () => {
-    lottieViewRef.current && lottieViewRef.current.reset();
-    lottieViewRef.current && lottieViewRef.current.play();
+  // for Android
+  const animatedViewRef = useRef<AnimatedViewMethods>(null);
+  const playAnimation = () => {
+    if (Platform.OS === "ios") {
+      lottieViewRef.current && lottieViewRef.current.reset();
+      lottieViewRef.current && lottieViewRef.current.play();
+    } else {
+      animatedViewRef.current &&
+        animatedViewRef.current.startInAnimation(() => void 0, {
+          settingByType: {
+            type: "FADE_IN_ZOOM",
+            springConfig: { friction: 3 },
+          },
+          delayStartIntervalMs: 200,
+        });
+    }
   };
+
   const [lottieViewSize] = useState(36);
   useEffect(() => {
     if (currentPageSetting.headerLeftAnimationType) {
-      playPopAnimation();
+      playAnimation();
     }
   }, [currentPageSetting.headerLeftAnimationType]);
 
@@ -83,15 +103,12 @@ export const IntroHeaderLeft: React.FC<Props> = (props) => {
           onPress={onPressBack}
           color={COLORS.LIGHT_BROWN}
           isOpacity={currentPageSetting.headerLeftAnimationType === null}
-          style={[
-            styles.backButton,
-            // currentPageSetting.isForbiddenBack ? { display: "none" } : {}, // TODO: ガタってなる
-          ]}
+          style={[styles.backButton]}
         />
-      ) : (
+      ) : Platform.OS === "ios" ? (
         <LottieView
           ref={lottieViewRef}
-          source={require("src/assets/animations/success.json")}
+          source={require("src/assets/animations/cracker.json")}
           style={{
             position: "absolute",
             height: lottieViewSize,
@@ -103,6 +120,25 @@ export const IntroHeaderLeft: React.FC<Props> = (props) => {
           loop={false}
           autoPlay
         />
+      ) : (
+        <AnimatedView
+          ref={animatedViewRef}
+          style={{
+            position: "absolute",
+            height: lottieViewSize,
+            width: lottieViewSize,
+            top: (height - lottieViewSize) / 2,
+            left: 0,
+          }}
+        >
+          <Image
+            source={CRACKER_IMG}
+            style={{
+              height: lottieViewSize,
+              width: lottieViewSize,
+            }}
+          />
+        </AnimatedView>
       )}
     </View>
   );

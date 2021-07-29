@@ -16,6 +16,8 @@ import {
 type Props = {
   bodyAnimSettings_inputProfile: BodyAnimSettings_inputProfile;
   signupProps: SignupProps;
+  onSubmitSignup: () => Promise<void>;
+  isLoadingSignup: boolean;
   bodyAnimSettings_pushNotificationReminder: BodyAnimSettings_pushNotificationReminder;
 };
 export const IntroSignupTemplate: React.FC<Props & IntroTemplateProps> = (
@@ -24,6 +26,8 @@ export const IntroSignupTemplate: React.FC<Props & IntroTemplateProps> = (
   const {
     bodyAnimSettings_inputProfile,
     signupProps,
+    onSubmitSignup,
+    isLoadingSignup,
     bodyAnimSettings_pushNotificationReminder,
     onComplete,
   } = props;
@@ -42,10 +46,13 @@ export const IntroSignupTemplate: React.FC<Props & IntroTemplateProps> = (
           bodyAnimSettings: bodyAnimSettings_inputProfile,
           canPressBottomButton: signupProps.canSignup,
           bottomButtonLabel: Platform.OS === "ios" ? "通知設定へ" : void 0,
+          onPressBottomAsync: onSubmitSignup,
+          isLoading: isLoadingSignup,
         },
         {
           body: (
             <PushNotificationReminderTemplate
+              username={signupProps.username}
               bodyAnimSettings={bodyAnimSettings_pushNotificationReminder}
             />
           ),
@@ -53,9 +60,9 @@ export const IntroSignupTemplate: React.FC<Props & IntroTemplateProps> = (
             Platform.OS === "ios"
               ? "メッセージが来たらお知らせするよ"
               : "プロフィールの登録が完了しました！",
-          headerLeftAnimationType: "CHECK",
+          headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_pushNotificationReminder,
-          bottomButtonLabel: "HOME画面へ",
+          bottomButtonLabel: "はじめる",
         },
       ]}
       onComplete={onComplete}

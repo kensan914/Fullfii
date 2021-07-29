@@ -12,7 +12,10 @@ export type AsyncStorageKeyString =
   | "versionNum"
   | "skipUpdateVersion";
 export type AsyncStorageKeyBool = "isBanned";
-export type AsyncStorageKeyObject = "profile" | "talkingRoomCollection";
+export type AsyncStorageKeyObject =
+  | "profile"
+  | "talkingRoomCollection"
+  | "signupBuffer";
 export type AsyncStorageKeyObjectIncludeId = "messageHistory";
 export type AsyncStorageKey =
   | AsyncStorageKeyString

@@ -17,6 +17,7 @@ import {
   asyncGetBool,
   asyncGetItem,
   asyncGetObject,
+  asyncRemoveItem,
 } from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
@@ -28,6 +29,8 @@ import {
   MeProfileIoTs,
   TalkingRoomCollectionAsync,
   TalkingRoomCollectionAsyncIoTs,
+  SignupBufferIoTs,
+  SignupBuffer,
 } from "src/types/Types.context";
 import { Assets } from "src/types/Types";
 import { DomProvider } from "src/contexts/DomContext";
@@ -86,6 +89,7 @@ const RootNavigator: React.FC<Props> = (props) => {
   const [talkingRoomCollection, setTalkingRoomCollection] =
     useState<InitState<TalkingRoomCollectionAsync>>();
   const [isBanned, setIsBanned] = useState<InitState<boolean>>();
+  const [signupBuffer, setSignupBuffer] = useState<InitState<SignupBuffer>>();
 
   useEffect(() => {
     (async () => {
@@ -116,6 +120,12 @@ const RootNavigator: React.FC<Props> = (props) => {
       const _isBanned =
         typeof _isBannedNullable === "boolean" ? _isBannedNullable : null;
       setIsBanned(_isBanned !== null ? _isBanned : null);
+
+      const _signupBuffer = (await asyncGetObject(
+        "signupBuffer",
+        SignupBufferIoTs
+      )) as SignupBuffer;
+      setSignupBuffer(_signupBuffer ? _signupBuffer : null);
     })();
   }, []);
 
@@ -125,6 +135,7 @@ const RootNavigator: React.FC<Props> = (props) => {
     typeof profile === "undefined" ||
     typeof talkingRoomCollection === "undefined" ||
     typeof isBanned === "undefined" ||
+    typeof signupBuffer === "undefined" ||
     !props.isFinishLoadingResources
   ) {
     return <></>; // AppLording
@@ -136,7 +147,11 @@ const RootNavigator: React.FC<Props> = (props) => {
     return (
       <SafeAreaProvider>
         <NavigationContainer>
-          <AuthProvider status={status} token={token}>
+          <AuthProvider
+            status={status}
+            token={token}
+            signupBuffer={signupBuffer}
+          >
             <ProfileProvider profile={profile} isBanned={isBanned}>
               <ChatProvider talkingRoomCollection={talkingRoomCollection}>
                 <DomProvider>

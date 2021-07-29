@@ -184,11 +184,11 @@ export const InputProfileTemplate: React.FC<Props> = (props) => {
           </Block>
         </AnimatedView>
 
-        <AnimatedView {...bodyAnimSettings[1]}>
+        {/* <AnimatedView {...bodyAnimSettings[1]}>
           <IntroComment style={{ marginTop: 56 }}>
             後でプロフィールは編集できるよ！
           </IntroComment>
-        </AnimatedView>
+        </AnimatedView> */}
       </>
       {/* </TouchableOpacity> */}
     </Block>

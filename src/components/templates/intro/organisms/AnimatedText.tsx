@@ -2,11 +2,16 @@ import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Text } from "galio-framework";
 
 import { COLORS } from "src/constants/colors";
+import { StyleProp, ViewStyle } from "react-native";
 
 export type AnimatedTextMethods = {
   startAnimation: (
     animationId: string,
-    onCompleteAnimation: () => void
+    onCompleteAnimation: () => void,
+    animationSetting?: {
+      durationMs?: number;
+      delayStartIntervalMs?: number;
+    }
   ) => void;
   skipAnimation: (animationId: string) => void;
   disableAnimation: () => void;
@@ -16,6 +21,7 @@ type Props = {
   color?: string;
   size?: number;
   children: string;
+  style?: StyleProp<ViewStyle>;
   durationMs?: number;
   delayStartIntervalMs?: number;
 };
@@ -26,8 +32,9 @@ export const AnimatedText = React.forwardRef<AnimatedTextMethods, Props>(
       color = COLORS.BLACK,
       size = 16,
       children: text,
+      style,
       durationMs = 60,
-      delayStartIntervalMs = 600,
+      delayStartIntervalMs = 0,
     } = props;
 
     const [displayTextLength, _setDisplayTextLength] = useState(0);
@@ -59,23 +66,37 @@ export const AnimatedText = React.forwardRef<AnimatedTextMethods, Props>(
       () => ({
         startAnimation: (
           animationId: string,
-          onCompleteAnimation: () => void
+          onCompleteAnimation: () => void,
+          animationSetting = {
+            durationMs: durationMs,
+            delayStartIntervalMs: delayStartIntervalMs,
+          }
         ) => {
           clearIntervalAnimation();
           setDisplayTextLength(0);
           setIsDisableAnimation(false);
           onCompleteAnimationCollection.current[animationId] =
             onCompleteAnimation;
-          setTimeout(() => {
-            intervalId.current = setInterval(() => {
-              if (displayTextLengthRef.current >= text.length) {
-                clearIntervalAnimation();
-                exeOnCompleteAnimation(animationId);
-                return;
-              }
-              setDisplayTextLength(displayTextLengthRef.current + 1);
-            }, durationMs);
-          }, delayStartIntervalMs);
+          setTimeout(
+            () => {
+              intervalId.current = setInterval(
+                () => {
+                  if (displayTextLengthRef.current >= text.length) {
+                    clearIntervalAnimation();
+                    exeOnCompleteAnimation(animationId);
+                    return;
+                  }
+                  setDisplayTextLength(displayTextLengthRef.current + 1);
+                },
+                typeof animationSetting.durationMs !== "undefined"
+                  ? animationSetting.durationMs
+                  : durationMs
+              );
+            },
+            typeof animationSetting.delayStartIntervalMs !== "undefined"
+              ? animationSetting.delayStartIntervalMs
+              : delayStartIntervalMs
+          );
         },
         skipAnimation: (animationId: string) => {
           setDisplayTextLength(text.length);
@@ -96,7 +117,7 @@ export const AnimatedText = React.forwardRef<AnimatedTextMethods, Props>(
     }, []);
 
     return (
-      <Text size={size} bold={bold} color={color}>
+      <Text size={size} bold={bold} color={color} style={style}>
         {!isDisableAnimation ? text.slice(0, displayTextLength) : text}
       </Text>
     );
