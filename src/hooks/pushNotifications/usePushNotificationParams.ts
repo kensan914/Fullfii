@@ -37,7 +37,7 @@ export const usePushNotificationParams = (): void => {
     }
   }, [domState.pushNotificationParams.isChanged]);
 
-  // アプリ起動時, 通知許可していた場合に通知設定のみを行う.
+  // アプリ起動時, 既に通知許可していた場合に通知設定のみを行う（deviceTokenの照合）.
   useEffect(() => {
     if (isRequiredConfigPN && domState.pushNotificationParams.isPermission) {
       configPushNotification();

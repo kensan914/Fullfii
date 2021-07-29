@@ -134,7 +134,6 @@ const AppStack: React.FC = () => {
           screenOptions={{
             gestureEnabled: false, // backを可能に。
           }}
-          // initialRouteName="OldSignup" // ~ ver3.3.0
           initialRouteName="IntroTop" // 新イントロ開発用
         >
           <Stack.Screen name="OldSignup" component={OldSignupScreen} />

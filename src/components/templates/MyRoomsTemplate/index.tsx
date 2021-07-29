@@ -37,9 +37,6 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
 
   const maxParticipatingRoomsLength = 1; // 参加ルームの最大数 (ver3.0.0現在)
   const maxCreatedRoomsLength = 1; // 作成ルームの最大数 (ver3.0.0現在)
-  // const isExistTalkingRooms = !(
-  //   createdRooms.length <= 0 && participatingRooms.length <= 0
-  // );
   return (
     <>
       <Block flex center style={styles.container}>
