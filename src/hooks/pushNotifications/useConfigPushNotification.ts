@@ -21,7 +21,12 @@ export const useConfigPushNotification: UseConfigPushNotification = () => {
     isConfiguredPushNotification.current = true;
   });
 
-  const [isRequiredConfigPN, seIsRequiredConfigPN] = useState(false);
+  const [isRequiredConfigPN, _seIsRequiredConfigPN] = useState(false);
+  const isRequiredConfigPNRef = useRef(false);
+  const seIsRequiredConfigPN = (val: boolean): void => {
+    isRequiredConfigPNRef.current = val;
+    _seIsRequiredConfigPN(val);
+  };
   useEffect(() => {
     seIsRequiredConfigPN(
       !!profileState.profile &&
@@ -44,7 +49,7 @@ export const useConfigPushNotification: UseConfigPushNotification = () => {
    * 最終条件: 取得したdeviceTokenがprofile.deviceTokenと不一致 (未だ登録されていない)
    */
   const configPushNotification = () => {
-    if (isRequiredConfigPN) {
+    if (isRequiredConfigPNRef.current) {
       (async () => {
         const deviceToken = await configurePushNotification();
 
