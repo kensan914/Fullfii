@@ -25,10 +25,6 @@ export const StartUpManager: React.FC = (props) => {
   });
   const { connectWsNotification } = useWsNotification();
 
-  // 通知許可
-  usePushNotificationParams();
-  const { configPushNotification } = useConfigPushNotification();
-
   useEffect(() => {
     // ログイン済みでアプリを起動した時、またはsignup成功時に実行
     if (authState.token && authState.status === "Authenticated") {
@@ -36,12 +32,23 @@ export const StartUpManager: React.FC = (props) => {
       requestGetMe();
       requestGetTalkInfo();
       connectWsNotification();
-
-      if (!domState.pushNotificationParams.isChosenPermission) {
-        configPushNotification();
-      }
     }
   }, [authState.token, authState.status]);
+
+  // 通知許可
+  usePushNotificationParams();
+  const { isRequiredConfigPN, configPushNotification } =
+    useConfigPushNotification();
+  useEffect(() => {
+    if (
+      authState.token &&
+      authState.status === "Authenticated" &&
+      !domState.pushNotificationParams.isChosenPermission &&
+      isRequiredConfigPN
+    ) {
+      configPushNotification();
+    }
+  }, [authState.token, authState.status, isRequiredConfigPN]);
 
   return <Block flex>{children}</Block>;
 };
