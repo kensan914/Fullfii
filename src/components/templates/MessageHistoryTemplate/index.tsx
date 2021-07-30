@@ -20,6 +20,7 @@ export const MessageHistoryTemplate: React.FC<Props> = (props) => {
         messages={giftedMessages}
         user={giftedMe}
         scrollToBottom
+        onPressAvatar={() => null}
         renderBubble={GiftedBubble}
         renderSystemMessage={GiftedSystemMessage}
         inverted

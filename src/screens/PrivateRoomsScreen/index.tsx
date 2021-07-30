@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
+import { FlatList } from "react-native";
 import { useScrollToTop } from "@react-navigation/native";
 
 import { useDomDispatch, useDomState } from "src/contexts/DomContext";
@@ -15,12 +16,16 @@ import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
 import { useHideRoom } from "src/screens/RoomsScreen/useHideRoom";
 import { PrivateRoomListEmpty } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomListEmpty";
 
-export const PrivateRoomsScreen: React.FC = () => {
+type Props = {
+  flatListRef: RefObject<FlatList>;
+};
+export const PrivateRoomsScreen: React.FC<Props> = (props) => {
+  const { flatListRef } = props;
+
   const domState = useDomState();
   const domDispatch = useDomDispatch();
 
-  const privateRoomsFlatListRef = useRef(null);
-  useScrollToTop(privateRoomsFlatListRef);
+  useScrollToTop(flatListRef);
 
   const [privateRooms, setPrivateRooms] = useState<Room[]>([]);
 
@@ -81,7 +86,7 @@ export const PrivateRoomsScreen: React.FC = () => {
       resetHiddenRooms={resetHiddenRooms}
       blockRoom={blockRoom}
       checkCanCreateRoom={checkCanCreateRoom}
-      roomsFlatListRef={privateRoomsFlatListRef}
+      roomsFlatListRef={flatListRef}
       ListEmptyComponent={PrivateRoomListEmpty}
     />
   );

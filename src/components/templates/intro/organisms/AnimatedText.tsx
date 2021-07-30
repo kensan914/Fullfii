@@ -1,8 +1,8 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Text } from "galio-framework";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { COLORS } from "src/constants/colors";
-import { StyleProp, ViewStyle } from "react-native";
 
 export type AnimatedTextMethods = {
   startAnimation: (

@@ -10,18 +10,24 @@ import { useUpdateTalk } from "src/screens/StartUpManager/useUpdateTalk";
 import { usePushNotificationParams } from "src/hooks/pushNotifications/usePushNotificationParams";
 import { useConfigPushNotification } from "src/hooks/pushNotifications/useConfigPushNotification";
 import { useDomState } from "src/contexts/DomContext";
+import { useChatDispatch } from "src/contexts/ChatContext";
 
 export const StartUpManager: React.FC = (props) => {
   const { children } = props;
 
   const authState = useAuthState();
   const domState = useDomState();
+  const chatDispatch = useChatDispatch();
 
   const { requestGetMe } = useRequestGetMe();
   const { updateTalk } = useUpdateTalk();
   const { requestGetTalkInfo } = useRequestGetTalkInfo((talkInfoJson) => {
     // 受け取った最新のトーク情報を各stateに適用
     updateTalk(talkInfoJson);
+    chatDispatch({
+      type: "SET_HAS_FAVORITE_USER",
+      hasFavoriteUser: talkInfoJson.hasFavoriteUser,
+    });
   });
   const { connectWsNotification } = useWsNotification();
 

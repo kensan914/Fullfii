@@ -180,6 +180,7 @@ export type ChatState = {
   totalUnreadNum: TotalUnreadNum;
   chatDispatchTask: ChatDispatchTask;
   talkingRoomCollection: { [talkingRoomId: string]: TalkingRoom };
+  hasFavoriteUser: boolean;
 };
 export type ChatDispatch = React.Dispatch<ChatActionType>;
 export type ChatActionType =
@@ -239,6 +240,10 @@ export type ChatActionType =
   | {
       type: "DELETE_FAVORITE_USER";
       userId: string;
+    }
+  | {
+      type: "SET_HAS_FAVORITE_USER";
+      hasFavoriteUser: boolean;
     }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
@@ -481,6 +486,7 @@ export const TalkInfoJsonIoTs = t.type({
   // lengthParticipants: t.record(t.string, t.number),
   createdRooms: t.array(RoomJsonIoTs),
   participatingRooms: t.array(RoomJsonIoTs),
+  hasFavoriteUser: t.boolean,
 });
 //========== Chat io-ts ==========//
 

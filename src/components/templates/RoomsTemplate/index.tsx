@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, RefObject } from "react";
 import { Block, Text } from "galio-framework";
 import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -27,7 +27,7 @@ type Props = {
   resetHiddenRooms: () => void;
   blockRoom: BlockRoom;
   checkCanCreateRoom: () => boolean;
-  roomsFlatListRef: React.MutableRefObject<null>;
+  roomsFlatListRef: RefObject<FlatList>;
   ListEmptyComponent?:
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>
     | React.ComponentType<any>

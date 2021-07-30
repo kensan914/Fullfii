@@ -4,7 +4,7 @@ import { Text } from "galio-framework";
 import { TabBar, TabView } from "react-native-tab-view";
 
 import { COLORS } from "src/constants/colors";
-import { MeProfile } from "src/types/Types.context";
+import { MeProfile, Profile } from "src/types/Types.context";
 import { ProfileBody } from "src/components/templates/ProfileTemplate/organisms/ProfileBody";
 import {
   AnimatedScrollY,
@@ -17,7 +17,8 @@ import {
 } from "src/types/Types";
 
 type Props = {
-  meProfile: MeProfile;
+  profile: Profile | MeProfile;
+  isMe: boolean;
   routes: Routes;
   tabIndex: number;
   animatedScrollY: AnimatedScrollY;
@@ -29,7 +30,8 @@ type Props = {
 };
 export const ProfileTemplate: React.FC<Props> = (props) => {
   const {
-    meProfile,
+    profile,
+    isMe,
     routes,
     tabIndex,
     animatedScrollY,
@@ -43,7 +45,8 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
   const renderHeader: RenderHeader = () => (props) =>
     (
       <ProfileBody
-        meProfile={meProfile}
+        profile={profile}
+        isMe={isMe}
         animatedScrollY={animatedScrollY}
         renderTabBar={() => (
           <TabBar
@@ -85,7 +88,7 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#edeef0",
+    backgroundColor: COLORS.BEIGE,
   },
   tabBar: {
     backgroundColor: COLORS.BEIGE,

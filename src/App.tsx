@@ -17,7 +17,6 @@ import {
   asyncGetBool,
   asyncGetItem,
   asyncGetObject,
-  asyncRemoveItem,
 } from "src/utils/asyncStorage";
 import { ProfileProvider } from "src/contexts/ProfileContext";
 import { ChatProvider } from "src/contexts/ChatContext";
@@ -34,6 +33,7 @@ import {
 } from "src/types/Types.context";
 import { Assets } from "src/types/Types";
 import { DomProvider } from "src/contexts/DomContext";
+import { useNetInfo } from "./hooks/useNetInfo";
 
 LogBox.ignoreAllLogs(true);
 
@@ -68,6 +68,9 @@ const App: React.FC = () => {
       setIsFinishLoadingResources(true);
     });
   }, []);
+
+  // ネットワーク不安定チェック
+  useNetInfo();
 
   return (
     <RootNavigator

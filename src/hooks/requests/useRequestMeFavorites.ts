@@ -1,10 +1,16 @@
+import { AxiosError } from "axios";
+
 import { BASE_URL } from "src/constants/env";
 import { useAuthState } from "src/contexts/AuthContext";
-import { Request } from "src/types/Types";
+import {
+  DeleteFavoriteUserResData,
+  DeleteFavoriteUserResDataIoTs,
+  Request,
+} from "src/types/Types";
 import { URLJoin } from "src/utils";
 import requestAxios, { useAxios } from "src/hooks/useAxios";
-import { AxiosError } from "axios";
-import { TokenNullable } from "src/types/Types.context";
+import { ChatDispatch, TokenNullable } from "src/types/Types.context";
+import { useChatDispatch } from "src/contexts/ChatContext";
 
 type UseRequestPatchMeFavoritesUsers = (
   userId: string | undefined,
@@ -17,6 +23,7 @@ type UseRequestPatchMeFavoritesUsers = (
 export const useRequestPatchMeFavoritesUsers: UseRequestPatchMeFavoritesUsers =
   (userId, additionalThenCallback, additionalCatchCallback) => {
     const authState = useAuthState();
+    const chatDispatch = useChatDispatch();
 
     const {
       request: requestPatchMeFavoritesUsers,
@@ -25,6 +32,10 @@ export const useRequestPatchMeFavoritesUsers: UseRequestPatchMeFavoritesUsers =
       token: authState.token ? authState.token : "",
       data: { user_id: userId },
       thenCallback: () => {
+        chatDispatch({
+          type: "SET_HAS_FAVORITE_USER",
+          hasFavoriteUser: true,
+        });
         additionalThenCallback && additionalThenCallback();
       },
       catchCallback: (err) => {
@@ -46,6 +57,7 @@ type UseRequestDeleteMeFavoritesUsers = (
 export const useRequestDeleteMeFavoritesUsers: UseRequestDeleteMeFavoritesUsers =
   (userId, additionalThenCallback, additionalCatchCallback) => {
     const authState = useAuthState();
+    const chatDispatch = useChatDispatch();
 
     const {
       request: requestDeleteMeFavoritesUsers,
@@ -53,10 +65,15 @@ export const useRequestDeleteMeFavoritesUsers: UseRequestDeleteMeFavoritesUsers 
     } = useAxios(
       URLJoin(BASE_URL, "me/favorites/users/", userId),
       "delete",
-      null,
+      DeleteFavoriteUserResDataIoTs,
       {
         token: authState.token ? authState.token : "",
-        thenCallback: () => {
+        thenCallback: (_resData) => {
+          const resData = _resData as DeleteFavoriteUserResData;
+          chatDispatch({
+            type: "SET_HAS_FAVORITE_USER",
+            hasFavoriteUser: resData.hasFavoriteUser,
+          });
           additionalThenCallback && additionalThenCallback();
         },
         catchCallback: (err) => {
@@ -71,6 +88,7 @@ export const useRequestDeleteMeFavoritesUsers: UseRequestDeleteMeFavoritesUsers 
 export const requestDeleteMeFavoritesUsers = (
   userId: string | undefined,
   token: TokenNullable,
+  chatDispatch: ChatDispatch,
   additionalThenCallback?: () => void,
   additionalCatchCallback?: (err: AxiosError) => void
 ): void => {
@@ -80,7 +98,12 @@ export const requestDeleteMeFavoritesUsers = (
     null,
     {
       token: token ? token : "",
-      thenCallback: () => {
+      thenCallback: (_resData) => {
+        const resData = _resData as DeleteFavoriteUserResData;
+        chatDispatch({
+          type: "SET_HAS_FAVORITE_USER",
+          hasFavoriteUser: resData.hasFavoriteUser,
+        });
         additionalThenCallback && additionalThenCallback();
       },
       catchCallback: (err) => {

@@ -29,6 +29,9 @@ export type Assets = { [key: string]: Asset };
 export type RootStackParamList = {
   Home: undefined;
   WorrySelect: undefined;
+  Profile: {
+    profile?: Profile;
+  };
   ProfileEditor: undefined;
   ProfileInput: {
     screen: ProfileInputScreen;
@@ -55,6 +58,7 @@ export type MessageHistoryRouteProp = RouteProp<
   RootStackParamList,
   "MessageHistory"
 >;
+export type ProfileRouteProp = RouteProp<RootStackParamList, "Profile">;
 export type ProfileInputRouteProp = RouteProp<
   RootStackParamList,
   "ProfileInput"
@@ -87,6 +91,7 @@ export type RouteName =
       | "Rooms"
       | "MyRooms"
       | "Profile"
+      | "MeProfile"
       | "ProfileEditor"
       | "Chat"
       | "MessageHistory"
@@ -442,6 +447,12 @@ export type GetFavoriteUsersResData = t.TypeOf<
 export const GetFavoriteUsersResDataIoTs = t.type({
   favoriteUsers: t.array(ProfileIoTs),
   hasMore: t.boolean,
+});
+export type DeleteFavoriteUserResData = t.TypeOf<
+  typeof DeleteFavoriteUserResDataIoTs
+>;
+export const DeleteFavoriteUserResDataIoTs = t.type({
+  hasFavoriteUser: t.boolean,
 });
 //--------- axios res.data ---------//
 

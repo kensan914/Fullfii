@@ -40,7 +40,7 @@ export const Header: React.FC<Props> = (props) => {
     if (routeName === "Chat" && roomId)
       return <ChatHeaderMenu key="Chat" roomId={roomId} />;
     switch (name) {
-      case "Profile":
+      case "MeProfile":
       case "Rooms":
       case "MyRooms":
         return <SettingsHeaderMenu key="Settings" />;
@@ -83,6 +83,7 @@ export const Header: React.FC<Props> = (props) => {
         return "ホーム";
       case "MyRooms":
         return "相談中のルーム";
+      case "MeProfile":
       case "Profile":
         return "プロフィール";
       case "ProfileEditor":

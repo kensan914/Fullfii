@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import { useScrollToTop } from "@react-navigation/native";
 
 import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
@@ -10,15 +10,18 @@ import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";
 import { GetRoomsResData, GetRoomsResDataIoTs } from "src/types/Types";
 import { BASE_URL } from "src/constants/env";
+import { FlatList } from "react-native";
 
-export const RoomsScreen: React.FC = () => {
+type Props = {
+  flatListRef: RefObject<FlatList>;
+};
+export const RoomsScreen: React.FC<Props> = (props) => {
+  const { flatListRef } = props;
+
   const domState = useDomState();
   const domDispatch = useDomDispatch();
 
-  // アクティブなホームタブをプレスした時, topにスクロール
-  // https://reactnavigation.org/docs/use-scroll-to-top
-  const roomsFlatListRef = useRef(null);
-  useScrollToTop(roomsFlatListRef);
+  useScrollToTop(flatListRef);
 
   const [rooms, setRooms] = useState<Room[]>([]);
 
@@ -79,7 +82,7 @@ export const RoomsScreen: React.FC = () => {
       resetHiddenRooms={resetHiddenRooms}
       blockRoom={blockRoom}
       checkCanCreateRoom={checkCanCreateRoom}
-      roomsFlatListRef={roomsFlatListRef}
+      roomsFlatListRef={flatListRef}
     />
   );
 };

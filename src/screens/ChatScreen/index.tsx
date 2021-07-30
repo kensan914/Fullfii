@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { ChatTemplate } from "src/components/templates/ChatTemplate";
 import { useChatState } from "src/contexts/ChatContext";
@@ -9,6 +9,7 @@ import { Profile } from "src/types/Types.context";
 export const ChatScreen: React.FC = () => {
   const route = useRoute<ChatRouteProp>();
   const chatState = useChatState();
+  const navigation = useNavigation();
 
   const roomId = route.params.roomId;
   const talkingRoom = chatState.talkingRoomCollection[roomId];
@@ -29,42 +30,28 @@ export const ChatScreen: React.FC = () => {
   };
 
   // idをkeyとしたルームメンバー(オーナー&参加者)のコレクションstate
-  const [
-    roomMemberCollection,
-    setRoomMemberCollection,
-  ] = useState<RoomMemberCollection>(geneRoomMemberCollection());
+  const [roomMemberCollection, setRoomMemberCollection] =
+    useState<RoomMemberCollection>(geneRoomMemberCollection());
   useEffect(() => {
     setRoomMemberCollection(geneRoomMemberCollection());
   }, [chatState.talkingRoomCollection]);
 
-  // profile modal
-  const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
-  const [
-    userWillShowProfileModal,
-    setUserWillShowProfileModal,
-  ] = useState<Profile>();
-  const openProfileModal = (userId: string) => {
-    roomMemberCollection &&
-      setUserWillShowProfileModal(roomMemberCollection[userId]);
-    setIsOpenProfileModal(true);
+  // profile
+  const navigateProfile = (_profile: Profile) => {
+    navigation.navigate("Profile", { profile: _profile });
   };
 
-  const [
-    isOpenNotificationReminderModal,
-    setIsOpenNotificationReminderModal,
-  ] = useState<boolean>(false);
+  const [isOpenNotificationReminderModal, setIsOpenNotificationReminderModal] =
+    useState<boolean>(false);
 
   if (talkingRoom) {
     return (
       <ChatTemplate
         talkingRoom={talkingRoom}
         roomMemberCollection={roomMemberCollection}
-        isOpenProfileModal={isOpenProfileModal}
-        userWillShowProfileModal={userWillShowProfileModal}
-        setIsOpenProfileModal={setIsOpenProfileModal}
-        openProfileModal={openProfileModal}
         isOpenNotificationReminderModal={isOpenNotificationReminderModal}
         setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
+        navigateProfile={navigateProfile}
       />
     );
   } else {

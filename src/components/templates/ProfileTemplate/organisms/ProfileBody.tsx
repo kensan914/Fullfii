@@ -7,15 +7,17 @@ import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
 import { formatGender } from "src/utils";
 import { width } from "src/constants";
-import { MeProfile } from "src/types/Types.context";
+import { MeProfile, Profile } from "src/types/Types.context";
 import {
   AnimatedScrollY,
   PROFILE_VIEW_HEIGHT_TYPE,
   RenderTabBar,
 } from "src/types/Types";
+import { Icon } from "src/components/atoms/Icon";
 
 type Props = {
-  meProfile: MeProfile;
+  profile: Profile | MeProfile;
+  isMe: boolean;
   animatedScrollY: AnimatedScrollY;
   renderTabBar: RenderTabBar;
   PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
@@ -23,9 +25,10 @@ type Props = {
 };
 export const ProfileBody: React.FC<Props> = (props) => {
   const {
+    profile,
+    isMe,
     animatedScrollY,
     renderTabBar,
-    meProfile,
     PROFILE_VIEW_HEIGHT,
     PROFILE_BODY_HEIGHT,
   } = props;
@@ -87,20 +90,29 @@ export const ProfileBody: React.FC<Props> = (props) => {
                   ],
                 }}
               >
-                <Avatar size={84} imageUri={meProfile.image} />
+                <Avatar size={84} imageUri={profile.image} />
               </Animated.View>
               <Block row flex style={styles.postContents}>
                 <Block column center style={styles.postSpoke}>
                   {/* 他者のマイページ且つ公開しない状態の場合はアイコン表示 */}
-                  {/* <IconExtra name="lock" family="Feather" size={20} color={COLORS.GRAY}/> */}
-                  <Text
-                    bold
-                    color={COLORS.BLACK}
-                    size={16}
-                    style={styles.textHeight}
-                  >
-                    {meProfile.numOfOwner}
-                  </Text>
+                  {!isMe && profile.isPrivateProfile ? (
+                    <Icon
+                      name="lock"
+                      family="Feather"
+                      size={20}
+                      color={COLORS.GRAY}
+                    />
+                  ) : (
+                    <Text
+                      bold
+                      color={COLORS.BLACK}
+                      size={16}
+                      style={styles.textHeight}
+                    >
+                      {profile.numOfOwner}
+                    </Text>
+                  )}
+
                   <Text
                     size={14}
                     color={COLORS.BLACK}
@@ -110,15 +122,23 @@ export const ProfileBody: React.FC<Props> = (props) => {
                   </Text>
                 </Block>
                 <Block column center style={styles.postListened}>
-                  {/* <IconExtra name="lock" family="Feather" size={20} color={COLORS.GRAY}/> */}
-                  <Text
-                    bold
-                    size={16}
-                    color={COLORS.BLACK}
-                    style={styles.textHeight}
-                  >
-                    {meProfile.numOfParticipated}
-                  </Text>
+                  {!isMe && profile.isPrivateProfile ? (
+                    <Icon
+                      name="lock"
+                      family="Feather"
+                      size={20}
+                      color={COLORS.GRAY}
+                    />
+                  ) : (
+                    <Text
+                      bold
+                      size={16}
+                      color={COLORS.BLACK}
+                      style={styles.textHeight}
+                    >
+                      {profile.numOfParticipated}
+                    </Text>
+                  )}
                   <Text
                     size={14}
                     color={COLORS.BLACK}
@@ -136,32 +156,34 @@ export const ProfileBody: React.FC<Props> = (props) => {
                 color={COLORS.BLACK}
                 style={styles.textHeight}
               >
-                {meProfile.name}
+                {profile.name}
               </Text>
               <Text size={14} color={COLORS.BLACK} style={styles.textHeight}>
                 性別：
-                {formatGender(meProfile.gender, meProfile.isSecretGender).label}
+                {formatGender(profile.gender, profile.isSecretGender).label}
                 {"   |   "}
-                職業：{meProfile.job.label}
+                職業：{profile.job.label}
               </Text>
             </Block>
-            <Button
-              shadowless={true}
-              color="transparent"
-              opacity={0.6}
-              style={styles.editProfileButton}
-              onPress={() => {
-                onTransitionProfileEditor();
-              }}
-            >
-              <Text size={14} bold color={COLORS.BROWN}>
-                プロフィールを編集
-              </Text>
-            </Button>
+            {isMe && (
+              <Button
+                shadowless={true}
+                color="transparent"
+                opacity={0.6}
+                style={styles.editProfileButton}
+                onPress={() => {
+                  onTransitionProfileEditor();
+                }}
+              >
+                <Text size={14} bold color={COLORS.BROWN}>
+                  プロフィールを編集
+                </Text>
+              </Button>
+            )}
           </Block>
         </View>
       </Animated.View>
-      {renderTabBar()}
+      {isMe && renderTabBar()}
     </Animated.View>
   );
 };

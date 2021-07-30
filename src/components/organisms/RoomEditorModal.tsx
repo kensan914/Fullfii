@@ -34,6 +34,7 @@ import { showToast } from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { formatGender, generateUuid4 } from "src/utils";
+import { useChatState } from "src/contexts/ChatContext";
 
 type PropsDependsOnMode =
   | {
@@ -62,6 +63,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
 
   const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
   const profileState = useProfileState();
+  const chatState = useChatState();
   const navigation = useNavigation();
 
   const formattedGender = formatGender(
@@ -418,7 +420,13 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                     : { borderColor: "#f4f8f7" },
                 ]}
                 onPress={() => {
-                  setIsPrivate(true);
+                  if (!chatState.hasFavoriteUser) {
+                    Alert.alert(
+                      ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
+                    );
+                  } else {
+                    setIsPrivate(true);
+                  }
                 }}
               >
                 <ImageBackground
