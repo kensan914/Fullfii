@@ -1,7 +1,7 @@
 import React from "react";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
-import { FormattedGenderKey, RouteName } from "./Types";
+import { RouteName } from "./Types";
 
 //========== Auth ==========//
 export type AuthState = {
@@ -9,6 +9,7 @@ export type AuthState = {
   token: TokenNullable;
   isShowSpinner: boolean;
   initBottomTabRouteName: null | RouteName;
+  signupBuffer: SignupBuffer;
 };
 export type AuthDispatch = React.Dispatch<AuthActionType>;
 export type UnauthenticatedType = t.TypeOf<typeof UnauthenticatedTypeIoTs>;
@@ -18,12 +19,28 @@ export type DeletedType = t.TypeOf<typeof DeletedTypeIoTs>;
 export type AuthStatus = t.TypeOf<typeof AuthStatusIoTs>;
 export type AuthStatusNullable = AuthStatus | null;
 export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
+export type SignupBufferNullable = SignupBuffer | null;
 export type TokenNullable = string | null;
 export type AuthActionType =
-  | { type: "COMPLETE_SIGNUP"; initBottomTabRouteName: RouteName }
-  | { type: "COMPLETE_INTRO" }
+  // TODO: 使用しない
+  // | { type: "COMPLETE_SIGNUP"; initBottomTabRouteName: RouteName }
+  // TODO: 使用しない
+  // | { type: "COMPLETE_INTRO" }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_PASSWORD"; password: string }
+  | {
+      type: "START_INTRO";
+    }
+  | {
+      type: "COMPLETE_ROOM_INTRO";
+      introType: "introCreateRoom" | "introParticipateRoom";
+    }
+  | {
+      type: "SET_ROOM_NAME_INTRO";
+      roomName: string;
+    }
+  | { type: "SUCCESS_SIGNUP_INTRO" }
+  | { type: "COMPLETE_INTRO"; initBottomTabRouteName: RouteName }
   | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
   | { type: "DELETE_ACCOUNT" }
   | { type: "DANGEROUSLY_RESET" };
@@ -40,6 +57,18 @@ export const AuthStatusIoTs = t.union([
   AuthenticatedTypeIoTs,
   DeletedTypeIoTs,
 ]);
+export const SignupBufferIoTs = t.type({
+  introCreateRoom: t.type({
+    isComplete: t.boolean,
+    roomName: t.string,
+  }),
+  introParticipateRoom: t.type({
+    isComplete: t.boolean,
+  }),
+  introSignup: t.type({
+    isSignedup: t.boolean,
+  }),
+});
 //========== Auth io-ts ==========//
 
 //========== Profile ==========//
@@ -151,6 +180,7 @@ export type ChatState = {
   totalUnreadNum: TotalUnreadNum;
   chatDispatchTask: ChatDispatchTask;
   talkingRoomCollection: { [talkingRoomId: string]: TalkingRoom };
+  hasFavoriteUser: boolean;
 };
 export type ChatDispatch = React.Dispatch<ChatActionType>;
 export type ChatActionType =
@@ -210,6 +240,10 @@ export type ChatActionType =
   | {
       type: "DELETE_FAVORITE_USER";
       userId: string;
+    }
+  | {
+      type: "SET_HAS_FAVORITE_USER";
+      hasFavoriteUser: boolean;
     }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
@@ -452,6 +486,7 @@ export const TalkInfoJsonIoTs = t.type({
   // lengthParticipants: t.record(t.string, t.number),
   createdRooms: t.array(RoomJsonIoTs),
   participatingRooms: t.array(RoomJsonIoTs),
+  hasFavoriteUser: t.boolean,
 });
 //========== Chat io-ts ==========//
 
@@ -493,10 +528,6 @@ export type Dispatches = {
 //========== ContextsUtils ==========//
 
 //========== 呼び出し順 ==========//
-export const SignupBufferIoTs = t.type({
-  didProgressNum: t.number,
-  worries: GenreOfWorriesIoTs,
-});
 export const WorriesResJsonIoTs = t.type({
   addedTalkTickets: t.array(TalkTicketJsonIoTs),
   removedTalkTicketKeys: t.array(TalkTicketKeyIoTs),

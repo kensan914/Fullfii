@@ -174,7 +174,7 @@ export const ProgressBar: React.FC<Props> = (props) => {
           >
             <LottieView
               ref={lottieViewRef}
-              source={require("src/assets/animations/pop2.json")}
+              source={require("src/assets/animations/pop.json")}
               style={{
                 height: lottieViewSize,
                 width: lottieViewSize,

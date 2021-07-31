@@ -11,6 +11,7 @@ import { useTurnOnRead } from "src/screens/ChatScreen/useTurnOnRead";
 import {
   AllMessages,
   OfflineMessage,
+  Profile,
   WsNullable,
 } from "src/types/Types.context";
 import {
@@ -36,9 +37,10 @@ type Props = {
   offlineMessages: OfflineMessage[];
   ws: WsNullable;
   isEnd: boolean;
-  openProfileModal: (userId: string) => void;
   setIsOpenNotificationReminderModal: Dispatch<boolean>;
   isStart: boolean;
+  navigateProfile: (userProfile: Profile) => void;
+  // openProfileModal: (userId: string) => void;
 };
 export const ChatBody: React.FC<Props> = (props) => {
   const {
@@ -48,9 +50,10 @@ export const ChatBody: React.FC<Props> = (props) => {
     offlineMessages,
     ws,
     isEnd,
-    openProfileModal,
     setIsOpenNotificationReminderModal,
     isStart,
+    navigateProfile,
+    // openProfileModal,
   } = props;
 
   const authState = useAuthState();
@@ -152,7 +155,10 @@ export const ChatBody: React.FC<Props> = (props) => {
         user={giftedMe}
         scrollToBottom
         onPressAvatar={(user) => {
-          openProfileModal(user._id.toString());
+          // openProfileModal(user._id.toString());
+          if (user._id in roomMemberCollection) {
+            navigateProfile(roomMemberCollection[user._id]);
+          }
         }}
         keyboardShouldPersistTaps="never"
         renderBubble={GiftedBubble}

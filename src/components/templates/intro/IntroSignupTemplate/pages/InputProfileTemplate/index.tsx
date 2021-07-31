@@ -184,11 +184,11 @@ export const InputProfileTemplate: React.FC<Props> = (props) => {
           </Block>
         </AnimatedView>
 
-        <AnimatedView {...bodyAnimSettings[1]}>
+        {/* <AnimatedView {...bodyAnimSettings[1]}>
           <IntroComment style={{ marginTop: 56 }}>
             後でプロフィールは編集できるよ！
           </IntroComment>
-        </AnimatedView>
+        </AnimatedView> */}
       </>
       {/* </TouchableOpacity> */}
     </Block>
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderWidth: 2,
     paddingHorizontal: 8,
-    // paddingTop: 9,
+    paddingTop: 9,
   },
   genderContainer: {
     marginTop: 32,

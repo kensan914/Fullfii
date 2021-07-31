@@ -9,9 +9,11 @@ import {
   BodyAnimSettings_inputRoomName,
 } from "src/types/Types";
 import { CreateRoomProps } from "src/components/templates/intro/IntroCreateRoomTemplate/pages/InputRoomNameTemplate";
+import { useAuthDispatch } from "src/contexts/AuthContext";
 
 export const IntroCreateRoomScreen: React.FC = () => {
   const navigation = useNavigation();
+  const authDispatch = useAuthDispatch();
 
   const onComplete = () => {
     navigation.navigate("IntroTop");
@@ -31,6 +33,10 @@ export const IntroCreateRoomScreen: React.FC = () => {
     maxRoomNameLength: maxRoomNameLength,
     isFocusInputRoomName: isFocusInputRoomName,
     setIsFocusInputRoomName: setIsFocusInputRoomName,
+  };
+  const setRoomNameIntro = () => {
+    authDispatch({ type: "SET_ROOM_NAME_INTRO", roomName: roomName });
+    authDispatch({ type: "COMPLETE_ROOM_INTRO", introType: "introCreateRoom" });
   };
 
   const animatedViewRef_explanationRoom1 = useRef<AnimatedViewMethods>(null);
@@ -80,6 +86,7 @@ export const IntroCreateRoomScreen: React.FC = () => {
       bodyAnimSettings_inputRoomName={bodyAnimSettings_inputRoomName}
       canCreateRoom={canCreateRoom}
       createRoomProps={createRoomProps}
+      setRoomNameIntro={setRoomNameIntro}
       bodyAnimSettings_createdRoom={bodyAnimSettings_createdRoom}
       onComplete={onComplete}
     />

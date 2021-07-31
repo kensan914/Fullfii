@@ -7,8 +7,8 @@ import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { TalkingRoomCard } from "src/components/templates/MyRoomsTemplate/organisms/TalkingRoomCard";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
-import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
-import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
+// import { RoomCreatedModal } from "src/components/templates/RoomsTemplate/organisms/RoomCreatedModal";
+// import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
 import { Icon } from "src/components/atoms/Icon";
 
 type Props = {
@@ -16,10 +16,10 @@ type Props = {
   createdRooms: TalkingRoom[];
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
-  isOpenRoomCreatedModal: boolean;
-  setIsOpenRoomCreatedModal: Dispatch<boolean>;
-  isOpenNotificationReminderModal: boolean;
-  setIsOpenNotificationReminderModal: Dispatch<boolean>;
+  // isOpenRoomCreatedModal: boolean;
+  // setIsOpenRoomCreatedModal: Dispatch<boolean>;
+  // isOpenNotificationReminderModal: boolean;
+  // setIsOpenNotificationReminderModal: Dispatch<boolean>;
   checkCanCreateRoom: () => boolean;
 };
 export const MyRoomsTemplate: React.FC<Props> = (props) => {
@@ -28,18 +28,15 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
     createdRooms,
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
-    isOpenRoomCreatedModal,
-    setIsOpenRoomCreatedModal,
-    isOpenNotificationReminderModal,
-    setIsOpenNotificationReminderModal,
+    // isOpenRoomCreatedModal,
+    // setIsOpenRoomCreatedModal,
+    // isOpenNotificationReminderModal,
+    // setIsOpenNotificationReminderModal,
     checkCanCreateRoom,
   } = props;
 
   const maxParticipatingRoomsLength = 1; // 参加ルームの最大数 (ver3.0.0現在)
   const maxCreatedRoomsLength = 1; // 作成ルームの最大数 (ver3.0.0現在)
-  // const isExistTalkingRooms = !(
-  //   createdRooms.length <= 0 && participatingRooms.length <= 0
-  // );
   return (
     <>
       <Block flex center style={styles.container}>
@@ -150,10 +147,10 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
         propsDependsOnMode={{
           mode: "CREATE_FROM_MY_ROOMS",
-          setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
+          // setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
         }}
       />
-      <RoomCreatedModal
+      {/* <RoomCreatedModal
         isOpenRoomCreatedModal={isOpenRoomCreatedModal}
         setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
         setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
@@ -161,7 +158,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
       <NotificationReminderModal
         isOpenNotificationReminderModal={isOpenNotificationReminderModal}
         setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
-      />
+      /> */}
     </>
   );
 };

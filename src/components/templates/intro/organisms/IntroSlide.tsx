@@ -8,7 +8,12 @@ import {
 import { Block } from "galio-framework";
 
 import { useIntroSlide } from "src/components/templates/intro/organisms/useIntroSlide";
-import { height, width } from "src/constants";
+import {
+  BOTTOM_SPACE_HEIGHT,
+  height,
+  STATUS_BAR_HEIGHT,
+  width,
+} from "src/constants";
 import { COLORS } from "src/constants/colors";
 import { ProgressBar } from "src/components/templates/intro/organisms/ProgressBar";
 import { IntroPageSettings } from "src/types/Types";
@@ -64,7 +69,6 @@ export const IntroSlide: React.FC<Props> = (props) => {
           <ProgressBar
             step={currentPage}
             steps={pageLength}
-            // isShowPopAnimation
             height={18}
             style={{
               flex: 1,
@@ -73,9 +77,11 @@ export const IntroSlide: React.FC<Props> = (props) => {
         </Block>
         <AnimatedText
           ref={headerTitleRef}
-          size={width * 0.04}
+          size={width * 0.045}
           bold
           color={COLORS.BLACK}
+          durationMs={60}
+          delayStartIntervalMs={600}
         >
           {currentPageSetting.title}
         </AnimatedText>
@@ -130,6 +136,7 @@ export const IntroSlide: React.FC<Props> = (props) => {
                 <Block key={index} style={styles.footer}>
                   <IntroBottomButton
                     page={_page}
+                    currentPage={currentPage}
                     pageLength={pageLength}
                     pageSetting={pageSetting}
                     isReadyFooter={isReadyFooterCollection[_page - 1]}
@@ -148,7 +155,8 @@ export const IntroSlide: React.FC<Props> = (props) => {
 
 const HEADER_HEIGHT = 104;
 const FOOTER_HEIGHT = 120;
-export const INTRO_BODY_HEIGHT = height - (HEADER_HEIGHT + FOOTER_HEIGHT);
+export const INTRO_BODY_HEIGHT =
+  height - (HEADER_HEIGHT + STATUS_BAR_HEIGHT + FOOTER_HEIGHT);
 const PROGRESS_BAR_CONTAINER = 56;
 const styles = StyleSheet.create({
   container: {

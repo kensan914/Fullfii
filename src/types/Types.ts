@@ -29,6 +29,9 @@ export type Assets = { [key: string]: Asset };
 export type RootStackParamList = {
   Home: undefined;
   WorrySelect: undefined;
+  Profile: {
+    profile?: Profile;
+  };
   ProfileEditor: undefined;
   ProfileInput: {
     screen: ProfileInputScreen;
@@ -55,6 +58,7 @@ export type MessageHistoryRouteProp = RouteProp<
   RootStackParamList,
   "MessageHistory"
 >;
+export type ProfileRouteProp = RouteProp<RootStackParamList, "Profile">;
 export type ProfileInputRouteProp = RouteProp<
   RootStackParamList,
   "ProfileInput"
@@ -87,6 +91,7 @@ export type RouteName =
       | "Rooms"
       | "MyRooms"
       | "Profile"
+      | "MeProfile"
       | "ProfileEditor"
       | "Chat"
       | "MessageHistory"
@@ -274,8 +279,9 @@ export type IntroPageSetting = {
   body: ReactNode;
   title: string;
   bodyAnimSettings: BodyAnimSettings;
-  headerLeftAnimationType?: "CHECK" | null;
-  onPressBottom?: () => void;
+  headerLeftAnimationType?: "CRACKER" | null;
+  onPressBottom?: () => void; // 実行後, 次ページへ遷移
+  onPressBottomAsync?: () => Promise<void>; // 次ページへの遷移を遅延する
   bottomButtonLabel?: string;
   canPressBottomButton?: boolean;
   isLoading?: boolean;
@@ -292,9 +298,26 @@ export type InAnimatedViewSettingByType =
   | {
       type: "FADE_IN_UP";
       initTransLateBottom: number;
+    }
+  | {
+      type: "FADE_IN_ZOOM";
+      springConfig?: {
+        overshootClamping?: boolean;
+        restDisplacementThreshold?: number;
+        restSpeedThreshold?: number;
+        velocity?: number | { x: number; y: number };
+        bounciness?: number;
+        speed?: number;
+        tension?: number;
+        friction?: number;
+        stiffness?: number;
+        mass?: number;
+        damping?: number;
+        delay?: number;
+      };
     };
 export type InAnimatedViewSetting = {
-  settingByType: InAnimatedViewSettingByType;
+  settingByType?: InAnimatedViewSettingByType;
   duration?: number;
   delayStartIntervalMs?: number;
 };
@@ -303,7 +326,7 @@ export type OutAnimatedViewSettingByType = {
   type: "FADE_OUT";
 };
 export type OutAnimatedViewSetting = {
-  settingByType: OutAnimatedViewSettingByType;
+  settingByType?: OutAnimatedViewSettingByType;
   duration?: number;
   delayStartIntervalMs?: number;
 };
@@ -326,7 +349,7 @@ export type BodyAnimSettings_createdRoom = FixedBodyAnimSettings<3>;
 export type BodyAnimSettings_explanationRoomParticipate =
   FixedBodyAnimSettings<3>;
 // introSignup
-export type BodyAnimSettings_inputProfile = FixedBodyAnimSettings<2>;
+export type BodyAnimSettings_inputProfile = FixedBodyAnimSettings<1>;
 export type BodyAnimSettings_pushNotificationReminder = BodyAnimSettings; // platformごとに異なるため
 
 //--------- IntroSlide.tsx -----------//
@@ -355,6 +378,7 @@ export type AxiosReActionType = {
   url?: string;
   data?: unknown;
   thenCallback?: (resData: unknown, res: AxiosResponse) => void;
+  token?: string;
 };
 export type Request = (reAction?: AxiosReActionType | null) => void;
 export type UseAxiosReturn = {
@@ -423,6 +447,12 @@ export type GetFavoriteUsersResData = t.TypeOf<
 export const GetFavoriteUsersResDataIoTs = t.type({
   favoriteUsers: t.array(ProfileIoTs),
   hasMore: t.boolean,
+});
+export type DeleteFavoriteUserResData = t.TypeOf<
+  typeof DeleteFavoriteUserResDataIoTs
+>;
+export const DeleteFavoriteUserResDataIoTs = t.type({
+  hasFavoriteUser: t.boolean,
 });
 //--------- axios res.data ---------//
 

@@ -1,16 +1,25 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { IntroParticipateRoomTemplate } from "src/components/templates/intro/IntroParticipateRoomTemplate";
 import { AnimatedViewMethods } from "src/components/templates/intro/organisms/AnimatedView";
 import { BodyAnimSettings_explanationRoomParticipate } from "src/types/Types";
+import { useAuthDispatch } from "src/contexts/AuthContext";
 
 export const IntroParticipateRoomScreen: React.FC = () => {
   const navigation = useNavigation();
+  const authDispatch = useAuthDispatch();
 
   const onComplete = () => {
     navigation.navigate("IntroTop");
   };
+
+  useEffect(() => {
+    authDispatch({
+      type: "COMPLETE_ROOM_INTRO",
+      introType: "introParticipateRoom",
+    });
+  }, []);
 
   const animatedViewRef_explanationRoomParticipate1 =
     useRef<AnimatedViewMethods>(null);

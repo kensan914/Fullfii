@@ -26,7 +26,7 @@ export const IntroParticipateRoomTemplate: React.FC<
           ),
           title: "悩みを聞くにはルームに入室しよう",
           bottomButtonLabel: "分かった！",
-          headerLeftAnimationType: "CHECK",
+          headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_explanationRoomParticipate,
         },
       ]}

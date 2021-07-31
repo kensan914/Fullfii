@@ -6,38 +6,24 @@ import { Profile, TalkingRoom } from "src/types/Types.context";
 import { ChatBody } from "src/components/templates/ChatTemplate/organisms/ChatBody";
 import { COLORS } from "src/constants/colors";
 import { RoomMemberCollection } from "src/types/Types";
-import { ProfileModal } from "src/components/molecules/ProfileModal";
 import { NotificationReminderModal } from "src/components/organisms/NotificationReminderModal";
-import { formatGender } from "src/utils";
 
 type Props = {
   talkingRoom: TalkingRoom;
   roomMemberCollection: RoomMemberCollection;
-  isOpenProfileModal: boolean;
-  userWillShowProfileModal: Profile | undefined;
-  setIsOpenProfileModal: Dispatch<boolean>;
-  openProfileModal: (userId: string) => void;
   isOpenNotificationReminderModal: boolean;
   setIsOpenNotificationReminderModal: Dispatch<boolean>;
+  navigateProfile: (userProfile: Profile) => void;
 };
 export const ChatTemplate: React.FC<Props> = (props) => {
   const {
     talkingRoom,
     roomMemberCollection,
-    userWillShowProfileModal,
-    isOpenProfileModal,
-    setIsOpenProfileModal,
-    openProfileModal,
     isOpenNotificationReminderModal,
     setIsOpenNotificationReminderModal,
+    navigateProfile,
   } = props;
 
-  const formattedGender =
-    userWillShowProfileModal &&
-    formatGender(
-      userWillShowProfileModal?.gender,
-      userWillShowProfileModal?.isSecretGender
-    );
   return (
     <Block flex space="between" style={styles.container}>
       <ChatBody
@@ -47,23 +33,9 @@ export const ChatTemplate: React.FC<Props> = (props) => {
         offlineMessages={talkingRoom.offlineMessages}
         ws={talkingRoom.ws}
         isEnd={talkingRoom.isEnd}
-        openProfileModal={openProfileModal}
         setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
         isStart={talkingRoom.isStart}
-      />
-      <ProfileModal
-        userName={userWillShowProfileModal ? userWillShowProfileModal.name : ""}
-        userImage={
-          userWillShowProfileModal?.image ? userWillShowProfileModal.image : ""
-        }
-        userJob={
-          userWillShowProfileModal?.job?.label
-            ? userWillShowProfileModal.job.label
-            : ""
-        }
-        userGender={formattedGender ? formattedGender.label : ""}
-        isOpen={isOpenProfileModal}
-        setIsOpen={setIsOpenProfileModal}
+        navigateProfile={navigateProfile}
       />
       <NotificationReminderModal
         isOpenNotificationReminderModal={isOpenNotificationReminderModal}

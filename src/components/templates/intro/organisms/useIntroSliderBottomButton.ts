@@ -5,6 +5,7 @@ import { GoToPage, IntroPageSetting } from "src/types/Types";
 
 export const useIntroSliderBottomButton = (
   page: number,
+  currentPage: number,
   pageLength: number,
   pageSetting: IntroPageSetting,
   isReadyFooter: boolean,
@@ -52,48 +53,39 @@ export const useIntroSliderBottomButton = (
     }
   }, [isReadyFooter]);
 
-  // 戻る操作によるボトムボタンの再描画
-  // const preventPage = useRef(1);
-  // useEffect(() => {
-  //   if (currentPage < preventPage.current) {
-  //     setIsShowBottomButton(true);
-  //     bottomButtonRef.current &&
-  //       bottomButtonRef.current.startInAnimation(
-  //         () => {
-  //           setIsTouchableBottomButton(true);
-  //         },
-  //         {
-  //           settingByType: { type: "FADE_IN" },
-  //           //
-  //           duration: isShowBottomButtonRef.current ? 0 : 100,
-  //         }
-  //       );
-  //   }
-  //   preventPage.current = currentPage;
-  // }, [currentPage]);
+  // 戻る操作によるボトムボタンの復元
+  const preventPage = useRef(1);
+  useEffect(() => {
+    if (currentPage === page && currentPage < preventPage.current) {
+      setIsTouchableBottomButton(true);
+    }
+    preventPage.current = currentPage;
+  }, [currentPage]);
 
   const onPressBottom = () => {
     if (!isTouchableBottomButtonRef.current) return;
 
-    // setIsTouchableBottomButton(false);
-    // bottomButtonRef.current &&
-    //   bottomButtonRef.current.startOutAnimation(
-    //     () => {
-    //       setIsShowBottomButton(false);
-    //     },
-    //     {
-    //       settingByType: { type: "FADE_OUT" },
-    //       duration: 150,
-    //     }
-    //   );
+    // ⇓ ボトムボタン処理 (ページにつき1度までの処理)
+    setIsTouchableBottomButton(false);
+    const onPressBottom = pageSetting.onPressBottom;
+    onPressBottom && onPressBottom();
 
-    // ⇓ ボトムボタン処理
-    const additionalOnPressBottom = pageSetting.onPressBottom;
-    additionalOnPressBottom && additionalOnPressBottom();
-    if (pageLength <= page) {
-      onComplete();
+    const completePage = () => {
+      if (pageLength <= page) {
+        onComplete();
+      } else {
+        goToPage();
+      }
+    };
+
+    // 遅延
+    const onPressAsync = pageSetting.onPressBottomAsync;
+    if (typeof onPressAsync === "undefined") {
+      completePage();
     } else {
-      goToPage();
+      onPressAsync().finally(() => {
+        completePage();
+      });
     }
   };
 

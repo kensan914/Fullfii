@@ -16,6 +16,7 @@ type AlertMessages = {
   CANNOT_SEND_MSG_NOT_EXIST_USER: AlertMessagesValue;
   CANNOT_SEND_MSG_INAPPROPRIATE: AlertMessagesValue;
   CANNOT_SEND_MSG_NOT_START: AlertMessagesValue;
+  NOT_CONNECT_NETWORK: AlertMessagesValue;
 };
 /**
  * アラートメッセージのみこの定数で管理. 確認モーダルとしてのアラートなどは実行元で管理
@@ -58,6 +59,10 @@ export const ALERT_MESSAGES: AlertMessages = {
     "メッセージを送信できません",
     "一度アプリを落として再度お試しください。",
   ],
+  NOT_CONNECT_NETWORK: [
+    "ネットワークが不安定みたいです...",
+    "電波が届きにくい環境にいますか？もしくはお使いの端末のOSが古いかもしれません。確認してみてください、お待ちしております！",
+  ],
 };
 
 type ToastMessages = {
@@ -76,7 +81,7 @@ type ToastMessages = {
 };
 export const TOAST_SETTINGS: ToastMessages = {
   CREATE_ROOM: {
-    text1: "ルームを作成しました", // イントロ時のルーム作成時用
+    text1: "ルームを作成しました",
   },
   FIX_ROOM: {
     text1: "ルームを修正しました",

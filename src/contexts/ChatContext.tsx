@@ -658,6 +658,16 @@ const chatReducer = (
       };
     }
 
+    case "SET_HAS_FAVORITE_USER": {
+      /** set hasFavoriteUser.
+       * @param {Object} action [type, hasFavoriteUser] */
+
+      return {
+        ...prevState,
+        hasFavoriteUser: action.hasFavoriteUser,
+      };
+    }
+
     case "TURN_ON_DELAY": {
       /** delayモードをONにする. ONの間, chatDispatchは遅延される
        * @param {Object} action [type, excludeType] */
@@ -716,6 +726,7 @@ const initChatState: ChatState = Object.freeze({
   chatDispatchTask: { status: "GO", queue: [], excludeType: [] },
   totalUnreadNum: 0,
   talkingRoomCollection: Object.freeze({}),
+  hasFavoriteUser: false,
 });
 const ChatStateContext = createContext<ChatState>(initChatState);
 const ChatDispatchContext = createContext<ChatDispatch>(() => {
@@ -746,6 +757,7 @@ export const ChatProvider: React.FC<Props> = ({
     talkingRoomCollection: talkingRoomCollection
       ? { ...talkingRoomCollection }
       : {},
+    hasFavoriteUser: false,
   });
 
   // delayモードが終了した時にtaskを全て実行

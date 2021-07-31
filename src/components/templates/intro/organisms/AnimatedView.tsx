@@ -26,11 +26,14 @@ export const AnimatedView = React.forwardRef<AnimatedViewMethods, Props>(
 
     const animatedOpacity = useRef(new Animated.Value(0)).current;
     const animatedTransLateY = useRef(new Animated.Value(0)).current;
+    const animatedScale = useRef(new Animated.Value(1)).current;
     const [isShow, setIsShow] = useState(false);
 
     const startAnimationOtherThanFade = (
       animationSetting: InAnimatedViewSetting | OutAnimatedViewSetting
     ) => {
+      const _duration = getValue<number>(animationSetting.duration, duration);
+      if (typeof animationSetting.settingByType === "undefined") return;
       switch (animationSetting.settingByType.type) {
         case "FADE_IN_UP": {
           animatedTransLateY.setValue(
@@ -38,9 +41,28 @@ export const AnimatedView = React.forwardRef<AnimatedViewMethods, Props>(
           );
           Animated.timing(animatedTransLateY, {
             toValue: 0,
-            duration: getValue<number>(animationSetting.duration, duration),
+            duration: _duration,
             useNativeDriver: true,
           }).start();
+          return;
+        }
+        case "FADE_IN_ZOOM": {
+          animatedScale.setValue(0);
+          if (
+            typeof animationSetting.settingByType.springConfig === "undefined"
+          ) {
+            Animated.timing(animatedScale, {
+              toValue: 1,
+              duration: _duration,
+              useNativeDriver: true,
+            }).start();
+          } else {
+            Animated.spring(animatedScale, {
+              ...animationSetting.settingByType.springConfig,
+              toValue: 1,
+              useNativeDriver: true,
+            }).start();
+          }
           return;
         }
       }
@@ -98,6 +120,9 @@ export const AnimatedView = React.forwardRef<AnimatedViewMethods, Props>(
             transform: [
               {
                 translateY: animatedTransLateY,
+              },
+              {
+                scale: animatedScale,
               },
             ],
           },

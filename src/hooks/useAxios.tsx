@@ -155,7 +155,7 @@ export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
     "shouldRequestDidMount",
     "limitRequest",
   ];
-  const correctRequestActionKeys = ["url", "data", "thenCallback"];
+  const correctRequestActionKeys = ["url", "data", "thenCallback", "token"];
   //---------- constants ----------//
 
   // init axios
@@ -217,6 +217,13 @@ export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
         action.thenCallback = (resData: unknown, res: AxiosResponse<any>) => {
           tempThenCallback && tempThenCallback(resData, res);
           reAction.thenCallback && reAction.thenCallback(resData, res);
+        };
+      }
+      // token上書き
+      if (typeof reAction.token !== "undefined") {
+        _axiosSettings["headers"] = {
+          ..._axiosSettings["headers"],
+          Authorization: `JWT ${reAction.token}`,
         };
       }
     }

@@ -5,16 +5,16 @@ import { StyleSheet } from "react-native";
 import { COLORS } from "src/constants/colors";
 import { width, height } from "src/constants";
 import { Avatar } from "src/components/atoms/Avatar";
-import { INTRO_BODY_HEIGHT } from "src/components/templates/intro/organisms/IntroSlide";
 import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
 import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 import { BodyAnimSettings_createdRoom } from "src/types/Types";
 
 type Props = {
   bodyAnimSettings: BodyAnimSettings_createdRoom;
+  roomName: string;
 };
 export const CreatedRoomTemplate: React.FC<Props> = (props) => {
-  const { bodyAnimSettings } = props;
+  const { bodyAnimSettings, roomName } = props;
 
   return (
     <Block flex style={styles.container}>
@@ -29,7 +29,7 @@ export const CreatedRoomTemplate: React.FC<Props> = (props) => {
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                悩み相談名はなんでしょう！？
+                {roomName}
               </Text>
             </Block>
             <Block row>

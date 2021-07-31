@@ -107,23 +107,32 @@ export const FavoriteUserList = React.forwardRef<
             okButton: "削除する",
             okButtonStyle: "destructive",
             onPress: () => {
-              requestDeleteMeFavoritesUsers(user.id, authState.token, () => {
-                showToast(TOAST_SETTINGS["DELETE_FAVORITE_USER"]);
-                setFavoriteUsers(
-                  favoriteUsers.filter((favoriteUser) => {
-                    return favoriteUser.id !== user.id;
-                  })
-                );
-                chatDispatch({
-                  type: "DELETE_FAVORITE_USER",
-                  userId: user.id,
-                });
-              });
+              requestDeleteMeFavoritesUsers(
+                user.id,
+                authState.token,
+                chatDispatch,
+                () => {
+                  showToast(TOAST_SETTINGS["DELETE_FAVORITE_USER"]);
+                  setFavoriteUsers(
+                    favoriteUsers.filter((favoriteUser) => {
+                      return favoriteUser.id !== user.id;
+                    })
+                  );
+                  chatDispatch({
+                    type: "DELETE_FAVORITE_USER",
+                    userId: user.id,
+                  });
+                }
+              );
             },
           });
         },
       },
     ]);
+  };
+
+  const navigateProfile = (_profile: Profile) => {
+    navigation.navigate("Profile", { profile: _profile });
   };
 
   return (
@@ -136,6 +145,7 @@ export const FavoriteUserList = React.forwardRef<
           <FavoriteUserListItem
             key={item.id}
             user={item}
+            navigateProfile={navigateProfile}
             navigateMessageHistory={navigateMessageHistory}
             onLongPressItem={onLongPressItem}
           />

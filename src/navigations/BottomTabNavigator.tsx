@@ -1,14 +1,12 @@
 import React from "react";
 import { Block, Text } from "galio-framework";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
 import { Header } from "src/navigations/Header";
 import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
-import { ProfileScreen } from "src/screens/ProfileScreen";
-import { RoomsScreen } from "src/screens/RoomsScreen";
-import { createStackNavigator } from "@react-navigation/stack";
+import { MeProfileScreen } from "src/screens/MeProfileScreen";
 import { COLORS } from "src/constants/colors";
 import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
@@ -22,12 +20,11 @@ import {
   mypageIconFocusSvg,
   mypageIconSvg,
 } from "src/constants/svgSources";
-import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
 import { BOTTOM_TAB_BAR_HEIGHT } from "src/constants";
+import { HomeTopTabNavigator } from "src/navigations/HomeTopTabNavigator";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
-  const TopTab = createMaterialTopTabNavigator();
   const Stack = createStackNavigator();
 
   const chatState = useChatState();
@@ -50,7 +47,7 @@ export const BottomTabNavigator: React.FC = () => {
             iconName = focused ? chatIconFocusSvg : chatIconSvg;
             label = "トーク";
             badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
-          } else if (routeName === "Profile") {
+          } else if (routeName === "MeProfile") {
             iconName = focused ? mypageIconFocusSvg : mypageIconSvg;
             label = "マイページ";
           }
@@ -121,29 +118,11 @@ export const BottomTabNavigator: React.FC = () => {
             <Stack.Navigator>
               <Stack.Screen
                 name="Rooms"
-                // component={RoomsScreen}
                 options={() => ({
                   header: () => <Header name={"Rooms"} />,
                 })}
-              >
-                {() => (
-                  <TopTab.Navigator
-                    tabBarOptions={{
-                      style: { backgroundColor: COLORS.BEIGE },
-                      indicatorStyle: {
-                        backgroundColor: COLORS.PINK,
-                        height: 3,
-                      },
-                    }}
-                  >
-                    <Tab.Screen name="ルーム一覧" component={RoomsScreen} />
-                    <Tab.Screen
-                      name="プライベート"
-                      component={PrivateRoomsScreen}
-                    />
-                  </TopTab.Navigator>
-                )}
-              </Stack.Screen>
+                component={HomeTopTabNavigator}
+              />
             </Stack.Navigator>
           </Block>
         )}
@@ -168,15 +147,15 @@ export const BottomTabNavigator: React.FC = () => {
           );
         }}
       </Tab.Screen>
-      <Tab.Screen name="Profile">
+      <Tab.Screen name="MeProfile">
         {() => (
           <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
             <Stack.Navigator>
               <Stack.Screen
-                name="Profile"
-                component={ProfileScreen}
+                name="MeProfile"
+                component={MeProfileScreen}
                 options={() => ({
-                  header: () => <Header name={"Profile"} />,
+                  header: () => <Header name={"MeProfile"} />,
                 })}
               />
             </Stack.Navigator>

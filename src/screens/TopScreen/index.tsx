@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/core";
 import { Animated } from "react-native";
 
 import { TopTemplate } from "src/components/templates/TopTemplate";
 import { LottieSource } from "src/types/Types";
 import { logEvent } from "src/utils/firebase/logEvent";
 import { useAuthDispatch } from "src/contexts/AuthContext";
+import { useAtt } from "src/screens/TopScreen/useAtt";
 
 // CONSTANTS
 const BALLOON_ANIMATION_DURATION_MS = 4180;
@@ -13,8 +13,10 @@ const FADE_IN_ANIMATION_DURATION_MS = 1500;
 const BALLOON_ANIMATION_DELAY_MS = 200;
 
 export const TopScreen: React.FC = () => {
-  const navigation = useNavigation();
   const authDispatch = useAuthDispatch();
+
+  // ==== appTrackingTransparency ====
+  const { showAttModal, renderAttModal } = useAtt();
 
   // ==== 風船アニメーション ====
   const [lottieBalloonSource, setLottieBalloonSource] =
@@ -62,22 +64,26 @@ export const TopScreen: React.FC = () => {
       toValue: 1,
       duration: FADE_IN_ANIMATION_DURATION_MS,
       useNativeDriver: false,
-    }).start();
+    }).start(() => {
+      showAttModal();
+    });
   };
 
   const onPressConsent = () => {
     logEvent("push_top_screen_button");
-    // navigation.navigate("Onboarding");
-    authDispatch({ type: "COMPLETE_INTRO" });
+    authDispatch({ type: "START_INTRO" });
   };
 
   return (
-    <TopTemplate
-      onPressConsent={onPressConsent}
-      animationProgressRef={animationProgressRef}
-      lottieBalloonSource={lottieBalloonSource}
-      fadeInOpacityRef={fadeInOpacityRef}
-      isEndAnimation={isEndAnimation}
-    />
+    <>
+      <TopTemplate
+        onPressConsent={onPressConsent}
+        animationProgressRef={animationProgressRef}
+        lottieBalloonSource={lottieBalloonSource}
+        fadeInOpacityRef={fadeInOpacityRef}
+        isEndAnimation={isEndAnimation}
+      />
+      {renderAttModal()}
+    </>
   );
 };

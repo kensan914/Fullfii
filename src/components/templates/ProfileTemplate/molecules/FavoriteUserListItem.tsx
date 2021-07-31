@@ -10,11 +10,13 @@ import { Profile } from "src/types/Types.context";
 type Props = {
   user: Profile;
   navigateMessageHistory: (user: Profile) => void;
+  navigateProfile: (user: Profile) => void;
   onLongPressItem: (user: Profile) => void;
 };
 
 export const FavoriteUserListItem: React.FC<Props> = (props) => {
-  const { user, navigateMessageHistory, onLongPressItem } = props;
+  const { user, navigateMessageHistory, navigateProfile, onLongPressItem } =
+    props;
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -27,11 +29,18 @@ export const FavoriteUserListItem: React.FC<Props> = (props) => {
     >
       <Block row space="between" style={styles.listItemContainer}>
         <Block row center>
-          <Avatar
-            size={40}
-            imageUri={user.image}
-            style={styles.otherProfileImage}
-          />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              navigateProfile(user);
+            }}
+          >
+            <Avatar
+              size={40}
+              imageUri={user.image}
+              style={styles.otherProfileImage}
+            />
+          </TouchableOpacity>
           <Block style={styles.otherProfileName}>
             <Text size={14} bold color={COLORS.BLACK} style={styles.textHeight}>
               {user.name}
