@@ -34,7 +34,7 @@ export const ExplanationRoomParticipateTemplate: React.FC<Props> = (props) => {
               </Text>
             </Block>
             <Block row>
-              <Block style={styles.image} />
+              <Image source={LECTURE_WOMAN_IMG} style={styles.image} />
               <Block flex column>
                 <Block row>
                   <Image source={LECTURE_WOMAN_IMG} style={styles.cardAvatar} />

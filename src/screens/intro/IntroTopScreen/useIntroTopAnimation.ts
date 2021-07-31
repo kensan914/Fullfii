@@ -1,13 +1,12 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 
-import { AnimatedTextMethods } from "src/components/templates/intro/organisms/AnimatedText";
 import { AnimatedViewMethods } from "src/components/templates/intro/organisms/AnimatedView";
 import { useAuthState } from "src/contexts/AuthContext";
 
 export type IntroTopScene = "01" | "02";
 export type IntroTopAnimationProps = {
   currentScene: IntroTopScene;
-  animatedTextRefScene1_title: RefObject<AnimatedTextMethods>;
+  animatedViewRefScene1_title: RefObject<AnimatedViewMethods>;
   animatedViewRefScene1_whole: RefObject<AnimatedViewMethods>;
   animatedViewRefScene1_comment: RefObject<AnimatedViewMethods>;
   animatedViewRefScene2_whole: RefObject<AnimatedViewMethods>;
@@ -35,8 +34,7 @@ export const useIntroTopAnimation = (): IntroTopAnimationProps => {
     isReadySceneRef.current = _isReadyScene;
     _setIsReadyScene(_isReadyScene);
   };
-  const animatedTextRefScene1_title = useRef<AnimatedTextMethods>(null);
-  const [animatedTextScene1Id] = useState("ANIMATED_TEXT_SCENE_1");
+  const animatedViewRefScene1_title = useRef<AnimatedViewMethods>(null);
   const animatedViewRefScene1_whole = useRef<AnimatedViewMethods>(null);
   const animatedViewRefScene1_comment = useRef<AnimatedViewMethods>(null);
   const animatedViewRefScene2_whole = useRef<AnimatedViewMethods>(null);
@@ -48,9 +46,8 @@ export const useIntroTopAnimation = (): IntroTopAnimationProps => {
           settingByType: { type: "FADE_IN" },
           duration: 0,
         });
-      animatedTextRefScene1_title.current &&
-        animatedTextRefScene1_title.current.startAnimation(
-          animatedTextScene1Id,
+      animatedViewRefScene1_title.current &&
+        animatedViewRefScene1_title.current.startInAnimation(
           () => {
             animatedViewRefScene1_comment.current &&
               animatedViewRefScene1_comment.current.startInAnimation(
@@ -87,7 +84,7 @@ export const useIntroTopAnimation = (): IntroTopAnimationProps => {
 
   return {
     currentScene,
-    animatedTextRefScene1_title,
+    animatedViewRefScene1_title,
     animatedViewRefScene1_whole,
     animatedViewRefScene1_comment,
     animatedViewRefScene2_whole,

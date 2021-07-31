@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Block } from "galio-framework";
-import { StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 
 import { COLORS } from "src/constants/colors";
 import { width, height } from "src/constants";
@@ -8,6 +8,7 @@ import { Avatar } from "src/components/atoms/Avatar";
 import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
 import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 import { BodyAnimSettings_createdRoom } from "src/types/Types";
+import { LECTURE_WOMAN_IMG } from "src/constants/imagePath";
 
 type Props = {
   bodyAnimSettings: BodyAnimSettings_createdRoom;
@@ -33,7 +34,7 @@ export const CreatedRoomTemplate: React.FC<Props> = (props) => {
               </Text>
             </Block>
             <Block row>
-              <Block style={styles.image} />
+              <Image source={LECTURE_WOMAN_IMG} style={styles.image} />
               <Block flex column>
                 <Block row>
                   <Avatar size={32} imageUri={null} style={styles.avatar} />

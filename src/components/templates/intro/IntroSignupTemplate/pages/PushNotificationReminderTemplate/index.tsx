@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
   },
   notificationImgContainer: {
     alignItems: "center",
-    marginTop: 32,
+    marginTop: 24,
   },
   notificationImg: {
     width: width * 0.64,
+    height: 204,
   },
 });
