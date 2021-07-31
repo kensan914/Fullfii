@@ -26,6 +26,7 @@ import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useNavigation } from "@react-navigation/core";
 import { cvtBadgeCount, formatGender } from "src/utils";
 import { useRequestDeleteRoom } from "src/hooks/requests/useRequestRooms";
+import { logEvent } from "src/utils/firebase/logEvent";
 
 type Props = {
   talkingRoom: TalkingRoom;
@@ -68,6 +69,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
         label: "削除する",
         destructive: true,
         onPress: () => {
+          logEvent("delete_created_room");
           if (talkingRoom.isStart) {
             Alert.alert(...ALERT_MESSAGES["CANNOT_DELETE_TALKING_ROOM"]);
           } else {

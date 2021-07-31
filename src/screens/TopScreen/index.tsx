@@ -70,7 +70,7 @@ export const TopScreen: React.FC = () => {
   };
 
   const onPressConsent = () => {
-    logEvent("push_top_screen_button");
+    logEvent("start_intro");
     authDispatch({ type: "START_INTRO" });
   };
 
