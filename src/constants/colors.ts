@@ -2,6 +2,7 @@ export const COLORS = {
   TRANSPARENT: "rgba(255, 255, 255, 0)",
   PINK: "#f5b5a7", //#f5b5a7, #f6bab2
   DEEP_PINK: "#F69896",
+  LIGHT_PINK: "#EACDC2",
   GREEN: "#71DDA1",
   ALERT: "#F44336",
   BEIGE: "#eee2d3",

@@ -7,9 +7,11 @@ import { width, height } from "src/constants";
 import { BodyAnimSettings_explanationRoomParticipate } from "src/types/Types";
 import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
 import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
-import { LECTURE_WOMAN_IMG } from "src/constants/imagePath";
+import {
+  INTRO_PARTICIPATE_ROOM_IMG,
+  LECTURE_WOMAN_IMG,
+} from "src/constants/imagePath";
 import { Icon } from "src/components/atoms/Icon";
-import { INTRO_BODY_HEIGHT } from "src/components/templates/intro/organisms/IntroSlide";
 
 type Props = {
   bodyAnimSettings: BodyAnimSettings_explanationRoomParticipate;
@@ -34,7 +36,7 @@ export const ExplanationRoomParticipateTemplate: React.FC<Props> = (props) => {
               </Text>
             </Block>
             <Block row>
-              <Block style={styles.image} />
+              <Image source={INTRO_PARTICIPATE_ROOM_IMG} style={styles.image} />
               <Block flex column>
                 <Block row>
                   <Image source={LECTURE_WOMAN_IMG} style={styles.cardAvatar} />

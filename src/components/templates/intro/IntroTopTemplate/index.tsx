@@ -8,7 +8,6 @@ import { Icon } from "src/components/atoms/Icon";
 import { SignupBuffer } from "src/types/Types.context";
 import { IntroTopAnimationProps } from "src/screens/intro/IntroTopScreen/useIntroTopAnimation";
 import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
-import { AnimatedText } from "src/components/templates/intro/organisms/AnimatedText";
 import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 
 type Props = {
@@ -44,15 +43,16 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
             ref={animationProps.animatedViewRefScene1_whole}
           >
             <Block flex={0.4} style={styles.centerContainer}>
-              <AnimatedText
-                size={26}
-                bold
-                color={COLORS.BLACK}
-                style={styles.scene1Title}
-                ref={animationProps.animatedTextRefScene1_title}
-              >
-                {"はじめまして\nようこそFullfiiへ"}
-              </AnimatedText>
+              <AnimatedView ref={animationProps.animatedViewRefScene1_title}>
+                <Text
+                  size={26}
+                  bold
+                  color={COLORS.BLACK}
+                  style={styles.scene1Title}
+                >
+                  {"はじめまして\nようこそFullfiiへ"}
+                </Text>
+              </AnimatedView>
             </Block>
             <Block flex={0.2} style={styles.centerContainer}>
               <AnimatedView ref={animationProps.animatedViewRefScene1_comment}>
@@ -95,7 +95,11 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
                     <Text
                       center
                       size={24}
-                      color={COLORS.BROWN}
+                      color={
+                        signupBuffer.introCreateRoom.isComplete
+                          ? COLORS.LIGHT_PINK
+                          : COLORS.BROWN
+                      }
                       bold
                       style={styles.innerButtonText}
                     >
@@ -126,7 +130,11 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
                     <Text
                       center
                       size={24}
-                      color={COLORS.BROWN}
+                      color={
+                        signupBuffer.introParticipateRoom.isComplete
+                          ? COLORS.LIGHT_PINK
+                          : COLORS.BROWN
+                      }
                       bold
                       style={styles.innerButtonText}
                     >
