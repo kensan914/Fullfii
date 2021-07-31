@@ -7,6 +7,8 @@ import privateRoomDemo from "src/assets/images/privateRoom/privateRoomInfo.png";
 import lectureWoman from "src/assets/images/intro/lectureWoman.png";
 import notificationPermissionDialog from "src/assets/images/intro/notificationPermissionDialog.png";
 import cracker from "src/assets/images/intro/cracker.png";
+import introCreateRoom from "src/assets/images/intro/introCreatedRoom.png";
+import introParticipateRoom from "src/assets/images/intro/introParticipateRoom.png";
 
 export const MAN_AND_WOMAN_IMG = manAndWomanImg;
 export const MEN_IMG = menImg;
@@ -17,3 +19,5 @@ export const PRIVATE_ROOM_DEMO_IMG = privateRoomDemo;
 export const LECTURE_WOMAN_IMG = lectureWoman;
 export const NOTIFICATION_PERMISSION_DIALOG_IMG = notificationPermissionDialog;
 export const CRACKER_IMG = cracker;
+export const INTRO_CREATE_ROOM_IMG = introCreateRoom;
+export const INTRO_PARTICIPATE_ROOM_IMG = introParticipateRoom;

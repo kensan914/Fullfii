@@ -97,7 +97,7 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
                       size={24}
                       color={
                         signupBuffer.introCreateRoom.isComplete
-                          ? COLORS.BLACK
+                          ? COLORS.LIGHT_PINK
                           : COLORS.BROWN
                       }
                       bold
@@ -132,7 +132,7 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
                       size={24}
                       color={
                         signupBuffer.introParticipateRoom.isComplete
-                          ? COLORS.BLACK
+                          ? COLORS.LIGHT_PINK
                           : COLORS.BROWN
                       }
                       bold
