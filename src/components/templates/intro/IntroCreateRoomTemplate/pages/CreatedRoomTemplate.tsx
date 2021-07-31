@@ -75,13 +75,13 @@ export const CreatedRoomTemplate: React.FC<Props> = (props) => {
 
       <AnimatedView {...bodyAnimSettings[1]}>
         <IntroComment style={{ marginTop: height * 0.075 }}>
-          おめでとう！🎉ルームの作成が完了したよ
+          {"おめでとう！🎉\nルームの作成が完了したよ！"}
         </IntroComment>
       </AnimatedView>
 
       <AnimatedView {...bodyAnimSettings[2]}>
         <IntroComment style={{ marginTop: 20 }}>
-          あとは話しを聞いてくれる人がルームに入るまで待ちましょう！
+          あとは話しを聞いてくれる人がルームに入るまで待っててね！
         </IntroComment>
       </AnimatedView>
     </Block>
