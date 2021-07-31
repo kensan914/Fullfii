@@ -59,7 +59,9 @@ export const TopTemplate: React.FC<Props> = (props) => {
             >
               サービス利用規約
             </Text>
-            <Text size={16}>に同意します</Text>
+            <Text size={16} color={COLORS.BLACK}>
+              に同意します
+            </Text>
           </Block>
         </Animated.View>
       </Block>
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   textTop: {
-    // marginBottom: 8,
+    marginBottom: 4,
   },
   button: {
     backgroundColor: COLORS.BROWN,
