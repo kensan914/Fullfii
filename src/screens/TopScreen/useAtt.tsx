@@ -68,18 +68,22 @@ const AttModal: React.FC<Props> = (props) => {
     >
       <Block style={styles.attContainer}>
         <Text size={21} bold color={COLORS.BLACK} style={styles.attTitle}>
-          広告をカスタマイズしましょう
+          あなたに合う広告を表示します
         </Text>
-        <Text color={COLORS.GRAY} style={styles.attDescription}>
+        <Text size={14} color={COLORS.GRAY} style={styles.attDescription}>
           Fullfiiは広告の収益に支えられています。
-          <Text color="#ff5576">関連性の低い広告</Text>
-          を表示させずにより
-          <Text color="#1997d2">適切な広告</Text>
-          を表示するには、必要な情報の利用をFullfiiに許可してください。アプリに表示される広告が皆様に合わせてカスタマイズされます。
+          <Text size={14} color="#ff5576">
+            関連性の低い広告
+          </Text>
+          を表示させずによりあなたに
+          <Text size={14} color="#1997d2">
+            適切な広告
+          </Text>
+          を表示するには、必要な情報の利用をFullfiiに許可してください。
         </Text>
         <Button
           round
-          color={COLORS.PINK}
+          color={COLORS.BROWN}
           shadowless
           style={styles.attOnButton}
           onPress={onPress}
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
   attDescription: {
     textAlign: "center",
     marginBottom: 20,
+    lineHeight: 20,
   },
   attOnButton: {
     width: "100%",
