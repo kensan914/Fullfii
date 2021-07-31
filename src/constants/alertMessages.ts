@@ -81,7 +81,7 @@ type ToastMessages = {
 };
 export const TOAST_SETTINGS: ToastMessages = {
   CREATE_ROOM: {
-    text1: "ルームを作成しました", // イントロ時のルーム作成時用
+    text1: "ルームを作成しました",
   },
   FIX_ROOM: {
     text1: "ルームを修正しました",

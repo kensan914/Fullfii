@@ -39,7 +39,7 @@ import { useChatState } from "src/contexts/ChatContext";
 type PropsDependsOnMode =
   | {
       mode: "CREATE_FROM_MY_ROOMS";
-      setIsOpenRoomCreatedModal: Dispatch<boolean>;
+      // setIsOpenRoomCreatedModal: Dispatch<boolean>;
     }
   | {
       mode: "CREATE_FROM_ROOMS";
@@ -244,9 +244,10 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
           }
           // createdModalの表示のみ
           else if (propsDependsOnMode.mode === "CREATE_FROM_MY_ROOMS") {
-            propsDependsOnMode.setIsOpenRoomCreatedModal(true);
+            // propsDependsOnMode.setIsOpenRoomCreatedModal(true);
           }
 
+          showToast(TOAST_SETTINGS["CREATE_ROOM"]);
           isCreatedRef.current = false;
         }
       }}

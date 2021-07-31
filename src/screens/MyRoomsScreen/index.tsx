@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+// import { RouteProp, useFocusEffect } from "@react-navigation/core";
 
 import { MyRoomsTemplate } from "src/components/templates/MyRoomsTemplate";
 import { useChatState } from "src/contexts/ChatContext";
 import { TalkingRoom } from "src/types/Types.context";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
-import { RouteProp, useFocusEffect } from "@react-navigation/core";
 import { MyRoomsRouteProp } from "src/types/Types";
 
 type Props = {
@@ -38,21 +38,21 @@ export const MyRoomsScreen: React.FC<Props> = (props) => {
   }, [chatState.talkingRoomCollection]);
 
   const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false);
-  const [isOpenRoomCreatedModal, setIsOpenRoomCreatedModal] = useState(false);
-  const [
-    isOpenNotificationReminderModal,
-    setIsOpenNotificationReminderModal,
-  ] = useState<boolean>(false);
+  // const [isOpenRoomCreatedModal, setIsOpenRoomCreatedModal] = useState(false);
+  // const [
+  //   isOpenNotificationReminderModal,
+  //   setIsOpenNotificationReminderModal,
+  // ] = useState<boolean>(false);
 
-  const navigateState = route.params?.navigateState;
-  useEffect(() => {
-    if (
-      typeof navigateState?.willOpenRoomCreatedModal !== "undefined" &&
-      !!navigateState?.willOpenRoomCreatedModal
-    ) {
-      setIsOpenRoomCreatedModal(true);
-    }
-  }, [navigateState?.id]);
+  // const navigateState = route.params?.navigateState;
+  // useEffect(() => {
+  //   if (
+  //     typeof navigateState?.willOpenRoomCreatedModal !== "undefined" &&
+  //     !!navigateState?.willOpenRoomCreatedModal
+  //   ) {
+  //     setIsOpenRoomCreatedModal(true);
+  //   }
+  // }, [navigateState?.id]);
 
   const { checkCanCreateRoom } = useCanCreateRoom();
 
@@ -62,10 +62,10 @@ export const MyRoomsScreen: React.FC<Props> = (props) => {
       participatingRooms={participatingRooms}
       isOpenRoomEditorModal={isOpenRoomEditorModal}
       setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-      isOpenRoomCreatedModal={isOpenRoomCreatedModal}
-      setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
-      isOpenNotificationReminderModal={isOpenNotificationReminderModal}
-      setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
+      // isOpenRoomCreatedModal={isOpenRoomCreatedModal}
+      // setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
+      // isOpenNotificationReminderModal={isOpenNotificationReminderModal}
+      // setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       checkCanCreateRoom={checkCanCreateRoom}
     />
   );
