@@ -12,6 +12,7 @@ import {
   BodyAnimSettings_pushNotificationReminder,
   IntroTemplateProps,
 } from "src/types/Types";
+import { logEvent } from "src/utils/firebase/logEvent";
 
 type Props = {
   bodyAnimSettings_inputProfile: BodyAnimSettings_inputProfile;
@@ -63,6 +64,9 @@ export const IntroSignupTemplate: React.FC<Props & IntroTemplateProps> = (
           headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_pushNotificationReminder,
           bottomButtonLabel: "はじめる",
+          onPressBottom: () => {
+            logEvent("complete_intro");
+          },
         },
       ]}
       onComplete={onComplete}

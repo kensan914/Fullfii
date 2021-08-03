@@ -74,7 +74,7 @@ export const useSignup = (): {
   const onSubmitSignup = (): Promise<void> => {
     setIsLoadingSignup(true);
     return new Promise((resolve) => {
-      logEvent("press_intro_screen_submit_button");
+      logEvent("complete_intro_signup");
       const completeSignup = () => {
         authDispatch({
           type: "SUCCESS_SIGNUP_INTRO",

@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 
 import { IntroTopTemplate } from "src/components/templates/intro/IntroTopTemplate";
 import { useAuthDispatch, useAuthState } from "src/contexts/AuthContext";
-import { useIntroTopAnimation } from "./useIntroTopAnimation";
+import { useIntroTopAnimation } from "src/screens/intro/IntroTopScreen/useIntroTopAnimation";
+import { logEvent } from "src/utils/firebase/logEvent";
 
 export const IntroTopScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -27,15 +28,18 @@ export const IntroTopScreen: React.FC = () => {
 
   const navigateIntroCreateRoom = () => {
     if (!authState.signupBuffer.introCreateRoom.isComplete) {
+      logEvent("navigate_intro_create_room");
       navigation.navigate("IntroCreateRoom");
     }
   };
   const navigateIntroParticipateRoom = () => {
     if (!authState.signupBuffer.introParticipateRoom.isComplete) {
+      logEvent("navigate_intro_participate_room");
       navigation.navigate("IntroParticipateRoom");
     }
   };
   const navigateIntroSignup = () => {
+    logEvent("navigate_intro_signup");
     navigation.navigate("IntroSignup");
   };
 

@@ -13,6 +13,7 @@ import {
   BodyAnimSettings_inputRoomName,
   IntroTemplateProps,
 } from "src/types/Types";
+import { logEvent } from "src/utils/firebase/logEvent";
 
 type Props = {
   bodyAnimSettings_explanationRoom: BodyAnimSettings_explanationRoom;
@@ -57,7 +58,10 @@ export const IntroCreateRoomTemplate: React.FC<Props & IntroTemplateProps> = (
           title: "話したい悩みは何ですか？",
           bodyAnimSettings: bodyAnimSettings_inputRoomName,
           canPressBottomButton: canCreateRoom,
-          onPressBottom: setRoomNameIntro,
+          onPressBottom: () => {
+            setRoomNameIntro();
+            logEvent("input_intro_room_name");
+          },
         },
         {
           body: (
@@ -70,6 +74,9 @@ export const IntroCreateRoomTemplate: React.FC<Props & IntroTemplateProps> = (
           bottomButtonLabel: "分かった！",
           headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_createdRoom,
+          onPressBottom: () => {
+            logEvent("complete_intro_create_room");
+          },
         },
       ]}
       onComplete={onComplete}

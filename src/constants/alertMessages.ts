@@ -10,6 +10,7 @@ type AlertMessages = {
   LEAVE_ROOM_PARTICIPANT: AlertMessagesValue;
   LEAVE_ROOM_WITHOUT_MESSAGE: AlertMessagesValue;
   CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER: AlertMessagesValue;
+  CANNOT_SET_IS_PRIVATE: AlertMessagesValue;
   SEND_TABOO: AlertMessagesValue;
   OWNER_LEAVE_PARTICIPANT: AlertMessagesValue;
   CANNOT_SEND_MSG_ALREADY_END_ROOM: AlertMessagesValue;
@@ -41,6 +42,10 @@ export const ALERT_MESSAGES: AlertMessages = {
   LEAVE_ROOM_PARTICIPANT: ["退室しますか？", "相手に一言贈りましょう"],
   LEAVE_ROOM_WITHOUT_MESSAGE: ["ルームを退室します", ""],
   CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER: ["性別を登録してください", ""],
+  CANNOT_SET_IS_PRIVATE: [
+    "また話したい人リストが0人です",
+    "また話したい人リストにユーザを登録してください",
+  ],
   SEND_TABOO: [
     "不適切な単語が含まれています",
     "相手を傷つけるような表現が確認された場合、アカウントが予告なく凍結される可能性があります。",

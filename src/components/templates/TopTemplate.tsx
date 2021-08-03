@@ -1,16 +1,15 @@
 import React from "react";
 import { Block, Button, Text } from "galio-framework";
 import { Animated, StyleSheet } from "react-native";
-import * as WebBrowser from "expo-web-browser";
 import LottieView from "lottie-react-native";
 
-import { USER_POLICY_URL } from "src/constants/env";
 import { COLORS } from "src/constants/colors";
 import { LottieSource } from "src/types/Types";
 import { height, width } from "src/constants";
 
 type Props = {
   onPressConsent: () => void;
+  openBrowserUserPolicy: () => void;
   animationProgressRef: React.MutableRefObject<Animated.Value>;
   lottieBalloonSource: LottieSource | undefined;
   fadeInOpacityRef: React.MutableRefObject<Animated.Value>;
@@ -19,6 +18,7 @@ type Props = {
 export const TopTemplate: React.FC<Props> = (props) => {
   const {
     onPressConsent,
+    openBrowserUserPolicy,
     animationProgressRef,
     lottieBalloonSource,
     fadeInOpacityRef,
@@ -52,14 +52,14 @@ export const TopTemplate: React.FC<Props> = (props) => {
               bold
               size={16}
               color={COLORS.BROWN}
-              onPress={() =>
-                isEndAnimation && WebBrowser.openBrowserAsync(USER_POLICY_URL)
-              }
+              onPress={openBrowserUserPolicy}
               style={{ textDecorationLine: "underline" }}
             >
               サービス利用規約
             </Text>
-            <Text size={16}>に同意します</Text>
+            <Text size={16} color={COLORS.BLACK}>
+              に同意します
+            </Text>
           </Block>
         </Animated.View>
       </Block>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   textTop: {
-    // marginBottom: 8,
+    marginBottom: 4,
   },
   button: {
     backgroundColor: COLORS.BROWN,

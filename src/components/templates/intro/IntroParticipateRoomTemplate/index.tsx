@@ -6,6 +6,7 @@ import {
   BodyAnimSettings_explanationRoomParticipate,
   IntroTemplateProps,
 } from "src/types/Types";
+import { logEvent } from "src/utils/firebase/logEvent";
 
 type Props = {
   bodyAnimSettings_explanationRoomParticipate: BodyAnimSettings_explanationRoomParticipate;
@@ -28,6 +29,9 @@ export const IntroParticipateRoomTemplate: React.FC<
           bottomButtonLabel: "分かった！",
           headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_explanationRoomParticipate,
+          onPressBottom: () => {
+            logEvent("complete_intro_create_room");
+          },
         },
       ]}
       onComplete={onComplete}

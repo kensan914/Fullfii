@@ -422,9 +422,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 ]}
                 onPress={() => {
                   if (!chatState.hasFavoriteUser) {
-                    Alert.alert(
-                      ...ALERT_MESSAGES["CANNOT_SET_IS_EXCLUDE_DEFERENT_GENDER"]
-                    );
+                    Alert.alert(...ALERT_MESSAGES["CANNOT_SET_IS_PRIVATE"]);
                   } else {
                     setIsPrivate(true);
                   }

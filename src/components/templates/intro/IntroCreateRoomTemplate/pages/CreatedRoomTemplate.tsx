@@ -9,6 +9,7 @@ import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedV
 import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 import { BodyAnimSettings_createdRoom } from "src/types/Types";
 import { INTRO_CREATE_ROOM_IMG } from "src/constants/imagePath";
+import { Icon } from "src/components/atoms/Icon";
 
 type Props = {
   bodyAnimSettings: BodyAnimSettings_createdRoom;
@@ -49,6 +50,23 @@ export const CreatedRoomTemplate: React.FC<Props> = (props) => {
                     </Text>
                   </Block>
                 </Block>
+                <Block row>
+                  <Block flex row style={styles.member}>
+                    <Block>
+                      <Icon
+                        name="person-outline"
+                        family="Ionicons"
+                        size={32}
+                        color={COLORS.GRAY}
+                      />
+                    </Block>
+                    <Block style={styles.memberText}>
+                      <Text size={14} color={COLORS.LIGHT_GRAY}>
+                        0/1
+                      </Text>
+                    </Block>
+                  </Block>
+                </Block>
               </Block>
             </Block>
           </Block>
@@ -57,13 +75,13 @@ export const CreatedRoomTemplate: React.FC<Props> = (props) => {
 
       <AnimatedView {...bodyAnimSettings[1]}>
         <IntroComment style={{ marginTop: height * 0.075 }}>
-          おめでとう！🎉ルームの作成が完了したよ
+          {"おめでとう！🎉\nルームの作成が完了したよ！"}
         </IntroComment>
       </AnimatedView>
 
       <AnimatedView {...bodyAnimSettings[2]}>
         <IntroComment style={{ marginTop: 20 }}>
-          あとは話しを聞いてくれる人がルームに入るまで待ちましょう！
+          あとは話しを聞いてくれる人がルームに入るまで待っててね！
         </IntroComment>
       </AnimatedView>
     </Block>
@@ -107,5 +125,13 @@ const styles = StyleSheet.create({
   userInfo: {
     marginLeft: 8,
     alignSelf: "center",
+  },
+  member: {
+    marginLeft: 16,
+    marginTop: 16,
+    alignItems: "center",
+  },
+  memberText: {
+    marginLeft: 8,
   },
 });
