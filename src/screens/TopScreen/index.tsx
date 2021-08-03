@@ -20,7 +20,7 @@ export const TopScreen: React.FC = () => {
   const [isEndAnimation, setIsEndAnimation] = useState(false);
 
   // ==== appTrackingTransparency ====
-  const { showAttModal, renderAttModal } = useAtt();
+  const { showAttModal, renderAttModal, isRequestedRef } = useAtt();
 
   // ==== 風船アニメーション ====
   const [lottieBalloonSource, setLottieBalloonSource] =
@@ -73,13 +73,13 @@ export const TopScreen: React.FC = () => {
   };
 
   const openBrowserUserPolicy = () => {
-    if (!isEndAnimation) return;
+    if (!isRequestedRef.current) return;
 
     WebBrowser.openBrowserAsync(USER_POLICY_URL);
   };
 
   const onPressConsent = () => {
-    if (!isEndAnimation) return;
+    if (!isRequestedRef.current) return;
 
     logEvent("start_intro");
     authDispatch({ type: "START_INTRO" });
