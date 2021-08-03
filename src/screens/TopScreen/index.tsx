@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated } from "react-native";
+import * as WebBrowser from "expo-web-browser";
 
 import { TopTemplate } from "src/components/templates/TopTemplate";
 import { LottieSource } from "src/types/Types";
 import { logEvent } from "src/utils/firebase/logEvent";
 import { useAuthDispatch } from "src/contexts/AuthContext";
 import { useAtt } from "src/screens/TopScreen/useAtt";
+import { USER_POLICY_URL } from "src/constants/env";
 
 // CONSTANTS
 const BALLOON_ANIMATION_DURATION_MS = 4180;
@@ -15,6 +17,8 @@ const BALLOON_ANIMATION_DELAY_MS = 200;
 export const TopScreen: React.FC = () => {
   const authDispatch = useAuthDispatch();
 
+  const [isEndAnimation, setIsEndAnimation] = useState(false);
+
   // ==== appTrackingTransparency ====
   const { showAttModal, renderAttModal } = useAtt();
 
@@ -23,7 +27,6 @@ export const TopScreen: React.FC = () => {
     useState<LottieSource>();
   const animationProgressRef = useRef(new Animated.Value(0));
   const isAnimated = useRef(false);
-  const [isEndAnimation, setIsEndAnimation] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -42,7 +45,6 @@ export const TopScreen: React.FC = () => {
       }).start(({ finished }) => {
         if (finished) {
           // アニメーション終了
-          setIsEndAnimation(true);
           fadeIn();
         }
       });
@@ -66,10 +68,19 @@ export const TopScreen: React.FC = () => {
       useNativeDriver: false,
     }).start(() => {
       showAttModal();
+      setIsEndAnimation(true);
     });
   };
 
+  const openBrowserUserPolicy = () => {
+    if (!isEndAnimation) return;
+
+    WebBrowser.openBrowserAsync(USER_POLICY_URL);
+  };
+
   const onPressConsent = () => {
+    if (!isEndAnimation) return;
+
     logEvent("start_intro");
     authDispatch({ type: "START_INTRO" });
   };
@@ -78,6 +89,7 @@ export const TopScreen: React.FC = () => {
     <>
       <TopTemplate
         onPressConsent={onPressConsent}
+        openBrowserUserPolicy={openBrowserUserPolicy}
         animationProgressRef={animationProgressRef}
         lottieBalloonSource={lottieBalloonSource}
         fadeInOpacityRef={fadeInOpacityRef}
