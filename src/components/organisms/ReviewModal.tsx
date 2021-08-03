@@ -41,8 +41,8 @@ export const ReviewModal: React.FC<Props> = (props) => {
       AppleAppID: APP_ID,
       GooglePackageName: APP_ID_ANDROID,
       preferredAndroidMarket: AndroidMarket.Google,
-      preferInApp: false,
-      openAppStoreIfInAppFails: true,
+      preferInApp: true, // app内レビューを有効
+      openAppStoreIfInAppFails: true, // app内レビュー失敗時, storeに遷移
     };
     Rate.rate(options, (isSuccess) => {
       if (isSuccess) {
