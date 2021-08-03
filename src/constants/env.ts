@@ -2,8 +2,8 @@ import { Platform } from "react-native";
 import Config from "react-native-config";
 import deviceInfoModule from "react-native-device-info";
 
-const DEBUG = true;
-// const DEBUG = false;
+// const DEBUG = true;
+const DEBUG = false;
 // const ADMOB_DEBUG = true;
 const ADMOB_DEBUG = false;
 
@@ -86,12 +86,16 @@ export const CAN_APP_TRACKING_TRANSPARENCY =
 
 export const USER_EMPTY_ICON_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/static/images/user_empty_icon.png`;
 
-export const appId = "1533306689";
-export const ITUNES_LOOKUP_URL = `https://itunes.apple.com/lookup/?id=${appId}&country=JP`;
-export const APP_STORE_URI_ITMS_APPS = `itms-apps://itunes.apple.com/jp/app/id${appId}/?mt=8`;
-export const APP_STORE_URL = `https://itunes.apple.com/jp/app/id${appId}/?mt=8`;
+export const APP_ID = "1533306689";
+export const ITUNES_LOOKUP_URL = `https://itunes.apple.com/lookup/?id=${APP_ID}&country=JP`;
+export const APP_STORE_URI_ITMS_APPS = `itms-apps://itunes.apple.com/jp/app/id${APP_ID}/?mt=8`;
+export const APP_STORE_URL = `https://itunes.apple.com/jp/app/id${APP_ID}/?mt=8`;
 
 export const LATEST_VERSION_JSON_URL = `${URL_SCHEME_HTTP}://${BASE_HOST}/static/app/latest-version.json`;
 export const APP_ID_ANDROID = "com.fullfii.fullfii";
 export const PLAY_STORE_URL_SCHEME = `market://details?id=${APP_ID_ANDROID}`;
 export const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${APP_ID_ANDROID}`;
+
+export const TWITTER_FULLFII_URL_ORIGINAL_SCHEME =
+  "twitter://user?screen_name=fullfiiOfficial";
+export const TWITTER_FULLFII_URL = "https://twitter.com/fullfiiOfficial";
