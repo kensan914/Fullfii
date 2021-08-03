@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from "react";
+import React, { ReactNode, RefObject, useRef, useState } from "react";
 import Modal from "react-native-modal";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
@@ -12,19 +12,22 @@ import {
 export const useAtt = (): {
   showAttModal: () => void;
   renderAttModal: () => ReactNode;
+  isRequestedRef: RefObject<boolean>;
 } => {
   const [isOpenAttModal, setIsOpenAttModal] = useState(false);
-  const requested = useRef(false);
+  const isShowedAttModalRef = useRef(false); // showAttModalが2回以上実行されるのを防ぐため
+  const isRequestedRef = useRef(false); // iOSは標準のATT許可ダイアログが表示されるまで
 
   const showAttModal = (): void => {
-    if (!requested.current) {
+    if (!isShowedAttModalRef.current) {
       checkPermissionATT(
         () => {
           setIsOpenAttModal(true);
-          requested.current = true;
+          isShowedAttModalRef.current = true;
         },
         () => {
-          requested.current = true;
+          isShowedAttModalRef.current = true;
+          isRequestedRef.current = true;
         }
       );
     }
@@ -32,6 +35,7 @@ export const useAtt = (): {
 
   const onOpenRequestPermissionDialog = () => {
     requestPermissionATT();
+    isRequestedRef.current = true;
     setIsOpenAttModal(false);
   };
 
@@ -48,6 +52,7 @@ export const useAtt = (): {
   return {
     showAttModal,
     renderAttModal,
+    isRequestedRef,
   };
 };
 
