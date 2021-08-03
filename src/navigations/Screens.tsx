@@ -27,6 +27,7 @@ import { IntroParticipateRoomScreen } from "src/screens/intro/IntroParticipateRo
 import { IntroSignupScreen } from "src/screens/intro/IntroSignupScreen";
 import { IntroTopScreen } from "src/screens/intro/IntroTopScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
+import { Alert5xxScreen } from "src/screens/Alert5xxScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -108,6 +109,12 @@ const HomeStack = () => {
 const AppStack: React.FC = () => {
   const authState = useAuthState();
 
+  // === 5xxエラー === //
+  if (true) {
+    return <Alert5xxScreen />;
+  }
+  // ================ //
+
   const withSafeAreaView = (component: ReactNode) => {
     return (
       <SafeAreaView
@@ -144,11 +151,6 @@ const AppStack: React.FC = () => {
           }}
           initialRouteName="IntroTop"
         >
-          {/* <Stack.Screen name="OldSignup" component={OldSignupScreen} />
-          <Stack.Screen
-            name="OldIntroCreateRoom"
-            component={OldIntroCreateRoomScreen}
-          /> */}
           <Stack.Screen name="IntroTop" component={IntroTopScreen} />
           <Stack.Screen
             name="IntroCreateRoom"
