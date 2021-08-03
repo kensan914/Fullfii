@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Linking } from "react-native";
 
-import { Alert5xxTemplate } from "src/components/templates/Alert5xxTemplate/indext";
+import { Alert5xxTemplate } from "src/components/templates/Alert5xxTemplate";
 import {
   TWITTER_FULLFII_URL,
   TWITTER_FULLFII_URL_ORIGINAL_SCHEME,
