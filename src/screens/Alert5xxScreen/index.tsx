@@ -8,7 +8,7 @@ import {
 } from "src/constants/env";
 
 export const Alert5xxScreen: React.FC = () => {
-  const [isMaintenance] = useState(true); // メンテナンス or ネットワークエラー
+  const [isMaintenance] = useState(false); // メンテナンス or ネットワークエラー
 
   const openTwitterFullfii = () => {
     Linking.canOpenURL(TWITTER_FULLFII_URL_ORIGINAL_SCHEME).then((supported) =>

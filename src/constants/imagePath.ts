@@ -9,6 +9,10 @@ import notificationPermissionDialog from "src/assets/images/intro/notificationPe
 import cracker from "src/assets/images/intro/cracker.png";
 import introCreateRoom from "src/assets/images/intro/introCreatedRoom.png";
 import introParticipateRoom from "src/assets/images/intro/introParticipateRoom.png";
+import error5xx from "src/assets/images/errors/error_5xx.png";
+import maintenance from "src/assets/images/maintenance/maintenance.png";
+import star from "src/assets/images/review/star.png";
+import reviewIcon from "src/assets/images/review/iconForReview.png";
 
 export const MAN_AND_WOMAN_IMG = manAndWomanImg;
 export const MEN_IMG = menImg;
@@ -21,3 +25,7 @@ export const NOTIFICATION_PERMISSION_DIALOG_IMG = notificationPermissionDialog;
 export const CRACKER_IMG = cracker;
 export const INTRO_CREATE_ROOM_IMG = introCreateRoom;
 export const INTRO_PARTICIPATE_ROOM_IMG = introParticipateRoom;
+export const ERROR_5XX_IMG = error5xx;
+export const MAINTENANCE_IMG = maintenance;
+export const STAR_IMG = star;
+export const REVIEW_ICON_IMG = reviewIcon;
