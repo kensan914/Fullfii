@@ -19,4 +19,6 @@ export const COLORS = {
   LIGHT_GRAY: "#6a6a6a",
   HIGHLIGHT_GRAY: "#d0d0d0",
   RED: "#EC6D62",
+  ORANGE: "#FFA500",
+  LIGHT_BLUE: "#4FCAFF",
 };

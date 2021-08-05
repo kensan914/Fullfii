@@ -18,7 +18,8 @@ import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
-import { detailSvg } from "src/constants/svgSources";
+import { detailSvg, chatIconSvg, } from "src/constants/svgSources";
+
 
 type Props = {
   room: Room;
@@ -38,6 +39,13 @@ export const RoomCard: React.FC<Props> = (props) => {
     room.owner.gender,
     room.owner.isSecretGender
   );
+  const changeStatus = () => {
+    if (room.image) {
+      setIsSpeak(true)
+    } else {
+      setIsSpeak(false)
+    }
+  }
   return (
     <>
       <Block style={[styles.container, style]}>
@@ -111,19 +119,34 @@ export const RoomCard: React.FC<Props> = (props) => {
                   </Block>
                 </Block>
                 <Block row>
-                  <Block flex row style={styles.member}>
-                    <Block>
-                      <Icon
-                        name={participantIconName}
-                        family="Ionicons"
-                        size={32}
-                        color={participantIconColor}
+                  <Block flex row style={styles.statusAndMember}>
+                    <Block row center style={styles.statusContainer}>
+                      <SvgUri
+                        width={26}
+                        height={26}
+                        source={chatIconSvg}
+                        fill={formattedGender.label=="女性" ? COLORS.LIGHT_BLUE : COLORS.ORANGE}
                       />
+                      <Block style={styles.memberText}>
+                        <Text size={14} color={formattedGender.label=="女性" ? COLORS.LIGHT_BLUE : COLORS.ORANGE}>
+                          {formattedGender.label=="女性" ? "話したい" : "聞きたい"}
+                        </Text>
+                      </Block>
                     </Block>
-                    <Block style={styles.memberText}>
-                      <Text size={14} color={COLORS.LIGHT_GRAY}>
-                        {room.participants.length}/{room.maxNumParticipants}
-                      </Text>
+                    <Block row center>
+                      <Block>
+                        <Icon
+                          name={participantIconName}
+                          family="Ionicons"
+                          size={32}
+                          color={participantIconColor}
+                        />
+                      </Block>
+                      <Block style={styles.memberText}>
+                        <Text size={14} color={COLORS.LIGHT_GRAY}>
+                          {room.participants.length}/{room.maxNumParticipants}
+                        </Text>
+                      </Block>
                     </Block>
                   </Block>
                 </Block>
@@ -208,13 +231,16 @@ const styles = StyleSheet.create({
   positionText: {
     marginLeft: 8,
   },
-  member: {
+  statusAndMember: {
     marginLeft: 16,
     marginTop: 16,
     alignItems: "center",
   },
+  statusContainer: {
+    marginRight: 8
+  },
   memberText: {
-    marginLeft: 8,
+    marginLeft: 4,
   },
   eyeIcon: {
     position: "absolute",
