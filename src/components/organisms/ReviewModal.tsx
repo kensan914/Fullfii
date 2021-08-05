@@ -33,7 +33,6 @@ export const ReviewModal: React.FC<Props> = (props) => {
     shouldOpenDissatisfactionModalRef.current = false;
     setDissatisfactionText("");
     setIsLoadingPostSurveyDissatisfaction(false);
-    console.log("終了");
   };
 
   // レビューモーダル

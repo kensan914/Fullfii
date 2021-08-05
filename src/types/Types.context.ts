@@ -375,11 +375,19 @@ export const AllMessageIoTs = t.union([
 ]);
 export const AllMessagesIoTs = t.array(AllMessageIoTs);
 
+export const TagIoTs = t.type({
+  key: t.string,
+  label: t.string,
+  order: t.number,
+});
+
 export const BaseRoomIoTs = t.type({
   id: t.string,
   name: t.string,
   image: t.union([t.string, t.null]),
   owner: ProfileIoTs,
+  tags: t.array(TagIoTs),
+  isSpeaker: t.boolean,
   participants: t.array(ProfileIoTs),
   leftMembers: t.array(ProfileIoTs),
   maxNumParticipants: t.number,

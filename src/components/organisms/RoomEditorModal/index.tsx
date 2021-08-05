@@ -5,7 +5,6 @@ import {
   Keyboard,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
   Image,
   Alert,
   TouchableWithoutFeedback,
@@ -14,17 +13,12 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
+import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 
 import { COLORS } from "src/constants/colors";
-import {
-  MAN_AND_WOMAN_IMG,
-  MEN_IMG,
-  PRIVATE_IMG,
-} from "src/constants/imagePath";
 import { Icon } from "src/components/atoms/Icon";
 import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import { width } from "src/constants";
-import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 import {
   useRequestPatchRoom,
   useRequestPostRoom,
@@ -39,7 +33,6 @@ import { useChatState } from "src/contexts/ChatContext";
 type PropsDependsOnMode =
   | {
       mode: "CREATE_FROM_MY_ROOMS";
-      // setIsOpenRoomCreatedModal: Dispatch<boolean>;
     }
   | {
       mode: "CREATE_FROM_ROOMS";
@@ -76,6 +69,11 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   );
 
   // ====== init post or patch data ======
+  const [initIsSpeaker] = useState<boolean>(
+    propsDependsOnMode.mode === "FIX"
+      ? propsDependsOnMode.talkingRoom.isSpeaker
+      : true
+  );
   const [initRoomName] = useState(
     propsDependsOnMode.mode === "FIX"
       ? propsDependsOnMode.talkingRoom.name
@@ -109,6 +107,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   // ====== init post or patch data ======
 
   // ====== post or patch data ======
+  const [isSpeaker, setIsSpeaker] = useState<boolean>(initIsSpeaker);
   const [roomName, setRoomName] = useState<string | null>(initRoomName);
   const [roomImage, setRoomImage] = useState<ImageInfo | null>(initRoomImage);
   const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(
@@ -167,7 +166,8 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
       // then時、実行
       resetState();
       closeModalAfterCreate();
-    }
+    },
+    isSpeaker
   );
 
   // ルーム修正用
@@ -182,7 +182,8 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
       resetState();
       setIsOpenRoomEditorModal(false);
       showToast(TOAST_SETTINGS["FIX_ROOM"]);
-    }
+    },
+    isSpeaker
   );
 
   const renderRoomImage = () => {
@@ -326,11 +327,39 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Text>
             </Block>
             <Block row space="between" style={styles.statusButtonContainer}>
-              <Button shadowless={true} opacity={0.6} style={[styles.statusButton, {borderColor: COLORS.BROWN}]}>
-                <Text size={14} color={COLORS.BLACK}>悩みを話したい</Text>
+              <Button
+                shadowless={true}
+                opacity={0.8}
+                onPress={() => {
+                  setIsSpeaker(true);
+                }}
+                style={[
+                  styles.statusButton,
+                  isSpeaker
+                    ? { borderColor: COLORS.BROWN }
+                    : { borderColor: COLORS.HIGHLIGHT_GRAY, borderWidth: 1 },
+                ]}
+              >
+                <Text size={14} color={COLORS.BLACK}>
+                  悩みを話したい
+                </Text>
               </Button>
-              <Button shadowless={true} opacity={0.6} style={[styles.statusButton, {borderColor: COLORS.BROWN}]}>
-                <Text size={14} color={COLORS.BLACK}>悩みを聞きたい</Text>
+              <Button
+                shadowless={true}
+                opacity={0.8}
+                onPress={() => {
+                  setIsSpeaker(false);
+                }}
+                style={[
+                  styles.statusButton,
+                  !isSpeaker
+                    ? { borderColor: COLORS.BROWN }
+                    : { borderColor: COLORS.HIGHLIGHT_GRAY, borderWidth: 1 },
+                ]}
+              >
+                <Text size={14} color={COLORS.BLACK}>
+                  悩みを聞きたい
+                </Text>
               </Button>
             </Block>
 
@@ -381,7 +410,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                   !isExcludeDifferentGender &&
                   !isPrivate
                     ? { borderColor: COLORS.BROWN }
-                    : { borderColor: COLORS.WHITE },
+                    : { borderColor: COLORS.HIGHLIGHT_GRAY, borderWidth: 1 },
                 ]}
                 onPress={() => {
                   setIsExcludeDifferentGender(false);
@@ -401,7 +430,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                   isExcludeDifferentGender &&
                   !isPrivate
                     ? { borderColor: COLORS.BROWN }
-                    : { borderColor: COLORS.WHITE },
+                    : { borderColor: COLORS.HIGHLIGHT_GRAY, borderWidth: 1 },
                 ]}
                 onPress={() => {
                   if (!canSetIsExcludeDifferentGender) {
@@ -424,8 +453,9 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 style={[
                   styles.rangeButton,
                   isPrivate !== null && isPrivate
-                    ? { borderColor: COLORS.GREEN }
-                    : { borderColor: "#f4f8f7" },
+                    ? { borderColor: COLORS.BROWN }
+                    : { borderColor: COLORS.HIGHLIGHT_GRAY, borderWidth: 1 },
+                  // : { borderColor: "#f4f8f7", borderWidth: 1 },
                 ]}
                 onPress={() => {
                   if (!chatState.hasFavoriteUser) {
@@ -588,11 +618,6 @@ const styles = StyleSheet.create({
     top: 24,
     right: 16,
   },
-  checkRoomTopic: {
-    position: "absolute",
-    top: 48,
-    right: 16,
-  },
   checkRoomImage: {
     position: "absolute",
     top: 64,
@@ -600,35 +625,6 @@ const styles = StyleSheet.create({
   },
   choiceRangeTitle: {
     marginBottom: 8,
-  },
-  circleButtons: {
-    paddingHorizontal: 16,
-    marginBottom: 32,
-  },
-  circleButton: {
-    height: 84,
-    width: 84,
-    backgroundColor: "#f4f8f7",
-    borderRadius: 50,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 8,
-  },
-  disclosureRangeImage: {
-    height: 80,
-    width: 80,
-    alignItems: "center",
-  },
-  disclosureRangeText: {
-    paddingTop: 12,
   },
   submitButtonContainer: {
     marginBottom: 16,
@@ -717,7 +713,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   rangeButtonContainer: {
-    marginBottom:32
+    marginBottom: 32,
   },
   rangeButton: {
     width: width / 4,
@@ -731,10 +727,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 1,
-    borderWidth: 3
+    borderWidth: 3,
   },
   statusButtonContainer: {
-    marginBottom: 24
+    marginBottom: 24,
   },
   statusButton: {
     width: width / 2.5,
@@ -748,6 +744,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 1,
-    borderWidth: 3
-  }
+    borderWidth: 3,
+  },
 });

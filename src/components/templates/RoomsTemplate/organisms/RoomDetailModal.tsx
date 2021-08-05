@@ -173,15 +173,18 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             <Block row>
               <Block flex row style={styles.statusAndMember}>
                 <Block row center style={styles.statusContainer}>
-                  <SvgUri
-                    width={26}
-                    height={26}
-                    source={chatIconSvg}
-                    fill={room.owner.gender.label=="女性" ? COLORS.LIGHT_BLUE : COLORS.ORANGE}
+                  <Icon
+                    name="message1"
+                    family="AntDesign"
+                    size={26}
+                    color={room.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE}
                   />
                   <Block style={styles.memberText}>
-                    <Text size={14} color={room.owner.gender.label=="女性" ? COLORS.LIGHT_BLUE : COLORS.ORANGE}>
-                      {room.owner.gender.label=="女性" ? "話したい" : "聞きたい"}
+                    <Text
+                      size={14}
+                      color={room.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE}
+                    >
+                      {room.isSpeaker ? "話したい" : "聞きたい"}
                     </Text>
                   </Block>
                 </Block>
@@ -307,7 +310,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   statusContainer: {
-    marginRight: 8
+    marginRight: 8,
   },
   memberText: {
     marginLeft: 4,
