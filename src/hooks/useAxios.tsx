@@ -1,6 +1,8 @@
 import { Dispatch, useEffect, useRef, useState } from "react";
+import { Alert } from "react-native";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { isRight } from "fp-ts/lib/Either";
+import NetInfo from "@react-native-community/netinfo";
 
 import {
   AxiosMethod,
@@ -13,7 +15,8 @@ import {
   UseAxiosActionType,
 } from "src/types/Types";
 import { checkCorrectKey, deepCvtKeyFromSnakeToCamel } from "src/utils";
-import { Alert } from "react-native";
+import { DomDispatch } from "src/types/Types.context";
+import { DOWN, MAINTENANCE, useDomDispatch } from "src/contexts/DomContext";
 
 /**
  * カスタムHooks ver, Function verの共通init処理
@@ -98,7 +101,8 @@ const useCommonThen = (
  */
 const useCommonCatch = (
   err: AxiosError,
-  action: UseAxiosActionType | RequestAxiosActionType
+  action: UseAxiosActionType | RequestAxiosActionType,
+  domDispatch?: DomDispatch
 ): void => {
   if (err.response) {
     console.error(err.response);
@@ -114,6 +118,22 @@ const useCommonCatch = (
     console.error(err);
   }
   if (action.catchCallback !== void 0) action.catchCallback(err);
+
+  // メンテナンス or サーバダウン検知
+  if (err.response?.status === 503) {
+    domDispatch &&
+      domDispatch({ type: "SET_API_STATUS", apiStatus: MAINTENANCE });
+  } else {
+    // ⇓ detect network error
+    if (!!err.isAxiosError && !err.response) {
+      NetInfo.fetch().then((state) => {
+        if (state.isConnected) {
+          domDispatch &&
+            domDispatch({ type: "SET_API_STATUS", apiStatus: DOWN });
+        }
+      });
+    }
+  }
 };
 /**
  * カスタムHooks ver, Function verの共通タスク(finally)処理
@@ -157,6 +177,8 @@ export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
   ];
   const correctRequestActionKeys = ["url", "data", "thenCallback", "token"];
   //---------- constants ----------//
+
+  const domDispatch = useDomDispatch();
 
   // init axios
   const [axiosInstance, axiosSettings, actionKeys] = initAxios(
@@ -235,7 +257,7 @@ export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
       })
       .catch((err) => {
         requestNum.current--; // リクエスト無効
-        useCommonCatch(err, action);
+        useCommonCatch(err, action, domDispatch);
       })
       .finally(() => {
         useCommonFinally(action);

@@ -1,7 +1,8 @@
 import React from "react";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
-import { RouteName } from "./Types";
+
+import { RouteName } from "src/types/Types";
 
 //========== Auth ==========//
 export type AuthState = {
@@ -22,10 +23,6 @@ export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
 export type SignupBufferNullable = SignupBuffer | null;
 export type TokenNullable = string | null;
 export type AuthActionType =
-  // TODO: 使用しない
-  // | { type: "COMPLETE_SIGNUP"; initBottomTabRouteName: RouteName }
-  // TODO: 使用しない
-  // | { type: "COMPLETE_INTRO" }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_PASSWORD"; password: string }
   | {
@@ -492,6 +489,18 @@ export const TalkInfoJsonIoTs = t.type({
 
 //========== Dom ==========//
 export type TaskSchedulesKey = "refreshRooms";
+export const MaintenanceTypeIoTs = t.literal("MAINTENANCE");
+export const DownTypeIoTs = t.literal("DOWN");
+export const OkTypeIoTs = t.literal("OK");
+export const ApiStatusIoTs = t.union([
+  MaintenanceTypeIoTs,
+  DownTypeIoTs,
+  OkTypeIoTs,
+]);
+export type MaintenanceType = t.TypeOf<typeof MaintenanceTypeIoTs>;
+export type DownType = t.TypeOf<typeof DownTypeIoTs>;
+export type OkType = t.TypeOf<typeof OkTypeIoTs>;
+export type ApiStatus = t.TypeOf<typeof ApiStatusIoTs>;
 export type DomState = {
   taskSchedules: { [key in TaskSchedulesKey]: boolean };
   pushNotificationParams: {
@@ -499,6 +508,7 @@ export type DomState = {
     isChosenPermission: boolean;
     isChanged: boolean;
   };
+  apiStatus: ApiStatus;
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
 export type DomActionType =
@@ -510,7 +520,8 @@ export type DomActionType =
       isChosenPermission?: boolean;
     }
   | { type: "CONFIGURED_PUSH_NOTIFICATION" }
-  | { type: "FINISH_SET_PUSH_NOTIFICATION_PARAMS" };
+  | { type: "FINISH_SET_PUSH_NOTIFICATION_PARAMS" }
+  | { type: "SET_API_STATUS"; apiStatus: MaintenanceType | DownType };
 
 //========== Dom ==========//
 

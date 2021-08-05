@@ -33,7 +33,7 @@ import {
 } from "src/types/Types.context";
 import { Assets } from "src/types/Types";
 import { DomProvider } from "src/contexts/DomContext";
-import { useNetInfo } from "./hooks/useNetInfo";
+import { useNetInfo } from "src/hooks/useNetInfo";
 
 LogBox.ignoreAllLogs(true);
 

@@ -18,36 +18,6 @@ import {
 const authReducer = (prevState: AuthState, action: AuthActionType) => {
   let _signupBuffer: SignupBuffer;
   switch (action.type) {
-    // TODO: 使用しない
-    // case "COMPLETE_SIGNUP": {
-    //   /** HOMEに遷移. statusを"AUTHENTICATED"に.
-    //    ** initBottomTabRouteNameに指定したbottomタブに遷移.
-    //    * @param {Object} action [type, initBottomTabRouteName] */
-
-    //   const authenticatedStatus = AUTHENTICATED;
-    //   asyncStoreItem("status", authenticatedStatus);
-
-    //   return {
-    //     ...prevState,
-    //     status: authenticatedStatus,
-    //     initBottomTabRouteName: action.initBottomTabRouteName,
-    //   };
-    // }
-
-    // TODO: 使用しない
-    // case "COMPLETE_INTRO": {
-    //   /** イントロを終了した. statusを"AUTHENTICATING"に.
-    //    * @param {Object} action [type] */
-
-    //   const authenticatingStatus = AUTHENTICATING;
-    //   asyncStoreItem("status", authenticatingStatus);
-
-    //   return {
-    //     ...prevState,
-    //     status: authenticatingStatus,
-    //   };
-    // }
-
     case "SET_TOKEN": {
       /** set token. tokenが設定されていた場合、変更しない
        * @param {Object} action [type, token] */
