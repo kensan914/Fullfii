@@ -121,7 +121,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
           {talkingRoom.isPrivate && (
             <Block row style={styles.privateLabelContainer}>
               <Text
-                size={12}
+                size={13}
                 bold
                 color={COLORS.WHITE}
                 style={styles.privateLabel}
@@ -351,15 +351,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   privateLabelContainer: {
+    marginLeft: 8,
     marginRight: 8,
+    borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: COLORS.GREEN,
+    padding: 8,
+    height: "80%",
+    alignSelf: "center",
   },
   privateLabel: {
-    marginLeft: 8,
-    padding: 4,
-    borderRadius: 8,
-    backgroundColor: COLORS.GREEN,
     textAlign: "center",
     alignSelf: "center",
   },
