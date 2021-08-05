@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { TouchableOpacity, ViewStyle } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
 import { TOAST_SETTINGS } from "src/constants/alertMessages";
 import { COLORS } from "src/constants/colors";
-import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
+import { useChatDispatch } from "src/contexts/ChatContext";
 import {
   useRequestDeleteMeFavoritesUsers,
   useRequestPatchMeFavoritesUsers,
@@ -12,50 +12,22 @@ import {
 import { showToast } from "src/utils/customModules";
 
 type Props = {
-  roomId: string;
   isReadyTalk: boolean;
-  isReadyTalkForOwner: boolean;
+  targetFavoriteUserId: string | undefined;
+  isAddedFavoriteUserRef: React.MutableRefObject<boolean>;
+  isAddedFavoriteUser: boolean;
   style?: ViewStyle;
 };
 export const AddFavoriteUserMenu: React.FC<Props> = (props) => {
-  const { roomId, isReadyTalk, isReadyTalkForOwner, style } = props;
-
-  const chatState = useChatState();
-  const chatDispatch = useChatDispatch();
-
-  const targetFavoriteUserId: string | undefined = isReadyTalk
-    ? isReadyTalkForOwner
-      ? chatState.talkingRoomCollection[roomId]?.participants[0]?.id // HACK:
-      : chatState.talkingRoomCollection[roomId]?.owner?.id
-    : void 0;
-
-  // 即時反映お気に入りフラグ
-  const isAddedFavoriteUserRef = useRef(false);
-  useEffect(() => {
-    // ⇓初期化
-    if (isReadyTalk && targetFavoriteUserId) {
-      isAddedFavoriteUserRef.current =
-        chatState.talkingRoomCollection[roomId].addedFavoriteUserIds.includes(
-          targetFavoriteUserId
-        );
-    }
-  }, [isReadyTalk]);
-
-  // お気に入りフラグ
-  const [isAddedFavoriteUser, setIsAddedFavoriteUser] = useState(false);
-  useEffect(() => {
-    // ⇓初期化
-    if (isReadyTalk && targetFavoriteUserId) {
-      setIsAddedFavoriteUser(
-        chatState.talkingRoomCollection[roomId].addedFavoriteUserIds.includes(
-          targetFavoriteUserId
-        )
-      );
-    }
-  }, [
+  const {
     isReadyTalk,
-    chatState.talkingRoomCollection[roomId]?.addedFavoriteUserIds?.length,
-  ]);
+    targetFavoriteUserId,
+    isAddedFavoriteUserRef,
+    isAddedFavoriteUser,
+    style,
+  } = props;
+
+  const chatDispatch = useChatDispatch();
 
   // 追加リクエスト
   const { requestPatchMeFavoritesUsers, isLoadingPatchMeFavoritesUsers } =

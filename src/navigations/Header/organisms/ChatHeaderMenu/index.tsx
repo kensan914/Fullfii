@@ -7,6 +7,7 @@ import { LeaveParticipantMenu } from "src/navigations/Header/organisms/ChatHeade
 import { AddFavoriteUserMenu } from "src/navigations/Header/organisms/ChatHeaderMenu/AddFavoriteUserMenu";
 import { useChatState } from "src/contexts/ChatContext";
 import { useProfileState } from "src/contexts/ProfileContext";
+import { useAddFavoriteUser } from "./AddFavoriteUserMenu/useAddFavoriteUser";
 
 type Props = {
   roomId: string;
@@ -37,12 +38,16 @@ export const ChatHeaderMenu: React.FC<Props> = (props) => {
     }
   }, [chatState.talkingRoomCollection]);
 
+  const { targetFavoriteUserId, isAddedFavoriteUserRef, isAddedFavoriteUser } =
+    useAddFavoriteUser(roomId, isReadyTalk, isReadyTalkForOwner);
+
   return (
     <Block style={styles.container}>
       <AddFavoriteUserMenu
-        roomId={roomId}
         isReadyTalk={isReadyTalk}
-        isReadyTalkForOwner={isReadyTalkForOwner}
+        targetFavoriteUserId={targetFavoriteUserId}
+        isAddedFavoriteUserRef={isAddedFavoriteUserRef}
+        isAddedFavoriteUser={isAddedFavoriteUser}
         style={styles.leaveParticipantMenu}
       />
       <LeaveParticipantMenu
@@ -54,6 +59,7 @@ export const ChatHeaderMenu: React.FC<Props> = (props) => {
         roomId={roomId}
         isReadyTalk={isReadyTalk}
         isReadyTalkForOwner={isReadyTalkForOwner}
+        isAddedFavoriteUserRef={isAddedFavoriteUserRef}
         style={styles.byeByeMenu}
       />
     </Block>

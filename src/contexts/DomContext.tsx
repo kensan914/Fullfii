@@ -67,6 +67,16 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       return { ...prevState, apiStatus: action.apiStatus };
     }
 
+    case "SET_IS_SHOW_SPINNER": {
+      /** set isShowSpinner.
+       * @param {Object} action [type, value] */
+
+      return {
+        ...prevState,
+        isShowSpinner: Boolean(action.value),
+      };
+    }
+
     default:
       console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
@@ -79,6 +89,7 @@ export const OK: OkType = "OK"; // 正常運用中（初期状態）
 const initDomState = Object.freeze({
   taskSchedules: {
     refreshRooms: false,
+    openReviewModal: false,
   },
   pushNotificationParams: {
     isPermission: false, // 既に設定され, かつ許可されている
@@ -86,6 +97,7 @@ const initDomState = Object.freeze({
     isChanged: false, // depフラグ
   },
   apiStatus: OK,
+  isShowSpinner: false,
 });
 const domStateContext = createContext<DomState>({ ...initDomState });
 const domDispatchContext = createContext<DomDispatch>(() => {

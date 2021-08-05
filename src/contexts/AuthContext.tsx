@@ -128,15 +128,6 @@ const authReducer = (prevState: AuthState, action: AuthActionType) => {
       };
     }
 
-    case "SET_IS_SHOW_SPINNER": {
-      /** set isShowSpinner.
-       * @param {Object} action [type, value] */
-
-      return {
-        ...prevState,
-        isShowSpinner: Boolean(action.value),
-      };
-    }
     case "DELETE_ACCOUNT": {
       /** auth stateを初期化.
        * @param {Object} action [type] */
@@ -182,7 +173,6 @@ const initSignupBuffer: SignupBuffer = Object.freeze({
 const initAuthState = Object.freeze({
   status: UNAUTHENTICATED,
   token: null,
-  isShowSpinner: false,
   initBottomTabRouteName: null, // イントロ完了時にどのタブへ遷移するか
   signupBuffer: { ...initSignupBuffer },
 });
@@ -214,7 +204,6 @@ export const AuthProvider: React.FC<Props> = ({
   const initAuthState: AuthState = {
     status: status ? status : UNAUTHENTICATED,
     token: token ? token : null,
-    isShowSpinner: false,
     initBottomTabRouteName: null, // イントロ完了時にどのタブへ遷移するか
     signupBuffer: signupBuffer ? signupBuffer : initSignupBuffer,
   };

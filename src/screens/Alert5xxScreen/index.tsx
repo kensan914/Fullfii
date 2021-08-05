@@ -21,15 +21,10 @@ export const Alert5xxScreen: React.FC = () => {
     );
   };
 
-  // TODO: 最終的に消す
-  const [isOpenReviewModal, setIsOpenReviewModal] = useState(false);
-
   return (
     <Alert5xxTemplate
       isMaintenance={isMaintenance}
       openTwitterFullfii={openTwitterFullfii}
-      isOpenReviewModal={isOpenReviewModal}
-      setIsOpenReviewModal={setIsOpenReviewModal}
     />
   );
 };

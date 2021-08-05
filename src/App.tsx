@@ -93,6 +93,7 @@ const RootNavigator: React.FC<Props> = (props) => {
     useState<InitState<TalkingRoomCollectionAsync>>();
   const [isBanned, setIsBanned] = useState<InitState<boolean>>();
   const [signupBuffer, setSignupBuffer] = useState<InitState<SignupBuffer>>();
+  const [isReviewed, setIsReviewed] = useState<InitState<boolean>>();
 
   useEffect(() => {
     (async () => {
@@ -129,6 +130,11 @@ const RootNavigator: React.FC<Props> = (props) => {
         SignupBufferIoTs
       )) as SignupBuffer;
       setSignupBuffer(_signupBuffer ? _signupBuffer : null);
+
+      const _isReviewedNullable = await asyncGetBool("isReviewed", t.boolean);
+      const _isReviewed =
+        typeof _isReviewedNullable === "boolean" ? _isReviewedNullable : null;
+      setIsReviewed(_isReviewed !== null ? _isReviewed : null);
     })();
   }, []);
 
@@ -139,6 +145,7 @@ const RootNavigator: React.FC<Props> = (props) => {
     typeof talkingRoomCollection === "undefined" ||
     typeof isBanned === "undefined" ||
     typeof signupBuffer === "undefined" ||
+    typeof isReviewed === "undefined" ||
     !props.isFinishLoadingResources
   ) {
     return <></>; // AppLording
@@ -155,7 +162,11 @@ const RootNavigator: React.FC<Props> = (props) => {
             token={token}
             signupBuffer={signupBuffer}
           >
-            <ProfileProvider profile={profile} isBanned={isBanned}>
+            <ProfileProvider
+              profile={profile}
+              isBanned={isBanned}
+              isReviewed={isReviewed}
+            >
               <ChatProvider talkingRoomCollection={talkingRoomCollection}>
                 <DomProvider>
                   <StartUpManager>

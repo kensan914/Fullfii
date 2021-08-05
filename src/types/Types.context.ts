@@ -8,7 +8,6 @@ import { RouteName } from "src/types/Types";
 export type AuthState = {
   status: AuthStatus;
   token: TokenNullable;
-  isShowSpinner: boolean;
   initBottomTabRouteName: null | RouteName;
   signupBuffer: SignupBuffer;
 };
@@ -38,7 +37,6 @@ export type AuthActionType =
     }
   | { type: "SUCCESS_SIGNUP_INTRO" }
   | { type: "COMPLETE_INTRO"; initBottomTabRouteName: RouteName }
-  | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
   | { type: "DELETE_ACCOUNT" }
   | { type: "DANGEROUSLY_RESET" };
 //========== Auth ==========//
@@ -78,6 +76,7 @@ export type ProfileState = {
     genderKey: string;
     jobKey: string;
   };
+  isReviewed: boolean;
 };
 export type ProfileDispatch = React.Dispatch<ProfileActionType>;
 export type ProfileActionType =
@@ -90,7 +89,8 @@ export type ProfileActionType =
       genderKey: string;
       jobKey: string;
     }
-  | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" };
+  | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" }
+  | { type: "HAS_REVIEWED" };
 
 export type Plan = t.TypeOf<typeof PlanIoTs>;
 export type GenderKey = t.TypeOf<typeof GenderKeyIoTs>;
@@ -488,7 +488,7 @@ export const TalkInfoJsonIoTs = t.type({
 //========== Chat io-ts ==========//
 
 //========== Dom ==========//
-export type TaskSchedulesKey = "refreshRooms";
+export type TaskSchedulesKey = "refreshRooms" | "openReviewModal";
 export const MaintenanceTypeIoTs = t.literal("MAINTENANCE");
 export const DownTypeIoTs = t.literal("DOWN");
 export const OkTypeIoTs = t.literal("OK");
@@ -509,6 +509,7 @@ export type DomState = {
     isChanged: boolean;
   };
   apiStatus: ApiStatus;
+  isShowSpinner: boolean;
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
 export type DomActionType =
@@ -521,7 +522,8 @@ export type DomActionType =
     }
   | { type: "CONFIGURED_PUSH_NOTIFICATION" }
   | { type: "FINISH_SET_PUSH_NOTIFICATION_PARAMS" }
-  | { type: "SET_API_STATUS"; apiStatus: MaintenanceType | DownType };
+  | { type: "SET_API_STATUS"; apiStatus: MaintenanceType | DownType }
+  | { type: "SET_IS_SHOW_SPINNER"; value: boolean };
 
 //========== Dom ==========//
 

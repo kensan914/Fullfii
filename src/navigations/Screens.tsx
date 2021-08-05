@@ -136,7 +136,7 @@ const AppStack: React.FC = () => {
             {() => (
               <>
                 <HomeStack />
-                {authState.isShowSpinner && <Spinner />}
+                {domState.isShowSpinner && <Spinner />}
               </>
             )}
           </Stack.Screen>
