@@ -18,7 +18,7 @@ import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
-import { detailSvg } from "src/constants/svgSources";
+import { detailSvg, chatIconSvg } from "src/constants/svgSources";
 
 type Props = {
   room: Room;
@@ -38,6 +38,7 @@ export const RoomCard: React.FC<Props> = (props) => {
     room.owner.gender,
     room.owner.isSecretGender
   );
+
   return (
     <>
       <Block style={[styles.container, style]}>
@@ -55,39 +56,40 @@ export const RoomCard: React.FC<Props> = (props) => {
                 size={16}
                 color={COLORS.BLACK}
                 bold
-                numberOfLines={2}
+                numberOfLines={1}
                 ellipsizeMode="tail"
               >
                 {room.name}
               </Text>
             </Block>
-            <Block flex row>
-              <Block />
-              {room.image ? (
-                <Image source={{ uri: room.image }} style={styles.image} />
-              ) : (
-                <Block style={styles.image}></Block>
-              )}
-              <Block flex column>
-                <Block row>
+            <Block row>
+              <Block>
+                {room.image ? (
+                  <Image source={{ uri: room.image }} style={styles.image} />
+                ) : (
+                  <Block style={styles.image} />
+                )}
+              </Block>
+              <Block flex style={styles.roomInfoContainer}>
+                <Block row style={styles.ownerContainer}>
                   <Avatar
                     size={32}
                     imageUri={room.owner.image}
                     style={styles.avatar}
                   />
-                  <Block column style={styles.userInfo}>
-                    <Block style={styles.userName}>
+                  <Block flex column style={styles.ownerInfo}>
+                    <Block flex style={styles.ownerName}>
                       <Text
                         size={14}
                         color={COLORS.LIGHT_GRAY}
-                        numberOfLines={2}
+                        numberOfLines={1}
                         ellipsizeMode="tail"
                       >
                         {room.owner.name}
                       </Text>
                     </Block>
                     <Block row>
-                      <Block style={styles.userGender}>
+                      <Block style={styles.ownerGender}>
                         <Text
                           size={14}
                           color={COLORS.LIGHT_GRAY}
@@ -110,39 +112,60 @@ export const RoomCard: React.FC<Props> = (props) => {
                     </Block>
                   </Block>
                 </Block>
-                <Block row>
-                  <Block flex row style={styles.member}>
-                    <Block>
+                <Block row center style={styles.statusContainer}>
+                  <Block flex row>
+                    <Block row center style={styles.statusItem}>
                       <Icon
-                        name={participantIconName}
-                        family="Ionicons"
-                        size={32}
-                        color={participantIconColor}
+                        name="message1"
+                        family="AntDesign"
+                        size={26}
+                        color={
+                          room.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE
+                        }
                       />
+                      <Block style={styles.statusText}>
+                        <Text
+                          size={14}
+                          color={
+                            room.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE
+                          }
+                        >
+                          {room.isSpeaker ? "話したい" : "聞きたい"}
+                        </Text>
+                      </Block>
                     </Block>
-                    <Block style={styles.memberText}>
-                      <Text size={14} color={COLORS.LIGHT_GRAY}>
-                        {room.participants.length}/{room.maxNumParticipants}
-                      </Text>
+                    <Block row center style={styles.statusItem}>
+                      <Block>
+                        <Icon
+                          name={participantIconName}
+                          family="Ionicons"
+                          size={32}
+                          color={participantIconColor}
+                        />
+                      </Block>
+                      <Block style={styles.statusText}>
+                        <Text size={14} color={COLORS.LIGHT_GRAY}>
+                          {room.participants.length}/{room.maxNumParticipants}
+                        </Text>
+                      </Block>
                     </Block>
                   </Block>
+                  <TouchableOpacity
+                    style={styles.detailButton}
+                    onPress={() => {
+                      setIsOpen(true);
+                    }}
+                  >
+                    <SvgUri
+                      width={32}
+                      height={32}
+                      source={detailSvg}
+                      fill={COLORS.BROWN}
+                    />
+                  </TouchableOpacity>
                 </Block>
               </Block>
             </Block>
-            {/* 非表示見送り */}
-            <TouchableOpacity
-              style={styles.eyeIcon}
-              onPress={() => {
-                setIsOpen(true);
-              }}
-            >
-              <SvgUri
-                width={32}
-                height={32}
-                source={detailSvg}
-                fill={COLORS.BROWN}
-              />
-            </TouchableOpacity>
           </Block>
         </TouchableHighlight>
       </Block>
@@ -187,40 +210,37 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 16,
   },
-  avatar: {
-    marginLeft: 16,
+  roomInfoContainer: {
+    paddingLeft: 16,
   },
-  userInfo: {
+  ownerContainer: {},
+  avatar: {},
+  ownerInfo: {
     marginLeft: 8,
   },
-  userName: {
+  ownerName: {
     marginBottom: 4,
-    width: width - 40 - 88 - 32 - 16 - 8 - 32,
   },
-  userGender: {
+  ownerGender: {
     marginRight: 4,
   },
-  position: {
+
+  statusAndMember: {
     marginLeft: 16,
     marginTop: 16,
     alignItems: "center",
   },
-  positionText: {
-    marginLeft: 8,
-  },
-  member: {
-    marginLeft: 16,
+  statusContainer: {
     marginTop: 16,
     alignItems: "center",
   },
-  memberText: {
-    marginLeft: 8,
+  statusText: {
+    marginLeft: 4,
   },
-  eyeIcon: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
+  statusItem: {
+    marginRight: 8,
   },
+  detailButton: {},
   image: {
     width: 88,
     height: 88,

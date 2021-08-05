@@ -55,7 +55,8 @@ type UseRequestPostRoom = (
   isExcludeDifferentGender: boolean | null,
   isPrivate: boolean | null,
   roomImage: ImageInfo | null,
-  additionalThenCallback?: (roomJson: RoomJson) => void
+  additionalThenCallback?: (roomJson: RoomJson) => void,
+  isSpeaker?: boolean
 ) => {
   requestPostRoom: Request;
   isLoadingPostRoom: boolean;
@@ -65,7 +66,8 @@ export const useRequestPostRoom: UseRequestPostRoom = (
   isExcludeDifferentGender,
   isPrivate,
   roomImage,
-  additionalThenCallback = () => void 0
+  additionalThenCallback = () => void 0,
+  isSpeaker
 ) => {
   const authState = useAuthState();
   const chatDispatch = useChatDispatch();
@@ -78,6 +80,7 @@ export const useRequestPostRoom: UseRequestPostRoom = (
     RoomJsonIoTs,
     {
       data: {
+        ...(typeof isSpeaker !== "undefined" ? { is_speaker: isSpeaker } : {}),
         ...(roomName !== null ? { name: roomName } : {}),
         ...(isExcludeDifferentGender !== null
           ? { is_exclude_different_gender: isExcludeDifferentGender }
@@ -126,7 +129,8 @@ type UseRequestPatchRoom = (
   isExcludeDifferentGender?: boolean | null,
   isPrivate?: boolean | null,
   roomImage?: ImageInfo | null,
-  additionalThenCallback?: (roomJson: RoomJson) => void
+  additionalThenCallback?: (roomJson: RoomJson) => void,
+  isSpeaker?: boolean
 ) => {
   requestPatchRoom: Request;
   isLoadingPatchRoom: boolean;
@@ -137,7 +141,8 @@ export const useRequestPatchRoom: UseRequestPatchRoom = (
   isExcludeDifferentGender = null,
   isPrivate = null,
   roomImage = null,
-  additionalThenCallback = () => void 0
+  additionalThenCallback = () => void 0,
+  isSpeaker
 ) => {
   const authState = useAuthState();
   const chatDispatch = useChatDispatch();
@@ -150,6 +155,7 @@ export const useRequestPatchRoom: UseRequestPatchRoom = (
     RoomJsonIoTs,
     {
       data: {
+        ...(typeof isSpeaker !== "undefined" ? { is_speaker: isSpeaker } : {}),
         ...(roomName !== null ? { name: roomName } : {}),
         ...(isExcludeDifferentGender !== null
           ? { is_exclude_different_gender: isExcludeDifferentGender }

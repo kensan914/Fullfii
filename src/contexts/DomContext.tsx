@@ -1,6 +1,13 @@
 import React, { createContext, useReducer, useContext } from "react";
 
-import { DomActionType, DomState, DomDispatch } from "src/types/Types.context";
+import {
+  DomActionType,
+  DomState,
+  DomDispatch,
+  MaintenanceType,
+  OkType,
+  DownType,
+} from "src/types/Types.context";
 
 const domReducer = (prevState: DomState, action: DomActionType): DomState => {
   const _taskSchedules = { ...prevState.taskSchedules };
@@ -14,6 +21,7 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       _taskSchedules[action.taskKey] = true;
       return { ...prevState, taskSchedules: _taskSchedules };
     }
+
     case "DONE_TASK": {
       /** スケジュールされたタスクの実行終了後に実行.
        * @param {Object} action [type, taskKey] */
@@ -21,6 +29,7 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       _taskSchedules[action.taskKey] = false;
       return { ...prevState, taskSchedules: _taskSchedules };
     }
+
     case "SET_PUSH_NOTIFICATION_PARAMS": {
       /** set pushNotificationParams.isPermission or pushNotificationParams.isChosenPermission
        * @param {Object} action [type, isPermission, isChosenPermission] */
@@ -34,6 +43,7 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
 
       return { ...prevState, pushNotificationParams: _pushNotificationParams };
     }
+
     case "CONFIGURED_PUSH_NOTIFICATION": {
       /** push通知設定をした際に実行. pushNotificationParamsを最新状態に更新.
        * @param {Object} action [type] */
@@ -41,6 +51,7 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       _pushNotificationParams.isChanged = true;
       return { ...prevState, pushNotificationParams: _pushNotificationParams };
     }
+
     case "FINISH_SET_PUSH_NOTIFICATION_PARAMS": {
       /** pushNotificationParamsを設定をした際に実行.
        * @param {Object} action [type] */
@@ -48,21 +59,45 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
       _pushNotificationParams.isChanged = false;
       return { ...prevState, pushNotificationParams: _pushNotificationParams };
     }
+
+    case "SET_API_STATUS": {
+      /** set apiStatus.
+       * @param {Object} action [type, apiStatus] */
+
+      return { ...prevState, apiStatus: action.apiStatus };
+    }
+
+    case "SET_IS_SHOW_SPINNER": {
+      /** set isShowSpinner.
+       * @param {Object} action [type, value] */
+
+      return {
+        ...prevState,
+        isShowSpinner: Boolean(action.value),
+      };
+    }
+
     default:
       console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
   }
 };
 
+export const MAINTENANCE: MaintenanceType = "MAINTENANCE"; // メンテナンス中
+export const DOWN: DownType = "DOWN"; // サーバダウン中（ネットワークエラー）
+export const OK: OkType = "OK"; // 正常運用中（初期状態）
 const initDomState = Object.freeze({
   taskSchedules: {
     refreshRooms: false,
+    openReviewModal: false,
   },
   pushNotificationParams: {
     isPermission: false, // 既に設定され, かつ許可されている
     isChosenPermission: false, // 未だ通知設定がされていない
     isChanged: false, // depフラグ
   },
+  apiStatus: OK,
+  isShowSpinner: false,
 });
 const domStateContext = createContext<DomState>({ ...initDomState });
 const domDispatchContext = createContext<DomDispatch>(() => {

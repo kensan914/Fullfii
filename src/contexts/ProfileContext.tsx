@@ -72,6 +72,17 @@ const profileReducer = (
         profile: { ...initMeProfile },
       };
 
+    case "HAS_REVIEWED": {
+      /** レビューモーダルの表示時に実行.
+       * @param {Object} action [type] */
+
+      asyncStoreBool("isReviewed", true);
+      return {
+        ...prevState,
+        isReviewed: true,
+      };
+    }
+
     default:
       console.warn(`Not found the action.type (${action.type}).`);
       return { ...prevState };
@@ -127,6 +138,7 @@ const profileStateContext = createContext<ProfileState>({
   profileParams: null,
   isBanned: false,
   profileBuffer: initProfileBuffer,
+  isReviewed: false,
 });
 const profileDispatchContext = createContext<ProfileDispatch>(() => {
   return void 0;
@@ -144,16 +156,19 @@ export const useProfileDispatch = (): ProfileDispatch => {
 type Props = {
   profile: MeProfile | null;
   isBanned: boolean | null;
+  isReviewed: boolean | null;
 };
 export const ProfileProvider: React.FC<Props> = ({
   children,
   profile,
   isBanned,
+  isReviewed,
 }) => {
   const [profileState, profileDispatch] = useReducer(profileReducer, {
     profile: profile ? profile : { ...initMeProfile },
     profileParams: null,
     isBanned: isBanned !== null ? isBanned : false,
+    isReviewed: isReviewed !== null ? isReviewed : false,
     profileBuffer: initProfileBuffer,
   });
 

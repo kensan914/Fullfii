@@ -18,27 +18,41 @@ import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { showToast } from "src/utils/customModules";
 import { COLORS } from "src/constants/colors";
 import { useLeaveAndRecreateRoom } from "src/navigations/Header/organisms/ChatHeaderMenu/ByeByeMenu/useLeaveAndRecreateRoom";
+import { useDomDispatch } from "src/contexts/DomContext";
 
 type Props = {
   roomId: string;
   isReadyTalk: boolean;
   isReadyTalkForOwner: boolean;
+  isAddedFavoriteUserRef: React.MutableRefObject<boolean>;
   style?: ViewStyle;
 };
 export const ByeByeMenu: React.FC<Props> = (props) => {
-  const { roomId, isReadyTalk, isReadyTalkForOwner, style } = props;
+  const {
+    roomId,
+    isReadyTalk,
+    isReadyTalkForOwner,
+    isAddedFavoriteUserRef,
+    style,
+  } = props;
 
   const chatState = useChatState();
   const profileState = useProfileState();
   const navigation = useNavigation();
+  const domDispatch = useDomDispatch();
 
   const { requestPostRoomLeftMembers } = useRequestPostRoomLeftMembers(
     roomId,
     () => void 0,
     () => {
-      // クローズ成功時
-      additionalThenClose && additionalThenClose.fn();
+      // クローズ成功
       navigation.navigate("Home");
+
+      additionalThenClose && additionalThenClose.fn();
+
+      if (isAddedFavoriteUserRef.current && !profileState.isReviewed) {
+        domDispatch({ type: "SCHEDULE_TASK", taskKey: "openReviewModal" });
+      }
     }
   );
 
@@ -242,18 +256,25 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
   return (
     <>
       {isReadyTalk && (
-        <TouchableOpacity
-          style={[styles.byeByeButton, style]}
-          onPress={() => {
-            if (isReadyTalk) {
-              onPressByeBye();
-            }
-          }}
-        >
-          <Text size={16} color={"white"} bold style={styles.byeByeButtonLabel}>
-            {isReadyTalkForOwner ? "終了👋" : "退室🤫"}
-          </Text>
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={[styles.byeByeButton, style]}
+            onPress={() => {
+              if (isReadyTalk) {
+                onPressByeBye();
+              }
+            }}
+          >
+            <Text
+              size={16}
+              color={"white"}
+              bold
+              style={styles.byeByeButtonLabel}
+            >
+              {isReadyTalkForOwner ? "終了👋" : "退室🤫"}
+            </Text>
+          </TouchableOpacity>
+        </>
       )}
     </>
   );

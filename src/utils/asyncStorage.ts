@@ -11,7 +11,7 @@ export type AsyncStorageKeyString =
   | "status"
   | "versionNum"
   | "skipUpdateVersion";
-export type AsyncStorageKeyBool = "isBanned";
+export type AsyncStorageKeyBool = "isBanned" | "isReviewed";
 export type AsyncStorageKeyObject =
   | "profile"
   | "talkingRoomCollection"

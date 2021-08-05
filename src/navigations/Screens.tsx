@@ -28,6 +28,7 @@ import { IntroSignupScreen } from "src/screens/intro/IntroSignupScreen";
 import { IntroTopScreen } from "src/screens/intro/IntroTopScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { Alert5xxScreen } from "src/screens/Alert5xxScreen";
+import { OK, useDomState } from "src/contexts/DomContext";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -108,9 +109,10 @@ const HomeStack = () => {
 
 const AppStack: React.FC = () => {
   const authState = useAuthState();
+  const domState = useDomState();
 
   // === 5xxエラー === //
-  if (true) {
+  if (domState.apiStatus !== OK) {
     return <Alert5xxScreen />;
   }
   // ================ //
@@ -134,7 +136,7 @@ const AppStack: React.FC = () => {
             {() => (
               <>
                 <HomeStack />
-                {authState.isShowSpinner && <Spinner />}
+                {domState.isShowSpinner && <Spinner />}
               </>
             )}
           </Stack.Screen>
