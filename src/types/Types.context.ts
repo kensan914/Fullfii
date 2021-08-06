@@ -71,11 +71,6 @@ export type ProfileState = {
   profile: MeProfile;
   profileParams: ProfileParams | null;
   isBanned: boolean;
-  profileBuffer: {
-    username: string;
-    genderKey: string;
-    jobKey: string;
-  };
   isReviewed: boolean;
 };
 export type ProfileDispatch = React.Dispatch<ProfileActionType>;
@@ -83,12 +78,6 @@ export type ProfileActionType =
   | { type: "SET_ALL"; profile: MeProfile }
   | { type: "SET_PARAMS"; profileParams: ProfileParams }
   | { type: "SET_IS_BANNED"; isBan: boolean }
-  | {
-      type: "SET_PROFILE_BUFFER";
-      username: string;
-      genderKey: string;
-      jobKey: string;
-    }
   | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" }
   | { type: "HAS_REVIEWED" };
 

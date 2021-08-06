@@ -133,7 +133,7 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
                   />
                   <Block style={styles.buttonText}>
                     <Text size={20} color={COLORS.WHITE} bold>
-                      悩みを話す
+                      悩みを話す／聞く
                     </Text>
                   </Block>
                 </Block>

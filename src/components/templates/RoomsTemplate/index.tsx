@@ -135,7 +135,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             buttonColor="#F69896"
             iconName="pluscircleo"
             iconFamily="AntDesign"
-            label="悩みを話す"
+            label="悩みを話す／聞く"
             style={{ width: "auto" }}
             onPress={() => {
               if (checkCanCreateRoom()) {
