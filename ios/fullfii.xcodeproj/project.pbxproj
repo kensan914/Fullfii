@@ -426,14 +426,14 @@
 				CODE_SIGN_ENTITLEMENTS = fullfii/fullfii.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3.3.0;
+				CURRENT_PROJECT_VERSION = 3.4.0;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 9PV69CABG3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = fullfii/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -458,13 +458,13 @@
 				CODE_SIGN_ENTITLEMENTS = fullfii/fullfii.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3.3.0;
+				CURRENT_PROJECT_VERSION = 3.4.0;
 				DEVELOPMENT_TEAM = 9PV69CABG3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = fullfii/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.4.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -1,7 +1,8 @@
 import React, { Dispatch } from "react";
 
 import { MenuModal } from "src/components/molecules/Menu";
-import { useAuthDispatch, useAuthState } from "src/contexts/AuthContext";
+import { useAuthState } from "src/contexts/AuthContext";
+import { useDomDispatch } from "src/contexts/DomContext";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useRequestPatchMe } from "src/hooks/requests/useRequestMe";
 
@@ -14,13 +15,13 @@ export const JobEditorMenu: React.FC<Props> = (props) => {
 
   const profileState = useProfileState();
   const authState = useAuthState();
-  const authDispatch = useAuthDispatch();
+  const domDispatch = useDomDispatch();
 
   const { requestPatchMe } = useRequestPatchMe(
     () => void 0,
     () => void 0,
     () => {
-      authDispatch({
+      domDispatch({
         type: "SET_IS_SHOW_SPINNER",
         value: false,
       });
@@ -38,7 +39,7 @@ export const JobEditorMenu: React.FC<Props> = (props) => {
                 label: jobObj.label,
                 onPress: () => {
                   if (authState.token) {
-                    authDispatch({
+                    domDispatch({
                       type: "SET_IS_SHOW_SPINNER",
                       value: true,
                     });

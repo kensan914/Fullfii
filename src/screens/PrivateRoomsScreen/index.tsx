@@ -57,8 +57,10 @@ export const PrivateRoomsScreen: React.FC<Props> = (props) => {
 
   // ヘッダーからの再読み込みトリガー
   useEffect(() => {
+    // if (domState.taskSchedules.refreshRooms) {
     handleRefresh();
     domDispatch({ type: "DONE_TASK", taskKey: "refreshRooms" });
+    // }
   }, [domState.taskSchedules.refreshRooms]);
 
   const { hiddenRoomIds, hideRoom, resetHiddenRooms, blockRoom } = useHideRoom(

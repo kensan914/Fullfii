@@ -8,6 +8,7 @@ import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useWsChat } from "src/screens/StartUpManager/useWsChat";
 import { asyncStoreObjectIncludeId } from "src/utils/asyncStorage";
+import { useDomDispatch } from "src/contexts/DomContext";
 
 type UseRequestPostRoomParticipant = (
   roomId: string,
@@ -88,12 +89,25 @@ export const useRequestPostRoomLeftMembers: UseRequestPostRoomLeftMembers = (
   additionalCloseThenCallback = () => void 0
 ) => {
   const authState = useAuthState();
+  const domDispatch = useDomDispatch();
   const profileState = useProfileState();
   const chatDispatch = useChatDispatch();
 
   const { requestPostRoomClosedMembers } = useRequestPostRoomClosedMembers(
     roomId,
-    additionalCloseThenCallback
+    () => {
+      additionalCloseThenCallback();
+      domDispatch({
+        type: "SET_IS_SHOW_SPINNER",
+        value: false,
+      });
+    },
+    () => {
+      domDispatch({
+        type: "SET_IS_SHOW_SPINNER",
+        value: false,
+      });
+    }
   );
 
   const {
@@ -120,6 +134,18 @@ export const useRequestPostRoomLeftMembers: UseRequestPostRoomLeftMembers = (
         additionalThenCallback && additionalThenCallback(roomJson);
       },
       token: authState.token ? authState.token : "",
+      didRequestCallback: () => {
+        domDispatch({
+          type: "SET_IS_SHOW_SPINNER",
+          value: true,
+        });
+      },
+      catchCallback: () => {
+        domDispatch({
+          type: "SET_IS_SHOW_SPINNER",
+          value: false,
+        });
+      },
     }
   );
 
@@ -131,7 +157,8 @@ export const useRequestPostRoomLeftMembers: UseRequestPostRoomLeftMembers = (
 
 type UseRequestPostRoomClosedMembers = (
   roomId: string,
-  additionalThenCallback?: () => void
+  additionalThenCallback?: () => void,
+  additionalCatchCallback?: () => void
 ) => {
   requestPostRoomClosedMembers: Request;
   isLoadingPostRoomClosedMembers: boolean;
@@ -143,7 +170,11 @@ type UseRequestPostRoomClosedMembers = (
  * @returns
  */
 export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
-  (roomId, additionalThenCallback = () => void 0) => {
+  (
+    roomId,
+    additionalThenCallback = () => void 0,
+    additionalCatchCallback = () => void 0
+  ) => {
     const authState = useAuthState();
     const profileState = useProfileState();
     const chatDispatch = useChatDispatch();
@@ -180,6 +211,9 @@ export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
           additionalThenCallback && additionalThenCallback();
         },
         token: authState.token ? authState.token : "",
+        catchCallback: () => {
+          additionalCatchCallback();
+        },
       }
     );
 

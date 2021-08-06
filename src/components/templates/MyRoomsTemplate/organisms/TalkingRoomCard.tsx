@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
   ViewStyle,
 } from "react-native";
+import { useNavigation } from "@react-navigation/core";
 
 import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/colors";
@@ -23,7 +24,6 @@ import {
   showToast,
 } from "src/utils/customModules";
 import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
-import { useNavigation } from "@react-navigation/core";
 import { cvtBadgeCount, formatGender } from "src/utils";
 import { useRequestDeleteRoom } from "src/hooks/requests/useRequestRooms";
 import { logEvent } from "src/utils/firebase/logEvent";
@@ -96,11 +96,8 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
     showActionSheet(actionSheetSettings);
   };
 
-  const {
-    // isMaxed,
-    participantIconName,
-    participantIconColor,
-  } = useRoomParticipantsNum(talkingRoom);
+  const { participantIconName, participantIconColor } =
+    useRoomParticipantsNum(talkingRoom);
   const formattedGender = formatGender(
     talkingRoom.owner.gender,
     talkingRoom.owner.isSecretGender
@@ -108,12 +105,32 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
   const TalkingRoomCardContent: React.FC = () => {
     return (
       <>
-        <Block row space="between">
-          <Block style={styles.title}>
-            <Text size={16} color={COLORS.BLACK} bold ellipsizeMode="tail">
+        <Block row space="between" style={styles.titleContainer}>
+          <Block flex row style={styles.title}>
+            <Text
+              size={16}
+              color={COLORS.BLACK}
+              bold
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {talkingRoom.name}
             </Text>
           </Block>
+
+          {talkingRoom.isPrivate && (
+            <Block row style={styles.privateLabelContainer}>
+              <Text
+                size={13}
+                bold
+                color={COLORS.WHITE}
+                style={styles.privateLabel}
+              >
+                プライベート
+              </Text>
+            </Block>
+          )}
+
           {isShow3PointReader && (
             <TouchableOpacity
               style={styles.threeDotsIcon}
@@ -130,23 +147,23 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
-        <Block row style={{ position: "relative" }}>
+        <Block row>
           <Block>
             {talkingRoom.image ? (
               <Image source={{ uri: talkingRoom.image }} style={styles.image} />
             ) : (
-              <Block style={styles.image}></Block>
+              <Block style={styles.image} />
             )}
           </Block>
-          <Block flex column>
-            <Block row>
+          <Block flex style={styles.roomInfoContainer}>
+            <Block row style={styles.ownerContainer}>
               <Avatar
                 size={32}
                 imageUri={talkingRoom.owner.image}
                 style={styles.avatar}
               />
-              <Block column style={styles.userInfo}>
-                <Block style={styles.userName}>
+              <Block flex column style={styles.ownerInfo}>
+                <Block flex style={styles.ownerName}>
                   <Text
                     size={14}
                     color={COLORS.LIGHT_GRAY}
@@ -157,7 +174,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                   </Text>
                 </Block>
                 <Block row>
-                  <Block style={styles.userGender}>
+                  <Block style={styles.ownerGender}>
                     <Text
                       size={14}
                       color={COLORS.LIGHT_GRAY}
@@ -180,15 +197,28 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                 </Block>
               </Block>
             </Block>
-            <Block
-              flex
-              row
-              style={{
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-              }}
-            >
-              <Block flex row style={styles.member}>
+            <Block flex row style={styles.statusContainer}>
+              <Block row center style={styles.statusItem}>
+                <Icon
+                  name="message1"
+                  family="AntDesign"
+                  size={26}
+                  color={
+                    talkingRoom.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE
+                  }
+                />
+                <Block style={styles.statusText}>
+                  <Text
+                    size={14}
+                    color={
+                      talkingRoom.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE
+                    }
+                  >
+                    {talkingRoom.isSpeaker ? "話したい" : "聞きたい"}
+                  </Text>
+                </Block>
+              </Block>
+              <Block row center style={styles.statusItem}>
                 <Block>
                   <Icon
                     name={participantIconName}
@@ -197,20 +227,13 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                     color={participantIconColor}
                   />
                 </Block>
-                <Block style={styles.memberText}>
+                <Block style={styles.statusText}>
                   <Text size={14} color={COLORS.LIGHT_GRAY}>
                     {talkingRoom.participants.length}/
                     {talkingRoom.maxNumParticipants}
                   </Text>
                 </Block>
               </Block>
-              {talkingRoom.isPrivate ? (
-                <Block flex style={styles.privateRoomText}>
-                  <Text size={12} bold color={COLORS.GREEN}>
-                    プライベート{"\n"}ルーム
-                  </Text>
-                </Block>
-              ) : null}
             </Block>
           </Block>
         </Block>
@@ -321,55 +344,58 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: COLORS.RED,
   },
-  title: {
+  titleContainer: {
     marginVertical: 16,
-    width: width - 116,
+  },
+  title: {
+    alignItems: "center",
+  },
+  privateLabelContainer: {
+    marginLeft: 8,
+    marginRight: 8,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: COLORS.GREEN,
+    padding: 8,
+    height: "80%",
+    alignSelf: "center",
+  },
+  privateLabel: {
+    textAlign: "center",
+    alignSelf: "center",
   },
   threeDotsIcon: {
     alignItems: "center",
     justifyContent: "center",
   },
-  avatar: {
-    marginLeft: 16,
+  roomInfoContainer: {
+    paddingLeft: 16,
   },
-  userInfo: {
+  ownerContainer: {},
+  avatar: {},
+  ownerInfo: {
     marginLeft: 8,
   },
-  userName: {
+  ownerName: {
     marginBottom: 4,
   },
-  userGender: {
+  ownerGender: {
     marginRight: 4,
   },
-  position: {
-    marginLeft: 16,
+  statusContainer: {
     marginTop: 16,
     alignItems: "center",
   },
-  positionText: {
+  statusText: {
     marginLeft: 8,
   },
-  member: {
-    marginLeft: 16,
-    marginTop: 16,
-    alignItems: "center",
-  },
-  memberText: {
-    marginLeft: 8,
-  },
-  eyeIcon: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
+  statusItem: {
+    marginRight: 8,
   },
   image: {
     width: 88,
     height: 88,
     borderRadius: 20,
-  },
-  privateRoomText: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 32,
   },
 });

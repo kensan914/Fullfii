@@ -37,11 +37,40 @@ export const SettingsScreen: React.FC = () => {
   const [openSecondContent, setOpenSecondContent] = useState(false);
   const [openThirdContent, setOpenThirdContent] = useState(false);
   const [openFourthContent, setOpenFourthContent] = useState(false);
+  const [openProhibitedMatters, setOpenProhibitedMatters] = useState(false);
 
   return (
     <Block flex center style={{ backgroundColor: COLORS.BEIGE, width: width }}>
       <ScrollView>
         <SettingsTitle title="Fullfiiについて" />
+        <>
+          <SettingsCard
+            title="禁止事項について"
+            titleColor={COLORS.GRAY}
+            iconName={openProhibitedMatters ? "chevron-up" : "chevron-down"}
+            onPress={() => {
+              if (openProhibitedMatters) {
+                logEvent("press_prohibited_matters");
+              }
+              setOpenProhibitedMatters(!openProhibitedMatters);
+            }}
+          />
+          {openProhibitedMatters ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                以下の行為は禁止となっています。発覚した場合、最悪アカウント凍結となります。{"\n"}{"\n"}
+                ①相手が不快と感じるような性的、暴力的な表現に該当する行為{"\n"}
+                ②出会い目的での他メッセージアプリへの誘導や引き抜きに該当する、またそれに近い行為{"\n"}
+                ③その他利用規約第5条（禁止事項）に該当する行為{"\n"}{"\n"}
+                相手が嫌な気分になることは最低限言わないようにご利用ください！（運営より）
+              </Text>
+            </Block>
+          ) : null}
+        </>
         <SettingsLabel title="バージョン" content={VERSION} />
         <SettingsCard
           title="利用規約"

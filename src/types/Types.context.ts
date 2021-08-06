@@ -1,13 +1,13 @@
 import React from "react";
 import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
-import { RouteName } from "./Types";
+
+import { RouteName } from "src/types/Types";
 
 //========== Auth ==========//
 export type AuthState = {
   status: AuthStatus;
   token: TokenNullable;
-  isShowSpinner: boolean;
   initBottomTabRouteName: null | RouteName;
   signupBuffer: SignupBuffer;
 };
@@ -22,10 +22,6 @@ export type SignupBuffer = t.TypeOf<typeof SignupBufferIoTs>;
 export type SignupBufferNullable = SignupBuffer | null;
 export type TokenNullable = string | null;
 export type AuthActionType =
-  // TODO: 使用しない
-  // | { type: "COMPLETE_SIGNUP"; initBottomTabRouteName: RouteName }
-  // TODO: 使用しない
-  // | { type: "COMPLETE_INTRO" }
   | { type: "SET_TOKEN"; token: string }
   | { type: "SET_PASSWORD"; password: string }
   | {
@@ -41,7 +37,6 @@ export type AuthActionType =
     }
   | { type: "SUCCESS_SIGNUP_INTRO" }
   | { type: "COMPLETE_INTRO"; initBottomTabRouteName: RouteName }
-  | { type: "SET_IS_SHOW_SPINNER"; value: boolean }
   | { type: "DELETE_ACCOUNT" }
   | { type: "DANGEROUSLY_RESET" };
 //========== Auth ==========//
@@ -81,6 +76,7 @@ export type ProfileState = {
     genderKey: string;
     jobKey: string;
   };
+  isReviewed: boolean;
 };
 export type ProfileDispatch = React.Dispatch<ProfileActionType>;
 export type ProfileActionType =
@@ -93,7 +89,8 @@ export type ProfileActionType =
       genderKey: string;
       jobKey: string;
     }
-  | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" };
+  | { type: "DANGEROUSLY_RESET_OTHER_THAN_PROFILE_PARAMS" }
+  | { type: "HAS_REVIEWED" };
 
 export type Plan = t.TypeOf<typeof PlanIoTs>;
 export type GenderKey = t.TypeOf<typeof GenderKeyIoTs>;
@@ -378,11 +375,19 @@ export const AllMessageIoTs = t.union([
 ]);
 export const AllMessagesIoTs = t.array(AllMessageIoTs);
 
+export const TagIoTs = t.type({
+  key: t.string,
+  label: t.string,
+  order: t.number,
+});
+
 export const BaseRoomIoTs = t.type({
   id: t.string,
   name: t.string,
   image: t.union([t.string, t.null]),
   owner: ProfileIoTs,
+  tags: t.array(TagIoTs),
+  isSpeaker: t.boolean,
   participants: t.array(ProfileIoTs),
   leftMembers: t.array(ProfileIoTs),
   maxNumParticipants: t.number,
@@ -491,7 +496,19 @@ export const TalkInfoJsonIoTs = t.type({
 //========== Chat io-ts ==========//
 
 //========== Dom ==========//
-export type TaskSchedulesKey = "refreshRooms";
+export type TaskSchedulesKey = "refreshRooms" | "openReviewModal";
+export const MaintenanceTypeIoTs = t.literal("MAINTENANCE");
+export const DownTypeIoTs = t.literal("DOWN");
+export const OkTypeIoTs = t.literal("OK");
+export const ApiStatusIoTs = t.union([
+  MaintenanceTypeIoTs,
+  DownTypeIoTs,
+  OkTypeIoTs,
+]);
+export type MaintenanceType = t.TypeOf<typeof MaintenanceTypeIoTs>;
+export type DownType = t.TypeOf<typeof DownTypeIoTs>;
+export type OkType = t.TypeOf<typeof OkTypeIoTs>;
+export type ApiStatus = t.TypeOf<typeof ApiStatusIoTs>;
 export type DomState = {
   taskSchedules: { [key in TaskSchedulesKey]: boolean };
   pushNotificationParams: {
@@ -499,6 +516,8 @@ export type DomState = {
     isChosenPermission: boolean;
     isChanged: boolean;
   };
+  apiStatus: ApiStatus;
+  isShowSpinner: boolean;
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
 export type DomActionType =
@@ -510,7 +529,9 @@ export type DomActionType =
       isChosenPermission?: boolean;
     }
   | { type: "CONFIGURED_PUSH_NOTIFICATION" }
-  | { type: "FINISH_SET_PUSH_NOTIFICATION_PARAMS" };
+  | { type: "FINISH_SET_PUSH_NOTIFICATION_PARAMS" }
+  | { type: "SET_API_STATUS"; apiStatus: MaintenanceType | DownType }
+  | { type: "SET_IS_SHOW_SPINNER"; value: boolean };
 
 //========== Dom ==========//
 
