@@ -111,7 +111,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
               size={16}
               color={COLORS.BLACK}
               bold
-              numberOfLines={1}
+              numberOfLines={2}
               ellipsizeMode="tail"
             >
               {talkingRoom.name}
@@ -349,9 +349,9 @@ const styles = StyleSheet.create({
   },
   title: {
     alignItems: "center",
+    marginRight: 8,
   },
   privateLabelContainer: {
-    marginLeft: 8,
     marginRight: 8,
     borderRadius: 8,
     alignItems: "center",

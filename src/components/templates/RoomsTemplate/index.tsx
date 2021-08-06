@@ -85,13 +85,9 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       style={styles.roomCard}
                     />
                     {index > 0 && (index + 1) % 3 === 0 && (
-                      <AdView
-                        media={false}
-                        type="images"
-                        index={2}
-                        adUnitId={ADMOB_UNIT_ID_NATIVE.image}
-                      />
+                      <AdView adUnitId={ADMOB_UNIT_ID_NATIVE.image} />
                     )}
+                    {/* <AdView adUnitId={ADMOB_UNIT_ID_NATIVE.image} /> */}
                   </>
                 );
               }
