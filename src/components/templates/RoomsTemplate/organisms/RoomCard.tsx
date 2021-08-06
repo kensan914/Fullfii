@@ -224,12 +224,6 @@ const styles = StyleSheet.create({
   ownerGender: {
     marginRight: 4,
   },
-
-  statusAndMember: {
-    marginLeft: 16,
-    marginTop: 16,
-    alignItems: "center",
-  },
   statusContainer: {
     marginTop: 16,
     alignItems: "center",

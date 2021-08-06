@@ -1,8 +1,9 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch } from "react";
 import { Block, Text, Button } from "galio-framework";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import Modal from "react-native-modal";
 import ActionSheet from "react-native-action-sheet";
+import { useNavigation } from "@react-navigation/core";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
 import { Icon } from "src/components/atoms/Icon";
@@ -13,8 +14,7 @@ import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRequestPostRoomParticipant } from "src/hooks/requests/useRequestRoomMembers";
 import { useCanParticipateRoom } from "src/screens/RoomsScreen/useCanAction";
-import { useNavigation } from "@react-navigation/core";
-import { enterRoomSvg, chatIconSvg } from "src/constants/svgSources";
+import { enterRoomSvg } from "src/constants/svgSources";
 
 type Props = {
   room: Room;
@@ -135,8 +135,8 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
                 imageUri={room.owner.image}
                 style={styles.avatar}
               />
-              <Block column style={styles.userInfo}>
-                <Block style={styles.userName}>
+              <Block flex column style={styles.userInfo}>
+                <Block flex style={styles.userName}>
                   <Text
                     size={14}
                     color={COLORS.LIGHT_GRAY}
@@ -146,7 +146,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
                     {room.owner.name}
                   </Text>
                 </Block>
-                <Block row>
+                <Block flex row>
                   <Block style={styles.userGender}>
                     <Text
                       size={14}
@@ -314,11 +314,6 @@ const styles = StyleSheet.create({
   },
   memberText: {
     marginLeft: 4,
-  },
-  eyeIcon: {
-    position: "absolute",
-    bottom: 16,
-    right: 16,
   },
   svgContainer: {
     zIndex: 100,
