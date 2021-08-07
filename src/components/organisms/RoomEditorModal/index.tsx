@@ -587,14 +587,11 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Modal>
-          {Platform.OS === "ios" && (
-            <KeyboardAvoidingView
-              behavior="padding"
-              keyboardVerticalOffset={0}
-            />
-          )}
         </>
       </TouchableOpacity>
+      {Platform.OS === "ios" && (
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0} />
+      )}
     </Modal>
   );
 };
