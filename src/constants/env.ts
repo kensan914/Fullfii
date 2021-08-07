@@ -2,10 +2,10 @@ import { Platform } from "react-native";
 import Config from "react-native-config";
 import deviceInfoModule from "react-native-device-info";
 
-const DEBUG = true;
-// const DEBUG = false;
-const ADMOB_DEBUG = true;
-// const ADMOB_DEBUG = false;
+// const DEBUG = true;
+const DEBUG = false;
+// const ADMOB_DEBUG = true;
+const ADMOB_DEBUG = false;
 
 const BASE_HOST = DEBUG ? "192.168.11.46:8080" : "fullfii.com";
 const URL_SCHEME_HTTP = DEBUG ? "http" : "https";
