@@ -1,4 +1,4 @@
-import React, { Dispatch, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
@@ -15,6 +15,7 @@ import { COLORS } from "src/constants/colors";
 import { APP_ID, APP_ID_ANDROID } from "src/constants/env";
 import { STAR_IMG, REVIEW_ICON_IMG } from "src/constants/imagePath";
 import { useRequestSurveyDissatisfaction } from "src/hooks/requests/useRequestSurvey";
+import { logEvent } from "src/utils/firebase/logEvent";
 
 type Props = {
   isOpen: boolean;
@@ -28,6 +29,12 @@ export const ReviewModal: React.FC<Props> = (props) => {
     onEnd: onAdditionalEnd = () => void 0,
   } = props;
 
+  useEffect(() => {
+    if (isOpenReviewModal) {
+      logEvent("open_review_modal");
+    }
+  }, [isOpenReviewModal]);
+
   const onEnd = () => {
     onAdditionalEnd();
     shouldOpenDissatisfactionModalRef.current = false;
@@ -40,6 +47,7 @@ export const ReviewModal: React.FC<Props> = (props) => {
   const onPressDissatisfaction = () => {
     shouldOpenDissatisfactionModalRef.current = true;
     setIsOpenReviewModal(false);
+    logEvent("press_dissatisfaction_in_review_modal");
   };
   const onPressReview = () => {
     const options = {
@@ -51,13 +59,15 @@ export const ReviewModal: React.FC<Props> = (props) => {
     };
     Rate.rate(options, (isSuccess) => {
       if (isSuccess) {
-        //
+        logEvent("success_review");
       }
       setIsOpenReviewModal(false);
     });
+    logEvent("press_review_in_review_modal");
   };
   const onCancelReview = () => {
     setIsOpenReviewModal(false);
+    logEvent("press_cancel_in_review_modal");
   };
   const onHideReviewModal = () => {
     if (shouldOpenDissatisfactionModalRef.current) {

@@ -85,13 +85,9 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
                       style={styles.roomCard}
                     />
                     {index > 0 && (index + 1) % 3 === 0 && (
-                      <AdView
-                        media={false}
-                        type="images"
-                        index={2}
-                        adUnitId={ADMOB_UNIT_ID_NATIVE.image}
-                      />
+                      <AdView adUnitId={ADMOB_UNIT_ID_NATIVE.image} />
                     )}
+                    {/* <AdView adUnitId={ADMOB_UNIT_ID_NATIVE.image} /> */}
                   </>
                 );
               }
@@ -135,7 +131,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             buttonColor="#F69896"
             iconName="pluscircleo"
             iconFamily="AntDesign"
-            label="悩みを話す"
+            label="悩みを話す／聞く"
             style={{ width: "auto" }}
             onPress={() => {
               if (checkCanCreateRoom()) {

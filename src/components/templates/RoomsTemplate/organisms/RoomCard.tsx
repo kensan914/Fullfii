@@ -18,7 +18,7 @@ import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
-import { detailSvg, chatIconSvg } from "src/constants/svgSources";
+import { detailSvg } from "src/constants/svgSources";
 
 type Props = {
   room: Room;
@@ -56,7 +56,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                 size={16}
                 color={COLORS.BLACK}
                 bold
-                numberOfLines={1}
+                numberOfLines={2}
                 ellipsizeMode="tail"
               >
                 {room.name}

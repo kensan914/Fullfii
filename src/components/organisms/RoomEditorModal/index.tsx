@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -259,7 +258,8 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
         }
       }}
     >
-      <TouchableWithoutFeedback
+      <TouchableOpacity
+        activeOpacity={1}
         onPress={() => {
           Keyboard.dismiss();
         }}
@@ -366,7 +366,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             <Block row space="between" style={styles.subTitleTextInput}>
               <Block>
                 <Text size={14} color={COLORS.BLACK}>
-                  話したい悩みについて
+                  {isSpeaker ? "話したい悩みについて" : "聞きたい悩みについて"}
                 </Text>
               </Block>
               <Block>
@@ -379,7 +379,11 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               multiline
               numberOfLines={4}
               editable
-              placeholder="恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
+              placeholder={
+                isSpeaker
+                  ? "恋愛相談に乗って欲しい、ただ話しを聞いて欲しい、どんな悩みでも大丈夫です。"
+                  : "恋愛の悩み聞きます、相談に乗ります、なんでも大丈夫です。"
+              }
               maxLength={maxRoomNameLength}
               value={roomName === null ? "" : roomName}
               onChangeText={setRoomName}
@@ -455,7 +459,6 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                   isPrivate !== null && isPrivate
                     ? { borderColor: COLORS.BROWN }
                     : { borderColor: COLORS.HIGHLIGHT_GRAY, borderWidth: 1 },
-                  // : { borderColor: "#f4f8f7", borderWidth: 1 },
                 ]}
                 onPress={() => {
                   if (!chatState.hasFavoriteUser) {
@@ -591,7 +594,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             />
           )}
         </>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     </Modal>
   );
 };

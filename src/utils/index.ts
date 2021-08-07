@@ -292,28 +292,11 @@ export const equalsArray: EqualsArray = (
   return true;
 };
 
-/**
- * @param {string} tag
- * @param {string} type
- * @param {string} value
- */
-export const logAdmob = (tag = "AD", type: string, value: string): void => {
-  console.log(`[${tag}][${type}]:`, value);
-};
-
-// export const getValue = <T>(
-//   object: Record<string, T>,
-//   key: string,
-//   initValue: T
-// ): T => {
-//   return typeof object[key] !== "undefined" ? object[key] : initValue;
-// };
-
 export const getValue = <T>(
-  valueMaybeUndefine: T | undefined,
+  valueMaybeUndefined: T | undefined,
   initValue: T
 ): T => {
-  return typeof valueMaybeUndefine !== "undefined"
-    ? valueMaybeUndefine
+  return typeof valueMaybeUndefined !== "undefined"
+    ? valueMaybeUndefined
     : initValue;
 };

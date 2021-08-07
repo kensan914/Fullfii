@@ -30,7 +30,7 @@ export const IntroParticipateRoomTemplate: React.FC<
           headerLeftAnimationType: "CRACKER",
           bodyAnimSettings: bodyAnimSettings_explanationRoomParticipate,
           onPressBottom: () => {
-            logEvent("complete_intro_create_room");
+            logEvent("complete_intro_participate_room");
           },
         },
       ]}
