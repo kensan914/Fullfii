@@ -215,6 +215,6 @@ const styles = StyleSheet.create({
   talkingRoomCard: {
     marginRight: 20,
     marginLeft: 20,
-    marginTop: 10,
+    marginTop: 12,
   },
 });

@@ -118,7 +118,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                       <Icon
                         name="message1"
                         family="AntDesign"
-                        size={26}
+                        size={24}
                         color={
                           room.isSpeaker ? COLORS.LIGHT_BLUE : COLORS.ORANGE
                         }
@@ -150,7 +150,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                       </Block>
                     </Block>
                   </Block>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     style={styles.detailButton}
                     onPress={() => {
                       setIsOpen(true);
@@ -162,7 +162,7 @@ export const RoomCard: React.FC<Props> = (props) => {
                       source={detailSvg}
                       fill={COLORS.BROWN}
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </Block>
               </Block>
             </Block>
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   statusText: {
-    marginLeft: 4,
+    marginLeft: 8,
   },
   statusItem: {
     marginRight: 8,

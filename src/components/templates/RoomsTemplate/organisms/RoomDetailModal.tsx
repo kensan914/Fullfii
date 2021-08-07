@@ -230,11 +230,12 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
               </Block>
               <Block style={styles.buttonText}>
                 <Text size={20} color={COLORS.WHITE} bold>
-                  {room.isSpeaker ? "聞いてみる！" : "話してみる！"}
+                  {room.isSpeaker ? "悩みを聞く" : "悩みを話す"}
                 </Text>
               </Block>
             </Block>
           </Button>
+          <Text size={12}>相手に通知は届きません</Text>
         </Block>
       </Block>
     </Modal>

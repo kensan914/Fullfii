@@ -111,25 +111,12 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
               size={16}
               color={COLORS.BLACK}
               bold
-              numberOfLines={2}
+              numberOfLines={5}
               ellipsizeMode="tail"
             >
               {talkingRoom.name}
             </Text>
           </Block>
-
-          {talkingRoom.isPrivate && (
-            <Block row style={styles.privateLabelContainer}>
-              <Text
-                size={13}
-                bold
-                color={COLORS.WHITE}
-                style={styles.privateLabel}
-              >
-                プライベート
-              </Text>
-            </Block>
-          )}
 
           {isShow3PointReader && (
             <TouchableOpacity
@@ -218,22 +205,22 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
                   </Text>
                 </Block>
               </Block>
-              <Block row center style={styles.statusItem}>
-                <Block>
-                  <Icon
-                    name={participantIconName}
-                    family="Ionicons"
-                    size={32}
-                    color={participantIconColor}
-                  />
+              {talkingRoom.isPrivate && (
+                <Block center style={styles.statusItem}>
+                  <Block style={styles.privateLabelContainer}>
+                    <Block style={styles.privateLabel}>
+                      <Text
+                        size={13}
+                        bold
+                        color={COLORS.GREEN}
+                        style={styles.privateLabelText}
+                      >
+                        プライベート
+                      </Text>
+                    </Block>
+                  </Block>
                 </Block>
-                <Block style={styles.statusText}>
-                  <Text size={14} color={COLORS.LIGHT_GRAY}>
-                    {talkingRoom.participants.length}/
-                    {talkingRoom.maxNumParticipants}
-                  </Text>
-                </Block>
-              </Block>
+              )}
             </Block>
           </Block>
         </Block>
@@ -351,20 +338,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 8,
   },
-  privateLabelContainer: {
-    marginRight: 8,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.GREEN,
-    padding: 8,
-    height: "80%",
-    alignSelf: "center",
-  },
+  privateLabelContainer: {},
   privateLabel: {
-    textAlign: "center",
-    alignSelf: "center",
+    borderRadius: 8,
+    padding: 8,
   },
+  privateLabelText: {},
   threeDotsIcon: {
     alignItems: "center",
     justifyContent: "center",

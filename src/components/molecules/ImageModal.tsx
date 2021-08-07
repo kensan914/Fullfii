@@ -51,7 +51,7 @@ export const ImageModal: React.FC<Props> = (props) => {
           </Text>
         </Block>
         <Block center style={styles.subTitleContainer}>
-          <Text size={14} color={COLORS.BLACK} center style={styles.subTitle}>
+          <Text size={14} color={COLORS.BLACK} style={styles.subTitle}>
             {subTitle}
           </Text>
         </Block>
