@@ -13,8 +13,6 @@ import { useChatState } from "src/contexts/ChatContext";
 import { MyRoomsRouteProp } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
 import {
-  chatIconFocusSvg,
-  chatIconSvg,
   homeIconFocusSvg,
   homeIconSvg,
   mypageIconFocusSvg,
@@ -24,6 +22,7 @@ import { BOTTOM_TAB_BAR_HEIGHT } from "src/constants";
 import { HomeTopTabNavigator } from "src/navigations/HomeTopTabNavigator";
 import { useReview } from "src/hooks/useReview";
 import { ReviewModal } from "src/components/organisms/ReviewModal";
+import { Icon } from "src/components/atoms/Icon";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -40,6 +39,7 @@ export const BottomTabNavigator: React.FC = () => {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color }) => {
             let iconName;
+            let iconNode;
             let label: string | undefined;
             let badgeCount: number | null | undefined;
 
@@ -47,13 +47,31 @@ export const BottomTabNavigator: React.FC = () => {
 
             if (routeName === "Rooms") {
               iconName = focused ? homeIconFocusSvg : homeIconSvg;
+              iconNode = <SvgUri width={32} height={32} source={iconName} />;
               label = "ホーム";
             } else if (routeName === "MyRooms") {
-              iconName = focused ? chatIconFocusSvg : chatIconSvg;
+              // iconName = focused ? chatIconFocusSvg : chatIconSvg;
+              iconNode = (
+                <Block
+                  style={{
+                    width: 32,
+                    height: 32,
+                    padding: 2,
+                  }}
+                >
+                  <Icon
+                    name="message1"
+                    family="AntDesign"
+                    size={28}
+                    color={color}
+                  />
+                </Block>
+              );
               label = "トーク";
               badgeCount = cvtBadgeCount(chatState.totalUnreadNum);
             } else if (routeName === "MeProfile") {
               iconName = focused ? mypageIconFocusSvg : mypageIconSvg;
+              iconNode = <SvgUri width={32} height={32} source={iconName} />;
               label = "マイページ";
             }
             return (
@@ -64,7 +82,7 @@ export const BottomTabNavigator: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <SvgUri width={32} height={32} source={iconName} />
+                {iconNode}
                 <Text bold size={12} style={{ color: color }}>
                   {label}
                 </Text>
