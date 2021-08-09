@@ -38,6 +38,9 @@ export const SettingsScreen: React.FC = () => {
   const [openThirdContent, setOpenThirdContent] = useState(false);
   const [openFourthContent, setOpenFourthContent] = useState(false);
   const [openProhibitedMatters, setOpenProhibitedMatters] = useState(false);
+  const [openFifthCorntent, setOpenFifthCorntent] = useState(false);
+  const [openSixthCorntent, setOpenSixthCorntent] = useState(false);
+
 
   return (
     <Block flex center style={{ backgroundColor: COLORS.BEIGE, width: width }}>
@@ -98,7 +101,7 @@ export const SettingsScreen: React.FC = () => {
             navigation.navigate("AccountDelete");
           }}
         />
-        <SettingsTitle title="使い方ヘルプ" />
+        <SettingsTitle title="使い方Q&A" />
         <>
           <SettingsCard
             title="どういうアプリ？"
@@ -167,16 +170,16 @@ export const SettingsScreen: React.FC = () => {
                 color={COLORS.GRAY}
                 style={styles.hiddenContentText}
               >
-                ①ホーム画面またはマイトーク画面下部の「悩みを話すボタン」を押し、相談したいことを記載してルームを作成します
+                悩みを話す用のルームを作成するか、悩みを聞く用のルームに参加しましょう
                 {"\n"}
-                ②他の人があなたのルームに入ってメッセージを送信すると、あなたに通知が届きます
+                ・ 自分で「悩みを話したい」ルームを作成する
                 {"\n"}
-                ③悩みを話し終えたら、トークの右上から「終了」ボタンを押して悩み相談を終了しましょう
+                ・ 他の人が作成した「聞きたい」ルームに参加する
               </Text>
             </Block>
           ) : null}
         </>
-        <Block style={{ marginBottom: 40 }}>
+        <Block >
           <SettingsCard
             title="悩みを聞くには？"
             titleColor={COLORS.GRAY}
@@ -195,14 +198,70 @@ export const SettingsScreen: React.FC = () => {
                 color={COLORS.GRAY}
                 style={styles.hiddenContentText}
               >
-                ①ホーム画面に一覧で表示されているルームの中から、悩みに共感できそうなルームを選んで「聞いてみる！」ボタンを押します
+                悩みを聞く用のルームを作成するか、悩みを話す用のルームに参加しましょう
                 {"\n"}
-                ②ルームに入室したら相手の悩みを聞いてあげます{"\n"}
-                ③相談が終了したらトーク画面右上の「退室」ボタンを押して退室しましょう
+                ・ 自分で「悩みを聞きたい」ルームを作成する
+                {"\n"}
+                ・ 他の人が作成した「話したい」ルームに参加する
               </Text>
             </Block>
           ) : null}
         </Block>
+        <Block >
+          <SettingsCard
+            title="プライベートルームとは？"
+            titleColor={COLORS.GRAY}
+            iconName={openFifthCorntent ? "chevron-up" : "chevron-down"}
+            onPress={() => {
+              if (openFifthCorntent) {
+                logEvent("press_what_is_private_room");
+              }
+              setOpenFifthCorntent(!openFifthCorntent);
+            }}
+          />
+          {openFifthCorntent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                「また話したい人リスト」に追加したユーザーのみに公開されるルームです
+                {"\n"}
+                あなたを「また話したい人リスト」に追加したユーザーがプライベートルームを作成すると、あなたのホーム画面のプライベートタブに表示されます
+              </Text>
+            </Block>
+          ) : null}
+        </Block>
+        <Block style={{ marginBottom: 40 }}>
+          <SettingsCard
+            title="また話したい人リストとは？"
+            titleColor={COLORS.GRAY}
+            iconName={openSixthCorntent ? "chevron-up" : "chevron-down"}
+            onPress={() => {
+              if (openSixthCorntent) {
+                logEvent("press_want_to_talk_list");
+              }
+              setOpenSixthCorntent(!openSixthCorntent);
+            }}
+          />
+          {openSixthCorntent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                プライベートルーム公開時に使用されるユーザーリストです
+                {"\n"}
+                トーク時の上部のアイコンから、また話したい人リストに追加できます
+                {"\n"}
+                追加のタイミングで相手に通知はいきません
+              </Text>
+            </Block>
+          ) : null}
+        </Block>
+
       </ScrollView>
     </Block>
   );

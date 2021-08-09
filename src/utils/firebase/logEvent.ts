@@ -13,6 +13,8 @@ export type FirebaseEventName =
   | "press_what_is_room" // 「ルームとは？」を閲覧
   | "press_how_to_speak" // 「悩みを話すには？」を閲覧
   | "press_how_to_listen_to" // 「悩みを聞くには？」を閲覧
+  | "press_what_is_private_room" //「プライベートルームとは？」を閲覧
+  | "press_want_to_talk_list" // 「また話したい人リストとは？」を閲覧
   | "start_intro" // Topにて「承諾を」押下し, イントロを開始
   | "complete_intro_signup" // イントロにてプロフィールを入力し, サインアップをした
   | "navigate_intro_create_room" // イントロTopにて「話したい」を押下
