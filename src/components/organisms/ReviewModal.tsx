@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   lineHeight: {
-    lineHeight: 16,
+    lineHeight: 20,
   },
   dissatisfactionButton: {
     height: 40,
