@@ -15,6 +15,10 @@ export const ExplainRankModal = () => {
   }
   return (
     <Modal
+      animationIn="fadeIn"
+        animationInTiming={300}
+        animationOut="fadeOut"
+        animationOutTiming={300}
         backdropOpacity={0.3}
         isVisible={isOpen}
         onBackdropPress={close}

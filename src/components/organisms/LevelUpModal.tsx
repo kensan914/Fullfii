@@ -17,42 +17,43 @@ export const LevelUpModal = () => {
   }
   return (
     <Modal
-      // animationIn="fadeIn"
-      // animationInTiming={500}
-      // animationOut="fadeOut"
-      // animationOutTiming={500}
-        backdropOpacity={0.7}
-        isVisible={isOpen}
-        onBackdropPress={close}
-        style={styles.modal}
-      >
-        <Block style={styles.modalInnerContainer}>
-        <Image
-          source={LAURELS_IMG}
-          style={styles.informationImage}
-        />
-        <Block center style={styles.mainTextContainer}>
-          <Text size={96} color={COLORS.WHITE}>2</Text>
-          <Text center size={16} color={COLORS.WHITE}>レベル</Text>
-        </Block>
-        <Block center >
-          <Text size={16} color={COLORS.WHITE}>参加できるルーム数が2つに増えました！</Text>
-        </Block>
-        </Block>
-        <Block center>
-          <Button
-            style={styles.okButton}
-            color={COLORS.HIGHLIGHT_GRAY}
-            shadowless
-            onPress={close}
-          >
-            <Text size={20} color={COLORS.WHITE} bold>
-              閉じる
-            </Text>
-          </Button>
-        </Block>
-      </Modal>
+      animationIn="fadeIn"
+      animationInTiming={300}
+      animationOut="fadeOut"
+      animationOutTiming={300}
+      backdropOpacity={0.7}
+      isVisible={isOpen}
+      onBackdropPress={close}
+      style={styles.modal}
+    >
+      <Block style={styles.modalInnerContainer}>
+      <Image
+        source={LAURELS_IMG}
+        style={styles.informationImage}
+      />
+      <Block center style={styles.mainTextContainer}>
+        <Text size={96} color={COLORS.WHITE}>2</Text>
+        <Text center size={16} color={COLORS.WHITE}>レベル</Text>
+      </Block>
+      <Block center >
+        <Text size={16} color={COLORS.WHITE}>参加できるルーム数が2つに増えました！</Text>
+      </Block>
+      </Block>
+      <Block center>
+        <Button
+          style={styles.okButton}
+          color={COLORS.HIGHLIGHT_GRAY}
+          shadowless
+          onPress={close}
+        >
+          <Text size={20} color={COLORS.WHITE} bold>
+            閉じる
+          </Text>
+        </Button>
+      </Block>
+    </Modal>
   )
+
 }
 
 const styles = StyleSheet.create({
