@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Animated } from "react-native";
+import { View, StyleSheet, Animated, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Block, Text, Button } from "galio-framework";
 
@@ -14,6 +14,7 @@ import {
   RenderTabBar,
 } from "src/types/Types";
 import { Icon } from "src/components/atoms/Icon";
+import { CircleProgressBar } from "src/components/templates/ProfileTemplate/molecules/CircleProgressBar";
 
 type Props = {
   profile: Profile | MeProfile;
@@ -38,6 +39,8 @@ export const ProfileBody: React.FC<Props> = (props) => {
   const onTransitionProfileEditor = () => {
     navigation.navigate("ProfileEditor");
   };
+
+  // level up
 
   return (
     <Animated.View
@@ -76,7 +79,7 @@ export const ProfileBody: React.FC<Props> = (props) => {
           ]}
         >
           <Block flex>
-            <Block row style={styles.profilePostBox}>
+            <Block row style={styles.profileTopContainer}>
               <Animated.View
                 style={{
                   transform: [
@@ -92,61 +95,75 @@ export const ProfileBody: React.FC<Props> = (props) => {
               >
                 <Avatar size={84} imageUri={profile.image} />
               </Animated.View>
-              <Block row flex style={styles.postContents}>
-                <Block column center style={styles.postSpoke}>
-                  {/* 他者のマイページ且つ公開しない状態の場合はアイコン表示 */}
-                  {!isMe && profile.isPrivateProfile ? (
-                    <Icon
-                      name="lock"
-                      family="Feather"
-                      size={20}
-                      color={COLORS.GRAY}
-                    />
-                  ) : (
-                    <Text
-                      bold
-                      color={COLORS.BLACK}
-                      size={16}
-                      style={styles.textHeight}
-                    >
-                      {profile.numOfOwner}
-                    </Text>
-                  )}
+              <Block row flex style={styles.counterContainer}>
+                <Block row flex style={styles.talkCounterContainer}>
+                  <Block column center style={styles.spokeCounter}>
+                    {/* 他者のマイページ且つ公開しない状態の場合はアイコン表示 */}
+                    {!isMe && profile.isPrivateProfile ? (
+                      <Icon
+                        name="lock"
+                        family="Feather"
+                        size={20}
+                        color={COLORS.GRAY}
+                      />
+                    ) : (
+                      <Text
+                        bold
+                        color={COLORS.BLACK}
+                        size={16}
+                        style={styles.textHeight}
+                      >
+                        {profile.numOfOwner}
+                      </Text>
+                    )}
 
-                  <Text
-                    size={14}
-                    color={COLORS.BLACK}
-                    style={styles.textHeight}
-                  >
-                    話した
-                  </Text>
-                </Block>
-                <Block column center style={styles.postListened}>
-                  {!isMe && profile.isPrivateProfile ? (
-                    <Icon
-                      name="lock"
-                      family="Feather"
-                      size={20}
-                      color={COLORS.GRAY}
-                    />
-                  ) : (
                     <Text
-                      bold
-                      size={16}
+                      size={14}
                       color={COLORS.BLACK}
                       style={styles.textHeight}
                     >
-                      {profile.numOfParticipated}
+                      話した
                     </Text>
-                  )}
-                  <Text
-                    size={14}
-                    color={COLORS.BLACK}
-                    style={styles.textHeight}
-                  >
-                    聞いた
-                  </Text>
+                  </Block>
+                  <Block column center style={styles.listenedCounter}>
+                    {!isMe && profile.isPrivateProfile ? (
+                      <Icon
+                        name="lock"
+                        family="Feather"
+                        size={20}
+                        color={COLORS.GRAY}
+                      />
+                    ) : (
+                      <Text
+                        bold
+                        size={16}
+                        color={COLORS.BLACK}
+                        style={styles.textHeight}
+                      >
+                        {profile.numOfParticipated}
+                      </Text>
+                    )}
+                    <Text
+                      size={14}
+                      color={COLORS.BLACK}
+                      style={styles.textHeight}
+                    >
+                      聞いた
+                    </Text>
+                  </Block>
                 </Block>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.levelBarContainer}
+                >
+                  <CircleProgressBar
+                    step={5}
+                    steps={10}
+                    diameter={80}
+                    label={1}
+                    subLabel={"レベル"}
+                  />
+                </TouchableOpacity>
               </Block>
             </Block>
             <Block style={styles.profileInfoBox}>
@@ -205,24 +222,24 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 16,
   },
-  profilePostBox: {
+  profileTopContainer: {
     marginTop: 16,
     alignItems: "center",
   },
-  profileImage: {},
-  postContents: {
+  counterContainer: {
+    justifyContent: "space-around",
+  },
+  talkCounterContainer: {
+    justifyContent: "space-evenly",
+  },
+  spokeCounter: {
     justifyContent: "center",
   },
-  postSpoke: {
-    width: 72,
-    height: 40,
+  listenedCounter: {
     justifyContent: "center",
   },
-  postListened: {
-    width: 72,
-    height: 40,
+  levelBarContainer: {
     justifyContent: "center",
-    marginLeft: 8,
   },
   textHeight: {
     lineHeight: 20,

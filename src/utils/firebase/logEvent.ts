@@ -1,5 +1,6 @@
 import { firebase } from "@react-native-firebase/analytics";
 
+import { DEBUG } from "src/constants/env";
 import { ProfileState } from "src/types/Types.context";
 
 export type FirebaseEventName =
@@ -13,6 +14,8 @@ export type FirebaseEventName =
   | "press_what_is_room" // 「ルームとは？」を閲覧
   | "press_how_to_speak" // 「悩みを話すには？」を閲覧
   | "press_how_to_listen_to" // 「悩みを聞くには？」を閲覧
+  | "press_what_is_private_room" //「プライベートルームとは？」を閲覧
+  | "press_want_to_talk_list" // 「また話したい人リストとは？」を閲覧
   | "start_intro" // Topにて「承諾を」押下し, イントロを開始
   | "complete_intro_signup" // イントロにてプロフィールを入力し, サインアップをした
   | "navigate_intro_create_room" // イントロTopにて「話したい」を押下
@@ -29,6 +32,8 @@ export const logEvent = async (
   params?: { [key: string]: any },
   profileState?: ProfileState
 ): Promise<void> => {
+  if (DEBUG) return;
+
   const joined_params = {
     ...params,
     ...(profileState

@@ -109,6 +109,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
   const [isSpeaker, setIsSpeaker] = useState<boolean>(initIsSpeaker);
   const [roomName, setRoomName] = useState<string | null>(initRoomName);
   const [roomImage, setRoomImage] = useState<ImageInfo | null>(initRoomImage);
+  const [isTag, setIsTag] = useState(false)
   const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(
     initDraftRoomImage
   );
@@ -284,6 +285,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             <TouchableOpacity
               style={styles.addMore}
               onPress={() => {
+                setIsTag(false)
                 openOptionModal();
               }}
             >
@@ -394,11 +396,24 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 Keyboard.dismiss();
               }}
             />
-            <Block style={styles.subText}>
-              <Text size={12} color={COLORS.LIGHT_GRAY}>
-                見た人が不快になるような表現は避けましょう
-              </Text>
-            </Block>
+            <Button shadowless={true} opacity={0.6} style={styles.tagAreaContainer} onPress={() => {
+                setIsTag(true)
+                openOptionModal();
+              }}>
+              <Block row space="between" style={styles.tagArea} >
+                <Block flex={1}>
+                  {/* <Text size={14} color={COLORS.HIGHLIGHT_GRAY}>タグ（任意）</Text> */}
+                  <Text size={14} color={COLORS.BROWN}>#恋愛 #人間関係 #仕事 #友達 #学校</Text>
+                </Block>
+
+                <Icon
+                  name="chevron-right"
+                  family="Feather"
+                  size={24}
+                  color={COLORS.HIGHLIGHT_GRAY}
+                />
+              </Block>
+            </Button>
             <Block style={styles.choiceRangeTitle}>
               <Text size={14} color={COLORS.BLACK}>
                 表示範囲
@@ -545,7 +560,26 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                     color={COLORS.HIGHLIGHT_GRAY}
                   />
                 </TouchableOpacity>
-                <Block style={styles.subTitleTextInput}>
+                {
+                  isTag ?
+                  <Block center>
+                  <Button
+                    style={styles.addTopicButton}
+                    color={COLORS.BROWN}
+                    shadowless
+                    onPress={() => {
+                      addRoomOption();
+                      setIsOpenOptionModal(false);
+                    }}
+                  >
+                    <Text size={20} color={COLORS.WHITE} bold>
+                      1個のタグを追加する
+                    </Text>
+                  </Button>
+                </Block>
+                :
+                <>
+                  <Block style={styles.subTitleTextInput}>
                   <Text size={12} color={COLORS.GRAY}>
                     ルーム画像
                   </Text>
@@ -584,6 +618,9 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                     </Text>
                   </Button>
                 </Block>
+                </>
+                }
+
               </Block>
             </Block>
           </Modal>
@@ -675,6 +712,24 @@ const styles = StyleSheet.create({
   },
   subText: {
     marginBottom: 24,
+  },
+  tagAreaContainer: {
+    height: 40,
+    borderColor: "silver",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    backgroundColor: COLORS.WHITE,
+    marginBottom: 24,
+    alignItems: "center",
+  },
+  tagArea: {
+    height: 40,
+    width: width-40,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    alignItems: "center",
   },
   roomImageContainer: {
     marginBottom: 32,
