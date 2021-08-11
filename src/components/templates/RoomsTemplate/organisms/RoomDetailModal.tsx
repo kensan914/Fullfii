@@ -235,7 +235,9 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
               </Block>
             </Block>
           </Button>
-          <Text size={12}>相手に通知は届きません</Text>
+          <Text size={12} color={COLORS.GRAY}>
+            相手に通知は届きません
+          </Text>
         </Block>
       </Block>
     </Modal>
