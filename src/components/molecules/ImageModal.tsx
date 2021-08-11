@@ -30,7 +30,15 @@ export const ImageModal: React.FC<Props> = (props) => {
   };
 
   return (
-    <Modal isVisible={isOpen} onBackdropPress={close} deviceWidth={width}>
+    <Modal
+      animationIn="fadeIn"
+      animationInTiming={300}
+      animationOut="fadeOut"
+      animationOutTiming={300}
+      isVisible={isOpen}
+      onBackdropPress={close}
+      deviceWidth={width}
+    >
       <Block center style={styles.modalContent}>
         <ImageBackground
           source={imageSource}
