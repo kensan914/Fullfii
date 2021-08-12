@@ -155,6 +155,13 @@ export const MeProfileIoTs = t.intersection([
     isActive: t.boolean,
     isBan: t.boolean,
     me: t.boolean,
+    levelInfo: t.type({
+      currentLevel: t.number,
+      expInCurrentLevel: t.number,
+      requiredExpNextLevel: t.number,
+      totalExp: t.number,
+    }),
+    limitParticipate: t.number,
   }),
   ProfileIoTs,
 ]);
@@ -485,7 +492,10 @@ export const TalkInfoJsonIoTs = t.type({
 //========== Chat io-ts ==========//
 
 //========== Dom ==========//
-export type TaskSchedulesKey = "refreshRooms" | "openReviewModal";
+export type TaskSchedulesKey =
+  | "refreshRooms"
+  | "openReviewModal"
+  | "openLevelUpModal";
 export const MaintenanceTypeIoTs = t.literal("MAINTENANCE");
 export const DownTypeIoTs = t.literal("DOWN");
 export const OkTypeIoTs = t.literal("OK");

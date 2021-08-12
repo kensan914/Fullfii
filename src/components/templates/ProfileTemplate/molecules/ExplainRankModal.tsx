@@ -1,43 +1,46 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-} from "react-native";
+import React, { Dispatch } from "react";
+import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import { Block, Text, Button } from "galio-framework";
 
 import { COLORS } from "src/constants/colors";
 
-export const ExplainRankModal = () => {
-  const [isOpen, setIsOpen] = useState(true)
-
+type Props = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<boolean>;
+};
+export const ExplainRankModal: React.FC<Props> = (props) => {
+  const { isOpen, setIsOpen } = props;
   const close = () => {
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+  };
+
   return (
     <Modal
       animationIn="fadeIn"
-        animationInTiming={300}
-        animationOut="fadeOut"
-        animationOutTiming={300}
-        backdropOpacity={0.3}
-        isVisible={isOpen}
-        onBackdropPress={close}
-        style={styles.modal}
-      >
-        <Block style={styles.modalInnerContainer}>
-          <Block style={styles.titleContainer}>
-            <Text bold size={20} color={COLORS.BLACK}>
+      animationInTiming={300}
+      animationOut="fadeOut"
+      animationOutTiming={300}
+      backdropOpacity={0.3}
+      isVisible={isOpen}
+      onBackdropPress={close}
+      style={styles.modal}
+    >
+      <Block style={styles.modalInnerContainer}>
+        <Block style={styles.titleContainer}>
+          <Text bold size={20} color={COLORS.BLACK}>
             レベルが上がると参加できるルーム数が増えます（beta版）
-            </Text>
-          </Block>
-          <Block style={styles.descriptionContainer}>
-            <Text size={14} color={COLORS.BLACK} style={styles.lineHeight}>
-            相談した数や、話したい人リストに追加された数などによってレベルが上がります。{"\n"}
+          </Text>
+        </Block>
+        <Block style={styles.descriptionContainer}>
+          <Text size={14} color={COLORS.BLACK} style={styles.lineHeight}>
+            相談した数や、話したい人リストに追加された数などによってレベルが上がります。
+            {"\n"}
             レベルが上がると、参加できるルーム数が増えます。{"\n"}
             beta版のためレベル上限は2となっています。
-            </Text>
-          </Block>
-          <Block center>
+          </Text>
+        </Block>
+        <Block center>
           <Button
             style={styles.okButton}
             color={COLORS.BROWN}
@@ -49,10 +52,10 @@ export const ExplainRankModal = () => {
             </Text>
           </Button>
         </Block>
-        </Block>
-      </Modal>
-  )
-}
+      </Block>
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
   modal: {
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   titleContainer: {
-    marginTop: 32
+    marginTop: 32,
   },
   descriptionContainer: {
     marginTop: 16,

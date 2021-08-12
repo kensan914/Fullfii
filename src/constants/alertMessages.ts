@@ -36,7 +36,7 @@ export const ALERT_MESSAGES: AlertMessages = {
   ],
   CANNOT_PARTICIPATE_ROOM: [
     "既に参加しているルームを退室してください",
-    "ルームにはひとつまでしか参加できません。",
+    "参加できるルーム数が上限を超えました。",
   ],
   LEAVE_ROOM_OWNER: ["終了しますか？", "相手に一言贈りましょう"],
   LEAVE_ROOM_PARTICIPANT: ["退室しますか？", "相手に一言贈りましょう"],

@@ -2,8 +2,6 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "galio-framework";
 import { TabBar, TabView } from "react-native-tab-view";
-import {ExplainRankModal } from "src/components/organisms/ExplainRankModal"
-import {LevelUpModal} from "src/components/organisms/LevelUpModal"
 
 import { COLORS } from "src/constants/colors";
 import { MeProfile, Profile } from "src/types/Types.context";
@@ -83,8 +81,6 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
         onIndexChange={onIndexChange}
         swipeEnabled
       />
-      {/* <ExplainRankModal/> */}
-      <LevelUpModal/>
     </View>
   );
 };

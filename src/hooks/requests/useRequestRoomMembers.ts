@@ -3,9 +3,16 @@ import { useAuthState } from "src/contexts/AuthContext";
 import { URLJoin } from "src/utils";
 import { useAxios } from "src/hooks/useAxios";
 import { RoomJson, RoomJsonIoTs } from "src/types/Types.context";
-import { Request } from "src/types/Types";
+import {
+  PostRoomClosedMembersResData,
+  PostRoomClosedMembersResDataIoTs,
+  Request,
+} from "src/types/Types";
 import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
-import { useProfileState } from "src/contexts/ProfileContext";
+import {
+  useProfileDispatch,
+  useProfileState,
+} from "src/contexts/ProfileContext";
 import { useWsChat } from "src/screens/StartUpManager/useWsChat";
 import { asyncStoreObjectIncludeId } from "src/utils/asyncStorage";
 import { useDomDispatch } from "src/contexts/DomContext";
@@ -179,6 +186,8 @@ export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
     const profileState = useProfileState();
     const chatDispatch = useChatDispatch();
     const chatState = useChatState();
+    const profileDispatch = useProfileDispatch();
+    const domDispatch = useDomDispatch();
 
     const {
       isLoading: isLoadingPostRoomClosedMembers,
@@ -186,12 +195,16 @@ export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
     } = useAxios(
       URLJoin(BASE_URL, "rooms/", roomId, "closed-members/"),
       "post",
-      null,
+      PostRoomClosedMembersResDataIoTs,
       {
         data: {
           account_id: profileState.profile.id,
         },
-        thenCallback: async () => {
+        thenCallback: async (_resData) => {
+          const resData = _resData as PostRoomClosedMembersResData;
+
+          profileDispatch({ type: "SET_ALL", profile: resData.me });
+
           // メッセージ履歴のストア
           if (roomId in chatState.talkingRoomCollection) {
             for (const userId of chatState.talkingRoomCollection[roomId]
@@ -207,6 +220,10 @@ export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
             type: "CLOSE_TALK",
             roomId: roomId,
           });
+
+          if (resData.resultLevelUp === "LEVELED_UP") {
+            domDispatch({ type: "SCHEDULE_TASK", taskKey: "openLevelUpModal" });
+          }
 
           additionalThenCallback && additionalThenCallback();
         },
