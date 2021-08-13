@@ -2,11 +2,11 @@ import React, { Dispatch, useEffect, useRef } from "react";
 import { StyleSheet, Image } from "react-native";
 import Modal from "react-native-modal";
 import { Block, Text, Button } from "galio-framework";
+import AnimatedLottieView from "lottie-react-native";
 
 import { COLORS } from "src/constants/colors";
 import { LAURELS_IMG } from "src/constants/imagePath";
 import { useProfileState } from "src/contexts/ProfileContext";
-import AnimatedLottieView from "lottie-react-native";
 import { width } from "src/constants";
 
 type Props = {
@@ -65,6 +65,18 @@ export const LevelUpModal: React.FC<Props> = (props) => {
             {geneSubText()}
           </Text>
         </Block>
+        <AnimatedLottieView
+          ref={lottieViewRef}
+          source={require("src/assets/animations/confetti.json")}
+          style={{
+            width: width * 1.2,
+            alignSelf: "center",
+            position: "absolute",
+            bottom: 0,
+          }}
+          speed={1}
+          loop={false}
+        />
       </Block>
       <Block center>
         <Button
@@ -78,17 +90,6 @@ export const LevelUpModal: React.FC<Props> = (props) => {
           </Text>
         </Button>
       </Block>
-      <AnimatedLottieView
-        ref={lottieViewRef}
-        source={require("src/assets/animations/confetti.json")}
-        style={{
-          width: width * 1.2,
-          alignSelf: "center",
-          position: "absolute",
-        }}
-        speed={1}
-        loop={false}
-      />
     </Modal>
   );
 };
