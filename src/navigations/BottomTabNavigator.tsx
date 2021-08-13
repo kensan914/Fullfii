@@ -10,7 +10,6 @@ import { MeProfileScreen } from "src/screens/MeProfileScreen";
 import { COLORS } from "src/constants/colors";
 import { cvtBadgeCount } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
-import { MyRoomsRouteProp } from "src/types/Types";
 import { useAuthState } from "src/contexts/AuthContext";
 import {
   homeIconFocusSvg,
@@ -154,8 +153,7 @@ export const BottomTabNavigator: React.FC = () => {
           )}
         </Tab.Screen>
         <Tab.Screen name="MyRooms">
-          {({ route }) => {
-            const _route = route as MyRoomsRouteProp;
+          {() => {
             return (
               <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
                 <Stack.Navigator>
@@ -166,7 +164,7 @@ export const BottomTabNavigator: React.FC = () => {
                     })}
                   >
                     {/* Tab内でStackを用いたことで, MyRoomsScreen内でuseRouteしてもStackの方のrouteを引っ張ってくる (欲しいのはTabの) */}
-                    {() => <MyRoomsScreen route={_route} />}
+                    {() => <MyRoomsScreen />}
                   </Stack.Screen>
                 </Stack.Navigator>
               </Block>

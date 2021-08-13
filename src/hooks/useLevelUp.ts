@@ -1,4 +1,5 @@
 import { Dispatch, useEffect, useState } from "react";
+
 import { useDomDispatch, useDomState } from "src/contexts/DomContext";
 
 export const useLevelUp = (): {
