@@ -135,6 +135,9 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
+        <Block style={styles.tagContainer}>
+          <Text size={14} color={COLORS.LIGHT_GRAY}>#恋愛 #学校</Text>
+        </Block>
         <Block row>
           <Block>
             {talkingRoom.image ? (
@@ -333,11 +336,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.RED,
   },
   titleContainer: {
-    marginVertical: 16,
+    marginVertical: 8
   },
   title: {
     alignItems: "center",
     marginRight: 8,
+  },
+  tagContainer: {
+    marginBottom: 16,
   },
   privateLabelContainer: {},
   privateLabel: {
