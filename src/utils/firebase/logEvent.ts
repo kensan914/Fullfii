@@ -18,9 +18,9 @@ export type FirebaseEventName =
   | "press_want_to_talk_list" // 「また話したい人リストとは？」を閲覧
   | "start_intro" // Topにて「承諾を」押下し, イントロを開始
   | "complete_intro_signup" // イントロにてプロフィールを入力し, サインアップをした
-  | "navigate_intro_create_room" // イントロTopにて「話したい」を押下
-  | "navigate_intro_participate_room" // イントロTopにて「聞きたい」を押下
-  | "navigate_intro_signup" // イントロTopにて「プロフィールを入力」を押下
+  // | "navigate_intro_create_room" // イントロTopにて「話したい」を押下
+  // | "navigate_intro_participate_room" // イントロTopにて「聞きたい」を押下
+  // | "navigate_intro_signup" // イントロTopにて「プロフィールを入力」を押下
   | "open_review_modal" // レビューモーダルが表示された
   | "press_review_in_review_modal" // レビューモーダル内で「レビューする」を押下
   | "press_cancel_in_review_modal" // レビューモーダル内で「キャンセル」を押下

@@ -22,8 +22,6 @@ import { BottomTabNavigator } from "src/navigations/BottomTabNavigator";
 import { TopScreen } from "src/screens/TopScreen";
 import { ProfileEditorScreen } from "src/screens/ProfileEditorScreen";
 import { MessageHistoryScreen } from "src/screens/MessageHistoryScreen";
-import { IntroCreateRoomScreen } from "src/screens/intro/IntroCreateRoomScreen";
-import { IntroParticipateRoomScreen } from "src/screens/intro/IntroParticipateRoomScreen";
 import { IntroSignupScreen } from "src/screens/intro/IntroSignupScreen";
 import { IntroTopScreen } from "src/screens/intro/IntroTopScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
@@ -154,14 +152,14 @@ const AppStack: React.FC = () => {
           initialRouteName="IntroTop"
         >
           <Stack.Screen name="IntroTop" component={IntroTopScreen} />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="IntroCreateRoom"
             component={IntroCreateRoomScreen}
           />
           <Stack.Screen
             name="IntroParticipateRoom"
             component={IntroParticipateRoomScreen}
-          />
+          /> */}
           <Stack.Screen name="IntroSignup" component={IntroSignupScreen} />
         </Stack.Navigator>
       );
