@@ -5,18 +5,15 @@ import {
   Keyboard,
   TextInput,
   TouchableOpacity,
-  Image,
   Alert,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
-import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
 
 import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
-import { getPermissionAsync, pickImage } from "src/utils/imagePicker";
 import { width } from "src/constants";
 import {
   useRequestPatchRoom,
@@ -28,8 +25,19 @@ import { ALERT_MESSAGES, TOAST_SETTINGS } from "src/constants/alertMessages";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { formatGender, generateUuid4 } from "src/utils";
 import { useChatState } from "src/contexts/ChatContext";
+import { RoomImageEditorModal } from "src/components/organisms/RoomEditorModal/RoomImageEditorModal";
+import { TagEditorModal } from "src/components/organisms/RoomEditorModal/TagEditorModal";
+import {
+  isExcludeDifferentGenderState,
+  isPrivateState,
+  IsSpeakerState,
+  RoomImageState,
+  RoomNameState,
+  TagsState,
+  useInitStateInRoomEditor,
+} from "src/components/organisms/RoomEditorModal/useRoomEditor";
 
-type PropsDependsOnMode =
+export type PropsDependsOnMode =
   | {
       mode: "CREATE_FROM_MY_ROOMS";
     }
@@ -53,10 +61,21 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     propsDependsOnMode,
   } = props;
 
-  const [isOpenOptionModal, setIsOpenOptionModal] = useState(false);
   const profileState = useProfileState();
   const chatState = useChatState();
   const navigation = useNavigation();
+
+  // for オプションモーダル (ルーム画像Editor, タグEditor)
+  const [isOpenRoomImageEditorModal, setIsOpenRoomImageEditorModal] =
+    useState(false);
+  const openRoomImageEditorModal = () => {
+    setDraftRoomImage(roomImage);
+    setIsOpenRoomImageEditorModal(true);
+  };
+  const [isOpenTagEditorModal, setIsOpenTagEditorModal] = useState(false);
+  const openTagEditorModal = () => {
+    setIsOpenTagEditorModal(true);
+  };
 
   const formattedGender = formatGender(
     profileState.profile.gender,
@@ -67,56 +86,31 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     formattedGender.isNotSet || formattedGender.key === "secret"
   );
 
-  // ====== init post or patch data ======
-  const [initIsSpeaker] = useState<boolean>(
-    propsDependsOnMode.mode === "FIX"
-      ? propsDependsOnMode.talkingRoom.isSpeaker
-      : true
+  const {
+    initIsSpeaker,
+    initRoomName,
+    initRoomImage,
+    initDraftRoomImage,
+    initTags,
+    initDraftTags,
+    initIsExcludeDifferentGender,
+    initIsPrivate,
+  } = useInitStateInRoomEditor(
+    propsDependsOnMode,
+    canSetIsExcludeDifferentGender
   );
-  const [initRoomName] = useState(
-    propsDependsOnMode.mode === "FIX"
-      ? propsDependsOnMode.talkingRoom.name
-      : null
-  );
-  const [initRoomImage] = useState(null);
-  const [initDraftRoomImage] = useState(null);
-
-  // initIsExcludeDifferentGender初期値のコード量が長いので関数に抽出
-  const geneInitIsExcludeDifferentGender = () => {
-    let _initIsExcludeDifferentGender = null;
-    if (propsDependsOnMode.mode === "FIX") {
-      if (propsDependsOnMode.talkingRoom.isPrivate) return false;
-      if (canSetIsExcludeDifferentGender) {
-        _initIsExcludeDifferentGender =
-          propsDependsOnMode.talkingRoom.isExcludeDifferentGender;
-      } else {
-        _initIsExcludeDifferentGender = false; // HACK:(気味) 性別内緒or未設定は強制的に「異性にも表示」
-      }
-    }
-    return _initIsExcludeDifferentGender;
-  };
-  const [initIsExcludeDifferentGender] = useState(
-    geneInitIsExcludeDifferentGender()
-  );
-  const [initIsPrivate] = useState(
-    propsDependsOnMode.mode === "FIX"
-      ? propsDependsOnMode.talkingRoom.isPrivate
-      : null
-  );
-  // ====== init post or patch data ======
 
   // ====== post or patch data ======
-  const [isSpeaker, setIsSpeaker] = useState<boolean>(initIsSpeaker);
-  const [roomName, setRoomName] = useState<string | null>(initRoomName);
-  const [roomImage, setRoomImage] = useState<ImageInfo | null>(initRoomImage);
-  const [isTag, setIsTag] = useState(false)
-  const [draftRoomImage, setDraftRoomImage] = useState<ImageInfo | null>(
-    initDraftRoomImage
-  );
-  const [isExcludeDifferentGender, setIsExcludeDifferentGender] = useState<
-    boolean | null
-  >(initIsExcludeDifferentGender);
-  const [isPrivate, setIsPrivate] = useState<boolean | null>(initIsPrivate);
+  const [isSpeaker, setIsSpeaker] = useState<IsSpeakerState>(initIsSpeaker);
+  const [roomName, setRoomName] = useState<RoomNameState>(initRoomName);
+  const [roomImage, setRoomImage] = useState<RoomImageState>(initRoomImage);
+  const [draftRoomImage, setDraftRoomImage] =
+    useState<RoomImageState>(initDraftRoomImage);
+  const [tags, setTags] = useState<TagsState>(initTags);
+  const [draftTags, setDraftTags] = useState<TagsState>(initDraftTags);
+  const [isExcludeDifferentGender, setIsExcludeDifferentGender] =
+    useState<isExcludeDifferentGenderState>(initIsExcludeDifferentGender);
+  const [isPrivate, setIsPrivate] = useState<isPrivateState>(initIsPrivate);
   // ====== post or patch data ======
 
   const maxRoomNameLength = 60;
@@ -129,24 +123,20 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     roomName &&
     roomName.length > 0;
 
-  const resetDraftOption = () => {
+  const resetDraftRoomImage = () => {
     setDraftRoomImage(initDraftRoomImage);
+  };
+  const resetDraftTags = () => {
+    setDraftTags(initDraftTags);
   };
   /** ルーム作成後、全てのstateをリセット */
   const resetState = () => {
-    resetDraftOption();
+    resetDraftRoomImage();
+    resetDraftTags();
     setRoomName(initRoomName);
     setRoomImage(initRoomImage);
     setIsExcludeDifferentGender(initIsExcludeDifferentGender);
     setIsPrivate(initIsPrivate);
-  };
-  const addRoomOption = () => {
-    resetDraftOption();
-    setRoomImage(draftRoomImage);
-  };
-  const openOptionModal = () => {
-    setDraftRoomImage(roomImage);
-    setIsOpenOptionModal(true);
   };
 
   /** この値がtrueの状態でモーダルを閉じるとMyRoomsへ遷移し, ルーム作成モーダルが表示される(作成時のみ) */
@@ -162,6 +152,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     isExcludeDifferentGender,
     isPrivate,
     roomImage,
+    tags,
     () => {
       // then時、実行
       resetState();
@@ -177,6 +168,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     isExcludeDifferentGender,
     isPrivate,
     roomImage,
+    tags,
     () => {
       // then時、実行
       resetState();
@@ -186,44 +178,6 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
     isSpeaker
   );
 
-  const renderRoomImage = () => {
-    const emptyRoomImage = (
-      <Icon
-        name="image"
-        family="Feather"
-        size={48}
-        color={COLORS.HIGHLIGHT_GRAY}
-      />
-    );
-
-    if (propsDependsOnMode.mode === "FIX") {
-      if (draftRoomImage !== null) {
-        return <Image style={styles.roomImage} source={draftRoomImage} />;
-      } else {
-        if (propsDependsOnMode.talkingRoom.image) {
-          return (
-            <Image
-              style={styles.roomImage}
-              source={{ uri: propsDependsOnMode.talkingRoom.image }}
-            />
-          );
-        } else {
-          return emptyRoomImage;
-        }
-      }
-    } else if (
-      propsDependsOnMode.mode === "CREATE_FROM_MY_ROOMS" ||
-      propsDependsOnMode.mode === "CREATE_FROM_ROOMS"
-    ) {
-      if (draftRoomImage !== null) {
-        return <Image style={styles.roomImage} source={draftRoomImage} />;
-      } else {
-        return emptyRoomImage;
-      }
-    }
-    return null;
-  };
-
   return (
     <Modal
       isVisible={isOpenRoomEditorModal}
@@ -231,7 +185,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
       onBackdropPress={() => {
         setIsOpenRoomEditorModal(false);
       }}
-      style={styles.firstModal}
+      style={styles.modal}
       onModalHide={() => {
         if (isCreatedRef.current) {
           if (propsDependsOnMode.mode === "CREATE_FROM_ROOMS") {
@@ -266,7 +220,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
         }}
       >
         <>
-          <Block column style={styles.firstModalContent}>
+          <Block column style={styles.modalContent}>
             <Block row>
               <TouchableOpacity
                 style={styles.closeIcon}
@@ -283,10 +237,9 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </TouchableOpacity>
             </Block>
             <TouchableOpacity
-              style={styles.addMore}
+              style={styles.roomImageEditorModalOpener}
               onPress={() => {
-                setIsTag(false)
-                openOptionModal();
+                openRoomImageEditorModal();
               }}
             >
               <Block column>
@@ -323,7 +276,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Block>
             ) : null}
 
-            <Block style={styles.choiceRangeTitle}>
+            <Block style={styles.subTitle}>
               <Text size={14} color={COLORS.BLACK}>
                 私は
               </Text>
@@ -365,7 +318,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
               </Button>
             </Block>
 
-            <Block row space="between" style={styles.subTitleTextInput}>
+            <Block row space="between" style={styles.subTitle}>
               <Block>
                 <Text size={14} color={COLORS.BLACK}>
                   {isSpeaker ? "話したい悩みについて" : "聞きたい悩みについて"}
@@ -396,14 +349,30 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 Keyboard.dismiss();
               }}
             />
-            <Button shadowless={true} opacity={0.6} style={styles.tagAreaContainer} onPress={() => {
-                setIsTag(true)
-                openOptionModal();
-              }}>
-              <Block row space="between" style={styles.tagArea} >
+            <Button
+              shadowless={true}
+              opacity={0.6}
+              style={styles.tagAreaContainer}
+              onPress={() => {
+                openTagEditorModal();
+              }}
+            >
+              <Block row space="between" style={styles.tagArea}>
                 <Block flex={1}>
-                  {/* <Text size={14} color={COLORS.HIGHLIGHT_GRAY}>タグ（任意）</Text> */}
-                  <Text size={14} color={COLORS.BROWN}>#恋愛 #人間関係 #仕事 #友達 #学校</Text>
+                  <Text size={14} color={COLORS.BROWN}>
+                    {profileState.profileParams !== null &&
+                    tags !== null &&
+                    tags.length > 0
+                      ? tags
+                          .map((tagKey) => {
+                            return `#${
+                              profileState.profileParams !== null &&
+                              profileState.profileParams.tags[tagKey].label
+                            }`;
+                          })
+                          .join(" ")
+                      : "-- タグを追加する --"}
+                  </Text>
                 </Block>
 
                 <Icon
@@ -414,7 +383,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 />
               </Block>
             </Button>
-            <Block style={styles.choiceRangeTitle}>
+            <Block style={styles.subTitle}>
               <Text size={14} color={COLORS.BLACK}>
                 表示範囲
               </Text>
@@ -543,87 +512,25 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             </Block>
           </Block>
 
-          <Modal isVisible={isOpenOptionModal} deviceWidth={width}>
-            <Block style={styles.secondModal}>
-              <Block column style={styles.secondModalContent}>
-                <TouchableOpacity
-                  style={styles.closeIcon}
-                  onPress={() => {
-                    resetDraftOption();
-                    setIsOpenOptionModal(false);
-                  }}
-                >
-                  <Icon
-                    name="close"
-                    family="Ionicons"
-                    size={32}
-                    color={COLORS.HIGHLIGHT_GRAY}
-                  />
-                </TouchableOpacity>
-                {
-                  isTag ?
-                  <Block center>
-                  <Button
-                    style={styles.addTopicButton}
-                    color={COLORS.BROWN}
-                    shadowless
-                    onPress={() => {
-                      addRoomOption();
-                      setIsOpenOptionModal(false);
-                    }}
-                  >
-                    <Text size={20} color={COLORS.WHITE} bold>
-                      1個のタグを追加する
-                    </Text>
-                  </Button>
-                </Block>
-                :
-                <>
-                  <Block style={styles.subTitleTextInput}>
-                  <Text size={12} color={COLORS.GRAY}>
-                    ルーム画像
-                  </Text>
-                </Block>
-                <Block center>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={styles.roomImageContainer}
-                    onPress={async () => {
-                      const result = await getPermissionAsync();
-                      if (result) {
-                        pickImage().then((image) => {
-                          if (image) {
-                            setDraftRoomImage(image);
-                          }
-                        });
-                      }
-                    }}
-                  >
-                    {renderRoomImage()}
-                  </TouchableOpacity>
-                </Block>
-
-                <Block center>
-                  <Button
-                    style={styles.addTopicButton}
-                    color={COLORS.BROWN}
-                    shadowless
-                    onPress={() => {
-                      addRoomOption();
-                      setIsOpenOptionModal(false);
-                    }}
-                  >
-                    <Text size={20} color={COLORS.WHITE} bold>
-                      追加する
-                    </Text>
-                  </Button>
-                </Block>
-                </>
-                }
-
-              </Block>
-            </Block>
-          </Modal>
+          <RoomImageEditorModal
+            isOpen={isOpenRoomImageEditorModal}
+            setIsOpen={setIsOpenRoomImageEditorModal}
+            resetDraftRoomImage={resetDraftRoomImage}
+            propsDependsOnMode={propsDependsOnMode}
+            roomImage={roomImage}
+            setRoomImage={setRoomImage}
+            draftRoomImage={draftRoomImage}
+            setDraftRoomImage={setDraftRoomImage}
+          />
+          <TagEditorModal
+            isOpen={isOpenTagEditorModal}
+            setIsOpen={setIsOpenTagEditorModal}
+            resetDraftTags={resetDraftTags}
+            tags={tags}
+            setTags={setTags}
+            draftTags={draftTags}
+            setDraftTags={setDraftTags}
+          />
         </>
       </TouchableOpacity>
       {Platform.OS === "ios" && (
@@ -634,12 +541,12 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
 };
 
 const styles = StyleSheet.create({
-  firstModal: {
+  modal: {
     justifyContent: "flex-end",
     marginHorizontal: 0,
     marginBottom: 0,
   },
-  firstModalContent: {
+  modalContent: {
     backgroundColor: COLORS.WHITE,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
@@ -650,7 +557,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     width: 32,
   },
-  addMore: {
+  roomImageEditorModalOpener: {
     position: "absolute",
     top: 24,
     right: 16,
@@ -660,20 +567,16 @@ const styles = StyleSheet.create({
     top: 64,
     right: 16,
   },
-  choiceRangeTitle: {
+  subTitle: {
     marginBottom: 8,
   },
   submitButtonContainer: {
     marginBottom: 16,
   },
   submitButtonInner: {
-    width: 335,
-    height: 48,
-    borderRadius: 30,
     justifyContent: "center",
   },
   submitButton: {
-    width: 335,
     height: 48,
     borderRadius: 30,
     elevation: 1,
@@ -684,21 +587,7 @@ const styles = StyleSheet.create({
   submitButtonText: {
     paddingLeft: 4,
   },
-  secondModal: {
-    width: width - 40,
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 20,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-  },
-  secondModalContent: {
-    position: "relative",
-  },
-  subTitleTextInput: {
-    marginBottom: 8,
-  },
   textArea: {
-    width: width - 40,
     alignSelf: "center",
     textAlignVertical: "top",
     height: "auto",
@@ -710,62 +599,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     marginBottom: 8,
   },
-  subText: {
-    marginBottom: 24,
-  },
   tagAreaContainer: {
     height: 40,
     borderColor: "silver",
     borderWidth: 1,
     borderRadius: 10,
-    paddingHorizontal: 8,
     paddingVertical: 8,
+    paddingHorizontal: 8,
     backgroundColor: COLORS.WHITE,
     marginBottom: 24,
     alignItems: "center",
   },
   tagArea: {
-    height: 40,
-    width: width-40,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
     alignItems: "center",
-  },
-  roomImageContainer: {
-    marginBottom: 32,
-    height: 80,
-    width: 80,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.WHITE,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  roomImage: {
-    height: 72,
-    width: 72,
-    borderRadius: 8,
-  },
-  addTopicButton: {
-    marginBottom: 16,
-    width: 303,
-    height: 48,
-    borderRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 1,
+    width: "100%",
   },
   rangeButtonContainer: {
     marginBottom: 32,

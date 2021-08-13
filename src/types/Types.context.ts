@@ -127,9 +127,16 @@ export const JobIoTs = t.type({
   label: t.string,
 });
 export const JobsIoTs = t.record(t.string, JobIoTs);
+export const TagIoTs = t.type({
+  key: t.string,
+  label: t.string,
+  order: t.number,
+});
+export const TagsIoTs = t.record(t.string, TagIoTs);
 export const ProfileParamsIoTs = t.type({
   gender: GendersIoTs,
   job: JobsIoTs,
+  tags: TagsIoTs,
 });
 
 export const PlanIoTs = t.type({
@@ -238,6 +245,11 @@ export type ChatActionType =
       type: "SET_HAS_FAVORITE_USER";
       hasFavoriteUser: boolean;
     }
+  | {
+      type: "SET_INPUT_TEXT_BUFFER";
+      roomId: string;
+      inputText: string;
+    }
   | { type: "TURN_ON_DELAY"; excludeType: string[] }
   | { type: "TURN_OFF_DELAY" }
   | { type: "EXECUTED_DELAY_DISPATCH" }
@@ -284,6 +296,7 @@ export type TalkingRoomParts = {
   unreadNum: number;
   ws: WsNullable;
   isStart: boolean;
+  inputTextBuffer?: string; // 前バージョン対処
 };
 /** TalkingRoomJsonとの違い: wsのtypeがWsNullable, createdAtのtypeがDate */
 export type TalkingRoom = TalkingRoomParts & Room;
@@ -295,6 +308,7 @@ export type OfflineMessage = t.TypeOf<typeof OfflineMessageIoTs>;
 export type Message = t.TypeOf<typeof MessageIoTs>;
 export type MessageJson = t.TypeOf<typeof MessageJsonIoTs>;
 export type CommonMessage = t.TypeOf<typeof CommonMessageIoTs>;
+export type ThirdPartyMessage = t.TypeOf<typeof ThirdPartyMessageIoTs>;
 export type AllMessage = t.TypeOf<typeof AllMessageIoTs>;
 export type AllMessages = t.TypeOf<typeof AllMessagesIoTs>;
 
@@ -311,10 +325,12 @@ export type CommonMessageSettings =
   | {
       type: "SOMEONE_PARTICIPATED";
       participant: Profile;
+      isSpeaker: boolean;
     }
   | {
       type: "I_PARTICIPATED";
       owner: Profile;
+      isSpeaker: boolean;
     }
   | {
       type: "END";
@@ -364,18 +380,20 @@ export const CommonMessageIoTs = t.type({
   time: DateType,
   isCommon: t.boolean,
 });
+export const ThirdPartyMessageIoTs = t.type({
+  id: t.string,
+  text: t.string,
+  time: DateType,
+  isThirdParty: t.boolean,
+  senderId: t.literal("ASSISTANT"),
+});
 export const AllMessageIoTs = t.union([
   OfflineMessageIoTs,
   MessageIoTs,
   CommonMessageIoTs,
+  ThirdPartyMessageIoTs,
 ]);
 export const AllMessagesIoTs = t.array(AllMessageIoTs);
-
-export const TagIoTs = t.type({
-  key: t.string,
-  label: t.string,
-  order: t.number,
-});
 
 export const BaseRoomIoTs = t.type({
   id: t.string,
@@ -424,11 +442,12 @@ export const TalkingRoomCollectionJsonIoTs = t.record(
 // ------ //
 
 // -- TalkingRoomCollectionAsyncIoTs -- //
-// asyncStorage用IoTs. TalkingRoomCollectionのwsが常にnull(TalkingRoomとの唯一の違い)で, 時間は全てDateオブジェクト. (+ isStart)
+// asyncStorage用IoTs. TalkingRoomCollectionのwsが常にnull(TalkingRoomとの唯一の違い)で, 時間は全てDateオブジェクト. (+ isStart + inputTextBuffer)
 export const TalkingRoomPartsAsyncIoTs = t.intersection([
   TalkingRoomPartsJsonIoTs,
   t.type({
     isStart: t.boolean, // "START_TALK"実行済みか
+    inputTextBuffer: t.string,
   }),
 ]);
 export const TalkingRoomAsyncIoTs = t.intersection([

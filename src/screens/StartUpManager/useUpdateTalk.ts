@@ -71,6 +71,7 @@ export const useUpdateTalk: UseUpdateTalk = () => {
             commonMessageSettings: {
               type: "I_PARTICIPATED",
               owner: _participatingRoomJson.owner,
+              isSpeaker: _participatingRoomJson.isSpeaker,
             },
           });
         }
@@ -129,6 +130,7 @@ export const useUpdateTalk: UseUpdateTalk = () => {
               commonMessageSettings: {
                 type: "SOMEONE_PARTICIPATED",
                 participant: _participant,
+                isSpeaker: _createdRoomJson.isSpeaker,
               },
             });
           });

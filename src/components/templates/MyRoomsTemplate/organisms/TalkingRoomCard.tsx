@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableHighlight,
   ViewStyle,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
@@ -245,7 +246,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
           });
         }}
         activeOpacity={0.7}
-        underlayColor="#DDDDDD"
+        underlayColor={Platform.OS === "ios" ? "#DDDDDD" : COLORS.WHITE}
         style={styles.touchableHighlight}
       >
         <Block style={styles.card}>

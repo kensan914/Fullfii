@@ -61,6 +61,7 @@ export const useRequestPostRoomParticipant: UseRequestPostRoomParticipant = (
           commonMessageSettings: {
             type: "I_PARTICIPATED",
             owner: roomJson.owner,
+            isSpeaker: roomJson.isSpeaker,
           },
         });
 

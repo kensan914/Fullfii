@@ -36,6 +36,7 @@ export const ChatTemplate: React.FC<Props> = (props) => {
         setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
         isStart={talkingRoom.isStart}
         navigateProfile={navigateProfile}
+        inputTextBuffer={talkingRoom.inputTextBuffer}
       />
       <NotificationReminderModal
         isOpenNotificationReminderModal={isOpenNotificationReminderModal}

@@ -1,5 +1,6 @@
 import React, { RefObject, useEffect, useState } from "react";
 import { useScrollToTop } from "@react-navigation/native";
+import { FlatList } from "react-native";
 
 import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
 import { Room } from "src/types/Types.context";
@@ -10,13 +11,13 @@ import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";
 import { GetRoomsResData, GetRoomsResDataIoTs } from "src/types/Types";
 import { BASE_URL } from "src/constants/env";
-import { FlatList } from "react-native";
 
 type Props = {
   flatListRef: RefObject<FlatList>;
+  tagKey?: string;
 };
 export const RoomsScreen: React.FC<Props> = (props) => {
-  const { flatListRef } = props;
+  const { flatListRef, tagKey } = props;
 
   const domState = useDomState();
   const domDispatch = useDomDispatch();
@@ -45,7 +46,11 @@ export const RoomsScreen: React.FC<Props> = (props) => {
   } = useFetchItems<Room, GetRoomsResData>(
     rooms,
     setRooms,
-    URLJoin(BASE_URL, "rooms/"),
+    URLJoin(
+      BASE_URL,
+      "rooms/",
+      typeof tagKey !== "undefined" ? `?tags=${tagKey}` : void 0
+    ),
     GetRoomsResDataIoTs,
     cvtJsonToObject,
     getHasMore

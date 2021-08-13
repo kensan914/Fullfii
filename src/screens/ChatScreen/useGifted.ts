@@ -29,8 +29,30 @@ export const useGifted: UseGifted = (roomMemberCollection) => {
     const _giftedMessages: IMessage[] = [...messages]
       .reverse()
       .map((_message) => {
-        // normal message
-        if ("senderId" in _message) {
+        // system message
+        if ("isCommon" in _message) {
+          return {
+            _id: _message.id,
+            text: _message.text,
+            createdAt: _message.time,
+            user: giftedMe,
+            system: "isCommon" in _message && _message.isCommon,
+          };
+        } else if ("isThirdParty" in _message) {
+          return {
+            _id: _message.id,
+            text: _message.text,
+            createdAt: _message.time,
+            user: {
+              _id: _message.senderId,
+              name: "匿名子",
+              avatar: require("src/assets/images/intro/lectureWoman.png"),
+            },
+            sent: true,
+            system: false,
+          };
+        } else {
+          // normal message (message | offlineMessage)
           let giftedSender: User;
           if (_message.senderId in roomMemberCollection) {
             const sender = roomMemberCollection[_message.senderId];
@@ -54,17 +76,6 @@ export const useGifted: UseGifted = (roomMemberCollection) => {
             user: giftedSender,
             sent: !("isOffline" in _message && _message.isOffline),
             system: false,
-          };
-        }
-
-        // system message
-        else {
-          return {
-            _id: _message.id,
-            text: _message.text,
-            createdAt: _message.time,
-            user: giftedMe,
-            system: "isCommon" in _message && _message.isCommon,
           };
         }
       });

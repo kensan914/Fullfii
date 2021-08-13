@@ -4,11 +4,10 @@ import {
   StyleSheet,
   TouchableHighlight,
   Image,
-  TouchableOpacity,
   ViewStyle,
+  Platform,
 } from "react-native";
 
-import { SvgUri } from "src/components/atoms/SvgUri";
 import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
@@ -18,7 +17,7 @@ import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
-import { detailSvg } from "src/constants/svgSources";
+import { useProfileState } from "src/contexts/ProfileContext";
 
 type Props = {
   room: Room;
@@ -29,6 +28,8 @@ type Props = {
 };
 export const RoomCard: React.FC<Props> = (props) => {
   const { room, hiddenRoomIds, hideRoom, blockRoom, style } = props;
+
+  const profileState = useProfileState();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,11 +45,12 @@ export const RoomCard: React.FC<Props> = (props) => {
       <Block style={[styles.container, style]}>
         <TouchableHighlight
           activeOpacity={0.7}
-          underlayColor="#DDDDDD"
+          underlayColor={Platform.OS === "ios" ? "#DDDDDD" : COLORS.WHITE}
           onPress={() => {
             setIsOpen(true);
           }}
           style={styles.touchableHighlight}
+          disabled={room.owner.id === profileState.profile.id} // 自身が作成したルームは押下禁止
         >
           <Block style={styles.card}>
             <Block style={styles.title}>
@@ -150,19 +152,6 @@ export const RoomCard: React.FC<Props> = (props) => {
                       </Block>
                     </Block>
                   </Block>
-                  {/* <TouchableOpacity
-                    style={styles.detailButton}
-                    onPress={() => {
-                      setIsOpen(true);
-                    }}
-                  >
-                    <SvgUri
-                      width={32}
-                      height={32}
-                      source={detailSvg}
-                      fill={COLORS.BROWN}
-                    />
-                  </TouchableOpacity> */}
                 </Block>
               </Block>
             </Block>
@@ -234,7 +223,6 @@ const styles = StyleSheet.create({
   statusItem: {
     marginRight: 8,
   },
-  detailButton: {},
   image: {
     width: 88,
     height: 88,
