@@ -44,14 +44,17 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
   const { requestPostRoomLeftMembers } = useRequestPostRoomLeftMembers(
     roomId,
     () => void 0,
-    () => {
+    (isLeveledUp) => {
       // クローズ成功
       navigation.navigate("Home");
 
       additionalThenClose && additionalThenClose.fn();
 
       if (isAddedFavoriteUserRef.current && !profileState.isReviewed) {
-        domDispatch({ type: "SCHEDULE_TASK", taskKey: "openReviewModal" });
+        if (typeof isLeveledUp !== "undefined" && !isLeveledUp) {
+          // LevelupModalとReviewModalの競合を防ぐ
+          domDispatch({ type: "SCHEDULE_TASK", taskKey: "openReviewModal" });
+        }
       }
     }
   );

@@ -80,7 +80,7 @@ export const useRequestPostRoomParticipant: UseRequestPostRoomParticipant = (
 type UseRequestPostRoomLeftMembers = (
   roomId: string,
   additionalThenCallback?: (roomJson: RoomJson) => void,
-  additionalCloseThenCallback?: () => void
+  additionalCloseThenCallback?: (isLeveledUp?: boolean) => void
 ) => {
   requestPostRoomLeftMembers: Request;
   isLoadingPostRoomLeftMembers: boolean;
@@ -103,8 +103,8 @@ export const useRequestPostRoomLeftMembers: UseRequestPostRoomLeftMembers = (
 
   const { requestPostRoomClosedMembers } = useRequestPostRoomClosedMembers(
     roomId,
-    () => {
-      additionalCloseThenCallback();
+    (isLeveledUp) => {
+      additionalCloseThenCallback(isLeveledUp);
       domDispatch({
         type: "SET_IS_SHOW_SPINNER",
         value: false,
@@ -165,7 +165,7 @@ export const useRequestPostRoomLeftMembers: UseRequestPostRoomLeftMembers = (
 
 type UseRequestPostRoomClosedMembers = (
   roomId: string,
-  additionalThenCallback?: () => void,
+  additionalThenCallback?: (isLeveledUp?: boolean) => void,
   additionalCatchCallback?: () => void
 ) => {
   requestPostRoomClosedMembers: Request;
@@ -222,11 +222,13 @@ export const useRequestPostRoomClosedMembers: UseRequestPostRoomClosedMembers =
             roomId: roomId,
           });
 
+          let isLeveledUp = false;
           if (resData.resultLevelUp === "LEVELED_UP") {
             domDispatch({ type: "SCHEDULE_TASK", taskKey: "openLevelUpModal" });
+            isLeveledUp = true;
           }
 
-          additionalThenCallback && additionalThenCallback();
+          additionalThenCallback && additionalThenCallback(isLeveledUp);
         },
         token: authState.token ? authState.token : "",
         catchCallback: () => {
