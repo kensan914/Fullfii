@@ -45,12 +45,13 @@ export const useCanParticipateRoom: UseCanParticipateRoom = () => {
   const profileState = useProfileState();
 
   const checkCanParticipateRoom = () => {
-    // 全てのトーキングルームが自分の作成したものであれば、参加可能
-    const canParticipate = Object.values(chatState.talkingRoomCollection).every(
-      (talkingRoom) => {
-        return talkingRoom.owner.id === profileState.profile.id;
-      }
-    );
+    const participatingRooms = Object.values(
+      chatState.talkingRoomCollection
+    ).filter((talkingRoom) => {
+      return talkingRoom.owner.id !== profileState.profile.id;
+    });
+    const canParticipate =
+      participatingRooms.length < profileState.profile.limitParticipate;
 
     if (canParticipate) {
       return true;

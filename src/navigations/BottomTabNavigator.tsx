@@ -23,6 +23,8 @@ import { HomeTopTabNavigator } from "src/navigations/HomeTopTabNavigator";
 import { useReview } from "src/hooks/useReview";
 import { ReviewModal } from "src/components/organisms/ReviewModal";
 import { Icon } from "src/components/atoms/Icon";
+import { LevelUpModal } from "src/components/organisms/LevelUpModal";
+import { useLevelUp } from "src/hooks/useLevelUp";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -32,6 +34,7 @@ export const BottomTabNavigator: React.FC = () => {
   const authState = useAuthState();
 
   const { isOpenReviewModal, setIsOpenReviewModal } = useReview();
+  const { isOpenLevelUpModal, setIsOpenLevelUpModal } = useLevelUp();
 
   return (
     <>
@@ -189,6 +192,10 @@ export const BottomTabNavigator: React.FC = () => {
       <ReviewModal
         isOpen={isOpenReviewModal}
         setIsOpen={setIsOpenReviewModal}
+      />
+      <LevelUpModal
+        isOpen={isOpenLevelUpModal}
+        setIsOpen={setIsOpenLevelUpModal}
       />
     </>
   );

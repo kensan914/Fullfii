@@ -170,12 +170,8 @@ const RootNavigator: React.FC<Props> = (props) => {
               <ChatProvider talkingRoomCollection={talkingRoomCollection}>
                 <DomProvider>
                   <StartUpManager>
-                    {Platform.OS === "ios" ? (
+                    {Platform.OS === "ios" && (
                       <StatusBar barStyle="dark-content" />
-                    ) : (
-                      // HACK: react-native-modal内でkeyboardを開くと意図せずavoidがかかる(Android). Androidのステータスバーを全面非表示
-                      // https://github.com/react-native-modal/react-native-modal/issues/344#issuecomment-629400548
-                      <StatusBar hidden />
                     )}
                     <Screens />
                     <Toast ref={(ref) => Toast.setRef(ref)} />

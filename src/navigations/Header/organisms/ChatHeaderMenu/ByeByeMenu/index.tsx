@@ -103,7 +103,10 @@ export const ByeByeMenu: React.FC<Props> = (props) => {
           // メッセージがかわされず, かつ退室メッセを入力しなかった
           if (
             !text &&
-            !talkingRoom.messages.some((_message) => !("isCommon" in _message))
+            !talkingRoom.messages.some(
+              (_message) =>
+                !("isCommon" in _message) && !("isThirdParty" in _message)
+            )
           ) {
             if (shouldAlert) Alert.alert("一言を入力する必要があります");
             return false;

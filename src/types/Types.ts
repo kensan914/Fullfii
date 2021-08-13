@@ -454,6 +454,13 @@ export type DeleteFavoriteUserResData = t.TypeOf<
 export const DeleteFavoriteUserResDataIoTs = t.type({
   hasFavoriteUser: t.boolean,
 });
+export type PostRoomClosedMembersResData = t.TypeOf<
+  typeof PostRoomClosedMembersResDataIoTs
+>;
+export const PostRoomClosedMembersResDataIoTs = t.type({
+  resultLevelUp: t.union([t.literal("STABLE"), t.literal("LEVELED_UP")]),
+  me: MeProfileIoTs,
+});
 //--------- axios res.data ---------//
 
 //--------- ws ---------//

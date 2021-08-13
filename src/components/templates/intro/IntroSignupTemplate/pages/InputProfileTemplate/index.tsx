@@ -19,7 +19,6 @@ import {
 import { MenuModal } from "src/components/molecules/Menu";
 import { Job } from "src/types/Types.context";
 import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
-import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 
 export type SignupProps = {
   username: string;

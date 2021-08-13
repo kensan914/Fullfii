@@ -40,7 +40,7 @@ type Props = {
   setIsOpenNotificationReminderModal: Dispatch<boolean>;
   isStart: boolean;
   navigateProfile: (userProfile: Profile) => void;
-  // openProfileModal: (userId: string) => void;
+  inputTextBuffer?: string;
 };
 export const ChatBody: React.FC<Props> = (props) => {
   const {
@@ -53,29 +53,43 @@ export const ChatBody: React.FC<Props> = (props) => {
     setIsOpenNotificationReminderModal,
     isStart,
     navigateProfile,
-    // openProfileModal,
+    inputTextBuffer,
   } = props;
 
   const authState = useAuthState();
   const profileState = useProfileState();
   const chatDispatch = useChatDispatch();
+  const domState = useDomState();
 
-  const [step, setStep] = useState(0);
   const [giftedMessages, setGiftedMessages] = useState<IMessage[]>([]);
-  const [isTyping, setIsTyping] = useState(false);
-  const _isMounted = useRef(false);
+  const [inputText, setInputText] = useState("");
+  const isInitializedInputTextRef = useRef(false); // GiftedChatの仕様で初回に空文字でinputTextを初期化するのを防ぐ
+  const isUnmountRef = useRef(false); // unmountコールバック内にstateを含むため, useEffectを分割する
+
+  useEffect(() => {
+    // inputTextの復元
+    if (typeof inputTextBuffer !== "undefined" && inputTextBuffer.length > 0) {
+      setInputText(inputTextBuffer);
+    }
+    return () => {
+      isUnmountRef.current = true;
+    };
+  }, []);
+  useEffect(() => {
+    return () => {
+      // inputTextのストア
+      if (isUnmountRef.current) {
+        chatDispatch({
+          type: "SET_INPUT_TEXT_BUFFER",
+          roomId: roomId,
+          inputText: inputText,
+        });
+      }
+    };
+  }, [inputText]);
 
   useTurnOnRead(messages, roomId);
   const { giftedMe, convertMessagesToGifted } = useGifted(roomMemberCollection);
-  const domState = useDomState();
-
-  useEffect(() => {
-    _isMounted.current = true;
-    setIsTyping(false);
-    return () => {
-      _isMounted.current = false;
-    };
-  }, []);
 
   // オフラインメッセージの反映
   useEffect(() => {
@@ -133,8 +147,6 @@ export const ChatBody: React.FC<Props> = (props) => {
         sendWsMessage(ws, messageId, _giftedMessage.text);
       }
 
-      setStep(step + 1);
-
       // プッシュ通知催促
       if (!domState.pushNotificationParams.isChosenPermission) {
         setIsOpenNotificationReminderModal(true);
@@ -151,11 +163,19 @@ export const ChatBody: React.FC<Props> = (props) => {
     >
       <GiftedChat
         messages={giftedMessages}
+        text={inputText}
+        onInputTextChanged={(_text) => {
+          if (_text.length <= 0 && !isInitializedInputTextRef.current) {
+            // GiftedChatの仕様で初回に空文字でinputTextを初期化するのを防ぐ
+            isInitializedInputTextRef.current = true;
+            return;
+          }
+          setInputText(_text);
+        }}
         onSend={onSend}
         user={giftedMe}
         scrollToBottom
         onPressAvatar={(user) => {
-          // openProfileModal(user._id.toString());
           if (user._id in roomMemberCollection) {
             navigateProfile(roomMemberCollection[user._id]);
           }
@@ -170,7 +190,6 @@ export const ChatBody: React.FC<Props> = (props) => {
           left: { color: "lightcoral" },
           right: { color: "navajowhite" },
         }}
-        isTyping={isTyping}
         infiniteScroll
         alwaysShowSend
         renderTicks={() => null}

@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from "react";
-// import { RouteProp, useFocusEffect } from "@react-navigation/core";
 
 import { MyRoomsTemplate } from "src/components/templates/MyRoomsTemplate";
 import { useChatState } from "src/contexts/ChatContext";
 import { TalkingRoom } from "src/types/Types.context";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
-import { MyRoomsRouteProp } from "src/types/Types";
 
-type Props = {
-  route: MyRoomsRouteProp;
-};
-export const MyRoomsScreen: React.FC<Props> = (props) => {
-  const { route } = props;
-
+export const MyRoomsScreen: React.FC = () => {
   const chatState = useChatState();
   const profileState = useProfileState();
 
@@ -38,23 +31,9 @@ export const MyRoomsScreen: React.FC<Props> = (props) => {
   }, [chatState.talkingRoomCollection]);
 
   const [isOpenRoomEditorModal, setIsOpenRoomEditorModal] = useState(false);
-  // const [isOpenRoomCreatedModal, setIsOpenRoomCreatedModal] = useState(false);
-  // const [
-  //   isOpenNotificationReminderModal,
-  //   setIsOpenNotificationReminderModal,
-  // ] = useState<boolean>(false);
-
-  // const navigateState = route.params?.navigateState;
-  // useEffect(() => {
-  //   if (
-  //     typeof navigateState?.willOpenRoomCreatedModal !== "undefined" &&
-  //     !!navigateState?.willOpenRoomCreatedModal
-  //   ) {
-  //     setIsOpenRoomCreatedModal(true);
-  //   }
-  // }, [navigateState?.id]);
-
   const { checkCanCreateRoom } = useCanCreateRoom();
+
+  const maxParticipatingRoomsLength = profileState.profile.limitParticipate;
 
   return (
     <MyRoomsTemplate
@@ -62,11 +41,8 @@ export const MyRoomsScreen: React.FC<Props> = (props) => {
       participatingRooms={participatingRooms}
       isOpenRoomEditorModal={isOpenRoomEditorModal}
       setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
-      // isOpenRoomCreatedModal={isOpenRoomCreatedModal}
-      // setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
-      // isOpenNotificationReminderModal={isOpenNotificationReminderModal}
-      // setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
       checkCanCreateRoom={checkCanCreateRoom}
+      maxParticipatingRoomsLength={maxParticipatingRoomsLength}
     />
   );
 };

@@ -1,34 +1,32 @@
 import React from "react";
-import { Text, Button, Block } from "galio-framework";
+import { Text, Block } from "galio-framework";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { COLORS } from "src/constants/colors";
 import { width } from "src/constants";
-import { Icon } from "src/components/atoms/Icon";
-import { SignupBuffer } from "src/types/Types.context";
 import { IntroTopAnimationProps } from "src/screens/intro/IntroTopScreen/useIntroTopAnimation";
 import { AnimatedView } from "src/components/templates/intro/organisms/AnimatedView";
 import { IntroComment } from "src/components/templates/intro/molecules/IntroComment";
 
 type Props = {
-  signupBuffer: SignupBuffer;
-  navigateIntroCreateRoom: () => void;
-  navigateIntroParticipateRoom: () => void;
-  navigateIntroSignup: () => void;
+  // signupBuffer: SignupBuffer;
+  // navigateIntroCreateRoom: () => void;
+  // navigateIntroParticipateRoom: () => void;
+  // navigateIntroSignup: () => void;
   animationProps: IntroTopAnimationProps;
 };
 export const IntroTopTemplate: React.FC<Props> = (props) => {
   const {
-    signupBuffer,
-    navigateIntroCreateRoom,
-    navigateIntroParticipateRoom,
-    navigateIntroSignup,
+    // signupBuffer,
+    // navigateIntroCreateRoom,
+    // navigateIntroParticipateRoom,
+    // navigateIntroSignup,
     animationProps,
   } = props;
 
-  const canNavigateIntroSignup =
-    signupBuffer.introCreateRoom.isComplete ||
-    signupBuffer.introParticipateRoom.isComplete;
+  // const canNavigateIntroSignup =
+  //   signupBuffer.introCreateRoom.isComplete ||
+  //   signupBuffer.introParticipateRoom.isComplete;
 
   return (
     <Block flex style={styles.container}>
@@ -57,14 +55,17 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
             <Block flex={0.2} style={styles.centerContainer}>
               <AnimatedView ref={animationProps.animatedViewRefScene1_comment}>
                 <IntroComment>
-                  {"タップして当てはまる方を選んでね"}
+                  {"Fullfiiは悩み相談専用のアプリです"}
+                </IntroComment>
+                <IntroComment style={{ marginTop: 16 }}>
+                  {"悩み相談の前に簡単なプロフィールを作成しよう"}
                 </IntroComment>
               </AnimatedView>
             </Block>
           </AnimatedView>
         </TouchableOpacity>
       )}
-      {animationProps.currentScene === "02" && (
+      {/* {animationProps.currentScene === "02" && (
         <AnimatedView
           style={styles.scene2Container}
           ref={animationProps.animatedViewRefScene2_whole}
@@ -169,7 +170,7 @@ export const IntroTopTemplate: React.FC<Props> = (props) => {
             </Block>
           </>
         </AnimatedView>
-      )}
+      )} */}
     </Block>
   );
 };
@@ -182,7 +183,6 @@ const styles = StyleSheet.create({
   scene1Container: {
     flex: 1,
     paddingHorizontal: 16,
-    // justifyContent: "center",
   },
   scene2Container: {
     flex: 1,

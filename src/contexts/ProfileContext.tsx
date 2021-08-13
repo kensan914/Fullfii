@@ -112,6 +112,13 @@ export const initMeProfile: MeProfile = Object.freeze({
   numOfOwner: 0,
   numOfParticipated: 0,
   isPrivateProfile: true,
+  levelInfo: {
+    currentLevel: 1,
+    expInCurrentLevel: 0,
+    requiredExpNextLevel: 8,
+    totalExp: 0,
+  },
+  limitParticipate: 1,
 });
 
 const profileStateContext = createContext<ProfileState>({

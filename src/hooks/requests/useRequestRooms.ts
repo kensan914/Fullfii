@@ -8,6 +8,14 @@ import requestAxios, { useAxios } from "src/hooks/useAxios";
 import { RoomJson, RoomJsonIoTs } from "src/types/Types.context";
 import { Request } from "src/types/Types";
 import { useChatDispatch } from "src/contexts/ChatContext";
+import {
+  isExcludeDifferentGenderState,
+  isPrivateState,
+  IsSpeakerState,
+  RoomImageState,
+  RoomNameState,
+  TagsState,
+} from "src/components/organisms/RoomEditorModal/useRoomEditor";
 
 type UseRequestPostRoomImage = () => {
   requestPostRoomImage: (_roomId: string, _roomImage: ImageInfo) => void;
@@ -51,12 +59,13 @@ export const useRequestPostRoomImage: UseRequestPostRoomImage = () => {
 };
 
 type UseRequestPostRoom = (
-  roomName: string | null,
-  isExcludeDifferentGender: boolean | null,
-  isPrivate: boolean | null,
-  roomImage: ImageInfo | null,
+  roomName: RoomNameState,
+  isExcludeDifferentGender: isExcludeDifferentGenderState,
+  isPrivate: isPrivateState,
+  roomImage: RoomImageState,
+  tags: TagsState,
   additionalThenCallback?: (roomJson: RoomJson) => void,
-  isSpeaker?: boolean
+  isSpeaker?: IsSpeakerState
 ) => {
   requestPostRoom: Request;
   isLoadingPostRoom: boolean;
@@ -66,6 +75,7 @@ export const useRequestPostRoom: UseRequestPostRoom = (
   isExcludeDifferentGender,
   isPrivate,
   roomImage,
+  tags,
   additionalThenCallback = () => void 0,
   isSpeaker
 ) => {
@@ -86,6 +96,7 @@ export const useRequestPostRoom: UseRequestPostRoom = (
           ? { is_exclude_different_gender: isExcludeDifferentGender }
           : {}),
         ...(isPrivate !== null ? { is_private: isPrivate } : {}),
+        ...(tags !== null ? { tags: tags } : {}),
       },
       thenCallback: (resData) => {
         const roomJson = resData as RoomJson;
@@ -125,12 +136,13 @@ export const useRequestPostRoom: UseRequestPostRoom = (
 
 type UseRequestPatchRoom = (
   roomId: string,
-  roomName?: string | null,
-  isExcludeDifferentGender?: boolean | null,
-  isPrivate?: boolean | null,
-  roomImage?: ImageInfo | null,
+  roomName?: RoomNameState,
+  isExcludeDifferentGender?: isExcludeDifferentGenderState,
+  isPrivate?: isPrivateState,
+  roomImage?: RoomImageState,
+  tag?: TagsState,
   additionalThenCallback?: (roomJson: RoomJson) => void,
-  isSpeaker?: boolean
+  isSpeaker?: IsSpeakerState
 ) => {
   requestPatchRoom: Request;
   isLoadingPatchRoom: boolean;
@@ -141,6 +153,7 @@ export const useRequestPatchRoom: UseRequestPatchRoom = (
   isExcludeDifferentGender = null,
   isPrivate = null,
   roomImage = null,
+  tags = null,
   additionalThenCallback = () => void 0,
   isSpeaker
 ) => {
@@ -161,6 +174,7 @@ export const useRequestPatchRoom: UseRequestPatchRoom = (
           ? { is_exclude_different_gender: isExcludeDifferentGender }
           : {}),
         ...(isPrivate !== null ? { is_private: isPrivate } : {}),
+        ...(tags !== null ? { tags: tags } : {}),
       },
       thenCallback: (resData) => {
         const roomJson = resData as RoomJson;

@@ -90,6 +90,7 @@ const initDomState = Object.freeze({
   taskSchedules: {
     refreshRooms: false,
     openReviewModal: false,
+    openLevelUpModal: false,
   },
   pushNotificationParams: {
     isPermission: false, // 既に設定され, かつ許可されている

@@ -23,11 +23,12 @@ import {
   TalkingRoomCollection,
   Room,
   CommonMessageSettings,
+  ThirdPartyMessage,
 } from "src/types/Types.context";
 import {
   canAddCommonMessage,
   checkAndAddCommonMessage,
-  geneCommonMessage,
+  geneCommonMessages,
   getTotalUnreadNum,
 } from "src/utils/chat/chatContextUtils";
 
@@ -400,7 +401,7 @@ const chatReducer = (
       // }
 
       if (_talkingRoom.messages.length > 0) {
-        const leftCommonMessages: CommonMessage[] = [];
+        let leftCommonMessages: (CommonMessage | ThirdPartyMessage)[] = [];
         _talkingRoom.leftMembers
           .filter((_leftMember) => _leftMember.id !== action.meId) // 自身を含めない
           .forEach((_leftMember) => {
@@ -414,9 +415,10 @@ const chatReducer = (
                 leftCommonMessageSettings
               )
             ) {
-              leftCommonMessages.push(
-                geneCommonMessage(leftCommonMessageSettings)
-              );
+              leftCommonMessages = [
+                ...leftCommonMessages,
+                ...geneCommonMessages(leftCommonMessageSettings),
+              ];
             }
           });
 
@@ -424,24 +426,6 @@ const chatReducer = (
           ..._talkingRoom.messages,
           ...leftCommonMessages,
         ];
-
-        // let targetUser: Profile | undefined;
-        // if (_talkingRoom.owner.id === action.meId) {
-        //   // 自身が作成者の時
-        //   if (_talkingRoom.participants.length > 0) {
-        //     targetUser = _talkingRoom.participants[0]; // 参加者が１人までという現時点での仕様により
-        //   }
-        // } else {
-        //   // 自身が参加者の時
-        //   targetUser = _talkingRoom.owner;
-        // }
-
-        // if (targetUser) {
-        //   _talkingRoom.messages = checkAndAddCommonMessage(_talkingRoom.messages, {
-        //     type: "END",
-        //     targetUser: targetUser,
-        //   });
-        // }
       }
 
       _talkingRoom.isEnd = true;
@@ -665,6 +649,26 @@ const chatReducer = (
       return {
         ...prevState,
         hasFavoriteUser: action.hasFavoriteUser,
+      };
+    }
+
+    case "SET_INPUT_TEXT_BUFFER": {
+      /** set inputTextBuffer.
+       * @param {Object} action [type, roomId, inputText] */
+
+      _talkingRoomCollection = { ...prevState.talkingRoomCollection };
+      _talkingRoom = _talkingRoomCollection[action.roomId];
+      if (!_talkingRoom) {
+        consoleErrorNotFountRoom(action.roomId);
+        return { ...prevState };
+      }
+
+      _talkingRoomCollection[action.roomId].inputTextBuffer = action.inputText;
+      asyncStoreTalkingRoomCollection(_talkingRoomCollection);
+
+      return {
+        ...prevState,
+        talkingRoomCollection: _talkingRoomCollection,
       };
     }
 

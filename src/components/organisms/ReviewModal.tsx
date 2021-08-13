@@ -109,6 +109,10 @@ export const ReviewModal: React.FC<Props> = (props) => {
   return (
     <>
       <Modal
+        animationIn="fadeIn"
+        animationInTiming={300}
+        animationOut="fadeOut"
+        animationOutTiming={300}
         backdropOpacity={0.3}
         isVisible={isOpenReviewModal}
         style={styles.modal}
@@ -261,7 +265,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   lineHeight: {
-    lineHeight: 16,
+    lineHeight: 20,
   },
   dissatisfactionButton: {
     height: 40,

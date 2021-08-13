@@ -13,6 +13,7 @@ import error5xx from "src/assets/images/errors/error_5xx.png";
 import maintenance from "src/assets/images/maintenance/maintenance.png";
 import star from "src/assets/images/review/star.png";
 import reviewIcon from "src/assets/images/review/iconForReview.png";
+import laurels from "src/assets/images/rankup/laurels.png";
 
 export const MAN_AND_WOMAN_IMG = manAndWomanImg;
 export const MEN_IMG = menImg;
@@ -29,3 +30,4 @@ export const ERROR_5XX_IMG = error5xx;
 export const MAINTENANCE_IMG = maintenance;
 export const STAR_IMG = star;
 export const REVIEW_ICON_IMG = reviewIcon;
+export const LAURELS_IMG = laurels;

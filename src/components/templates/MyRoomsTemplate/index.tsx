@@ -16,11 +16,8 @@ type Props = {
   createdRooms: TalkingRoom[];
   isOpenRoomEditorModal: boolean;
   setIsOpenRoomEditorModal: Dispatch<boolean>;
-  // isOpenRoomCreatedModal: boolean;
-  // setIsOpenRoomCreatedModal: Dispatch<boolean>;
-  // isOpenNotificationReminderModal: boolean;
-  // setIsOpenNotificationReminderModal: Dispatch<boolean>;
   checkCanCreateRoom: () => boolean;
+  maxParticipatingRoomsLength: number;
 };
 export const MyRoomsTemplate: React.FC<Props> = (props) => {
   const {
@@ -28,14 +25,10 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
     createdRooms,
     isOpenRoomEditorModal,
     setIsOpenRoomEditorModal,
-    // isOpenRoomCreatedModal,
-    // setIsOpenRoomCreatedModal,
-    // isOpenNotificationReminderModal,
-    // setIsOpenNotificationReminderModal,
     checkCanCreateRoom,
+    maxParticipatingRoomsLength,
   } = props;
 
-  const maxParticipatingRoomsLength = 1; // 参加ルームの最大数 (ver3.0.0現在)
   const maxCreatedRoomsLength = 1; // 作成ルームの最大数 (ver3.0.0現在)
   return (
     <>
@@ -147,18 +140,8 @@ export const MyRoomsTemplate: React.FC<Props> = (props) => {
         setIsOpenRoomEditorModal={setIsOpenRoomEditorModal}
         propsDependsOnMode={{
           mode: "CREATE_FROM_MY_ROOMS",
-          // setIsOpenRoomCreatedModal: setIsOpenRoomCreatedModal,
         }}
       />
-      {/* <RoomCreatedModal
-        isOpenRoomCreatedModal={isOpenRoomCreatedModal}
-        setIsOpenRoomCreatedModal={setIsOpenRoomCreatedModal}
-        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
-      />
-      <NotificationReminderModal
-        isOpenNotificationReminderModal={isOpenNotificationReminderModal}
-        setIsOpenNotificationReminderModal={setIsOpenNotificationReminderModal}
-      /> */}
     </>
   );
 };

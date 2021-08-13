@@ -46,6 +46,7 @@ export const useWsNotification: UseWsNotification = () => {
                 commonMessageSettings: {
                   type: "SOMEONE_PARTICIPATED",
                   participant: participant,
+                  isSpeaker: data.room.isSpeaker,
                 },
               });
             }

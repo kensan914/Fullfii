@@ -7,6 +7,7 @@ import {
   Alert,
   TouchableHighlight,
   ViewStyle,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 
@@ -134,6 +135,17 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
             </TouchableOpacity>
           )}
         </Block>
+        {talkingRoom.tags.length > 0 && (
+          <Block style={styles.tagContainer}>
+            <Text size={14} color={COLORS.LIGHT_GRAY}>
+              {talkingRoom.tags
+                .map((tag) => {
+                  return `#${tag.label}`;
+                })
+                .join(" ")}
+            </Text>
+          </Block>
+        )}
         <Block row>
           <Block>
             {talkingRoom.image ? (
@@ -245,7 +257,7 @@ export const TalkingRoomCard: React.FC<Props> = (props) => {
           });
         }}
         activeOpacity={0.7}
-        underlayColor="#DDDDDD"
+        underlayColor={Platform.OS === "ios" ? "#DDDDDD" : COLORS.WHITE}
         style={styles.touchableHighlight}
       >
         <Block style={styles.card}>
@@ -332,11 +344,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.RED,
   },
   titleContainer: {
-    marginVertical: 16,
+    marginVertical: 8,
   },
   title: {
     alignItems: "center",
     marginRight: 8,
+  },
+  tagContainer: {
+    marginBottom: 16,
   },
   privateLabelContainer: {},
   privateLabel: {

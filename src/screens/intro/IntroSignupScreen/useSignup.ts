@@ -3,13 +3,8 @@ import { useEffect, useState } from "react";
 import { SignupProps } from "src/components/templates/intro/IntroSignupTemplate/pages/InputProfileTemplate";
 import { useAuthDispatch, useAuthState } from "src/contexts/AuthContext";
 import { useProfileState } from "src/contexts/ProfileContext";
-import { useRequestPostRoom } from "src/hooks/requests/useRequestRooms";
 import { useRequestPostSignup } from "src/hooks/requests/useRequestSignup";
-import {
-  FormattedGenderKey,
-  NotSetGenderKey,
-  SignupResData,
-} from "src/types/Types";
+import { FormattedGenderKey, NotSetGenderKey } from "src/types/Types";
 import { Job } from "src/types/Types.context";
 import { generatePassword } from "src/utils";
 import { logEvent } from "src/utils/firebase/logEvent";
@@ -65,12 +60,12 @@ export const useSignup = (): {
     job?.key
   );
   // ルーム作成用
-  const { requestPostRoom } = useRequestPostRoom(
-    authState.signupBuffer.introCreateRoom.roomName,
-    null, // 公開範囲設定はできない
-    null, // プライベート設定はできない
-    null // ルーム画像の設定はできない
-  );
+  // const { requestPostRoom } = useRequestPostRoom(
+  //   authState.signupBuffer.introCreateRoom.roomName,
+  //   null, // 公開範囲設定はできない
+  //   null, // プライベート設定はできない
+  //   null // ルーム画像の設定はできない
+  // );
   const onSubmitSignup = (): Promise<void> => {
     setIsLoadingSignup(true);
     return new Promise((resolve) => {
@@ -82,20 +77,21 @@ export const useSignup = (): {
         resolve();
       };
       requestPostSignup({
-        thenCallback: (resData) => {
-          const _resData = resData as SignupResData;
-          const _token = _resData.token;
+        thenCallback: () => {
+          // const _resData = resData as SignupResData;
+          // const _token = _resData.token;
 
-          if (authState.signupBuffer.introCreateRoom.isComplete) {
-            requestPostRoom({
-              token: _token,
-              thenCallback: () => {
-                completeSignup();
-              },
-            });
-          } else {
-            completeSignup();
-          }
+          // if (authState.signupBuffer.introCreateRoom.isComplete) {
+          //   requestPostRoom({
+          //     token: _token,
+          //     thenCallback: () => {
+          //       completeSignup();
+          //     },
+          //   });
+          // } else {
+          //   completeSignup();
+          // }
+          completeSignup();
         },
       });
     });
