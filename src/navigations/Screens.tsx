@@ -128,17 +128,17 @@ const AppStack: React.FC = () => {
 
   switch (authState.status) {
     case AUTHENTICATED:
-      return withSafeAreaView(
-        <Stack.Navigator mode="card" headerMode="none">
-          <Stack.Screen name="Authenticated">
-            {() => (
-              <>
-                <HomeStack />
-                {domState.isShowSpinner && <Spinner />}
-              </>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
+      return (
+        <>
+          {withSafeAreaView(
+            <Stack.Navigator mode="card" headerMode="none">
+              <Stack.Screen name="Authenticated">
+                {() => <HomeStack />}
+              </Stack.Screen>
+            </Stack.Navigator>
+          )}
+          {domState.isShowSpinner && <Spinner />}
+        </>
       );
 
     case AUTHENTICATING:

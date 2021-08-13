@@ -33,8 +33,8 @@ export const BottomTabNavigator: React.FC = () => {
   const chatState = useChatState();
   const authState = useAuthState();
 
-  const { isOpenReviewModal, setIsOpenReviewModal } = useReview();
   const { isOpenLevelUpModal, setIsOpenLevelUpModal } = useLevelUp();
+  const { isOpenReviewModal, setIsOpenReviewModal } = useReview();
 
   return (
     <>
