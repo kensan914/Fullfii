@@ -8,7 +8,7 @@ export const width = Dimensions.get("window").width;
 export const height = Dimensions.get("window").height;
 
 // Androidはステータスバー非表示のため
-export const STATUS_BAR_HEIGHT = getStatusBarHeight();
+export const STATUS_BAR_HEIGHT = getStatusBarHeight(true);
 export const BOTTOM_SPACE_HEIGHT = getBottomSpace();
 
 export const HEADER_HEIGHT = 54;
