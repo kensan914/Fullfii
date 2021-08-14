@@ -16,6 +16,7 @@ import { APP_ID, APP_ID_ANDROID } from "src/constants/env";
 import { STAR_IMG, REVIEW_ICON_IMG } from "src/constants/imagePath";
 import { useRequestSurveyDissatisfaction } from "src/hooks/requests/useRequestSurvey";
 import { logEvent } from "src/utils/firebase/logEvent";
+import { geneFadeModalProps } from "src/utils/customModules";
 
 type Props = {
   isOpen: boolean;
@@ -109,14 +110,11 @@ export const ReviewModal: React.FC<Props> = (props) => {
   return (
     <>
       <Modal
-        animationIn="fadeIn"
-        animationInTiming={300}
-        animationOut="fadeOut"
-        animationOutTiming={300}
         backdropOpacity={0.3}
         isVisible={isOpenReviewModal}
         style={styles.modal}
         onModalHide={onHideReviewModal}
+        {...geneFadeModalProps()}
       >
         <Block style={styles.modalInnerContainer}>
           <Block style={styles.titleContainer}>

@@ -4,6 +4,7 @@ import Modal from "react-native-modal";
 import { Block, Text, Button } from "galio-framework";
 
 import { COLORS } from "src/constants/colors";
+import { geneFadeModalProps } from "src/utils/customModules";
 
 type Props = {
   isOpen: boolean;
@@ -17,14 +18,11 @@ export const ExplainRankModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      animationIn="fadeIn"
-      animationInTiming={300}
-      animationOut="fadeOut"
-      animationOutTiming={300}
       backdropOpacity={0.3}
       isVisible={isOpen}
       onBackdropPress={close}
       style={styles.modal}
+      {...geneFadeModalProps()}
     >
       <Block style={styles.modalInnerContainer}>
         <Block style={styles.titleContainer}>

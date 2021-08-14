@@ -7,6 +7,7 @@ import { RoundButton } from "src/components/atoms/RoundButton";
 import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 import { width } from "src/constants";
+import { geneFadeModalProps } from "src/utils/customModules";
 
 type Props = {
   isOpen: boolean;
@@ -31,13 +32,10 @@ export const ImageModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      animationIn="fadeIn"
-      animationInTiming={300}
-      animationOut="fadeOut"
-      animationOutTiming={300}
       isVisible={isOpen}
       onBackdropPress={close}
       deviceWidth={width}
+      {...geneFadeModalProps()}
     >
       <Block center style={styles.modalContent}>
         <ImageBackground

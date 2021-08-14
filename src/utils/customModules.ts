@@ -1,7 +1,8 @@
-import { Alert, AlertButton } from "react-native";
+import { Alert, AlertButton, Platform } from "react-native";
 import Toast from "react-native-toast-message";
 import { getStatusBarHeight } from "react-native-iphone-x-helper";
 import ActionSheet from "react-native-action-sheet";
+import { Animation, CustomAnimation } from "react-native-animatable";
 
 type alertModalProps = {
   mainText: string;
@@ -117,4 +118,22 @@ export const showToast = (settings: ShowToastSettings): void => {
     type: typeof settings.type !== "undefined" ? settings.type : "success",
     topOffset: getStatusBarHeight() + 10,
   });
+};
+
+export const geneFadeModalProps = (
+  isForceFadeAnimation?: boolean
+): {
+  animationIn?: Animation | CustomAnimation;
+  animationInTiming?: number;
+  animationOut?: Animation | CustomAnimation;
+  animationOutTiming?: number;
+} => {
+  return Platform.OS === "ios" || isForceFadeAnimation
+    ? {
+        animationIn: "fadeIn",
+        animationInTiming: 300,
+        animationOut: "fadeOut",
+        animationOutTiming: 300,
+      }
+    : {};
 };
