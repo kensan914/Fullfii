@@ -360,7 +360,14 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
             >
               <Block row space="between" style={styles.tagArea}>
                 <Block flex={1}>
-                  <Text size={14} color={COLORS.BROWN}>
+                  <Text
+                    size={14}
+                    color={
+                      tags !== null && tags.length > 0
+                        ? COLORS.BROWN
+                        : COLORS.HIGHLIGHT_GRAY
+                    }
+                  >
                     {profileState.profileParams !== null &&
                     tags !== null &&
                     tags.length > 0
@@ -372,7 +379,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                             }`;
                           })
                           .join(" ")
-                      : "-- タグを追加する --"}
+                      : "タグ（任意）"}
                   </Text>
                 </Block>
 
@@ -591,7 +598,6 @@ const styles = StyleSheet.create({
   textArea: {
     alignSelf: "center",
     textAlignVertical: "top",
-    height: "auto",
     borderColor: "silver",
     borderWidth: 1,
     borderRadius: 10,
@@ -599,6 +605,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: COLORS.WHITE,
     marginBottom: 8,
+    height: 80,
+    width: "100%",
   },
   tagAreaContainer: {
     height: 40,
