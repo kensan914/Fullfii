@@ -50,7 +50,7 @@ export const RoomCard: React.FC<Props> = (props) => {
             setIsOpen(true);
           }}
           style={styles.touchableHighlight}
-          disabled={room.owner.id === profileState.profile.id} // 自身が作成したルームは押下禁止
+          // disabled={room.owner.id === profileState.profile.id} // 自身が作成したルームは押下禁止
         >
           <Block style={styles.card}>
             <Block style={styles.title}>

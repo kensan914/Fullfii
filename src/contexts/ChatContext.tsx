@@ -659,7 +659,7 @@ const chatReducer = (
       _talkingRoomCollection = { ...prevState.talkingRoomCollection };
       _talkingRoom = _talkingRoomCollection[action.roomId];
       if (!_talkingRoom) {
-        consoleErrorNotFountRoom(action.roomId);
+        // ルーム退室時
         return { ...prevState };
       }
 

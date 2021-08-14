@@ -15,8 +15,21 @@ const domReducer = (prevState: DomState, action: DomActionType): DomState => {
 
   switch (action.type) {
     case "SCHEDULE_TASK": {
-      /** 指定したtaskKeyのタスクをスケジュール.
+      /** 指定したtaskKeyのタスクをスケジュール. openReviewModalとopenLevelUpModalはどちらか1つのみtrueにできる. そのため, openLevelUpModalを最初に実行.
        * @param {Object} action [type, taskKey] */
+
+      switch (action.taskKey) {
+        case "openLevelUpModal":
+          if (_taskSchedules["openReviewModal"]) {
+            return { ...prevState };
+          }
+          break;
+        case "openReviewModal":
+          if (_taskSchedules["openLevelUpModal"]) {
+            return { ...prevState };
+          }
+          break;
+      }
 
       _taskSchedules[action.taskKey] = true;
       return { ...prevState, taskSchedules: _taskSchedules };

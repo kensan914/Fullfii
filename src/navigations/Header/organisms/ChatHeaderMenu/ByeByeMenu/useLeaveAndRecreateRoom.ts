@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { useRequestPostRoom } from "src/hooks/requests/useRequestRooms";
 import { AxiosReActionType, Request } from "src/types/Types";
 import { TalkingRoom } from "src/types/Types.context";
@@ -22,7 +23,7 @@ export const useLeaveAndRecreateRoom: UseLeaveAndRecreateRoom = (
   requestPostRoomLeftMembers,
   thenRecreateRoom
 ) => {
-  const { requestPostRoom } = useRequestPostRoom(null, null, null, null);
+  const { requestPostRoom } = useRequestPostRoom(null, null, null, null, null);
   const [additionalThenClose, setAdditionalThenClose] = useState<{
     fn: () => void;
   }>();
@@ -40,6 +41,8 @@ export const useLeaveAndRecreateRoom: UseLeaveAndRecreateRoom = (
             name: _talkingRoom.name,
             is_exclude_different_gender: _talkingRoom.isExcludeDifferentGender,
             is_private: _talkingRoom.isPrivate,
+            is_speaker: _talkingRoom.isSpeaker,
+            tags: _talkingRoom.tags.map((_tag) => _tag.key),
           },
           thenCallback: () => {
             thenRecreateRoom && thenRecreateRoom();
