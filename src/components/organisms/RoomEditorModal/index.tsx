@@ -8,6 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  TouchableHighlight,
 } from "react-native";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/core";
@@ -349,10 +350,10 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                 Keyboard.dismiss();
               }}
             />
-            <Button
-              shadowless={true}
-              opacity={0.6}
+            <TouchableHighlight
               style={styles.tagAreaContainer}
+              activeOpacity={0.5}
+              underlayColor={COLORS.WHITE}
               onPress={() => {
                 openTagEditorModal();
               }}
@@ -382,7 +383,7 @@ export const RoomEditorModal: React.FC<Props> = (props) => {
                   color={COLORS.HIGHLIGHT_GRAY}
                 />
               </Block>
-            </Button>
+            </TouchableHighlight>
             <Block style={styles.subTitle}>
               <Text size={14} color={COLORS.BLACK}>
                 表示範囲
@@ -604,11 +605,11 @@ const styles = StyleSheet.create({
     borderColor: "silver",
     borderWidth: 1,
     borderRadius: 10,
-    paddingVertical: 8,
     paddingHorizontal: 8,
     backgroundColor: COLORS.WHITE,
     marginBottom: 24,
     alignItems: "center",
+    justifyContent: "center",
   },
   tagArea: {
     alignItems: "center",
