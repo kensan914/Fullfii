@@ -162,12 +162,15 @@ export const MeProfileIoTs = t.intersection([
     isActive: t.boolean,
     isBan: t.boolean,
     me: t.boolean,
-    levelInfo: t.type({
-      currentLevel: t.number,
-      expInCurrentLevel: t.number,
-      requiredExpNextLevel: t.number,
-      totalExp: t.number,
-    }),
+    levelInfo: t.union([
+      t.type({
+        currentLevel: t.number,
+        expInCurrentLevel: t.number,
+        requiredExpNextLevel: t.number,
+        totalExp: t.number,
+      }),
+      t.undefined,
+    ]),
     limitParticipate: t.number,
   }),
   ProfileIoTs,
