@@ -8,7 +8,7 @@ import { useRequestPatchMe } from "src/hooks/requests/useRequestMe";
 import configurePushNotification from "src/utils/firebase/pushNotification";
 
 type UseConfigPushNotification = () => {
-  configPushNotification: () => void;
+  configPushNotification: (isOnlyGetDeviceToken?: boolean) => void;
   isRequiredConfigPN: boolean;
 };
 export const useConfigPushNotification: UseConfigPushNotification = () => {
@@ -21,14 +21,14 @@ export const useConfigPushNotification: UseConfigPushNotification = () => {
     isConfiguredPushNotification.current = true;
   });
 
-  const [isRequiredConfigPN, _seIsRequiredConfigPN] = useState(false);
+  const [isRequiredConfigPN, _setIsRequiredConfigPN] = useState(false);
   const isRequiredConfigPNRef = useRef(false);
-  const seIsRequiredConfigPN = (val: boolean): void => {
+  const setIsRequiredConfigPN = (val: boolean): void => {
     isRequiredConfigPNRef.current = val;
-    _seIsRequiredConfigPN(val);
+    _setIsRequiredConfigPN(val);
   };
   useEffect(() => {
-    seIsRequiredConfigPN(
+    setIsRequiredConfigPN(
       !!profileState.profile &&
         !isExpo &&
         !isConfiguredPushNotification.current &&
@@ -48,10 +48,12 @@ export const useConfigPushNotification: UseConfigPushNotification = () => {
    * 前提条件: profile準備完了 && expoじゃない && pushNotification未設定 && アカウント作成済み && サインアップ終了
    * 最終条件: 取得したdeviceTokenがprofile.deviceTokenと不一致 (未だ登録されていない)
    */
-  const configPushNotification = () => {
+  const configPushNotification = (isOnlyGetDeviceToken?: boolean) => {
     if (isRequiredConfigPNRef.current) {
       (async () => {
-        const deviceToken = await configurePushNotification();
+        const deviceToken = await configurePushNotification(
+          isOnlyGetDeviceToken
+        );
 
         if (deviceToken) {
           if (profileState.profile.deviceToken !== deviceToken) {

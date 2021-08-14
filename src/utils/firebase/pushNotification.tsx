@@ -34,11 +34,11 @@ const requestPermissionOfIosPN = async (): Promise<boolean> => {
 };
 
 const configurePushNotification = (
-  onlyConfig?: boolean /* requestPermission */
+  isOnlyGetDeviceToken?: boolean /* requestPermission */
 ): Promise<null | string> => {
   const initPushNotification = async (): Promise<null | string> => {
-    if (onlyConfig) {
-      return initFcm();
+    if (isOnlyGetDeviceToken) {
+      return initFcm(isOnlyGetDeviceToken);
     } else {
       const enabled = await requestPermissionOfIosPN();
 
@@ -50,29 +50,33 @@ const configurePushNotification = (
     }
   };
 
-  const initFcm = async (): Promise<null | string> => {
+  const initFcm = async (
+    isOnlyGetDeviceToken?: boolean
+  ): Promise<null | string> => {
     const _deviceToken = await messaging().getToken();
 
-    PushNotification.configure({
-      requestPermissions: false,
-      onNotification: (notification) => {
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
-      },
-      permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-      },
-    });
+    if (!isOnlyGetDeviceToken) {
+      PushNotification.configure({
+        requestPermissions: false,
+        onNotification: (notification) => {
+          notification.finish(PushNotificationIOS.FetchResult.NoData);
+        },
+        permissions: {
+          alert: true,
+          badge: true,
+          sound: true,
+        },
+      });
 
-    messaging().onTokenRefresh(() => {
-      //
-    });
-    messaging().onMessage((message) => {
-      _localNotification(message);
-      // // badge=1が送信されるが, Foregroundであるためリセット
-      // PushNotification.setApplicationIconBadgeNumber(0);
-    });
+      messaging().onTokenRefresh(() => {
+        //
+      });
+      messaging().onMessage((message) => {
+        _localNotification(message);
+        // // badge=1が送信されるが, Foregroundであるためリセット
+        // PushNotification.setApplicationIconBadgeNumber(0);
+      });
+    }
 
     return _deviceToken;
   };
