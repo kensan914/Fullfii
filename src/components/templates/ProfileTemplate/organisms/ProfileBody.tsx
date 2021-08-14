@@ -45,24 +45,41 @@ export const ProfileBody: React.FC<Props> = (props) => {
 
   const geneExpStep = () => {
     if ("levelInfo" in profile) {
+      const currentLevel =
+        typeof profile.levelInfo !== "undefined"
+          ? profile.levelInfo.currentLevel
+          : 1;
+      const expInCurrentLevel =
+        typeof profile.levelInfo !== "undefined"
+          ? profile.levelInfo.expInCurrentLevel
+          : 0;
       // HACK: 上限2のため, Lv.2以上の経験値は表示しない
-      if (profile.levelInfo.currentLevel >= 2) {
+      if (currentLevel >= 2) {
         return 1;
       }
 
-      return profile.levelInfo.expInCurrentLevel;
+      return expInCurrentLevel;
     } else {
       return 1;
     }
   };
   const geneExpSteps = () => {
     if ("levelInfo" in profile) {
+      const currentLevel =
+        typeof profile.levelInfo !== "undefined"
+          ? profile.levelInfo.currentLevel
+          : 1;
+      const requiredExpNextLevel =
+        typeof profile.levelInfo !== "undefined"
+          ? profile.levelInfo.requiredExpNextLevel
+          : 0;
+
       // HACK: 上限2のため, Lv.2以上の経験値は表示しない
-      if (profile.levelInfo.currentLevel >= 2) {
+      if (currentLevel >= 2) {
         return 1;
       }
 
-      return profile.levelInfo.requiredExpNextLevel;
+      return requiredExpNextLevel;
     } else {
       return 1;
     }
@@ -192,7 +209,9 @@ export const ProfileBody: React.FC<Props> = (props) => {
                         steps={geneExpSteps()}
                         label={
                           "levelInfo" in profile
-                            ? profile.levelInfo.currentLevel
+                            ? typeof profile.levelInfo !== "undefined"
+                              ? profile.levelInfo.currentLevel
+                              : 1
                             : ""
                         }
                         subLabel={"レベル"}

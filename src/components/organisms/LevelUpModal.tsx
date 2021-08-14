@@ -23,7 +23,10 @@ export const LevelUpModal: React.FC<Props> = (props) => {
   };
 
   const geneSubText = () => {
-    switch (profileState.profile.levelInfo.currentLevel) {
+    switch (
+      typeof profileState.profile.levelInfo !== "undefined" &&
+      profileState.profile.levelInfo.currentLevel
+    ) {
       case 2: {
         return "参加できるルーム数が2つに増えました！";
       }
@@ -54,7 +57,9 @@ export const LevelUpModal: React.FC<Props> = (props) => {
         <Image source={LAURELS_IMG} style={styles.informationImage} />
         <Block center style={styles.mainTextContainer}>
           <Text size={96} color={COLORS.WHITE}>
-            {profileState.profile.levelInfo.currentLevel}
+            {typeof profileState.profile.levelInfo !== "undefined"
+              ? profileState.profile.levelInfo.currentLevel
+              : 1}
           </Text>
           <Text center size={16} color={COLORS.WHITE}>
             レベル
