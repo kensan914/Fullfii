@@ -8,6 +8,7 @@ import { COLORS } from "src/constants/colors";
 import { LAURELS_IMG } from "src/constants/imagePath";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { width } from "src/constants";
+import { geneFadeModalProps } from "src/utils/customModules";
 
 type Props = {
   isOpen: boolean;
@@ -44,14 +45,11 @@ export const LevelUpModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      animationIn="fadeIn"
-      animationInTiming={300}
-      animationOut="fadeOut"
-      animationOutTiming={300}
       backdropOpacity={0.7}
       isVisible={isOpen}
       onBackdropPress={close}
       style={styles.modal}
+      {...geneFadeModalProps(true)}
     >
       <Block style={styles.modalInnerContainer}>
         <Image source={LAURELS_IMG} style={styles.informationImage} />
