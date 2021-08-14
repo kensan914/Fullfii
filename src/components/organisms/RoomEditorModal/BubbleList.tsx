@@ -81,7 +81,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
             borderRadius: (diameter - diameterDiff) / 2,
             margin: diameterDiff / 2,
             marginHorizontal: diameterDiff / 2 + margin,
-            backgroundColor: isActive ? COLORS.PINK : "white",
+            backgroundColor: isActive ? COLORS.PINK : COLORS.WHITE,
             borderWidth: isActive ? 0 : 1,
           },
           style ? style : {},
@@ -98,7 +98,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
         ]}
       >
         <Text
-          color={isActive ? "white" : "lightpink"}
+          color={isActive ? COLORS.WHITE : COLORS.PINK}
           bold
           size={isPressed ? textSize - weightPressed * 0.2 : textSize}
           ellipsizeMode="tail"
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   bubble: {
-    borderColor: "pink",
+    borderColor: COLORS.PINK,
   },
   bubbleTextContainer: {
     position: "absolute",

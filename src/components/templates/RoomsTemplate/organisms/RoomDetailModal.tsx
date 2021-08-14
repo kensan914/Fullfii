@@ -15,6 +15,7 @@ import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRequestPostRoomParticipant } from "src/hooks/requests/useRequestRoomMembers";
 import { useCanParticipateRoom } from "src/screens/RoomsScreen/useCanAction";
 import { enterRoomSvg } from "src/constants/svgSources";
+import { useProfileState } from "src/contexts/ProfileContext";
 
 type Props = {
   room: Room;
@@ -41,6 +42,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
   } = props;
 
   const navigation = useNavigation();
+  const profileState = useProfileState();
 
   const openRoomDetailActionSheet = () => {
     ActionSheet.showActionSheetWithOptions(
@@ -75,6 +77,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
 
   const { checkCanParticipateRoom } = useCanParticipateRoom();
 
+  const isMyRoom = room.owner.id === profileState.profile.id;
   return (
     <Modal
       isVisible={isOpen}
@@ -109,19 +112,22 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             {room.name}
           </Text>
         </Block>
-        <TouchableOpacity
-          style={styles.touchableOpacity}
-          onPress={() => {
-            openRoomDetailActionSheet();
-          }}
-        >
-          <Icon
-            name="dots-three-horizontal"
-            family="Entypo"
-            size={32}
-            color={COLORS.BROWN}
-          />
-        </TouchableOpacity>
+        {!isMyRoom && (
+          <TouchableOpacity
+            style={styles.touchableOpacity}
+            onPress={() => {
+              openRoomDetailActionSheet();
+            }}
+          >
+            <Icon
+              name="dots-three-horizontal"
+              family="Entypo"
+              size={32}
+              color={COLORS.BROWN}
+            />
+          </TouchableOpacity>
+        )}
+
         <Block row>
           {room.image ? (
             <Image source={{ uri: room.image }} style={styles.modalImage} />
@@ -207,38 +213,40 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             </Block>
           </Block>
         </Block>
-        <Block center>
-          <Button
-            style={styles.modalButton}
-            color={COLORS.BROWN}
-            shadowless
-            loading={isLoadingPostRoomParticipants}
-            onPress={() => {
-              if (checkCanParticipateRoom()) {
-                requestPostRoomParticipants();
-              }
-            }}
-          >
-            <Block center row>
-              <Block style={[styles.svgContainer]}>
-                <SvgUri
-                  width={40}
-                  height={40}
-                  source={enterRoomSvg}
-                  fill={"#fff"}
-                />
+        {!isMyRoom && (
+          <Block center>
+            <Button
+              style={styles.modalButton}
+              color={COLORS.BROWN}
+              shadowless
+              loading={isLoadingPostRoomParticipants}
+              onPress={() => {
+                if (checkCanParticipateRoom()) {
+                  requestPostRoomParticipants();
+                }
+              }}
+            >
+              <Block center row>
+                <Block style={[styles.svgContainer]}>
+                  <SvgUri
+                    width={40}
+                    height={40}
+                    source={enterRoomSvg}
+                    fill={"#fff"}
+                  />
+                </Block>
+                <Block style={styles.buttonText}>
+                  <Text size={20} color={COLORS.WHITE} bold>
+                    {room.isSpeaker ? "悩みを聞く" : "悩みを話す"}
+                  </Text>
+                </Block>
               </Block>
-              <Block style={styles.buttonText}>
-                <Text size={20} color={COLORS.WHITE} bold>
-                  {room.isSpeaker ? "悩みを聞く" : "悩みを話す"}
-                </Text>
-              </Block>
-            </Block>
-          </Button>
-          <Text size={12} color={COLORS.GRAY}>
-            相手に通知は届きません
-          </Text>
-        </Block>
+            </Button>
+            <Text size={12} color={COLORS.GRAY}>
+              相手に通知は届きません
+            </Text>
+          </Block>
+        )}
       </Block>
     </Modal>
   );
