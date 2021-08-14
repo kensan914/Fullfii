@@ -16,6 +16,7 @@ import { useRequestPostRoomParticipant } from "src/hooks/requests/useRequestRoom
 import { useCanParticipateRoom } from "src/screens/RoomsScreen/useCanAction";
 import { enterRoomSvg } from "src/constants/svgSources";
 import { useProfileState } from "src/contexts/ProfileContext";
+import { geneFadeModalProps } from "src/utils/customModules";
 
 type Props = {
   room: Room;
@@ -86,6 +87,7 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
       }}
       backdropColor={COLORS.BLACK}
       backdropOpacity={0.7}
+      {...geneFadeModalProps()}
     >
       <Block column style={styles.modal}>
         <TouchableOpacity
