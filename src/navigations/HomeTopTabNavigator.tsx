@@ -57,6 +57,9 @@ export const HomeTopTabNavigator: React.FC = () => {
   return (
     <TopTab.Navigator
       tabBarOptions={{
+        activeTintColor: COLORS.DEEP_PINK,
+        inactiveTintColor: COLORS.GRAY,
+        labelStyle: { fontSize: 16 },
         style: { backgroundColor: COLORS.BEIGE },
         indicatorStyle: {
           backgroundColor: COLORS.PINK,
