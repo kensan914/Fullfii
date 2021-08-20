@@ -21,19 +21,19 @@ export const FilterHeaderMenu: React.FC<Props> = (props) => {
         cancel: true,
       },
       {
-        label: `${filterKey === "all" ? "✔ " : ""}全部`,
+        label: `${filterKey === "all" ? "✓ " : ""}全部`,
         onPress: () => {
           setFilterKey("all");
         },
       },
       {
-        label: `${filterKey === "speak" ? "✔ " : ""}話したいのみ`,
+        label: `${filterKey === "speak" ? "✓ " : ""}話したいのみ`,
         onPress: () => {
           setFilterKey("speak");
         },
       },
       {
-        label: `${filterKey === "listen" ? "✔ " : ""}聞きたいのみ`,
+        label: `${filterKey === "listen" ? "✓ " : ""}聞きたいのみ`,
         onPress: () => {
           setFilterKey("listen");
         },
