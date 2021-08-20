@@ -17,6 +17,7 @@ import {
 } from "src/constants";
 import { useTabInList } from "src/hooks/tabInList/useTabInList";
 import { Header } from "src/navigations/Header";
+import { useFilterRoom } from "src/navigations/Header/organisms/FilterHeaderMenu/useFilterRoom";
 
 export type RouteKeyHomeTopTab =
   | "PRIVATE"
@@ -54,6 +55,8 @@ export const HomeTopTabNavigator: React.FC = () => {
     { key: "SCHOOL", title: "学校" },
   ]);
 
+  const { filterKey, filterHeaderMenu } = useFilterRoom();
+
   const {
     tabIndex,
     animatedScrollY,
@@ -65,7 +68,8 @@ export const HomeTopTabNavigator: React.FC = () => {
     HEADER_HEIGHT,
     HOME_TOP_TAB_HEIGHT,
     height - (STATUS_BAR_HEIGHT + BOTTOM_TAB_BAR_HEIGHT),
-    domState.animatedHeaderScrollY
+    domState.animatedHeaderScrollY,
+    1
   );
 
   const renderScene: React.FC<
@@ -80,6 +84,7 @@ export const HomeTopTabNavigator: React.FC = () => {
           <PrivateRoomsScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={privateRoomsFlatListRef}
+            filterKey={filterKey}
           />
         );
       }
@@ -88,6 +93,7 @@ export const HomeTopTabNavigator: React.FC = () => {
           <RoomsScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={roomsAllFlatListRef}
+            filterKey={filterKey}
           />
         );
       }
@@ -96,6 +102,7 @@ export const HomeTopTabNavigator: React.FC = () => {
           <RoomsScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={roomsLoveFlatListRef}
+            filterKey={filterKey}
             tagKey="love"
           />
         );
@@ -105,6 +112,7 @@ export const HomeTopTabNavigator: React.FC = () => {
           <RoomsScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={roomsWorkFlatListRef}
+            filterKey={filterKey}
             tagKey="work"
           />
         );
@@ -114,6 +122,7 @@ export const HomeTopTabNavigator: React.FC = () => {
           <RoomsScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={roomsRelationshipFlatListRef}
+            filterKey={filterKey}
             tagKey="relationship"
           />
         );
@@ -123,6 +132,7 @@ export const HomeTopTabNavigator: React.FC = () => {
           <RoomsScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={roomsSchoolFlatListRef}
+            filterKey={filterKey}
             tagKey="school"
           />
         );
@@ -143,7 +153,7 @@ export const HomeTopTabNavigator: React.FC = () => {
         renderScene={renderScene}
         renderTabBar={(props) => (
           <Animated.View style={hiddenAnimatedViewStyle}>
-            <Header name={"Rooms"} />
+            <Header name={"Rooms"} renderRight={filterHeaderMenu} />
             <TabBar
               getLabelText={({ route }) => route.title}
               indicatorStyle={styles.indicator}

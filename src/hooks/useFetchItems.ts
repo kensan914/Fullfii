@@ -11,13 +11,15 @@ export const useFetchItems = <Item, ResData>(
   urlExcludePage: string,
   resDataIoTs: TypeIoTsOfResData | null,
   cvtJsonToObject: (resData: ResData) => Item[],
-  getHasMore: (resData: ResData) => boolean
+  getHasMore: (resData: ResData) => boolean,
+  additionalQParams?: (string | number | string[])[]
 ): {
+  page: React.RefObject<number>;
   onEndReached: () => void;
   handleRefresh: () => void;
   isRefreshing: boolean;
   hasMore: boolean;
-  isLoadingGetItems: boolean;
+  isLoading: boolean;
 } => {
   const authState = useAuthState();
 
@@ -28,7 +30,11 @@ export const useFetchItems = <Item, ResData>(
   const isLoadingGetItemsRef = useRef(false); // 即時反映
 
   const { isLoading: isLoadingGetItems, request: requestGetItems } = useAxios(
-    URLJoin(urlExcludePage, `?page=${page.current}`),
+    URLJoin(
+      urlExcludePage,
+      `?page=${page.current}`,
+      ...(typeof additionalQParams !== "undefined" ? additionalQParams : [])
+    ),
     "get",
     resDataIoTs,
     {
@@ -45,15 +51,18 @@ export const useFetchItems = <Item, ResData>(
 
         setHasMore(_hasMore);
       },
+      catchCallback: () => {
+        setHasMore(false);
+      },
       finallyCallback: () => {
         page.current += 1;
         isRefreshingRef.current = false;
         isLoadingGetItemsRef.current = false;
       },
-      token: authState.token ? authState.token : "",
       didRequestCallback: () => {
         isLoadingGetItemsRef.current = true;
       },
+      ...(authState.token ? { token: authState.token } : {}),
     }
   );
 
@@ -64,7 +73,11 @@ export const useFetchItems = <Item, ResData>(
   const onEndReached = () => {
     if (hasMore && !isLoadingGetItems && !isLoadingGetItemsRef.current) {
       requestGetItems({
-        url: URLJoin(urlExcludePage, `?page=${page.current}`),
+        url: URLJoin(
+          urlExcludePage,
+          `?page=${page.current}`,
+          ...(typeof additionalQParams !== "undefined" ? additionalQParams : [])
+        ),
       });
     }
   };
@@ -73,15 +86,22 @@ export const useFetchItems = <Item, ResData>(
       page.current = 1;
       setHasMore(true);
       isRefreshingRef.current = true;
-      requestGetItems({ url: URLJoin(urlExcludePage, `?page=${1}`) });
+      requestGetItems({
+        url: URLJoin(
+          urlExcludePage,
+          `?page=${1}`,
+          ...(typeof additionalQParams !== "undefined" ? additionalQParams : [])
+        ),
+      });
     }
   };
 
   return {
+    page,
     onEndReached,
     handleRefresh,
     isRefreshing,
     hasMore,
-    isLoadingGetItems,
+    isLoading: isLoadingGetItems,
   };
 };

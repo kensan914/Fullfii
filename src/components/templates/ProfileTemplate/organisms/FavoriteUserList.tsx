@@ -47,7 +47,7 @@ export const FavoriteUserList: React.FC<
     handleRefresh,
     isRefreshing,
     hasMore,
-    isLoadingGetItems,
+    isLoading: isLoadingGetItems,
   } = useFetchItems<Profile, GetFavoriteUsersResData>(
     favoriteUsers,
     setFavoriteUsers,

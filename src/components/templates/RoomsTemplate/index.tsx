@@ -18,6 +18,7 @@ import { AdView } from "src/components/molecules/AdView";
 import { ADMOB_UNIT_ID_NATIVE } from "src/constants/env";
 import { RoundButton } from "src/components/atoms/RoundButton";
 import { AnimatedFlatListProps } from "src/hooks/tabInList/useAnimatedListProps";
+import { mergeRefs } from "src/utils";
 
 type Props = {
   rooms: Room[];
@@ -78,6 +79,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
         ) : (
           <Animated.FlatList
             {...animatedFlatListProps}
+            ref={mergeRefs(roomsFlatListRef, animatedFlatListProps.ref)}
             data={rooms}
             renderItem={({ item, index }) => {
               if (hiddenRoomIds.includes(item.id)) {

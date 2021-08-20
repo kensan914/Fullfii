@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
 import { useScrollToTop } from "@react-navigation/native";
 import { FlatList } from "react-native";
 
@@ -13,15 +13,17 @@ import { GetRoomsResData, GetRoomsResDataIoTs } from "src/types/Types";
 import { BASE_URL } from "src/constants/env";
 import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
 import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
+import { FilterKey } from "src/navigations/Header/organisms/FilterHeaderMenu/useFilterRoom";
 
 type Props = {
   flatListRef: RefObject<FlatList>;
+  filterKey: FilterKey;
   tagKey?: string;
 };
 export const RoomsScreen: React.FC<Props & TabInListSettingsProps> = (
   props
 ) => {
-  const { flatListRef, tagKey, tabInListSettings } = props;
+  const { flatListRef, filterKey, tagKey, tabInListSettings } = props;
 
   const domState = useDomState();
   const domDispatch = useDomDispatch();
@@ -46,7 +48,7 @@ export const RoomsScreen: React.FC<Props & TabInListSettingsProps> = (
     handleRefresh,
     isRefreshing,
     hasMore,
-    isLoadingGetItems,
+    isLoading: isLoadingGetItems,
   } = useFetchItems<Room, GetRoomsResData>(
     rooms,
     setRooms,
@@ -57,7 +59,8 @@ export const RoomsScreen: React.FC<Props & TabInListSettingsProps> = (
     ),
     GetRoomsResDataIoTs,
     cvtJsonToObject,
-    getHasMore
+    getHasMore,
+    [`?filter=${filterKey}`]
   );
 
   // ヘッダーからの再読み込みトリガー
@@ -65,6 +68,15 @@ export const RoomsScreen: React.FC<Props & TabInListSettingsProps> = (
     handleRefresh();
     domDispatch({ type: "DONE_TASK", taskKey: "refreshRooms" });
   }, [domState.taskSchedules.refreshRooms]);
+
+  // 絞り込み
+  const prevFilterKey = useRef<FilterKey>("all");
+  useEffect(() => {
+    if (prevFilterKey.current !== filterKey) {
+      handleRefresh();
+      prevFilterKey.current = filterKey;
+    }
+  }, [filterKey]);
 
   const { hiddenRoomIds, hideRoom, resetHiddenRooms, blockRoom } = useHideRoom(
     handleRefresh,

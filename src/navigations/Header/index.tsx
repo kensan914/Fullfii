@@ -19,6 +19,7 @@ type Props = {
   transparent?: boolean;
   roomId?: string;
   isLeftTitle?: boolean;
+  renderRight?: () => React.ReactNode;
 };
 export const Header: React.FC<Props> = (props) => {
   const {
@@ -29,6 +30,7 @@ export const Header: React.FC<Props> = (props) => {
     transparent,
     roomId,
     isLeftTitle = false,
+    renderRight: renderRightPriority,
   } = props;
 
   const navigation = useNavigation();
@@ -36,6 +38,12 @@ export const Header: React.FC<Props> = (props) => {
 
   const renderRight = () => {
     const routeName = route.name;
+
+    if (typeof renderRightPriority !== "undefined") {
+      return (
+        <React.Fragment key={routeName}>{renderRightPriority()}</React.Fragment>
+      );
+    }
 
     if (routeName === "Chat" && roomId)
       return <ChatHeaderMenu key="Chat" roomId={roomId} />;

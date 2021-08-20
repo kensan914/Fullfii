@@ -8,7 +8,7 @@ export type Routes<RouteKey> = Route<RouteKey>[];
 export type ScrollYCollection<RouteKey extends string> = {
   [key in RouteKey]?: number;
 };
-export type FlatListRef = React.RefObject<FlatList | null>;
+export type FlatListRef = React.RefObject<FlatList>;
 export type FlatListRefCollection<RouteKey extends string> = {
   [key in RouteKey]?: FlatListRef;
 };
@@ -54,7 +54,8 @@ export const useTabInList = <RouteKey extends string>(
   hiddenHeight: number,
   tabBarHeight: number,
   tabViewHeight: number,
-  priorityAnimatedScrollY?: Animated.Value
+  priorityAnimatedScrollY?: Animated.Value,
+  initIndex?: number
 ): {
   animatedScrollY: Animated.Value; // 任意のスクロールアニメーション使用 (ex. プロフィール画像の縮小)
   tabIndex: number; // TabViewのpropsに指定
@@ -64,7 +65,9 @@ export const useTabInList = <RouteKey extends string>(
 } => {
   const [hiddenAndTabBarHeight] = useState(hiddenHeight + tabBarHeight);
 
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(
+    typeof initIndex !== "undefined" ? initIndex : 0
+  );
   const [animatedScrollY] = useState(
     priorityAnimatedScrollY || new Animated.Value(0)
   );

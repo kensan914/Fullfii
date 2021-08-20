@@ -2,21 +2,46 @@ import { FormattedGender, FormattedGenderKey } from "src/types/Types";
 import { Gender } from "src/types/Types.context";
 
 /**
- * ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo"
+ * Once a query parameter such as "?foo=123" is evaluated, all subsequent arguments will be treated as query parameters.
+ *
+ * ex) URLJoin("http://www.google.com", "a", undefined, "/b/cd", null, "?foo=123", "?bar=foo", "?list=", [1, "a"]);
+ * => "http://www.google.com/a/b/cd/?foo=123&bar=foo&list=1,a"
  */
-export const URLJoin = (...args: (string | undefined)[]): string => {
-  args = args.filter((n) => n !== void 0);
-  for (let i = args.length - 1; i >= 0; i--) {
-    const arg = args[i];
-    if (typeof arg === "string") {
-      if (arg.toString().startsWith("?")) continue;
-      if (!arg.toString().endsWith("/")) {
-        args[i] += "/";
-        break;
-      }
+export const URLJoin = (
+  ...args: (string | number | undefined | string[] | null)[]
+): string => {
+  args = args.filter((n) => n !== void 0 && n !== null);
+
+  const newArgs: string[] = [];
+  let mode: "URL" | "QP" = "URL"; // "URL" | "QP"
+  args.forEach((arg) => {
+    if (Array.isArray(arg)) {
+      arg = arg.join(",");
     }
-  }
-  return args
+
+    if (typeof arg === "string" || typeof arg === "number") {
+      if (mode === "QP" && !arg.toString().startsWith("?")) {
+        newArgs[newArgs.length - 1] += arg;
+        return;
+      }
+      if (mode === "QP" || arg.toString().startsWith("?")) {
+        mode = "QP";
+        newArgs.push(arg.toString());
+        return;
+      }
+      if (mode === "URL" && !arg.toString().endsWith("/")) {
+        newArgs.push(arg + "/");
+        return;
+      }
+      newArgs.push(arg.toString());
+    } else {
+      console.error(
+        `"${arg}" is an unexpected argument. Perhaps you have entered a boolean or object type?`
+      );
+    }
+  });
+
+  return newArgs
     .join("/")
     .replace(/[/]+/g, "/")
     .replace(/^(.+):\//, "$1://")
@@ -300,3 +325,20 @@ export const getValue = <T>(
     ? valueMaybeUndefined
     : initValue;
 };
+
+type Mutable<T> = {
+  -readonly [k in keyof T]: T[k];
+};
+export const mergeRefs =
+  <T>(...refs: React.Ref<T>[]) =>
+  (value: T): void => {
+    for (let i = 0; i < refs.length; i += 1) {
+      const ref = refs[i];
+
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref) {
+        (ref as Mutable<React.RefObject<T>>).current = value;
+      }
+    }
+  };

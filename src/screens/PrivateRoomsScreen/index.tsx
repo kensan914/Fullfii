@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useState } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { useScrollToTop } from "@react-navigation/native";
 
@@ -17,14 +17,16 @@ import { useHideRoom } from "src/screens/RoomsScreen/useHideRoom";
 import { PrivateRoomListEmpty } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomListEmpty";
 import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
 import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
+import { FilterKey } from "src/navigations/Header/organisms/FilterHeaderMenu/useFilterRoom";
 
 type Props = {
   flatListRef: RefObject<FlatList>;
+  filterKey: FilterKey;
 };
 export const PrivateRoomsScreen: React.FC<TabInListSettingsProps & Props> = (
   props
 ) => {
-  const { flatListRef, tabInListSettings } = props;
+  const { flatListRef, filterKey, tabInListSettings } = props;
 
   const domState = useDomState();
   const domDispatch = useDomDispatch();
@@ -49,23 +51,31 @@ export const PrivateRoomsScreen: React.FC<TabInListSettingsProps & Props> = (
     handleRefresh,
     isRefreshing,
     hasMore,
-    isLoadingGetItems,
+    isLoading: isLoadingGetItems,
   } = useFetchItems<Room, GetPrivateRoomsResData>(
     privateRooms,
     setPrivateRooms,
     URLJoin(BASE_URL, "private-rooms/"),
     GetPrivateRoomsResDataIoTs,
     cvtJsonToObject,
-    getHasMore
+    getHasMore,
+    [`?filter=${filterKey}`]
   );
 
   // ヘッダーからの再読み込みトリガー
   useEffect(() => {
-    // if (domState.taskSchedules.refreshRooms) {
     handleRefresh();
     domDispatch({ type: "DONE_TASK", taskKey: "refreshRooms" });
-    // }
   }, [domState.taskSchedules.refreshRooms]);
+
+  // 絞り込み
+  const prevFilterKey = useRef<FilterKey>("all");
+  useEffect(() => {
+    if (prevFilterKey.current !== filterKey) {
+      handleRefresh();
+      prevFilterKey.current = filterKey;
+    }
+  }, [filterKey]);
 
   const { hiddenRoomIds, hideRoom, resetHiddenRooms, blockRoom } = useHideRoom(
     handleRefresh,
