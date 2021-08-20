@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext } from "react";
+import { Animated } from "react-native";
 
 import {
   DomActionType,
@@ -112,6 +113,7 @@ const initDomState = Object.freeze({
   },
   apiStatus: OK,
   isShowSpinner: false,
+  animatedHeaderScrollY: new Animated.Value(0),
 });
 const domStateContext = createContext<DomState>({ ...initDomState });
 const domDispatchContext = createContext<DomDispatch>(() => {

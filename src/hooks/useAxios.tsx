@@ -70,6 +70,7 @@ const useCommonThen = (
   action: UseAxiosActionType | RequestAxiosActionType,
   setResData?: Dispatch<unknown>
 ): void => {
+  // TODO: ⇓のやつdeepCvtKeyFromSnakeToCamelしてないけど大丈夫？
   if (typeIoTsOfResData === null) {
     if (action.thenCallback !== void 0) {
       action.thenCallback(res.data, res);

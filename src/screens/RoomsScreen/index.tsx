@@ -11,13 +11,17 @@ import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";
 import { GetRoomsResData, GetRoomsResDataIoTs } from "src/types/Types";
 import { BASE_URL } from "src/constants/env";
+import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
+import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
 
 type Props = {
   flatListRef: RefObject<FlatList>;
   tagKey?: string;
 };
-export const RoomsScreen: React.FC<Props> = (props) => {
-  const { flatListRef, tagKey } = props;
+export const RoomsScreen: React.FC<Props & TabInListSettingsProps> = (
+  props
+) => {
+  const { flatListRef, tagKey, tabInListSettings } = props;
 
   const domState = useDomState();
   const domDispatch = useDomDispatch();
@@ -72,6 +76,11 @@ export const RoomsScreen: React.FC<Props> = (props) => {
 
   const { checkCanCreateRoom } = useCanCreateRoom();
 
+  const { animatedFlatListProps } = useAnimatedListProps(tabInListSettings, {
+    isRefreshing: isRefreshing,
+    handleRefresh: handleRefresh,
+  });
+
   return (
     <RoomsTemplate
       rooms={rooms}
@@ -88,6 +97,7 @@ export const RoomsScreen: React.FC<Props> = (props) => {
       blockRoom={blockRoom}
       checkCanCreateRoom={checkCanCreateRoom}
       roomsFlatListRef={flatListRef}
+      animatedFlatListProps={animatedFlatListProps}
     />
   );
 };

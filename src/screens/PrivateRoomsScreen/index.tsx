@@ -15,12 +15,16 @@ import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
 import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
 import { useHideRoom } from "src/screens/RoomsScreen/useHideRoom";
 import { PrivateRoomListEmpty } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomListEmpty";
+import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
+import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
 
 type Props = {
   flatListRef: RefObject<FlatList>;
 };
-export const PrivateRoomsScreen: React.FC<Props> = (props) => {
-  const { flatListRef } = props;
+export const PrivateRoomsScreen: React.FC<TabInListSettingsProps & Props> = (
+  props
+) => {
+  const { flatListRef, tabInListSettings } = props;
 
   const domState = useDomState();
   const domDispatch = useDomDispatch();
@@ -73,6 +77,11 @@ export const PrivateRoomsScreen: React.FC<Props> = (props) => {
 
   const { checkCanCreateRoom } = useCanCreateRoom();
 
+  const { animatedFlatListProps } = useAnimatedListProps(tabInListSettings, {
+    isRefreshing: isRefreshing,
+    handleRefresh: handleRefresh,
+  });
+
   return (
     <RoomsTemplate
       rooms={privateRooms}
@@ -90,6 +99,7 @@ export const PrivateRoomsScreen: React.FC<Props> = (props) => {
       checkCanCreateRoom={checkCanCreateRoom}
       roomsFlatListRef={flatListRef}
       ListEmptyComponent={PrivateRoomListEmpty}
+      animatedFlatListProps={animatedFlatListProps}
     />
   );
 };

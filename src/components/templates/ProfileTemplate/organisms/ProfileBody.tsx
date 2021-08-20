@@ -16,6 +16,7 @@ import {
 import { Icon } from "src/components/atoms/Icon";
 import { CircleProgressBar } from "src/components/templates/ProfileTemplate/molecules/CircleProgressBar";
 import { ExplainRankModal } from "src/components/templates/ProfileTemplate/molecules/ExplainRankModal";
+import { HiddenAnimatedViewStyle } from "src/hooks/tabInList/useTabInList";
 
 type Props = {
   profile: Profile | MeProfile;
@@ -24,6 +25,7 @@ type Props = {
   renderTabBar: RenderTabBar;
   PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
   PROFILE_BODY_HEIGHT: number;
+  hiddenAnimatedViewStyle: HiddenAnimatedViewStyle;
 };
 export const ProfileBody: React.FC<Props> = (props) => {
   const {
@@ -33,6 +35,7 @@ export const ProfileBody: React.FC<Props> = (props) => {
     renderTabBar,
     PROFILE_VIEW_HEIGHT,
     PROFILE_BODY_HEIGHT,
+    hiddenAnimatedViewStyle,
   } = props;
 
   const navigation = useNavigation();
@@ -87,23 +90,7 @@ export const ProfileBody: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Animated.View
-        style={[
-          styles.wrapper,
-          {
-            height: PROFILE_BODY_HEIGHT,
-            transform: [
-              {
-                translateY: animatedScrollY.interpolate({
-                  inputRange: [0, PROFILE_VIEW_HEIGHT],
-                  outputRange: [0, -1 * PROFILE_VIEW_HEIGHT],
-                  extrapolate: "clamp",
-                }),
-              },
-            ],
-          },
-        ]}
-      >
+      <Animated.View style={hiddenAnimatedViewStyle}>
         <Animated.View
           style={{
             opacity: animatedScrollY.interpolate({
