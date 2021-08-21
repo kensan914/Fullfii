@@ -88,6 +88,7 @@ export type ProfileInputScreen =
 
 export type RouteName =
   | (
+      | "Recommend"
       | "Rooms"
       | "MyRooms"
       | "Profile"

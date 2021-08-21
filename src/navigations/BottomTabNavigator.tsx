@@ -24,6 +24,7 @@ import { ReviewModal } from "src/components/organisms/ReviewModal";
 import { Icon } from "src/components/atoms/Icon";
 import { LevelUpModal } from "src/components/organisms/LevelUpModal";
 import { useLevelUp } from "src/hooks/useLevelUp";
+import { RecommendScreen } from "src/screens/RecommendScreen";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -46,11 +47,28 @@ export const BottomTabNavigator: React.FC = () => {
             let badgeCount: number | null | undefined;
 
             const routeName = route.name;
-
-            if (routeName === "Rooms") {
+            if (routeName === "Recommend") {
+              iconNode = (
+                <Block
+                  style={{
+                    width: 32,
+                    height: 32,
+                    padding: 2,
+                  }}
+                >
+                  <Icon
+                    name="message1"
+                    family="AntDesign"
+                    size={28}
+                    color={color}
+                  />
+                </Block>
+              );
+              label = "レコメンド";
+            } else if (routeName === "Rooms") {
               iconName = focused ? homeIconFocusSvg : homeIconSvg;
               iconNode = <SvgUri width={32} height={32} source={iconName} />;
-              label = "ホーム";
+              label = "ルーム";
             } else if (routeName === "MyRooms") {
               // iconName = focused ? chatIconFocusSvg : chatIconSvg;
               iconNode = (
@@ -137,6 +155,21 @@ export const BottomTabNavigator: React.FC = () => {
             : void 0
         }
       >
+        <Tab.Screen name="Recommend">
+          {() => (
+            <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Recommend"
+                  options={() => ({
+                    header: () => <Header name={"Recommend"} />,
+                  })}
+                  component={RecommendScreen}
+                />
+              </Stack.Navigator>
+            </Block>
+          )}
+        </Tab.Screen>
         <Tab.Screen name="Rooms">
           {() => (
             <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
