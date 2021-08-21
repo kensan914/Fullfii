@@ -87,8 +87,10 @@ export const Header: React.FC<Props> = (props) => {
 
   const convertNameToTitle = (name: RouteName): string => {
     switch (name) {
+      case "Recommend":
+        return "レコメンド";
       case "Rooms":
-        return "ホーム";
+        return "ルーム";
       case "MyRooms":
         return "相談中のルーム";
       case "MeProfile":
