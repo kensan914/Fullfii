@@ -29,7 +29,6 @@ export const useIntroSlideHeader = (
       // 未だヘッダ描画完了していない場合, タイトルアニメーション開始
       headerTitleRef.current &&
         headerTitleRef.current.startAnimation(currentPage.toString(), () => {
-          // console.log("コンプリート", currentPage.toString());
           setIsReadyBodyCollection(currentPage);
         });
     } else {

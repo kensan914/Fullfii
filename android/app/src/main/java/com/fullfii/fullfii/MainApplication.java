@@ -23,12 +23,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
 import com.fullfii.fullfii.Debug;
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
-    new BasePackageList().getPackageList()
-  );
+      new BasePackageList().getPackageList());
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -42,6 +43,8 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
       packages.add(new LottiePackage()); // https://github.com/lottie-react-native/lottie-react-native#installing-react-native--0600
+      // https://github.com/crazycodeboy/react-native-splash-screen/issues/522
+      // packages.add(new SplashScreenReactPackage());
       return packages;
     }
 
@@ -52,7 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected @Nullable String getJSBundleFile() {
-    //  if (BuildConfig.DEBUG) {
+      // if (BuildConfig.DEBUG) {
       if (Debug.debug) {
         return super.getJSBundleFile();
       } else {
@@ -62,7 +65,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected @Nullable String getBundleAssetName() {
-//      if (BuildConfig.DEBUG) {
+      // if (BuildConfig.DEBUG) {
       if (Debug.debug) {
         return super.getBundleAssetName();
       } else {
@@ -81,7 +84,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
-//    if (!BuildConfig.DEBUG) {
+    // if (!BuildConfig.DEBUG) {
     if (!Debug.debug) {
       UpdatesController.initialize(this);
     }
@@ -97,9 +100,9 @@ public class MainApplication extends Application implements ReactApplication {
     if (Debug.debug) {
       try {
         /*
-         We use reflection here to pick up the class that initializes Flipper,
-        since Flipper library is not available in release mode
-        */
+         * We use reflection here to pick up the class that initializes Flipper, since
+         * Flipper library is not available in release mode
+         */
         Class<?> aClass = Class.forName("com.facebook.flipper.ReactNativeFlipper");
         aClass.getMethod("initializeFlipper", Context.class).invoke(null, context);
       } catch (ClassNotFoundException e) {

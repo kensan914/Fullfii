@@ -20,7 +20,7 @@ export const StartUpManager: React.FC = (props) => {
   const chatDispatch = useChatDispatch();
 
   const { requestGetMe } = useRequestGetMe();
-  const { updateTalk } = useUpdateTalk();
+  const { updateTalk, renderWsChatManagerCollection } = useUpdateTalk();
   const { requestGetTalkInfo } = useRequestGetTalkInfo((talkInfoJson) => {
     // 受け取った最新のトーク情報を各stateに適用
     updateTalk(talkInfoJson);
@@ -56,5 +56,18 @@ export const StartUpManager: React.FC = (props) => {
     }
   }, [authState.token, authState.status, isRequiredConfigPN]);
 
-  return <Block flex>{children}</Block>;
+  return (
+    <Block flex>
+      {Object.entries(renderWsChatManagerCollection).map(
+        ([roomId, renderWsChatManager]) => {
+          return (
+            <React.Fragment key={roomId}>
+              {renderWsChatManager()}
+            </React.Fragment>
+          );
+        }
+      )}
+      {children}
+    </Block>
+  );
 };
