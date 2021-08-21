@@ -111,7 +111,7 @@ export const asyncGetBool = async (
       if (!isRight(typeIoTsResult)) {
         console.group();
         console.error(
-          `Type does not match(asyncGetItem). key is "${key}". value can be found below.`
+          `Type does not match(asyncGetBool). key is "${key}". value can be found below.`
         );
         console.error(item);
         console.groupEnd();
@@ -158,7 +158,7 @@ export const asyncGetObject = async (
       } else {
         console.group();
         console.error(
-          `Type does not match(asyncGetJson). key is "${key}". value can be found below.`
+          `Type does not match(asyncGetObject). key is "${key}". value can be found below.`
         );
         console.error({ ...obj });
         console.groupEnd();

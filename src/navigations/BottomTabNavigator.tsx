@@ -144,7 +144,8 @@ export const BottomTabNavigator: React.FC = () => {
                 <Stack.Screen
                   name="Rooms"
                   options={() => ({
-                    header: () => <Header name={"Rooms"} />,
+                    // ヘッダーhideアニメーションでHomeTopTabNavigator内に配置するため
+                    header: () => null,
                   })}
                   component={HomeTopTabNavigator}
                 />

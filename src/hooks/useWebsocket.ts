@@ -6,6 +6,38 @@ import { CODE } from "src/constants/statusCodes";
 import { WsSettings } from "src/types/Types";
 import { closeWsSafely, deepCvtKeyFromSnakeToCamel } from "src/utils";
 
+export type SomeWebsocketSettings = {
+  [wsId: string]: {
+    wsSettings: WsSettings;
+    wsState: WsState;
+    wsHandlersDeps?: unknown[];
+    wsSettingsDeps?: unknown[];
+  };
+};
+export const useSomeWebsocket = (
+  someWebsocketSettings: SomeWebsocketSettings
+): { connectSomeWebsocket: (wsId: string) => void } => {
+  const connectWebsocketCollection: { [wsId: string]: () => void } = {};
+
+  const connectSomeWebsocket = (wsId: string) => {
+    connectWebsocketCollection[wsId]();
+  };
+
+  Object.entries(someWebsocketSettings).forEach(
+    ([wsId, someWebsocketSetting]) => {
+      const { connectWebsocket } = useWebsocket(
+        someWebsocketSetting.wsSettings,
+        someWebsocketSetting.wsState,
+        someWebsocketSetting.wsHandlersDeps,
+        someWebsocketSetting.wsSettingsDeps
+      );
+      connectWebsocketCollection[wsId] = connectWebsocket;
+    }
+  );
+
+  return { connectSomeWebsocket };
+};
+
 type WsState = undefined | null | WebSocket;
 type UseWebsocket = (
   wsSettings: WsSettings,

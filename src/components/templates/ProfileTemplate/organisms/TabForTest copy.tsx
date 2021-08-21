@@ -5,7 +5,6 @@ import { Text, Animated, View, StyleSheet } from "react-native";
 import { SceneRendererProps } from "react-native-tab-view";
 import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
 import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
-import { useAnimatedFlatListProps } from "src/screens/ProfileScreen/useAnimatedFlatListProps";
 
 export const Tab: React.FC<TabInListSettingsProps & SceneRendererProps> = (
   props
@@ -36,46 +35,6 @@ export const Tab: React.FC<TabInListSettingsProps & SceneRendererProps> = (
     />
   );
 };
-
-// export const Tab = React.forwardRef((props, ref) => {
-//   const {
-//     animatedScrollY,
-//     route,
-//     onUpdateOffsetY,
-//     PROFILE_VIEW_HEIGHT,
-//     PROFILE_BODY_HEIGHT,
-//   } = props;
-
-//   const { animatedFlatListProps } = useAnimatedFlatListProps(
-//     animatedScrollY,
-//     onUpdateOffsetY,
-//     PROFILE_VIEW_HEIGHT,
-//     PROFILE_BODY_HEIGHT
-//   );
-
-//   const [dataSource] = useState(
-//     Array(22)
-//       .fill()
-//       .map((_, index) => ({ id: index }))
-//   );
-//   return (
-//     <Animated.FlatList
-//       ref={ref}
-//       {...animatedFlatListProps}
-//       style={styles.wrapper}
-//       data={dataSource}
-//       keyExtractor={(item) => item.id.toString()}
-//       tabRoute={route.key}
-//       renderItem={({ item }) => (
-//         <View style={styles.item}>
-//           <Text>{item.id}</Text>
-//         </View>
-//       )}
-//       onEndReached={() => {}}
-//       onEndReachedThreshold={0.3}
-//     />
-//   );
-// });
 
 const styles = StyleSheet.create({
   wrapper: {

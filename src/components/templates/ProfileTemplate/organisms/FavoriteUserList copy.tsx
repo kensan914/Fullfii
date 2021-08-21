@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Animated, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Animated,
+  Platform,
+  RefreshControl,
+  StyleSheet,
+} from "react-native";
 import { SceneRendererProps } from "react-native-tab-view";
-import { useNavigation } from "@react-navigation/native";
 
 import { Profile } from "src/types/Types.context";
 import {
@@ -14,6 +19,8 @@ import { COLORS } from "src/constants/colors";
 import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";
 import { BASE_URL } from "src/constants/env";
+import { width } from "src/constants";
+import { useNavigation } from "@react-navigation/native";
 import {
   alertModal,
   showActionSheet,
@@ -26,16 +33,24 @@ import { TOAST_SETTINGS } from "src/constants/alertMessages";
 import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
 import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
 
+// type Props = {
+// };
 export const FavoriteUserList: React.FC<
   TabInListSettingsProps & SceneRendererProps
 > = (props) => {
-  const { tabInListSettings } = props;
+  // React.forwardRef<
+  //   any,
+  //   TabInListSettingsProps & SceneRendererProps
+  // >((props, ref) => {
+  // const { tabInListSettings } = props;
 
   const navigation = useNavigation();
   const authState = useAuthState();
   const chatDispatch = useChatDispatch();
 
   const [favoriteUsers, setFavoriteUsers] = useState<Profile[]>([]);
+
+  const { animatedFlatListProps } = useAnimatedListProps(tabInListSettings);
 
   const cvtJsonToObject = (resData: GetFavoriteUsersResData): Profile[] => {
     const favoriteUsers = resData.favoriteUsers;
@@ -47,7 +62,7 @@ export const FavoriteUserList: React.FC<
     handleRefresh,
     isRefreshing,
     hasMore,
-    isLoading: isLoadingGetItems,
+    isLoadingGetItems,
   } = useFetchItems<Profile, GetFavoriteUsersResData>(
     favoriteUsers,
     setFavoriteUsers,
@@ -56,11 +71,6 @@ export const FavoriteUserList: React.FC<
     cvtJsonToObject,
     getHasMore
   );
-
-  const { animatedFlatListProps } = useAnimatedListProps(tabInListSettings, {
-    isRefreshing: isRefreshing,
-    handleRefresh: handleRefresh,
-  });
 
   // HACK: コンテンツが0だとonEndReachedが発火しないため
   useEffect(() => {
@@ -121,6 +131,7 @@ export const FavoriteUserList: React.FC<
   return (
     <>
       <Animated.FlatList
+        // ref={ref}
         {...animatedFlatListProps}
         data={favoriteUsers}
         renderItem={({ item }) => (
@@ -151,14 +162,46 @@ export const FavoriteUserList: React.FC<
             <></>
           )
         }
+        ListHeaderComponent={
+          // iOSはprogressViewOffsetがきかないため, 擬似インジケータで対処
+          Platform.OS === "ios"
+            ? () => {
+                return (
+                  <ActivityIndicator
+                    size="large"
+                    color={COLORS.LIGHT_GRAY}
+                    style={styles.indicatorOnlyIOS}
+                  />
+                );
+              }
+            : void 0
+        }
         ListEmptyComponent={hasMore ? <></> : FavoriteUserListEmpty}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            // android only (インジケータの位置は, iOSでは上記ListHeaderComponentにて対応済み)
+            progressViewOffset={tabInListSettings.hiddenAndTabBarHeight} // TODO:
+          />
+        }
       />
     </>
   );
 };
+// );
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.BEIGE,
+  },
+  indicatorOnlyIOS: {
+    position: "absolute",
+    top: -60,
+    width: width,
+    height: 60,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

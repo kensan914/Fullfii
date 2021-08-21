@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Block, Text, Button } from "galio-framework";
+
 import { COLORS } from "src/constants/colors";
 import { Icon } from "src/components/atoms/Icon";
 import { PrivateRoomDemoModal } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomDemoModal";
@@ -9,7 +10,7 @@ export const PrivateRoomListEmpty: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Block flex>
-      <Block flex center>
+      <Block center>
         <Text size={16} bold color={COLORS.BLACK} style={styles.title}>
           プライベートルーム
         </Text>

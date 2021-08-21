@@ -70,16 +70,16 @@ const useCommonThen = (
   action: UseAxiosActionType | RequestAxiosActionType,
   setResData?: Dispatch<unknown>
 ): void => {
-  if (typeIoTsOfResData === null) {
-    if (action.thenCallback !== void 0) {
-      action.thenCallback(res.data, res);
-    }
-    return;
-  }
   const formattedResData = deepCvtKeyFromSnakeToCamel(res.data) as Record<
     string,
     unknown
   >;
+  if (typeIoTsOfResData === null) {
+    if (action.thenCallback !== void 0) {
+      action.thenCallback(formattedResData, res);
+    }
+    return;
+  }
   const typeIoTsResult = typeIoTsOfResData.decode(formattedResData);
   if (!isRight(typeIoTsResult)) {
     console.group();

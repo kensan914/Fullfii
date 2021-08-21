@@ -3,6 +3,7 @@ import * as t from "io-ts";
 import { either } from "fp-ts/lib/Either";
 
 import { RouteName } from "src/types/Types";
+import { Animated } from "react-native";
 
 //========== Auth ==========//
 export type AuthState = {
@@ -539,6 +540,7 @@ export type DomState = {
   };
   apiStatus: ApiStatus;
   isShowSpinner: boolean;
+  animatedHeaderScrollY: Animated.Value;
 };
 export type DomDispatch = React.Dispatch<DomActionType>;
 export type DomActionType =

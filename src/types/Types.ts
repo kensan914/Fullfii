@@ -243,13 +243,13 @@ export type SubmitSettings = {
 //--------- FormTemplate.tsx ---------//
 
 //--------- Profile.tsx -----------//
-export type RouteKey = "tab1" | "tab2";
-export type Route = { key: RouteKey; title: string };
-export type Routes = Route[];
+export type RouteKeyProfile = "tab1" | "tab2";
+export type RouteProfile = { key: RouteKeyProfile; title: string };
+export type RoutesProfile = RouteProfile[];
 export type AnimatedScrollY = Animated.Value;
-export type ScrollYCollection = { [key in RouteKey]?: number };
+export type ScrollYCollection = { [key in RouteKeyProfile]?: number };
 export type FlatListRef = React.RefObject<FlatList | null>;
-export type FlatListRefCollection = { [key in RouteKey]?: FlatListRef };
+export type FlatListRefCollection = { [key in RouteKeyProfile]?: FlatListRef };
 export type OnIndexChange = (index: number) => void;
 export type SceneProps = {
   animatedScrollY: AnimatedScrollY;
@@ -258,18 +258,18 @@ export type SceneProps = {
   PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
   PROFILE_BODY_HEIGHT: number;
 };
-export type GeneSceneProps = (routeKey: RouteKey) => SceneProps;
+export type GeneSceneProps = (routeKey: RouteKeyProfile) => SceneProps;
 export type RenderScene = (
   props: SceneRendererProps & {
-    route: Route;
+    route: RouteProfile;
   }
 ) => React.ReactNode;
 export type RenderTabBar = () => React.ReactNode;
-export type RenderHeader = () => (
-  props: SceneRendererProps & {
-    navigationState: NavigationState<Route>;
+export type RenderHeader = React.FC<
+  SceneRendererProps & {
+    navigationState: NavigationState<RouteProfile>;
   }
-) => React.ReactNode;
+>;
 export type PROFILE_VIEW_HEIGHT_TYPE = 224;
 export type TAB_BAR_HEIGHT_TYPE = 48;
 //--------- Profile.tsx -----------//

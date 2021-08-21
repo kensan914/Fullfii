@@ -9,6 +9,12 @@ type Props = {
   color?: string;
   style?: ViewStyle;
 };
+/**
+ * 【family】
+ *    - Ionicons: "ionicon"
+ *    - MaterialIcon: "material"
+ *    - MaterialCommunityIcon: "material-community"
+ */
 export const Icon: React.FC<Props> = (props) => {
   const { name = "", family = "font-awesome", ...rest } = props;
 

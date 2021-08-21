@@ -1,3 +1,5 @@
+import React, { useReducer } from "react";
+
 import { useChatDispatch, useChatState } from "src/contexts/ChatContext";
 import {
   TalkInfoJson,
@@ -6,16 +8,41 @@ import {
 } from "src/types/Types.context";
 import { equalsArray } from "src/utils";
 import { asyncGetObject } from "src/utils/asyncStorage";
-import { useWsChat } from "./useWsChat";
+import { WsChatManager } from "src/screens/StartUpManager/organisms/WsChatManager";
 
+type RenderWsChatManagerCollection = {
+  [roomId: string]: () => React.ReactNode;
+};
 type UpdateTalk = (talkInfoJson: TalkInfoJson) => void;
 type UseUpdateTalk = () => {
   updateTalk: UpdateTalk;
+  renderWsChatManagerCollection: RenderWsChatManagerCollection;
 };
 export const useUpdateTalk: UseUpdateTalk = () => {
   const chatDispatch = useChatDispatch();
   const chatState = useChatState();
-  const { connectWsChat } = useWsChat();
+
+  // かつて1つのuseWsChat()で複数のルームのwsを管理していたため, 最初にopenされたwsが上書きされて
+  // 送信バグを引き起こしていた. ルームごとにWsChatManagerというコンポーネント内で管理することにし対処.
+  const [renderWsChatManagerCollection, dispatchWsChatManagerCollection] =
+    useReducer(
+      (
+        prevState: RenderWsChatManagerCollection,
+        action: { roomId: string; shouldStart: boolean }
+      ): RenderWsChatManagerCollection => {
+        const renderWsChatManager = (): React.ReactNode => (
+          <WsChatManager
+            roomId={action.roomId}
+            shouldStart={action.shouldStart}
+          />
+        );
+        return {
+          ...prevState,
+          ...{ [action.roomId]: renderWsChatManager },
+        };
+      },
+      {}
+    );
 
   /**トークを最新状態にする
    *
@@ -41,6 +68,11 @@ export const useUpdateTalk: UseUpdateTalk = () => {
             type: "INIT_TALKING_ROOM",
             roomJson: _createdRoomJson,
           });
+          dispatchWsChatManagerCollection({
+            roomId: _createdRoomJson.id,
+            shouldStart: true,
+          });
+          // connectWsChat(_createdRoomJson.id, true);
           chatDispatch({
             type: "APPEND_COMMON_MESSAGE",
             roomId: _createdRoomJson.id,
@@ -64,7 +96,11 @@ export const useUpdateTalk: UseUpdateTalk = () => {
             type: "INIT_TALKING_ROOM",
             roomJson: _participatingRoomJson,
           });
-          connectWsChat(_participatingRoomJson.id, true);
+          dispatchWsChatManagerCollection({
+            roomId: _participatingRoomJson.id,
+            shouldStart: true,
+          });
+          // connectWsChat(_participatingRoomJson.id, true);
           chatDispatch({
             type: "APPEND_COMMON_MESSAGE",
             roomId: _participatingRoomJson.id,
@@ -89,7 +125,11 @@ export const useUpdateTalk: UseUpdateTalk = () => {
       // そもそもトーク終了は, chat_authのレスポンスで検知するため, 始まっているトークは必ず再接続.
       Object.values(prevTalkingRoomCollection).forEach((_prevTalkingRoom) => {
         if (_prevTalkingRoom.isStart) {
-          connectWsChat(_prevTalkingRoom.id, false);
+          dispatchWsChatManagerCollection({
+            roomId: _prevTalkingRoom.id,
+            shouldStart: false,
+          });
+          // connectWsChat(_prevTalkingRoom.id, false);
         }
 
         // HACK: トーク開始時isStartがtrueにならなかった場合の対処. (☚現在原因を調査中)
@@ -97,7 +137,11 @@ export const useUpdateTalk: UseUpdateTalk = () => {
           !_prevTalkingRoom.isStart &&
           _prevTalkingRoom.participants.length > 0
         ) {
-          connectWsChat(_prevTalkingRoom.id, true);
+          dispatchWsChatManagerCollection({
+            roomId: _prevTalkingRoom.id,
+            shouldStart: true,
+          });
+          // connectWsChat(_prevTalkingRoom.id, true);
         }
       });
 
@@ -114,7 +158,11 @@ export const useUpdateTalk: UseUpdateTalk = () => {
         if (!equalsArray(prevParticipantIds, newParticipantIds)) {
           // 未スタートの場合, トーク開始
           if (!prevTalkingRoomCollection[_createdRoomJson.id].isStart) {
-            connectWsChat(_createdRoomJson.id, true);
+            dispatchWsChatManagerCollection({
+              roomId: _createdRoomJson.id,
+              shouldStart: true,
+            });
+            // connectWsChat(_createdRoomJson.id, true);
           }
 
           // 古いtalkingRoom.participantsに含まれない新参加者
@@ -137,21 +185,10 @@ export const useUpdateTalk: UseUpdateTalk = () => {
         }
       });
     }
-
-    // else {
-    //   createdRoomsJson.forEach((_createdRoomJson) => {
-    //     chatDispatch({ type: "INIT_TALKING_ROOM", roomJson: _createdRoomJson });
-    //   });
-    //   participatingRoomsJson.forEach((_participatingRoomJson) => {
-    //     chatDispatch({
-    //       type: "INIT_TALKING_ROOM",
-    //       roomJson: _participatingRoomJson,
-    //     });
-    //   });
-    // }
   };
 
   return {
     updateTalk,
+    renderWsChatManagerCollection,
   };
 };

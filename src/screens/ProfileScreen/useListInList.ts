@@ -7,13 +7,13 @@ import {
   GeneSceneProps,
   OnIndexChange,
   PROFILE_VIEW_HEIGHT_TYPE,
-  RouteKey,
-  Routes,
+  RouteKeyProfile,
+  RoutesProfile,
   ScrollYCollection,
 } from "src/types/Types";
 
 type UseListInList = (
-  routes: Routes,
+  routes: RoutesProfile,
   PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE,
   PROFILE_BODY_HEIGHT: number
 ) => {
@@ -47,7 +47,7 @@ export const useListInList: UseListInList = (
   });
   // スクロール実行と共にscrollYCollectionの変更も行う
   const scrollToOffset = (
-    routeKey: RouteKey,
+    routeKey: RouteKeyProfile,
     flatListRef: FlatListRef,
     offset: number
   ) => {
@@ -72,7 +72,7 @@ export const useListInList: UseListInList = (
   // 複数FlatListのscroll同期
   const synchronizeScrollY = () => {
     Object.keys(scrollYCollection.current).forEach((routeKeyStr) => {
-      const routeKey = routeKeyStr as RouteKey;
+      const routeKey = routeKeyStr as RouteKeyProfile;
 
       // スクロールされていない
       const targetScrollY = scrollYCollection.current[routeKey];
@@ -90,7 +90,7 @@ export const useListInList: UseListInList = (
         targetScrollY < PROFILE_VIEW_HEIGHT
       ) {
         otherRouteKeys.forEach((otherRouteKeyStr) => {
-          const otherRouteKey = otherRouteKeyStr as RouteKey;
+          const otherRouteKey = otherRouteKeyStr as RouteKeyProfile;
           const otherFlatListRef = flatListRefCollection[otherRouteKey];
           if (typeof otherFlatListRef !== "undefined") {
             scrollToOffset(otherRouteKey, otherFlatListRef, targetScrollY);
@@ -100,7 +100,7 @@ export const useListInList: UseListInList = (
       // tab barが完全に上についた状態
       else {
         otherRouteKeys.forEach((otherRouteKeyStr) => {
-          const otherRouteKey = otherRouteKeyStr as RouteKey;
+          const otherRouteKey = otherRouteKeyStr as RouteKeyProfile;
           const otherScrollY = scrollYCollection.current[otherRouteKey];
           const otherFlatListRef = flatListRefCollection[otherRouteKey];
           if (

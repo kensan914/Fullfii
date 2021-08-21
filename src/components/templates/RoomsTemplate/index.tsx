@@ -1,6 +1,11 @@
 import React, { Dispatch, RefObject } from "react";
 import { Block, Text } from "galio-framework";
-import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  Animated,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { COLORS } from "src/constants/colors";
@@ -12,6 +17,8 @@ import { BlockRoom, HideRoom } from "src/types/Types";
 import { AdView } from "src/components/molecules/AdView";
 import { ADMOB_UNIT_ID_NATIVE } from "src/constants/env";
 import { RoundButton } from "src/components/atoms/RoundButton";
+import { AnimatedFlatListProps } from "src/hooks/tabInList/useAnimatedListProps";
+import { mergeRefs } from "src/utils";
 
 type Props = {
   rooms: Room[];
@@ -32,6 +39,7 @@ type Props = {
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>
     | React.ComponentType<any>
     | null;
+  animatedFlatListProps: AnimatedFlatListProps;
 };
 export const RoomsTemplate: React.FC<Props> = (props) => {
   const numColumns = 1;
@@ -51,6 +59,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
     checkCanCreateRoom,
     roomsFlatListRef,
     ListEmptyComponent,
+    animatedFlatListProps,
   } = props;
 
   const isHiddenAll =
@@ -68,8 +77,9 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             <RoundButton label="元に戻す" onPress={resetHiddenRooms} />
           </Block>
         ) : (
-          <FlatList
-            ref={roomsFlatListRef}
+          <Animated.FlatList
+            {...animatedFlatListProps}
+            ref={mergeRefs(roomsFlatListRef, animatedFlatListProps.ref)}
             data={rooms}
             renderItem={({ item, index }) => {
               if (hiddenRoomIds.includes(item.id)) {
@@ -111,10 +121,12 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
             }
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            contentContainerStyle={{
-              paddingBottom: BOTTOM_BUTTON_HEIGHT,
-              paddingTop: 10,
-            }}
+            contentContainerStyle={[
+              animatedFlatListProps.contentContainerStyle,
+              {
+                paddingBottom: BOTTOM_BUTTON_HEIGHT,
+              },
+            ]}
             ListEmptyComponent={
               hasMore && ListEmptyComponent ? <></> : ListEmptyComponent
             }

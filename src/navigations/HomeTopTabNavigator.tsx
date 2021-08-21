@@ -1,15 +1,34 @@
-import React, { useRef } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import React, { useRef, useState } from "react";
+import { Animated, StyleSheet } from "react-native";
+import { Text } from "galio-framework";
 import { useScrollToTop } from "@react-navigation/native";
+import { SceneRendererProps, TabBar, TabView } from "react-native-tab-view";
 
 import { COLORS } from "src/constants/colors";
 import { RoomsScreen } from "src/screens/RoomsScreen";
 import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
+import { useDomState } from "src/contexts/DomContext";
+import {
+  BOTTOM_TAB_BAR_HEIGHT,
+  HEADER_HEIGHT,
+  height,
+  HOME_TOP_TAB_HEIGHT,
+  STATUS_BAR_HEIGHT,
+} from "src/constants";
+import { useTabInList } from "src/hooks/tabInList/useTabInList";
+import { Header } from "src/navigations/Header";
+import { useFilterRoom } from "src/navigations/Header/organisms/FilterHeaderMenu/useFilterRoom";
 
+export type RouteKeyHomeTopTab =
+  | "PRIVATE"
+  | "ALL"
+  | "LOVE"
+  | "WORK"
+  | "RELATIONSHIP"
+  | "SCHOOL";
+export type RouteHomeTopTab = { key: RouteKeyHomeTopTab; title: string };
 export const HomeTopTabNavigator: React.FC = () => {
-  const TopTab = createMaterialTopTabNavigator();
-  const Tab = createBottomTabNavigator();
+  const domState = useDomState();
 
   const privateRoomsFlatListRef = useRef(null);
   const roomsAllFlatListRef = useRef(null);
@@ -27,101 +46,159 @@ export const HomeTopTabNavigator: React.FC = () => {
   useScrollToTop(roomsRelationshipFlatListRef);
   useScrollToTop(roomsSchoolFlatListRef);
 
-  const geneTabName = (
-    key: "PRIVATE" | "ALL" | "LOVE" | "WORK" | "RELATIONSHIP" | "SCHOOL"
-  ) => {
-    let name = "";
-    switch (key) {
-      case "PRIVATE":
-        name = "プライベート";
-        break;
-      case "ALL":
-        name = "最新";
-        break;
-      case "LOVE":
-        name = "恋愛";
-        break;
-      case "WORK":
-        name = "仕事";
-        break;
-      case "RELATIONSHIP":
-        name = "人間関係";
-        break;
-      case "SCHOOL":
-        name = "学校";
-        break;
+  const [routes] = useState<RouteHomeTopTab[]>([
+    { key: "PRIVATE", title: "プライベート" },
+    { key: "ALL", title: "最新" },
+    { key: "LOVE", title: "恋愛" },
+    { key: "WORK", title: "仕事" },
+    { key: "RELATIONSHIP", title: "人間関係" },
+    { key: "SCHOOL", title: "学校" },
+  ]);
+
+  const { filterKey, filterHeaderMenu } = useFilterRoom();
+
+  const {
+    tabIndex,
+    animatedScrollY,
+    onIndexChange,
+    geneTabInListSettings,
+    hiddenAnimatedViewStyle,
+  } = useTabInList<RouteKeyHomeTopTab>(
+    routes,
+    HEADER_HEIGHT,
+    HOME_TOP_TAB_HEIGHT,
+    height - (STATUS_BAR_HEIGHT + BOTTOM_TAB_BAR_HEIGHT),
+    domState.animatedHeaderScrollY,
+    1
+  );
+
+  const renderScene: React.FC<
+    SceneRendererProps & {
+      route: RouteHomeTopTab;
     }
-    return ` ${name} `;
+  > = (props) => {
+    const { route } = props;
+    switch (route.key) {
+      case "PRIVATE": {
+        return (
+          <PrivateRoomsScreen
+            tabInListSettings={geneTabInListSettings(route.key)}
+            flatListRef={privateRoomsFlatListRef}
+            filterKey={filterKey}
+          />
+        );
+      }
+      case "ALL": {
+        return (
+          <RoomsScreen
+            tabInListSettings={geneTabInListSettings(route.key)}
+            flatListRef={roomsAllFlatListRef}
+            filterKey={filterKey}
+          />
+        );
+      }
+      case "LOVE": {
+        return (
+          <RoomsScreen
+            tabInListSettings={geneTabInListSettings(route.key)}
+            flatListRef={roomsLoveFlatListRef}
+            filterKey={filterKey}
+            tagKey="love"
+          />
+        );
+      }
+      case "WORK": {
+        return (
+          <RoomsScreen
+            tabInListSettings={geneTabInListSettings(route.key)}
+            flatListRef={roomsWorkFlatListRef}
+            filterKey={filterKey}
+            tagKey="work"
+          />
+        );
+      }
+      case "RELATIONSHIP": {
+        return (
+          <RoomsScreen
+            tabInListSettings={geneTabInListSettings(route.key)}
+            flatListRef={roomsRelationshipFlatListRef}
+            filterKey={filterKey}
+            tagKey="relationship"
+          />
+        );
+      }
+      case "SCHOOL": {
+        return (
+          <RoomsScreen
+            tabInListSettings={geneTabInListSettings(route.key)}
+            flatListRef={roomsSchoolFlatListRef}
+            filterKey={filterKey}
+            tagKey="school"
+          />
+        );
+      }
+      default:
+        return null;
+    }
   };
 
   return (
-    <TopTab.Navigator
-      tabBarOptions={{
-        activeTintColor: COLORS.DEEP_PINK,
-        inactiveTintColor: COLORS.GRAY,
-        labelStyle: { fontSize: 16 },
-        style: { backgroundColor: COLORS.BEIGE },
-        indicatorStyle: {
-          backgroundColor: COLORS.PINK,
-          height: 3,
-        },
-        scrollEnabled: true,
-        tabStyle: {
-          width: "auto",
-        },
-      }}
-      initialRouteName={geneTabName("ALL")}
-      lazy={true}
-    >
-      <Tab.Screen name={geneTabName("PRIVATE")}>
-        {(props) => (
-          <PrivateRoomsScreen
-            {...props}
-            flatListRef={privateRoomsFlatListRef}
-          />
+    <>
+      <TabView
+        style={styles.container}
+        navigationState={{
+          index: tabIndex,
+          routes: routes,
+        }}
+        renderScene={renderScene}
+        renderTabBar={(props) => (
+          <Animated.View style={hiddenAnimatedViewStyle}>
+            <Header name={"Rooms"} renderRight={filterHeaderMenu} />
+            <TabBar
+              getLabelText={({ route }) => route.title}
+              indicatorStyle={styles.indicator}
+              style={[styles.tabBar, {}]}
+              tabStyle={{
+                width: "auto",
+                height: HOME_TOP_TAB_HEIGHT,
+              }}
+              scrollEnabled
+              activeColor={COLORS.DEEP_PINK}
+              inactiveColor={COLORS.GRAY}
+              renderLabel={({ route, focused, color }) => (
+                <Text
+                  numberOfLines={1}
+                  bold={focused}
+                  size={16}
+                  style={{
+                    color: color,
+                    paddingHorizontal: 4,
+                  }}
+                >
+                  {route.title}
+                </Text>
+              )}
+              {...props}
+            />
+          </Animated.View>
         )}
-      </Tab.Screen>
-      <Tab.Screen name={geneTabName("ALL")}>
-        {(props) => (
-          <RoomsScreen {...props} flatListRef={roomsAllFlatListRef} />
-        )}
-      </Tab.Screen>
-      <Tab.Screen name={geneTabName("LOVE")}>
-        {(props) => (
-          <RoomsScreen
-            {...props}
-            flatListRef={roomsLoveFlatListRef}
-            tagKey="love"
-          />
-        )}
-      </Tab.Screen>
-      <Tab.Screen name={geneTabName("WORK")}>
-        {(props) => (
-          <RoomsScreen
-            {...props}
-            flatListRef={roomsWorkFlatListRef}
-            tagKey="work"
-          />
-        )}
-      </Tab.Screen>
-      <Tab.Screen name={geneTabName("RELATIONSHIP")}>
-        {(props) => (
-          <RoomsScreen
-            {...props}
-            flatListRef={roomsRelationshipFlatListRef}
-            tagKey="relationship"
-          />
-        )}
-      </Tab.Screen>
-      <Tab.Screen name={geneTabName("SCHOOL")}>
-        {(props) => (
-          <RoomsScreen
-            {...props}
-            flatListRef={roomsSchoolFlatListRef}
-            tagKey="school"
-          />
-        )}
-      </Tab.Screen>
-    </TopTab.Navigator>
+        onIndexChange={onIndexChange}
+        swipeEnabled
+        lazy
+      />
+    </>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.BEIGE,
+  },
+  tabBar: {
+    backgroundColor: COLORS.BEIGE,
+    elevation: 0,
+  },
+  indicator: {
+    backgroundColor: COLORS.PINK,
+    height: 3,
+  },
+});

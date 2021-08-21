@@ -12,14 +12,15 @@ import {
   PROFILE_VIEW_HEIGHT_TYPE,
   RenderHeader,
   RenderScene,
-  Routes,
+  RoutesProfile,
   TAB_BAR_HEIGHT_TYPE,
 } from "src/types/Types";
+import { HiddenAnimatedViewStyle } from "src/hooks/tabInList/useTabInList";
 
 type Props = {
   profile: Profile | MeProfile;
   isMe: boolean;
-  routes: Routes;
+  routes: RoutesProfile;
   tabIndex: number;
   animatedScrollY: AnimatedScrollY;
   onIndexChange: OnIndexChange;
@@ -27,6 +28,7 @@ type Props = {
   PROFILE_VIEW_HEIGHT: PROFILE_VIEW_HEIGHT_TYPE;
   TAB_BAR_HEIGHT: TAB_BAR_HEIGHT_TYPE;
   PROFILE_BODY_HEIGHT: number;
+  hiddenAnimatedViewStyle: HiddenAnimatedViewStyle;
 };
 export const ProfileTemplate: React.FC<Props> = (props) => {
   const {
@@ -40,33 +42,34 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
     PROFILE_VIEW_HEIGHT,
     TAB_BAR_HEIGHT,
     PROFILE_BODY_HEIGHT,
+    hiddenAnimatedViewStyle,
   } = props;
 
-  const renderHeader: RenderHeader = () => (props) =>
-    (
-      <ProfileBody
-        profile={profile}
-        isMe={isMe}
-        animatedScrollY={animatedScrollY}
-        renderTabBar={() => (
-          <TabBar
-            getLabelText={({ route }) => route.title}
-            indicatorStyle={styles.indicator}
-            style={[styles.tabBar, { height: TAB_BAR_HEIGHT }]}
-            activeColor={COLORS.LIGHT_GRAY}
-            inactiveColor={COLORS.LIGHT_GRAY}
-            renderLabel={({ route, focused, color }) => (
-              <Text bold={focused} size={12} style={{ color: color }}>
-                {route.title}
-              </Text>
-            )}
-            {...props}
-          />
-        )}
-        PROFILE_VIEW_HEIGHT={PROFILE_VIEW_HEIGHT}
-        PROFILE_BODY_HEIGHT={PROFILE_BODY_HEIGHT}
-      />
-    );
+  const renderHeader: RenderHeader = (props) => (
+    <ProfileBody
+      profile={profile}
+      isMe={isMe}
+      animatedScrollY={animatedScrollY}
+      renderTabBar={() => (
+        <TabBar
+          getLabelText={({ route }) => route.title}
+          indicatorStyle={styles.indicator}
+          style={[styles.tabBar, { height: TAB_BAR_HEIGHT }]}
+          activeColor={COLORS.LIGHT_GRAY}
+          inactiveColor={COLORS.LIGHT_GRAY}
+          renderLabel={({ route, focused, color }) => (
+            <Text bold={focused} size={12} style={{ color: color }}>
+              {route.title}
+            </Text>
+          )}
+          {...props}
+        />
+      )}
+      PROFILE_VIEW_HEIGHT={PROFILE_VIEW_HEIGHT}
+      PROFILE_BODY_HEIGHT={PROFILE_BODY_HEIGHT}
+      hiddenAnimatedViewStyle={hiddenAnimatedViewStyle}
+    />
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -77,7 +80,7 @@ export const ProfileTemplate: React.FC<Props> = (props) => {
           routes: routes,
         }}
         renderScene={renderScene}
-        renderTabBar={renderHeader()}
+        renderTabBar={renderHeader}
         onIndexChange={onIndexChange}
         swipeEnabled
       />
