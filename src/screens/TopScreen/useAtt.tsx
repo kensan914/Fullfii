@@ -94,7 +94,7 @@ const AttModal: React.FC<Props> = (props) => {
           onPress={onPress}
         >
           <Text size={16} color="white" bold>
-            次の画面で設定する
+            次へ
           </Text>
         </Button>
       </Block>
