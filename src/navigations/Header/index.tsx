@@ -90,7 +90,8 @@ export const Header: React.FC<Props> = (props) => {
       case "Recommend":
         return "レコメンド";
       case "Rooms":
-        return "ルーム";
+        // return "ルーム";
+        return "ホーム";
       case "MyRooms":
         return "相談中のルーム";
       case "MeProfile":

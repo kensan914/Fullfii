@@ -68,7 +68,8 @@ export const BottomTabNavigator: React.FC = () => {
             } else if (routeName === "Rooms") {
               iconName = focused ? homeIconFocusSvg : homeIconSvg;
               iconNode = <SvgUri width={32} height={32} source={iconName} />;
-              label = "ルーム";
+              // label = "ルーム";
+              label = "ホーム";
             } else if (routeName === "MyRooms") {
               // iconName = focused ? chatIconFocusSvg : chatIconSvg;
               iconNode = (
@@ -155,7 +156,7 @@ export const BottomTabNavigator: React.FC = () => {
             : void 0
         }
       >
-        <Tab.Screen name="Recommend">
+        {/* <Tab.Screen name="Recommend">
           {() => (
             <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
               <Stack.Navigator>
@@ -169,7 +170,7 @@ export const BottomTabNavigator: React.FC = () => {
               </Stack.Navigator>
             </Block>
           )}
-        </Tab.Screen>
+        </Tab.Screen> */}
         <Tab.Screen name="Rooms">
           {() => (
             <Block flex style={{ backgroundColor: COLORS.BEIGE }}>
