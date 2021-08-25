@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   adContainer: {
     width: width* 0.8,
-    height: height * 0.2,
+    height: 210
   },
   cardsLabel: {
     alignItems: "center",

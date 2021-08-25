@@ -3,6 +3,14 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import NativeAdView, {
   MediaView,
   NativeAd,
+  CallToActionView,
+  IconView,
+  HeadlineView,
+  TaglineView,
+  AdvertiserView,
+  AdBadge,
+  StoreView,
+  StarRatingView
 } from "react-native-admob-native-ads";
 import { Block, Text } from "galio-framework";
 
@@ -60,7 +68,30 @@ export const AdViewLgBanner: React.FC<Props> = (props) => {
               },
             ]}
           >
-            <Block  style={styles.mediaContainer}>
+            <Block style={styles.adBadge}>
+              <AdBadge />
+            </Block>
+            <Block row style={styles.topContainer}>
+              <Block>
+                <IconView
+                style={styles.IconView}
+              />
+              </Block>
+              <Block row style={styles.storeInfoContainer}>
+                <StoreView/>
+                <StarRatingView/>
+              </Block>
+
+              <Block style={styles.HeadlineView}>
+                <HeadlineView
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                  }}
+                />
+              </Block>
+            </Block>
+            <Block  center style={styles.mediaContainer}>
               <MediaView style={styles.mediaView} />
             </Block>
           </Block>
@@ -93,7 +124,6 @@ const styles = StyleSheet.create({
     width: width
   },
   nativeAdView: {
-    height: 200,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -103,8 +133,20 @@ const styles = StyleSheet.create({
 
   },
   adBadge: {
-    position: "absolute",
-    left: 0
+    backgroundColor: COLORS.GREEN,
+    marginBottom: 16
+  },
+  topContainer: {
+    marginBottom: 8
+  },
+  IconView: {
+    height: 60,
+    width: 60,
+    borderRadius: 8
+  },
+  HeadlineView: {
+    marginLeft: 8,
+    marginBottom: 16
   },
   titleContainer: {},
   taglineView: {
@@ -112,11 +154,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  storeInfoContainer: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
   contentContainer: {},
-  mediaContainer: {},
+  mediaContainer: {
+
+  },
   mediaView: {
-    width: "100%",
-    height: "100%",
+    width: 300,
+    height: 140,
     overflow: "hidden",
     borderRadius: 8,
   },
