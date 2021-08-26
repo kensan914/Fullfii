@@ -40,68 +40,14 @@ export const SettingsScreen: React.FC = () => {
   const [openProhibitedMatters, setOpenProhibitedMatters] = useState(false);
   const [openFifthCorntent, setOpenFifthCorntent] = useState(false);
   const [openSixthCorntent, setOpenSixthCorntent] = useState(false);
+  const [openSeventhCorntent, setOpenSeventhCorntent] = useState(false);
+
 
 
   return (
     <Block flex center style={{ backgroundColor: COLORS.BEIGE, width: width }}>
       <ScrollView>
-        <SettingsTitle title="Fullfiiについて" />
-        <>
-          <SettingsCard
-            title="禁止事項について"
-            titleColor={COLORS.GRAY}
-            iconName={openProhibitedMatters ? "chevron-up" : "chevron-down"}
-            onPress={() => {
-              if (openProhibitedMatters) {
-                logEvent("press_prohibited_matters");
-              }
-              setOpenProhibitedMatters(!openProhibitedMatters);
-            }}
-          />
-          {openProhibitedMatters ? (
-            <Block style={styles.hiddenContent}>
-              <Text
-                size={14}
-                color={COLORS.GRAY}
-                style={styles.hiddenContentText}
-              >
-                以下の行為は禁止となっています。発覚した場合、最悪アカウント凍結となります。{"\n"}{"\n"}
-                ①相手が不快と感じるような性的、暴力的な表現に該当する行為{"\n"}
-                ②出会い目的での他メッセージアプリへの誘導や引き抜きに該当する、またそれに近い行為{"\n"}
-                ③その他利用規約第5条（禁止事項）に該当する行為{"\n"}{"\n"}
-                相手が嫌な気分になることは最低限言わないようにご利用ください！（運営より）
-              </Text>
-            </Block>
-          ) : null}
-        </>
-        <SettingsLabel title="バージョン" content={VERSION} />
-        <SettingsCard
-          title="利用規約"
-          titleColor={COLORS.GRAY}
-          iconName={"chevron-right"}
-          onPress={_handleOpenWithWebBrowser}
-        />
-        <SettingsCard
-          title="プライバシーポリシー"
-          titleColor={COLORS.GRAY}
-          iconName={"chevron-right"}
-          onPress={_handleOpenWithWebBrowserPrivacyPolicy}
-        />
-        <SettingsCard
-          title="お問い合わせ"
-          titleColor={COLORS.GRAY}
-          iconName={"chevron-right"}
-          onPress={_handleOpenWithWebBrowserContactUsForm}
-        />
-        <SettingsCard
-          title="アカウント削除"
-          titleColor="#f44336"
-          iconName={"chevron-right"}
-          onPress={() => {
-            navigation.navigate("AccountDelete");
-          }}
-        />
-        <SettingsTitle title="使い方Q&A" />
+      <SettingsTitle title="使い方Q&A" />
         <>
           <SettingsCard
             title="どういうアプリ？"
@@ -233,7 +179,7 @@ export const SettingsScreen: React.FC = () => {
             </Block>
           ) : null}
         </Block>
-        <Block style={{ marginBottom: 40 }}>
+        <Block >
           <SettingsCard
             title="また話したい人リストとは？"
             titleColor={COLORS.GRAY}
@@ -261,6 +207,87 @@ export const SettingsScreen: React.FC = () => {
             </Block>
           ) : null}
         </Block>
+        <Block>
+          <SettingsCard
+            title="また話したい人リストのユーザーを削除するには？"
+            titleColor={COLORS.GRAY}
+            iconName={openSeventhCorntent ? "chevron-up" : "chevron-down"}
+            onPress={() => {
+              if (openSeventhCorntent) {
+                logEvent("press_want_to_talk_list");
+              }
+              setOpenSeventhCorntent(!openSeventhCorntent);
+            }}
+          />
+          {openSeventhCorntent ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                また話したい人リスト上で、既に追加されているユーザーを長押しすることで削除できます
+              </Text>
+            </Block>
+          ) : null}
+        </Block>
+        <SettingsTitle title="Fullfiiについて" />
+        <>
+          <SettingsCard
+            title="禁止事項について"
+            titleColor={COLORS.GRAY}
+            iconName={openProhibitedMatters ? "chevron-up" : "chevron-down"}
+            onPress={() => {
+              if (openProhibitedMatters) {
+                logEvent("press_prohibited_matters");
+              }
+              setOpenProhibitedMatters(!openProhibitedMatters);
+            }}
+          />
+          {openProhibitedMatters ? (
+            <Block style={styles.hiddenContent}>
+              <Text
+                size={14}
+                color={COLORS.GRAY}
+                style={styles.hiddenContentText}
+              >
+                以下の行為は禁止となっています。発覚した場合、最悪アカウント凍結となります。{"\n"}{"\n"}
+                ①相手が不快と感じるような性的、暴力的な表現に該当する行為{"\n"}
+                ②出会い目的での他メッセージアプリへの誘導や引き抜きに該当する、またそれに近い行為{"\n"}
+                ③その他利用規約第5条（禁止事項）に該当する行為{"\n"}{"\n"}
+                相手が嫌な気分になることは最低限言わないようにご利用ください！（運営より）
+              </Text>
+            </Block>
+          ) : null}
+        </>
+        <SettingsLabel title="バージョン" content={VERSION} />
+        <SettingsCard
+          title="利用規約"
+          titleColor={COLORS.GRAY}
+          iconName={"chevron-right"}
+          onPress={_handleOpenWithWebBrowser}
+        />
+        <SettingsCard
+          title="プライバシーポリシー"
+          titleColor={COLORS.GRAY}
+          iconName={"chevron-right"}
+          onPress={_handleOpenWithWebBrowserPrivacyPolicy}
+        />
+        <SettingsCard
+          title="お問い合わせ"
+          titleColor={COLORS.GRAY}
+          iconName={"chevron-right"}
+          onPress={_handleOpenWithWebBrowserContactUsForm}
+        />
+        <SettingsCard
+          title="アカウント削除"
+          titleColor="#f44336"
+          iconName={"chevron-right"}
+          onPress={() => {
+            navigation.navigate("AccountDelete");
+          }}
+        />
+
 
       </ScrollView>
     </Block>
