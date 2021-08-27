@@ -160,7 +160,7 @@ const useCommonFinally = (
   });
   // request()でリクエスト。urlかdataパラメータをobjectで渡してそのリクエスト間だけで有効な上書き設定が可能。
   request({ url: URLJoin(BASE_URL, ".../"), data: {}, });
- * */
+ **/
 export const useAxios: UseAxios = (url, method, typeIoTsOfResData, action) => {
   //---------- constants ----------//
   const axiosRequestMethods = ["get", "post", "delete", "put", "patch"];

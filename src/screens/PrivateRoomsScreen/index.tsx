@@ -11,9 +11,9 @@ import {
 import { useFetchItems } from "src/hooks/useFetchItems";
 import { URLJoin } from "src/utils";
 import { BASE_URL } from "src/constants/env";
-import { RoomsTemplate } from "src/components/templates/RoomsTemplate";
-import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
-import { useHideRoom } from "src/screens/RoomsScreen/useHideRoom";
+import { RecommendTemplate } from "src/components/templates/RecommendTemplate";
+import { useCanCreateRoom } from "src/screens/RecommendScreen/useCanAction";
+import { useHideRoom } from "src/screens/RecommendScreen/useHideRoom";
 import { PrivateRoomListEmpty } from "src/components/templates/PrivateRoomsTemplate/organisms/PrivateRoomListEmpty";
 import { TabInListSettingsProps } from "src/hooks/tabInList/useTabInList";
 import { useAnimatedListProps } from "src/hooks/tabInList/useAnimatedListProps";
@@ -93,7 +93,7 @@ export const PrivateRoomsScreen: React.FC<TabInListSettingsProps & Props> = (
   });
 
   return (
-    <RoomsTemplate
+    <RecommendTemplate
       rooms={privateRooms}
       hiddenRoomIds={hiddenRoomIds}
       hideRoom={hideRoom}

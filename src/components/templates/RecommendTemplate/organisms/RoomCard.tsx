@@ -6,30 +6,28 @@ import {
   Image,
   ViewStyle,
   Platform,
+  StyleProp,
 } from "react-native";
 
 import { Icon } from "src/components/atoms/Icon";
 import { COLORS } from "src/constants/colors";
 import { Avatar } from "src/components/atoms/Avatar";
-import { RoomDetailModal } from "src/components/templates/RoomsTemplate/organisms/RoomDetailModal";
+import { RoomDetailModal } from "src/components/templates/RecommendTemplate/organisms/RoomDetailModal";
 import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
-import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
+import { useRoomParticipantsNum } from "src/screens/RecommendScreen/useRoomParticipantsNum";
 import { formatGender } from "src/utils";
-import { useProfileState } from "src/contexts/ProfileContext";
 
 type Props = {
   room: Room;
   hiddenRoomIds: string[];
   hideRoom: HideRoom;
   blockRoom: BlockRoom;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 };
 export const RoomCard: React.FC<Props> = (props) => {
   const { room, hiddenRoomIds, hideRoom, blockRoom, style } = props;
-
-  const profileState = useProfileState();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -50,7 +48,6 @@ export const RoomCard: React.FC<Props> = (props) => {
             setIsOpen(true);
           }}
           style={styles.touchableHighlight}
-          // disabled={room.owner.id === profileState.profile.id} // 自身が作成したルームは押下禁止
         >
           <Block style={styles.card}>
             <Block style={styles.title}>

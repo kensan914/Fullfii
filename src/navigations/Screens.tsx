@@ -27,6 +27,7 @@ import { IntroTopScreen } from "src/screens/intro/IntroTopScreen";
 import { ProfileScreen } from "src/screens/ProfileScreen";
 import { Alert5xxScreen } from "src/screens/Alert5xxScreen";
 import { OK, useDomState } from "src/contexts/DomContext";
+import { RoomsIndividual } from "src/screens/RoomsIndividualScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -38,6 +39,21 @@ const HomeStack = () => {
         component={BottomTabNavigator}
         options={() => ({
           header: () => null,
+        })}
+      />
+      <Stack.Screen
+        name="RoomsIndividual"
+        component={RoomsIndividual}
+        options={({ route }) => ({
+          header: () => {
+            return (
+              <Header
+                back
+                name={"RoomsIndividual"}
+                title={route.params.headerTitle}
+              />
+            );
+          },
         })}
       />
       <Stack.Screen
@@ -152,14 +168,6 @@ const AppStack: React.FC = () => {
           initialRouteName="IntroTop"
         >
           <Stack.Screen name="IntroTop" component={IntroTopScreen} />
-          {/* <Stack.Screen
-            name="IntroCreateRoom"
-            component={IntroCreateRoomScreen}
-          />
-          <Stack.Screen
-            name="IntroParticipateRoom"
-            component={IntroParticipateRoomScreen}
-          /> */}
           <Stack.Screen name="IntroSignup" component={IntroSignupScreen} />
         </Stack.Navigator>
       );

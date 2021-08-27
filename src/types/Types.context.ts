@@ -93,6 +93,7 @@ export type GenreOfWorriesCollection = t.TypeOf<
 >;
 export type Job = t.TypeOf<typeof JobIoTs>;
 export type Jobs = t.TypeOf<typeof JobsIoTs>;
+export type Tag = t.TypeOf<typeof TagIoTs>;
 export type ProfileParams = t.TypeOf<typeof ProfileParamsIoTs>;
 export type MeProfile = t.TypeOf<typeof MeProfileIoTs>;
 export type Profile = t.TypeOf<typeof ProfileIoTs>;
