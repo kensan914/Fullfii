@@ -5,7 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { SvgUri } from "src/components/atoms/SvgUri";
 import { Header } from "src/navigations/Header";
-import { MyRoomsScreen } from "src/screens/MyRoomsScreen";
 import { MeProfileScreen } from "src/screens/MeProfileScreen";
 import { COLORS } from "src/constants/colors";
 import { cvtBadgeCount } from "src/utils";
@@ -27,6 +26,7 @@ import { Icon } from "src/components/atoms/Icon";
 import { LevelUpModal } from "src/components/organisms/LevelUpModal";
 import { useLevelUp } from "src/hooks/useLevelUp";
 import { RoomsScreen } from "src/screens/RoomsScreen";
+import { MyRoomsTopTabNavigator } from "./MyRoomsTopTabNavigator";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -184,10 +184,8 @@ export const BottomTabNavigator: React.FC = () => {
                     options={() => ({
                       header: () => <Header name={"MyRooms"} />,
                     })}
-                  >
-                    {/* Tab内でStackを用いたことで, MyRoomsScreen内でuseRouteしてもStackの方のrouteを引っ張ってくる (欲しいのはTabの) */}
-                    {() => <MyRoomsScreen />}
-                  </Stack.Screen>
+                    component={MyRoomsTopTabNavigator}
+                  ></Stack.Screen>
                 </Stack.Navigator>
               </Block>
             );

@@ -92,7 +92,7 @@ export const Header: React.FC<Props> = (props) => {
       case "Rooms":
         return "ルーム";
       case "MyRooms":
-        return "相談中のルーム";
+        return "トーク";
       case "MeProfile":
       case "Profile":
         return "プロフィール";
