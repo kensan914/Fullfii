@@ -13,7 +13,7 @@ import { width } from "src/constants";
 import { Room } from "src/types/Types.context";
 import { BlockRoom, HideRoom } from "src/types/Types";
 import { useRequestPostRoomParticipant } from "src/hooks/requests/useRequestRoomMembers";
-import { useCanParticipateRoom } from "src/screens/RoomsScreen/useCanAction";
+import { useCanParticipateRoom } from "src/screens/RecommendScreen/useCanAction";
 import { enterRoomSvg } from "src/constants/svgSources";
 import { useProfileState } from "src/contexts/ProfileContext";
 import { geneFadeModalProps } from "src/utils/customModules";
@@ -25,9 +25,9 @@ type Props = {
   participantIconColor: string;
   isOpen: boolean;
   setIsOpen: Dispatch<boolean>;
-  hiddenRoomIds: string[];
-  hideRoom: HideRoom;
-  blockRoom: BlockRoom;
+  hideRoom?: HideRoom;
+  blockRoom?: BlockRoom;
+  hiddenRoomIds?: string[];
 };
 export const RoomDetailModal: React.FC<Props> = (props) => {
   const {
@@ -46,6 +46,10 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
   const profileState = useProfileState();
 
   const openRoomDetailActionSheet = () => {
+    if (typeof hideRoom === "undefined" || typeof blockRoom === "undefined") {
+      return;
+    }
+
     ActionSheet.showActionSheetWithOptions(
       {
         options: ["キャンセル", "非表示", "ブロック"],
@@ -114,21 +118,23 @@ export const RoomDetailModal: React.FC<Props> = (props) => {
             {room.name}
           </Text>
         </Block>
-        {!isMyRoom && (
-          <TouchableOpacity
-            style={styles.touchableOpacity}
-            onPress={() => {
-              openRoomDetailActionSheet();
-            }}
-          >
-            <Icon
-              name="dots-three-horizontal"
-              family="Entypo"
-              size={32}
-              color={COLORS.BROWN}
-            />
-          </TouchableOpacity>
-        )}
+        {!isMyRoom &&
+          typeof hideRoom !== "undefined" &&
+          typeof blockRoom !== "undefined" && (
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() => {
+                openRoomDetailActionSheet();
+              }}
+            >
+              <Icon
+                name="dots-three-horizontal"
+                family="Entypo"
+                size={32}
+                color={COLORS.BROWN}
+              />
+            </TouchableOpacity>
+          )}
 
         <Block row>
           {room.image ? (

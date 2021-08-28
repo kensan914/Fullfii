@@ -17,7 +17,7 @@ import { Avatar } from "src/components/atoms/Avatar";
 import { RoomEditorModal } from "src/components/organisms/RoomEditorModal";
 import { width } from "src/constants";
 import { TalkingRoom } from "src/types/Types.context";
-import { useRoomParticipantsNum } from "src/screens/RoomsScreen/useRoomParticipantsNum";
+import { useRoomParticipantsNum } from "src/screens/RecommendScreen/useRoomParticipantsNum";
 import { useProfileState } from "src/contexts/ProfileContext";
 import {
   alertModal,

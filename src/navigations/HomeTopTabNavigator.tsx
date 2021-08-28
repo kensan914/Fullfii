@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
-import { Animated, StyleSheet } from "react-native";
+import { Animated, StyleSheet, View } from "react-native";
 import { Text } from "galio-framework";
 import { useScrollToTop } from "@react-navigation/native";
 import { SceneRendererProps, TabBar, TabView } from "react-native-tab-view";
 
 import { COLORS } from "src/constants/colors";
-import { RoomsScreen } from "src/screens/RoomsScreen";
+import { RecommendScreen } from "src/screens/RecommendScreen";
 import { PrivateRoomsScreen } from "src/screens/PrivateRoomsScreen";
 import { useDomState } from "src/contexts/DomContext";
 import {
@@ -19,40 +19,25 @@ import { useTabInList } from "src/hooks/tabInList/useTabInList";
 import { Header } from "src/navigations/Header";
 import { useFilterRoom } from "src/navigations/Header/organisms/FilterHeaderMenu/useFilterRoom";
 
-export type RouteKeyHomeTopTab =
-  | "PRIVATE"
-  | "ALL"
-  | "LOVE"
-  | "WORK"
-  | "RELATIONSHIP"
-  | "SCHOOL";
+export type RouteKeyHomeTopTab = "PRIVATE" | "ALL" | "RECOMMEND";
 export type RouteHomeTopTab = { key: RouteKeyHomeTopTab; title: string };
 export const HomeTopTabNavigator: React.FC = () => {
   const domState = useDomState();
 
   const privateRoomsFlatListRef = useRef(null);
   const roomsAllFlatListRef = useRef(null);
-  const roomsLoveFlatListRef = useRef(null);
-  const roomsWorkFlatListRef = useRef(null);
-  const roomsRelationshipFlatListRef = useRef(null);
-  const roomsSchoolFlatListRef = useRef(null);
+  const roomsRecommendFlatListRef = useRef(null);
 
   // アクティブなホームタブをプレスした時, topにスクロール
   // https://reactnavigation.org/docs/use-scroll-to-top
   useScrollToTop(privateRoomsFlatListRef);
   useScrollToTop(roomsAllFlatListRef);
-  useScrollToTop(roomsLoveFlatListRef);
-  useScrollToTop(roomsWorkFlatListRef);
-  useScrollToTop(roomsRelationshipFlatListRef);
-  useScrollToTop(roomsSchoolFlatListRef);
+  useScrollToTop(roomsRecommendFlatListRef);
 
   const [routes] = useState<RouteHomeTopTab[]>([
-    { key: "PRIVATE", title: "プライベート" },
     { key: "ALL", title: "最新" },
-    { key: "LOVE", title: "恋愛" },
-    { key: "WORK", title: "仕事" },
-    { key: "RELATIONSHIP", title: "人間関係" },
-    { key: "SCHOOL", title: "学校" },
+    { key: "RECOMMEND", title: "おすすめ" },
+    { key: "PRIVATE", title: "プライベート" },
   ]);
 
   const { filterKey, filterHeaderMenu } = useFilterRoom();
@@ -69,7 +54,7 @@ export const HomeTopTabNavigator: React.FC = () => {
     HOME_TOP_TAB_HEIGHT,
     height - (STATUS_BAR_HEIGHT + BOTTOM_TAB_BAR_HEIGHT),
     domState.animatedHeaderScrollY,
-    1
+    0
   );
 
   const renderScene: React.FC<
@@ -90,50 +75,20 @@ export const HomeTopTabNavigator: React.FC = () => {
       }
       case "ALL": {
         return (
-          <RoomsScreen
+          <RecommendScreen
             tabInListSettings={geneTabInListSettings(route.key)}
             flatListRef={roomsAllFlatListRef}
             filterKey={filterKey}
           />
         );
       }
-      case "LOVE": {
+      case "RECOMMEND": {
         return (
-          <RoomsScreen
+          <RecommendScreen
             tabInListSettings={geneTabInListSettings(route.key)}
-            flatListRef={roomsLoveFlatListRef}
+            flatListRef={roomsRecommendFlatListRef}
             filterKey={filterKey}
-            tagKey="love"
-          />
-        );
-      }
-      case "WORK": {
-        return (
-          <RoomsScreen
-            tabInListSettings={geneTabInListSettings(route.key)}
-            flatListRef={roomsWorkFlatListRef}
-            filterKey={filterKey}
-            tagKey="work"
-          />
-        );
-      }
-      case "RELATIONSHIP": {
-        return (
-          <RoomsScreen
-            tabInListSettings={geneTabInListSettings(route.key)}
-            flatListRef={roomsRelationshipFlatListRef}
-            filterKey={filterKey}
-            tagKey="relationship"
-          />
-        );
-      }
-      case "SCHOOL": {
-        return (
-          <RoomsScreen
-            tabInListSettings={geneTabInListSettings(route.key)}
-            flatListRef={roomsSchoolFlatListRef}
-            filterKey={filterKey}
-            tagKey="school"
+            isRecommend
           />
         );
       }
@@ -153,33 +108,35 @@ export const HomeTopTabNavigator: React.FC = () => {
         renderScene={renderScene}
         renderTabBar={(props) => (
           <Animated.View style={hiddenAnimatedViewStyle}>
-            <Header name={"Rooms"} renderRight={filterHeaderMenu} />
-            <TabBar
-              getLabelText={({ route }) => route.title}
-              indicatorStyle={styles.indicator}
-              style={[styles.tabBar, {}]}
-              tabStyle={{
-                width: "auto",
-                height: HOME_TOP_TAB_HEIGHT,
-              }}
-              scrollEnabled
-              activeColor={COLORS.DEEP_PINK}
-              inactiveColor={COLORS.GRAY}
-              renderLabel={({ route, focused, color }) => (
-                <Text
-                  numberOfLines={1}
-                  bold={focused}
-                  size={16}
-                  style={{
-                    color: color,
-                    paddingHorizontal: 4,
-                  }}
-                >
-                  {route.title}
-                </Text>
-              )}
-              {...props}
-            />
+            <Header name={"Recommend"} renderRight={filterHeaderMenu} />
+            <View style={styles.tabBarContainer}>
+              <TabBar
+                getLabelText={({ route }) => route.title}
+                indicatorStyle={styles.indicator}
+                style={[styles.tabBar, {}]}
+                tabStyle={{
+                  width: "auto",
+                  height: HOME_TOP_TAB_HEIGHT,
+                }}
+                scrollEnabled
+                activeColor={COLORS.DEEP_PINK}
+                inactiveColor={COLORS.GRAY}
+                renderLabel={({ route, focused, color }) => (
+                  <Text
+                    numberOfLines={1}
+                    bold={focused}
+                    size={16}
+                    style={{
+                      color: color,
+                      paddingHorizontal: 4,
+                    }}
+                  >
+                    {route.title}
+                  </Text>
+                )}
+                {...props}
+              />
+            </View>
           </Animated.View>
         )}
         onIndexChange={onIndexChange}
@@ -192,6 +149,10 @@ export const HomeTopTabNavigator: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.BEIGE,
+  },
+  tabBarContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
   tabBar: {
     backgroundColor: COLORS.BEIGE,

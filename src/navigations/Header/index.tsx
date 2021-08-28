@@ -69,7 +69,7 @@ export const Header: React.FC<Props> = (props) => {
     } else {
       const routeName = route.name;
       switch (routeName) {
-        case "Rooms":
+        case "Recommend":
           return <ReloadHeaderMenu />;
       }
     }
@@ -115,7 +115,8 @@ export const Header: React.FC<Props> = (props) => {
       case "MessageHistory":
         return "トーク履歴";
       default:
-        return name;
+        if (title) return title;
+        else return name;
     }
   };
 

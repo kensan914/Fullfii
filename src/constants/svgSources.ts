@@ -25,9 +25,9 @@ export const chatIconSvg = Platform.select({
   android: _chatIconSvg,
 });
 
-import _mypageIconSvg from "src/assets/icons/mypageIcon.svg";
+import _mypageIconSvg from "src/assets/icons/mypage.svg";
 export const mypageIconSvg = Platform.select({
-  ios: require("src/assets/icons/mypageIcon.svg"),
+  ios: require("src/assets/icons/mypage.svg"),
   android: _mypageIconSvg,
 });
 
@@ -43,8 +43,20 @@ export const chatIconFocusSvg = Platform.select({
   android: _chatIconFocusSvg,
 });
 
-import _mypageIconFocusSvg from "src/assets/icons/mypageIconFocus.svg";
+import _mypageIconFocusSvg from "src/assets/icons/mypageFocus.svg";
 export const mypageIconFocusSvg = Platform.select({
-  ios: require("src/assets/icons/mypageIconFocus.svg"),
+  ios: require("src/assets/icons/mypageFocus.svg"),
   android: _mypageIconFocusSvg,
+});
+
+import _roomsIconFocusSvg from "src/assets/icons/roomsFocus.svg";
+export const roomsIconFocusSvg = Platform.select({
+  ios: require("src/assets/icons/roomsFocus.svg"),
+  android: _roomsIconFocusSvg,
+});
+
+import _roomsIconSvg from "src/assets/icons/rooms.svg";
+export const roomsIconSvg = Platform.select({
+  ios: require("src/assets/icons/rooms.svg"),
+  android: _roomsIconSvg,
 });

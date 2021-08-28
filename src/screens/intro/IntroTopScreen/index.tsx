@@ -18,7 +18,7 @@ export const IntroTopScreen: React.FC = () => {
         initBottomTabRouteName: authState.signupBuffer.introCreateRoom
           .isComplete
           ? "MyRooms"
-          : "Rooms",
+          : "Recommend",
       });
     }
   }, []);

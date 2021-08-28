@@ -16,6 +16,8 @@ import {
   homeIconSvg,
   mypageIconFocusSvg,
   mypageIconSvg,
+  roomsIconFocusSvg,
+  roomsIconSvg,
 } from "src/constants/svgSources";
 import { BOTTOM_TAB_BAR_HEIGHT } from "src/constants";
 import { HomeTopTabNavigator } from "src/navigations/HomeTopTabNavigator";
@@ -24,7 +26,7 @@ import { ReviewModal } from "src/components/organisms/ReviewModal";
 import { Icon } from "src/components/atoms/Icon";
 import { LevelUpModal } from "src/components/organisms/LevelUpModal";
 import { useLevelUp } from "src/hooks/useLevelUp";
-import { RecommendScreen } from "src/screens/RecommendScreen";
+import { RoomsScreen } from "src/screens/RoomsScreen";
 
 export const BottomTabNavigator: React.FC = () => {
   const Tab = createBottomTabNavigator();
@@ -48,25 +50,11 @@ export const BottomTabNavigator: React.FC = () => {
 
             const routeName = route.name;
             if (routeName === "Recommend") {
-              iconNode = (
-                <Block
-                  style={{
-                    width: 32,
-                    height: 32,
-                    padding: 2,
-                  }}
-                >
-                  <Icon
-                    name="message1"
-                    family="AntDesign"
-                    size={28}
-                    color={color}
-                  />
-                </Block>
-              );
+              iconName = focused ? homeIconFocusSvg : homeIconSvg;
+              iconNode = <SvgUri width={32} height={32} source={iconName} />;
               label = "レコメンド";
             } else if (routeName === "Rooms") {
-              iconName = focused ? homeIconFocusSvg : homeIconSvg;
+              iconName = focused ? roomsIconFocusSvg : roomsIconSvg;
               iconNode = <SvgUri width={32} height={32} source={iconName} />;
               // label = "ルーム";
               label = "ホーム";
@@ -163,9 +151,10 @@ export const BottomTabNavigator: React.FC = () => {
                 <Stack.Screen
                   name="Recommend"
                   options={() => ({
-                    header: () => <Header name={"Recommend"} />,
+                    // ヘッダーhideアニメーションでHomeTopTabNavigator内に配置するため
+                    header: () => null,
                   })}
-                  component={RecommendScreen}
+                  component={HomeTopTabNavigator}
                 />
               </Stack.Navigator>
             </Block>
@@ -178,10 +167,9 @@ export const BottomTabNavigator: React.FC = () => {
                 <Stack.Screen
                   name="Rooms"
                   options={() => ({
-                    // ヘッダーhideアニメーションでHomeTopTabNavigator内に配置するため
-                    header: () => null,
+                    header: () => <Header name={"Rooms"} />,
                   })}
-                  component={HomeTopTabNavigator}
+                  component={RoomsScreen}
                 />
               </Stack.Navigator>
             </Block>

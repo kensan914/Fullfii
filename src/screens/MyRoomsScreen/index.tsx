@@ -4,7 +4,7 @@ import { MyRoomsTemplate } from "src/components/templates/MyRoomsTemplate";
 import { useChatState } from "src/contexts/ChatContext";
 import { TalkingRoom } from "src/types/Types.context";
 import { useProfileState } from "src/contexts/ProfileContext";
-import { useCanCreateRoom } from "src/screens/RoomsScreen/useCanAction";
+import { useCanCreateRoom } from "src/screens/RecommendScreen/useCanAction";
 
 export const MyRoomsScreen: React.FC = () => {
   const chatState = useChatState();

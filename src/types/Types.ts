@@ -18,8 +18,12 @@ import {
   ProfileDispatch,
   RoomJsonIoTs,
   TalkTicketKey,
+  TagIoTs,
+  Tag,
+  Room,
 } from "src/types/Types.context";
 import { AnimatedViewMethods } from "src/components/templates/intro/organisms/AnimatedView";
+import { FilterKey } from "src/navigations/Header/organisms/FilterHeaderMenu/useFilterRoom";
 
 //--------- App.tsx ---------//
 export type Assets = { [key: string]: Asset };
@@ -28,6 +32,11 @@ export type Assets = { [key: string]: Asset };
 //--------- Screens.tsx ---------//
 export type RootStackParamList = {
   Home: undefined;
+  RoomsIndividual: {
+    headerTitle: string;
+    filterKey?: FilterKey;
+    tagKey?: string;
+  };
   WorrySelect: undefined;
   Profile: {
     profile?: Profile;
@@ -57,6 +66,10 @@ export type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
 export type MessageHistoryRouteProp = RouteProp<
   RootStackParamList,
   "MessageHistory"
+>;
+export type RoomsIndividualRouteProp = RouteProp<
+  RootStackParamList,
+  "RoomsIndividual"
 >;
 export type ProfileRouteProp = RouteProp<RootStackParamList, "Profile">;
 export type ProfileInputRouteProp = RouteProp<
@@ -91,6 +104,7 @@ export type RouteName =
       | "Recommend"
       | "Rooms"
       | "MyRooms"
+      | "RoomsIndividual"
       | "Profile"
       | "MeProfile"
       | "ProfileEditor"
@@ -461,6 +475,17 @@ export type PostRoomClosedMembersResData = t.TypeOf<
 export const PostRoomClosedMembersResDataIoTs = t.type({
   resultLevelUp: t.union([t.literal("STABLE"), t.literal("LEVELED_UP")]),
   me: MeProfileIoTs,
+});
+export type RoomsSummariesResData = t.TypeOf<typeof RoomsSummariesResDataIoTs>;
+export type RoomsSummaries = { tag: Tag; title: string; rooms: Room[] }[];
+export const RoomsSummariesResDataIoTs = t.type({
+  summaries: t.array(
+    t.type({
+      tag: TagIoTs,
+      title: t.string,
+      rooms: t.array(RoomJsonIoTs),
+    })
+  ),
 });
 //--------- axios res.data ---------//
 
