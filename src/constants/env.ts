@@ -2,8 +2,8 @@ import { Platform } from "react-native";
 import Config from "react-native-config";
 import deviceInfoModule from "react-native-device-info";
 
-export const DEBUG = true;
-// export const DEBUG = false;
+// export const DEBUG = true;
+export const DEBUG = false;
 // const ADMOB_DEBUG = true;
 const ADMOB_DEBUG = false;
 
@@ -55,6 +55,11 @@ export const ADMOB_UNIT_ID_EDIT_PROFILE = ADMOB_DEBUG
 export const ADMOB_UNIT_ID_AFTER_SHUFFLE = ADMOB_DEBUG
   ? ADMOB_UNIT_ID_DEBUG_INT
   : "ca-app-pub-1754293395940427/3594231086";
+export const ADMOB_UNIT_ID_ROOMS = ADMOB_DEBUG
+  ? ADMOB_UNIT_ID_DEBUG_INT
+  : Platform.OS === "ios"
+  ? "ca-app-pub-1754293395940427/3374371984"
+  : "ca-app-pub-1754293395940427/9556636953";
 
 export const ADMOB_UNIT_ID_NATIVE = {
   image:

@@ -1,16 +1,14 @@
 import React from "react";
 import { Block, Text, Button } from "galio-framework";
-import { ScrollView, FlatList, StyleSheet, View } from "react-native";
+import { ScrollView, FlatList, StyleSheet } from "react-native";
 import {
   Placeholder,
   PlaceholderMedia,
   PlaceholderLine,
-  ShineOverlay,
-  Fade,
   Shine,
 } from "rn-placeholder";
 
-import { height, width } from "src/constants";
+import { width } from "src/constants";
 import { COLORS } from "src/constants/colors";
 import {
   RoomSummaryCard,
@@ -18,7 +16,7 @@ import {
   ROOM_SUMMARY_CARD_WIDTH,
 } from "src/components/templates/RoomsTemplate/organisms/RoomSummaryCard";
 import { AdViewLgBanner } from "src/components/molecules/AdViewLgBanner";
-import { ADMOB_UNIT_ID_NATIVE } from "src/constants/env";
+import { ADMOB_UNIT_ID_ROOMS } from "src/constants/env";
 import { RoomsSummaries } from "src/types/Types";
 import { NavigateRoomsIndividual } from "src/screens/RoomsScreen";
 
@@ -35,7 +33,7 @@ export const RoomsTemplate: React.FC<Props> = (props) => {
       contentContainerStyle={styles.contentContainer}
     >
       <Block center style={styles.adContainer}>
-        <AdViewLgBanner adUnitId={ADMOB_UNIT_ID_NATIVE.image} />
+        <AdViewLgBanner adUnitId={ADMOB_UNIT_ID_ROOMS} />
       </Block>
 
       {typeof roomsSummaries !== "undefined" ? (
