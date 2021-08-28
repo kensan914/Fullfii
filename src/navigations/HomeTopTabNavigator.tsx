@@ -35,9 +35,9 @@ export const HomeTopTabNavigator: React.FC = () => {
   useScrollToTop(roomsRecommendFlatListRef);
 
   const [routes] = useState<RouteHomeTopTab[]>([
+    { key: "PRIVATE", title: "プライベート" },
     { key: "ALL", title: "最新" },
     { key: "RECOMMEND", title: "おすすめ" },
-    { key: "PRIVATE", title: "プライベート" },
   ]);
 
   const { filterKey, filterHeaderMenu } = useFilterRoom();
@@ -54,7 +54,7 @@ export const HomeTopTabNavigator: React.FC = () => {
     HOME_TOP_TAB_HEIGHT,
     height - (STATUS_BAR_HEIGHT + BOTTOM_TAB_BAR_HEIGHT),
     domState.animatedHeaderScrollY,
-    0
+    1
   );
 
   const renderScene: React.FC<

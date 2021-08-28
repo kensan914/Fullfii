@@ -134,7 +134,7 @@ android {
         applicationId 'com.fullfii.fullfii'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 34
+        versionCode 35
         versionName "1.6.0"
     }
     splits {
